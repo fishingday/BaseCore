@@ -1,0 +1,2 @@
+# BaseCore
+CoreDevice.BaseCore
