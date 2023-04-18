@@ -13,7 +13,7 @@ public class CmRoleMenuMapId implements Serializable {
 
 	private static final long serialVersionUID = 8699491868509867589L;
 
-	private Long userSeq;
-
 	private Long roleSeq;
+	
+	private Long menuSeq;
 }
