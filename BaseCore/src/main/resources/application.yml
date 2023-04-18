@@ -1,4 +1,4 @@
-debug: true
+debug: false
 
 logging:
   level:
@@ -23,6 +23,11 @@ spring:
       hibernate:
         jdbc:
           lob.non_contextual_creation:true
+
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
 
   thymeleaf:
     cache: false
