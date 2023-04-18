@@ -1,4 +1,4 @@
-debug: true
+debug: false
 
 logging:
   level:
@@ -24,6 +24,11 @@ spring:
         jdbc:
           lob.non_contextual_creation:true
 
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+
   thymeleaf:
     cache: false
 
@@ -35,3 +40,8 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+    
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    use-root-path: true
