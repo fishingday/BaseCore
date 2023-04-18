@@ -40,10 +40,10 @@ public class CmUser implements Serializable{
 	@Column(name = "LOGIN_ID", nullable = false, unique = true)
 	private String loginId;
 
-	@Column(name = "USER_NM", length = 300)
+	@Column(name = "USER_NM", length = 30)
 	private String userNm;
 
-	@Column(name = "USER_TEL_NO", length = 300)
+	@Column(name = "USER_TEL_NO", length = 20)
 	private String userTelNo;
 
 	@Column(name = "LOGIN_FAIL_CNT")
@@ -73,15 +73,15 @@ public class CmUser implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creDt;
 
-	@Column(name = "UPDATOR_SEQ", insertable = false)
+	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
-	@Column(name = "UPD_DT", insertable = false)
+	@Column(name = "UPD_DT")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updDt;
 	
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<CmUserRoleMap> cmUserRoleMap = new ArrayList<>(1);
+	private List<CmUserRoleMap> cmUserRoleMapList = new ArrayList<>(1);
 
 }

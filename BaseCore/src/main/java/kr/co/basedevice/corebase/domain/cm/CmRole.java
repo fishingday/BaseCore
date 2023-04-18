@@ -40,7 +40,7 @@ public class CmRole implements Serializable{
 	@Column(name = "ROLE_CD", nullable = false, length = 35, unique = true)
 	private String roleCd;
 
-	@Column(name = "ROLE_NM", length = 300)
+	@Column(name = "ROLE_NM", length = 30)
 	private String roleNm;
 
 	@Column(name = "ROLE_DESC", length = 2000)
@@ -56,15 +56,19 @@ public class CmRole implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creDt;
 
-	@Column(name = "UPDATOR_SEQ", insertable = false)
+	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
-	@Column(name = "UPD_DT", insertable = false)
+	@Column(name = "UPD_DT")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updDt;
 	
 	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<CmUserRoleMap> cmUserRoleMap = new ArrayList<>(1);
+	private List<CmUserRoleMap> cmUserRoleMapList = new ArrayList<>(1);
+	
+	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmRoleMenuMap> cmRoleMenuMapList = new ArrayList<>(1);
 
 }
