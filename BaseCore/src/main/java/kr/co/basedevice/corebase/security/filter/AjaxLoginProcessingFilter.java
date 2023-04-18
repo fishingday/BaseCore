@@ -15,7 +15,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.co.basedevice.corebase.domain.dto.AccountDto;
+import kr.co.basedevice.corebase.dto.AccountDto;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 import kr.co.basedevice.corebase.util.WebUtil;
 

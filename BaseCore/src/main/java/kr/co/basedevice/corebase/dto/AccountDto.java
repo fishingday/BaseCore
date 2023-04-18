@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.dto;
+package kr.co.basedevice.corebase.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

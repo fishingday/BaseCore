@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import kr.co.basedevice.corebase.domain.entity.Account;
+import kr.co.basedevice.corebase.domain.cm.Account;
 import kr.co.basedevice.corebase.repository.UserRepository;
 
 @Service("userDetailsService")

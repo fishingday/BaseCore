@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.service.impl;
 
-import kr.co.basedevice.corebase.domain.entity.Role;
+import kr.co.basedevice.corebase.domain.cm.Role;
 import kr.co.basedevice.corebase.repository.RoleRepository;
 import kr.co.basedevice.corebase.service.RoleService;
 import lombok.extern.slf4j.Slf4j;

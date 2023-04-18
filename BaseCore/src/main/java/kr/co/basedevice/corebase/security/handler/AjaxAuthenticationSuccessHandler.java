@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.co.basedevice.corebase.domain.entity.Account;
+import kr.co.basedevice.corebase.domain.cm.Account;
 
 public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 

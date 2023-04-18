@@ -1,8 +1,9 @@
 package kr.co.basedevice.corebase.repository;
 
-import kr.co.basedevice.corebase.domain.entity.Resources;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import kr.co.basedevice.corebase.domain.cm.Resources;
 
 import java.util.List;
 

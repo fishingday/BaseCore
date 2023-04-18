@@ -1,8 +1,8 @@
-package kr.co.basedevice.corebase.domain.dto;
+package kr.co.basedevice.corebase.dto;
 
 import java.util.Set;
 
-import kr.co.basedevice.corebase.domain.entity.Role;
+import kr.co.basedevice.corebase.domain.cm.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package kr.co.basedevice.corebase.service;
 
-import kr.co.basedevice.corebase.domain.entity.Role;
-
 import java.util.List;
+
+import kr.co.basedevice.corebase.domain.cm.Role;
 
 public interface RoleService {
 

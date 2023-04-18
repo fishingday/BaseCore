@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.service;
 
-import kr.co.basedevice.corebase.domain.entity.Resources;
+import kr.co.basedevice.corebase.domain.cm.Resources;
 import kr.co.basedevice.corebase.repository.ResourcesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;

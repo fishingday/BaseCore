@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import kr.co.basedevice.corebase.domain.entity.Account;
+import kr.co.basedevice.corebase.domain.cm.Account;
 import lombok.Data;
 
 @Data

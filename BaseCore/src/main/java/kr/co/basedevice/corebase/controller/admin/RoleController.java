@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import kr.co.basedevice.corebase.domain.dto.RoleDto;
-import kr.co.basedevice.corebase.domain.entity.Role;
+import kr.co.basedevice.corebase.domain.cm.Role;
+import kr.co.basedevice.corebase.dto.RoleDto;
 import kr.co.basedevice.corebase.service.RoleService;
 
 @Controller

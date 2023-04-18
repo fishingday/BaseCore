@@ -1,8 +1,8 @@
 package kr.co.basedevice.corebase.service;
 
-import kr.co.basedevice.corebase.domain.entity.Resources;
-
 import java.util.List;
+
+import kr.co.basedevice.corebase.domain.cm.Resources;
 
 public interface ResourcesService {
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import kr.co.basedevice.corebase.domain.entity.Account;
+import kr.co.basedevice.corebase.domain.cm.Account;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 
 @Controller

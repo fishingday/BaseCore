@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import kr.co.basedevice.corebase.domain.dto.AccountDto;
-import kr.co.basedevice.corebase.domain.entity.Account;
+import kr.co.basedevice.corebase.domain.cm.Account;
+import kr.co.basedevice.corebase.dto.AccountDto;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 import kr.co.basedevice.corebase.service.UserService;
 

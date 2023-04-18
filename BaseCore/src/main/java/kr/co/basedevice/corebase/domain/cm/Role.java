@@ -1,5 +1,5 @@
 
-package kr.co.basedevice.corebase.domain.entity;
+package kr.co.basedevice.corebase.domain.cm;
 
 import lombok.*;
 

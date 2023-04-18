@@ -1,9 +1,9 @@
 package kr.co.basedevice.corebase.controller.admin;
 
 
-import kr.co.basedevice.corebase.domain.dto.AccountDto;
-import kr.co.basedevice.corebase.domain.entity.Account;
-import kr.co.basedevice.corebase.domain.entity.Role;
+import kr.co.basedevice.corebase.domain.cm.Account;
+import kr.co.basedevice.corebase.domain.cm.Role;
+import kr.co.basedevice.corebase.dto.AccountDto;
 import kr.co.basedevice.corebase.service.RoleService;
 import kr.co.basedevice.corebase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

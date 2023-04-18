@@ -1,7 +1,7 @@
 package kr.co.basedevice.corebase.service;
 
-import kr.co.basedevice.corebase.domain.dto.AccountDto;
-import kr.co.basedevice.corebase.domain.entity.Account;
+import kr.co.basedevice.corebase.domain.cm.Account;
+import kr.co.basedevice.corebase.dto.AccountDto;
 
 import java.util.List;
 
