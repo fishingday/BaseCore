@@ -1,8 +1,8 @@
 package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -65,14 +65,14 @@ public class CmMenu implements Serializable{
 
 	@Column(name = "CRE_DT", updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date creDt;
+	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date updDt;
+	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
 	@JsonIgnore

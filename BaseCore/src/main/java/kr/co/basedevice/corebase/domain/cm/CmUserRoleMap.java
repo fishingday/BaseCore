@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,14 +42,14 @@ public class CmUserRoleMap {
 
 	@Column(name = "CRE_DT", updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date creDt;
+	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ", insertable = false)
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT", insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date updDt;
+	private LocalDateTime updDt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
