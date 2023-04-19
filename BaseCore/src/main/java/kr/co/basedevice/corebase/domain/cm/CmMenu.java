@@ -77,4 +77,8 @@ public class CmMenu implements Serializable{
 	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmMenuDtl> cmMenuDtlList = new ArrayList<>(1);
+		
+	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmUserBookmark> cmUserBookmarkList = new ArrayList<>(1);
 }

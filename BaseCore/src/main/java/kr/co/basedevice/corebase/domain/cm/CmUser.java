@@ -81,4 +81,8 @@ public class CmUser implements Serializable{
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmNotiUserMap> cmNotiUserMapList = new ArrayList<>(1);
+	
+	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmUserAlowIp> cmUserAlowIpList = new ArrayList<>(1);
 }

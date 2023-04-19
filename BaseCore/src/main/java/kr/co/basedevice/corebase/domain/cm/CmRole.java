@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,12 +60,16 @@ public class CmRole implements Serializable{
 	@Column(name = "UPD_DT")
 	private LocalDateTime updDt;
 	
-	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<CmUserRoleMap> cmUserRoleMapList = new ArrayList<>(1);
 	
-	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<CmRoleMenuMap> cmRoleMenuMapList = new ArrayList<>(1);
+	
+	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<CmUserBookmark> cmUserBookmarkList = new ArrayList<>(1);
 	
 }
