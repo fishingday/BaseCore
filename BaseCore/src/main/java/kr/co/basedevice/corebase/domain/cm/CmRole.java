@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -53,14 +51,12 @@ public class CmRole implements Serializable{
 	private Long creatorSeq;
 
 	@Column(name = "CRE_DT", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT")
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL)

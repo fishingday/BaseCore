@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,11 +37,11 @@ public class CmMenu implements Serializable{
 	@Column(name = "UP_MENU_SEQ")
 	private Long upMenuSeq;
 	
-	@Column(name = "MENU_NM", length = 30, nullable = false)
-	private String menuNm;
-	
 	@Column(name = "MENU_PATH", length = 255)
 	private String menuPath;
+	
+	@Column(name = "MENU_NM", length = 30, nullable = false)
+	private String menuNm;
 	
 	@Column(name = "MENU_DESC", length = 2000)
 	private String menuDesc;
@@ -64,17 +62,19 @@ public class CmMenu implements Serializable{
 	private Long creatorSeq;
 
 	@Column(name = "CRE_DT", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT")
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmRoleMenuMap> cmRoleMenuMapList = new ArrayList<>(1);
+	
+	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmMenuDtl> cmMenuDtlList = new ArrayList<>(1);
 }

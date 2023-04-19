@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -69,18 +67,16 @@ public class CmCdDtl {
 	private Long creatorSeq;
 
 	@Column(name = "CRE_DT", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT")
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime updDt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "CM_GRP_CD", updatable = false, insertable = false)
+	@JoinColumn(name = "GRP_CD_SEQ", updatable = false, insertable = false)
 	private CmGrpCd cmGrpCd;
 }

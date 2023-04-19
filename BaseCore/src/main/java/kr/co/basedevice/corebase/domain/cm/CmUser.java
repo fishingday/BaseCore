@@ -3,7 +3,6 @@ package kr.co.basedevice.corebase.domain.cm;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,8 +48,7 @@ public class CmUser implements Serializable{
 	private Integer loginFailCnt;
 
 	@Column(name = "LOGIN_DT")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date loginDt;
+	private LocalDateTime loginDt;
 
 	@Column(name = "LAST_LOGIN_IP", length = 23)
 	private String lastLoginIp;
@@ -60,9 +56,8 @@ public class CmUser implements Serializable{
 	@Column(name = "USER_STAT_CD", length = 35)
 	private String userStatCd;
 
-	@Column(name = "ACUNT_EXP_DT")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date acuntExpDt;
+	@Column(name = "ACUNT_EXP_DT", length = 8)
+	private String acuntExpDt;
 
 	@Column(name = "DEL_YN", length = 1)
 	private String delYn;
@@ -71,14 +66,12 @@ public class CmUser implements Serializable{
 	private Long creatorSeq;
 
 	@Column(name = "CRE_DT", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT")
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)

@@ -10,8 +10,6 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,14 +39,12 @@ public class CmUserRoleMap {
 	private Long creatorSeq;
 
 	@Column(name = "CRE_DT", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ", insertable = false)
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT", insertable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime updDt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
