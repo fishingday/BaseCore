@@ -66,5 +66,5 @@ public class CmRole implements Serializable{
 	@OneToMany(mappedBy = "cmRole", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmRoleMenuMap> cmRoleMenuMapList = new ArrayList<>(1);
-
+	
 }

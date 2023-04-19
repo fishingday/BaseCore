@@ -78,4 +78,7 @@ public class CmUser implements Serializable{
 	@JsonIgnore
 	private List<CmUserRoleMap> cmUserRoleMapList = new ArrayList<>(1);
 
+	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmNotiUserMap> cmNotiUserMapList = new ArrayList<>(1);
 }

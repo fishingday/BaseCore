@@ -2,14 +2,20 @@ package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,5 +71,9 @@ public class CmNoti implements Serializable{
 	private Long updatorSeq;
 
 	@Column(name = "UPD_DT", nullable = false)
-	private LocalDateTime updDt;
+	private LocalDateTime updDt;	
+
+	@OneToMany(mappedBy = "cmNoti", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmNotiUserMap> cmNotiUserMapList = new ArrayList<>(1);
 }
