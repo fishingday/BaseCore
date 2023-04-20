@@ -10,7 +10,7 @@ import kr.co.basedevice.corebase.service.SecurityResourceService;
 public class AppConfig {
 
     @Bean
-    public SecurityResourceService securityResourceService(ResourcesRepository resourcesRepository) {
+    SecurityResourceService securityResourceService(ResourcesRepository resourcesRepository) {
         SecurityResourceService SecurityResourceService = new SecurityResourceService(resourcesRepository);
         return SecurityResourceService;
     }

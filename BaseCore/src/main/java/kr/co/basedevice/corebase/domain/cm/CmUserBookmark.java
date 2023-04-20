@@ -35,6 +35,8 @@ public class CmUserBookmark {
 	@Column(name = "MENU_SEQ", nullable = false)
 	private Long menuSeq;
 	
+	@Column(name = "BOOK_MARK_NM", length = 30, nullable = false)
+	private String bookMarkNm;
 	
 	@Column(name = "DEL_YN", length = 1)
 	private String delYn;

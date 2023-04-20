@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "CM_MENU")
+@Table(name = "CM_MENU_DTL")
 @SequenceGenerator(name = "SEQGEN_CM_MENU_DTL", sequenceName = "SEQ_CM_MENU_DTL", initialValue = 1000, allocationSize = 1)
 public class CmMenuDtl {
 	
@@ -36,7 +36,6 @@ public class CmMenuDtl {
 	@Column(name = "MENU_DTL_PATH", length = 255, nullable = false)
 	private String menuDtlPath;
 	
-
 	@Column(name = "MENU_DTL_METH_CD", length = 35, nullable = false)
 	private String menuDtlMethCd;
 

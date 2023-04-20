@@ -1,9 +1,9 @@
 drop table if exists account CASCADE ;
-drop table if exists cm_cd_dtl CASCADE; 
+drop table if exists cm_cd_dtl CASCADE ;
 drop table if exists cm_grp_cd CASCADE ;
 drop table if exists cm_menu CASCADE ;
-drop table if exists CM_MENU_DTL CASCADE ;
-drop table if exists CM_MENU_DTL_ROLE_MAP CASCADE ;
+drop table if exists cm_menu_dtl CASCADE ;
+drop table if exists cm_menu_dtl_role_map CASCADE ;
 drop table if exists cm_noti CASCADE ;
 drop table if exists cm_noti_user_map CASCADE ;
 drop table if exists cm_role CASCADE ;
@@ -19,8 +19,8 @@ drop table if exists resources CASCADE ;
 drop table if exists role CASCADE ;
 drop table if exists role_resources CASCADE ;
 drop table if exists user_roles CASCADE ;
-drop sequence if exists hibernate_sequence ;
-drop sequence if exists seq_cm_cd_dtl ;
+drop sequence if exists hibernate_sequence;
+drop sequence if exists seq_cm_cd_dtl;
 drop sequence if exists seq_cm_grp_cd;
 drop sequence if exists seq_cm_menu;
 drop sequence if exists seq_cm_menu_dtl;
@@ -30,9 +30,6 @@ drop sequence if exists seq_cm_role_chg_log;
 drop sequence if exists seq_cm_user;
 drop sequence if exists seq_cm_user_acces_log;
 drop sequence if exists seq_cm_user_alow_ip;
-
-drop table "flyway_schema_history";
-
 
 DROP TABLE QRTZ_FIRED_TRIGGERS;
 DROP TABLE QRTZ_CRON_TRIGGERS;
@@ -45,3 +42,5 @@ DROP TABLE QRTZ_JOB_DETAILS;
 DROP TABLE QRTZ_CALENDARS;
 DROP TABLE QRTZ_BLOB_TRIGGERS;
 DROP TABLE QRTZ_LOCKS;
+
+DROP TABLE "flyway_schema_history"

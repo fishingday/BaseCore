@@ -19,11 +19,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "CM_ROLE_MENU_MAP")
+@Table(name = "CM_MENU_DTL_ROLE_MAP")
 @IdClass(CmMenuDtlRoleMapId.class)
 public class CmMenuDtlRoleMap {
 	
-
 	@Id
 	@Column(name = "MENU_DTL_SEQ", nullable = false)
 	private Long menuDtlSeq;

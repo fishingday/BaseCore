@@ -48,6 +48,9 @@ public class CmMenu implements Serializable{
 	
 	@Column(name = "ICON_URL", length = 255)
 	private String iConUrl;
+	
+	@Column(name = "CM_SCREN_YN", length = 1, nullable = false)
+	private String cmScrenYn;	
 		
 	@Column(name = "PRNT_YN", length = 1, nullable = false)
 	private String prntYn;
