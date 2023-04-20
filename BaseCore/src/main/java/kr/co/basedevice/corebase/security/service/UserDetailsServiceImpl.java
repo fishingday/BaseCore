@@ -1,8 +1,6 @@
 package kr.co.basedevice.corebase.security.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,46 +13,46 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import kr.co.basedevice.corebase.domain.cm.Account;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
+import kr.co.basedevice.corebase.repository.cm.CmUserPwdRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired private CmUserRepository cmUserRepository;
+    @Autowired private CmUserPwdRepository cmUserPwdRepository;
     @Autowired private CmRoleRepository cmRoleRepository;
     
-    private int limitCnt = Integer.valueOf(5); 
-
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
 
         CmUser cmUser = cmUserRepository.findByLoginIdAndDelYn(loginId, "N");
         if (cmUser == null) {        	
         	throw new UsernameNotFoundException("No user found with username: " + loginId);
-        }else {
-        	int nowDate = Integer.valueOf(DateTimeFormatter.ofPattern("yyyyMMdd").format(LocalDate.now()));
-        	
-        	if(!"ENABLE".equals(cmUser.getUserStatCd())) {
-        		throw new UsernameNotFoundException("계정 상태에 문제가 있습니다. 관리자에게 문의하세요.");
-        	}else if(Integer.parseInt(cmUser.getAcuntExpDt()) < nowDate) {
-        		throw new UsernameNotFoundException("계정이 만료 되었습니다.");
-        	}else if(limitCnt < cmUser.getLoginFailCnt()) {
-        		throw new UsernameNotFoundException("접속 실패 한계를 초과했습니다. 관리자에게 문의하세요. ");
-        	}
         }
         
-        /**    
-        Set<String> userRoles = account.getUserRoles()
+        List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYnOrderByUserPwdSeqDesc(cmUser.getUserSeq(), "N");
+        if (cmUserPwdList == null || cmUserPwdList.isEmpty()) {        	
+        	throw new UsernameNotFoundException("No user found with username or password :" + loginId);
+        }
+            
+        Set<String> userRoles = cmRoleRepository.findByUserSeq(cmUser.getUserSeq())
                 .stream()
-                .map(userRole -> userRole.getRoleName())
+                .map(userRole -> userRole.getRoleNm())
                 .collect(Collectors.toSet());
 
         List<GrantedAuthority> collect = userRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        return new AccountContext(account, collect);
         
-        */
-        return null;
+        // 유효성을 체크하고 넘겨 준다면....
+        LocalDate now = LocalDate.now();		
+		boolean enabled = "ENABLE".equals(cmUser.getUserStatCd());
+		boolean accountNonExpired = cmUser.getAcuntExpDt() != null && now.isBefore(cmUser.getAcuntExpDt());
+		boolean credentialsNonExpired = cmUserPwdList.get(0).getPwdExpDt() != null && now.isBefore(cmUserPwdList.get(0).getPwdExpDt());
+		boolean accountNonLocked = "ENABLE".equals(cmUser.getUserStatCd()) || "LOCKED".equals(cmUser.getUserStatCd());
+        
+        return new AccountContext(cmUser, cmUserPwdList.get(0), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, collect);
+        
     }
 }

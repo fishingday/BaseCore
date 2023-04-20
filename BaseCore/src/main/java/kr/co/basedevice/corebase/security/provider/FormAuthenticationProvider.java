@@ -43,7 +43,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
             throw new IllegalArgumentException("Invalid Secret");
         }
 
-        return new UsernamePasswordAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(accountContext.getCmUser(), null, accountContext.getAuthorities());
     }
 
     @Override

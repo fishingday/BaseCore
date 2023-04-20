@@ -1,6 +1,7 @@
 package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class CmUser implements Serializable{
 	private String userStatCd;
 
 	@Column(name = "ACUNT_EXP_DT", length = 8)
-	private String acuntExpDt;
+	private LocalDate acuntExpDt;
 
 	@Column(name = "DEL_YN", length = 1)
 	private String delYn;
@@ -85,4 +86,5 @@ public class CmUser implements Serializable{
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmUserAlowIp> cmUserAlowIpList = new ArrayList<>(1);
+
 }
