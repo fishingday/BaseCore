@@ -17,7 +17,7 @@ import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
-	@Value("${login.use2factor}")
+	@Value("${login.use2factor:false}")
 	private boolean use2factor;
 	
     @Autowired
