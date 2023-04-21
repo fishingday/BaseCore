@@ -50,3 +50,7 @@ spring:
 #  swagger-ui:
 #    path: /swagger-ui.html
 #    use-root-path: true
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
