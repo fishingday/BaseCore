@@ -1,6 +1,4 @@
 create sequence hibernate_sequence start with 1 increment by 1;
-create sequence seq_cm_cd_dtl start with 1000 increment by 1;
-create sequence seq_cm_grp_cd start with 1000 increment by 1;
 create sequence seq_cm_menu start with 1000 increment by 1;
 create sequence seq_cm_menu_dtl start with 1000 increment by 1;
 create sequence seq_cm_noti_user_map start with 1000 increment by 1;
@@ -10,8 +8,8 @@ create sequence seq_cm_user start with 1000 increment by 1;
 create sequence seq_cm_user_acces_log start with 1000 increment by 1;
 create sequence seq_cm_user_alow_ip start with 1000 increment by 1;
 create table account (id bigint not null, age integer, email varchar(255), password varchar(255), username varchar(255), primary key (id));
-create table cm_cd_dtl (cd_dtl_seq bigint not null, cd_nm varchar(30) not null, cd varchar(35) not null, cd_desc varchar(2000), cre_dt timestamp, creator_seq bigint, del_yn varchar(1), grp_cd_seq bigint not null, opt_1 varchar(256), opt_2 varchar(256), opt_3 varchar(256), opt_4 varchar(256), opt_5 varchar(256), prnt_ord integer, upd_dt timestamp, updator_seq bigint, primary key (cd_dtl_seq));
-create table cm_grp_cd (grp_cd_seq bigint not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1), grp_cd varchar(35) not null, grp_cd_desc varchar(2000), grp_cd_nm varchar(30), upd_dt timestamp, updator_seq bigint, primary key (grp_cd_seq));
+create table cm_cd_dtl (cd_nm varchar(30) not null, grp_cd varchar(35) not null, cd varchar(35) not null, cd_desc varchar(2000), cre_dt timestamp, creator_seq bigint, del_yn varchar(1), opt_1 varchar(256), opt_2 varchar(256), opt_3 varchar(256), opt_4 varchar(256), opt_5 varchar(256), prnt_ord integer, upd_dt timestamp, updator_seq bigint, primary key (grp_cd, cd));
+create table cm_grp_cd (cre_dt timestamp, creator_seq bigint, del_yn varchar(1), grp_cd varchar(35) not null, grp_cd_desc varchar(2000), grp_cd_nm varchar(30), upd_dt timestamp, updator_seq bigint, primary key (grp_cd));
 create table cm_menu (menu_seq bigint not null, cm_scren_yn varchar(1) not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1) not null, icon_url varchar(255), menu_desc varchar(2000), menu_nm varchar(30) not null, menu_path varchar(255), prnt_ord integer not null, prnt_yn varchar(1) not null, up_menu_seq bigint, upd_dt timestamp, updator_seq bigint, primary key (menu_seq));
 create table cm_menu_dtl (menu_dtl_seq bigint not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1), menu_dtl_desc varchar(2000), menu_dtl_meth_cd varchar(35) not null, menu_dtl_nm varchar(30) not null, menu_dtl_path varchar(255) not null, menu_seq bigint not null, upd_dt timestamp, updator_seq bigint, primary key (menu_dtl_seq));
 create table cm_menu_dtl_role_map (menu_dtl_seq bigint not null, role_seq bigint not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1) not null, upd_dt timestamp, updator_seq bigint, primary key (menu_dtl_seq, role_seq));
@@ -33,7 +31,7 @@ create table user_roles (user_id bigint not null, role_id bigint not null, prima
 alter table cm_grp_cd add constraint UK_7x94pu161x7h24tp5nvj0btle unique (grp_cd);
 alter table cm_role add constraint UK_2j7vpbi7ekt471wc03y5kbs5f unique (role_cd);
 alter table cm_user add constraint UK_k3f18xcjet2p2id7v534udwsg unique (login_id);
-alter table cm_cd_dtl add constraint FK31oviaiu500y81ssuoy8bpsjd foreign key (grp_cd_seq) references cm_grp_cd;
+alter table cm_cd_dtl add constraint FK31oviaiu500y81ssuoy8bpsjd foreign key (grp_cd) references cm_grp_cd;
 alter table cm_menu_dtl add constraint FKopi00ys66fdc50k0apmvwdyrw foreign key (menu_seq) references cm_menu;
 alter table cm_menu_dtl_role_map add constraint FKmj7knsqb5kprqymf9c3mp7j3b foreign key (menu_dtl_seq) references cm_menu_dtl;
 alter table cm_menu_dtl_role_map add constraint FKm698ihqh4xl8h3dw418yb4spt foreign key (role_seq) references cm_role;

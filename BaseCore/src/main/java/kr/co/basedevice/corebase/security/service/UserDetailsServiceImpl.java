@@ -40,19 +40,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             
         Set<String> userRoles = cmRoleRepository.findByUserSeq(cmUser.getUserSeq())
                 .stream()
-                .map(userRole -> userRole.getRoleNm())
+                .map(userRole -> userRole.getRoleCd())
                 .collect(Collectors.toSet());
 
         List<GrantedAuthority> collect = userRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         
         // 유효성을 체크하고 넘겨 준다면....
         LocalDate now = LocalDate.now();		
-		boolean enabled = "ENABLE".equals(cmUser.getUserStatCd());
+		boolean enabled = "ENABLED".equals(cmUser.getUserStatCd());
 		boolean accountNonExpired = cmUser.getAcuntExpDt() != null && now.isBefore(cmUser.getAcuntExpDt());
 		boolean credentialsNonExpired = cmUserPwdList.get(0).getPwdExpDt() != null && now.isBefore(cmUserPwdList.get(0).getPwdExpDt());
-		boolean accountNonLocked = "ENABLE".equals(cmUser.getUserStatCd()) || "LOCKED".equals(cmUser.getUserStatCd());
+		boolean accountNonLocked = "ENABLED".equals(cmUser.getUserStatCd()) || !"LOCKED".equals(cmUser.getUserStatCd());
         
         return new AccountContext(cmUser, cmUserPwdList.get(0), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, collect);
-        
     }
 }

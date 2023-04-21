@@ -7,32 +7,29 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 그룹코드는 컬럼명으로 사용 
+ * 
+ * @author fishingday
+ *
+ */
 @Getter
 @Setter
 @Entity
-@Table(name = "CM_GRP_CD", uniqueConstraints = {@UniqueConstraint(name = "UK_CM_GRP_CD_GRP_CD", columnNames = { "GRP_CD" }) })
-@SequenceGenerator(name = "SEQGEN_CM_GRP_CD", sequenceName = "SEQ_CM_GRP_CD", initialValue = 1000, allocationSize = 1)
+@Table(name = "CM_GRP_CD")
 public class CmGrpCd {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_GRP_CD")
-	@Column(name = "GRP_CD_SEQ", nullable = false)
-	private Long grpCdSeq;
-
-	@Column(name = "GRP_CD", nullable = false, length = 35, unique = true)
+	@Column(name = "GRP_CD", nullable = false, length = 35)
 	private String grpCd;
 
 	@Column(name = "GRP_CD_NM", length = 30)

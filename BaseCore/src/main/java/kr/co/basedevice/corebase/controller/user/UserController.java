@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import kr.co.basedevice.corebase.domain.cm.Account;
+import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.AccountDto;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 import kr.co.basedevice.corebase.service.UserService;
@@ -50,28 +51,28 @@ public class UserController {
 	}
 
 	@GetMapping(value="/mypage")
-	public String myPage(@AuthenticationPrincipal Account account, Authentication authentication, Principal principal) throws Exception {
+	public String myPage(@AuthenticationPrincipal CmUser cmUser, Authentication authentication, Principal principal) throws Exception {
 
-		String username1 = account.getUsername();
+		String username1 = cmUser.getUserNm();
 		System.out.println("username1 = " + username1);
 
-		Account account2 = (Account) authentication.getPrincipal();
-		String username2 = account2.getUsername();
+		CmUser cmUser2 = (CmUser) authentication.getPrincipal();
+		String username2 = cmUser2.getUserNm();
 		System.out.println("username2 = " + username2);
 
-		Account account3 = null;
+		CmUser cmUser3 = null;
 		if (principal instanceof UsernamePasswordAuthenticationToken) {
-			account3 = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+			cmUser3 = (CmUser) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
 
 		}else if(principal instanceof AjaxAuthenticationToken){
-			account3 = (Account) ((AjaxAuthenticationToken) principal).getPrincipal();
+			cmUser3 = (CmUser) ((AjaxAuthenticationToken) principal).getPrincipal();
 		}
 
-		String username3 = account3.getUsername();
+		String username3 = cmUser3.getUserNm();
 		System.out.println("username3 = " + username3);
 
-		Account account4 = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username4 = account4.getUsername();
+		CmUser cmUser4 = (CmUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username4 = cmUser4.getUserNm();
 		System.out.println("username4 = " + username4);
 
 		return "user/mypage";

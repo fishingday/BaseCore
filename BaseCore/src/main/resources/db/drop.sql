@@ -20,8 +20,6 @@ drop table if exists role CASCADE ;
 drop table if exists role_resources CASCADE ;
 drop table if exists user_roles CASCADE ;
 drop sequence if exists hibernate_sequence;
-drop sequence if exists seq_cm_cd_dtl;
-drop sequence if exists seq_cm_grp_cd;
 drop sequence if exists seq_cm_menu;
 drop sequence if exists seq_cm_menu_dtl;
 drop sequence if exists seq_cm_noti_user_map;

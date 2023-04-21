@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.security.provider;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,9 @@ import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
+	@Value("${login.use2factor}")
+	private boolean use2factor;
+	
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -36,6 +40,10 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
         if (!passwordEncoder.matches(password, accountContext.getPassword())) {
             throw new BadCredentialsException("Invalid password");
+        }
+        
+        if(use2factor) {
+	        // TODO : OTP 적용
         }
 
         return new AjaxAuthenticationToken(accountContext.getCmUser(), null, accountContext.getAuthorities());

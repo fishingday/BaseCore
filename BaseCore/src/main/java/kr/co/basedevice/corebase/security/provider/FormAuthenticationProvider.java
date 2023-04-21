@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.security.provider;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +17,9 @@ import kr.co.basedevice.corebase.security.service.AccountContext;
 
 public class FormAuthenticationProvider implements AuthenticationProvider {
 
+	@Value("${login.use2factor}")
+	private boolean use2factor;
+	
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -38,9 +42,11 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid password");
         }
 
-        String secretKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
-        if (secretKey == null || !secretKey.equals("secret")) {
-            throw new IllegalArgumentException("Invalid Secret");
+        if(use2factor) {
+	        String secretKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
+	        if (secretKey == null || !secretKey.equals("secret")) {
+	            throw new IllegalArgumentException("Invalid Secret");
+	        }
         }
 
         return new UsernamePasswordAuthenticationToken(accountContext.getCmUser(), null, accountContext.getAuthorities());

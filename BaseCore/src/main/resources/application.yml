@@ -5,6 +5,11 @@ logging:
     sql: debug    
 
 spring:
+  config:
+    import:
+    - environment.properties
+
+
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
