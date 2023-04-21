@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import kr.co.basedevice.corebase.security.common.AjaxWebAuthenticationDetails;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 
@@ -42,8 +43,11 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid password");
         }
         
-        if(use2factor) {
-	        // TODO : OTP 적용
+        if(use2factor) { // 추가 인증 구현 시 적용
+	        String otpKey = ((AjaxWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
+	        if (otpKey == null || !otpKey.equals("xxxxx")) {
+	            throw new IllegalArgumentException("Invalid Secret");
+	        }
         }
 
         return new AjaxAuthenticationToken(accountContext.getCmUser(), null, accountContext.getAuthorities());

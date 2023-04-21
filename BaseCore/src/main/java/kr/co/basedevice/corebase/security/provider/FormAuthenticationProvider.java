@@ -42,9 +42,9 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid password");
         }
 
-        if(use2factor) {
-	        String secretKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
-	        if (secretKey == null || !secretKey.equals("secret")) {
+        if(use2factor) { // 추가 인증 구현 시 적용
+	        String otpKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
+	        if (otpKey == null || !otpKey.equals("xxxxx")) {
 	            throw new IllegalArgumentException("Invalid Secret");
 	        }
         }
