@@ -26,6 +26,11 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                
+        // 로그인에 성공 했다면 ...
+        // 로그인 실패 카운트 0, 계정 만료일 갱신
+        
+        // TODO : 갈곳을 정해 줄 수 있나?
 
 //        HttpSession session = request.getSession();
 //        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());

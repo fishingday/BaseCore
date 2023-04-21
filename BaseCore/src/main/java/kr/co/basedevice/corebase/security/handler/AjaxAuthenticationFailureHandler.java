@@ -29,6 +29,9 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
 		if(exception instanceof BadCredentialsException) {
+			
+			// 로그인 실패 카운트를 1 추가한다.
+			
 			errorMessage = "Invalid Username or Password";
 		} else if(exception instanceof DisabledException) {
 			errorMessage = "Locked";
