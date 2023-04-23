@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,16 +53,19 @@ public class CmMenu implements Serializable{
 	private String iConUrl;
 	
 	@Column(name = "CM_SCREN_YN", length = 1, nullable = false)
-	private String cmScrenYn;	
+	@Enumerated(EnumType.STRING)
+	private Yn cmScrenYn;	
 		
 	@Column(name = "PRNT_YN", length = 1, nullable = false)
-	private String prntYn;
+	@Enumerated(EnumType.STRING)
+	private Yn prntYn;
 	
 	@Column(name = "PRNT_ORD", nullable = false)
 	private Integer prntOrd;
 
-	@Column(name = "DEL_YN", length = 1, nullable = false)
-	private String delYn;
+	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Enumerated(EnumType.STRING)
+	private Yn delYn;
 
 	@Column(name = "CREATOR_SEQ", updatable = false)
 	private Long creatorSeq;

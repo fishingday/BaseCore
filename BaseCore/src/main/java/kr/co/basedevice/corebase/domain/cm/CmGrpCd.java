@@ -7,12 +7,15 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,8 +41,9 @@ public class CmGrpCd {
 	@Column(name = "GRP_CD_DESC", length = 2000)
 	private String grpCdDesc;
 
-	@Column(name = "DEL_YN", length = 1)
-	private String delYn;
+	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Enumerated(EnumType.STRING)
+	private Yn delYn;
 
 	@Column(name = "CREATOR_SEQ", updatable = false)
 	private Long creatorSeq;

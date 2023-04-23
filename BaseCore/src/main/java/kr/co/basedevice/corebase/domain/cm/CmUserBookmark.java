@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,9 +41,10 @@ public class CmUserBookmark {
 	@Column(name = "BOOK_MARK_NM", length = 30, nullable = false)
 	private String bookMarkNm;
 	
-	@Column(name = "DEL_YN", length = 1)
-	private String delYn;
-
+	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Enumerated(EnumType.STRING)
+	private Yn delYn;
+	
 	@Column(name = "CREATOR_SEQ", updatable = false)
 	private Long creatorSeq;
 

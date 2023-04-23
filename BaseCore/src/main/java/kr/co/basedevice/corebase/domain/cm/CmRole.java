@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,8 +48,9 @@ public class CmRole implements Serializable{
 	@Column(name = "ROLE_DESC", length = 2000)
 	private String roleDesc;
 
-	@Column(name = "DEL_YN", length = 1)
-	private String delYn;
+	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Enumerated(EnumType.STRING)
+	private Yn delYn;
 
 	@Column(name = "CREATOR_SEQ", updatable = false)
 	private Long creatorSeq;

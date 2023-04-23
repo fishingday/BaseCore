@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,9 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.NotiSendGrdCd;
+import kr.co.basedevice.corebase.domain.code.SendMediaTypCd;
+import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +49,8 @@ public class CmNoti implements Serializable{
 	private String notiLnkAddr;
 
 	@Column(name = "NOTI_SEND_GRD_CD", length = 35, nullable = false)
-	private String notiSendGrdCd;
+	@Enumerated(EnumType.STRING)
+	private NotiSendGrdCd notiSendGrdCd;
 
 	@Column(name = "NOTI_SEND_DT", length = 14, nullable = false)
 	private String notiSendDt;
@@ -53,13 +59,16 @@ public class CmNoti implements Serializable{
 	private String notiEndDt;
 
 	@Column(name = "SEND_MEDIA_TYP_CD", length = 35, nullable = false)
-	private String sendMediaTypCd;	
+	@Enumerated(EnumType.STRING)
+	private SendMediaTypCd sendMediaTypCd;	
 
 	@Column(name = "SEND_YN", length = 1, nullable = false)
-	private String sendYn;
+	@Enumerated(EnumType.STRING)
+	private Yn sendYn;
 
-	@Column(name = "DEL_YN", length = 1, nullable = false)
-	private String delYn;
+	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Enumerated(EnumType.STRING)
+	private Yn delYn;
 
 	@Column(name = "CREATOR_SEQ", updatable = false, nullable = false)
 	private Long creatorSeq;
