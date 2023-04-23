@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import kr.co.basedevice.corebase.domain.code.HttpMethCd;
+import kr.co.basedevice.corebase.domain.code.HttpMethodCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,9 +40,9 @@ public class CmMenuDtl {
 	@Column(name = "MENU_DTL_PATH", length = 255, nullable = false)
 	private String menuDtlPath;
 	
-	@Column(name = "HTTP_METH_CD", length = 35, nullable = false)
+	@Column(name = "HTTP_METHOD_CD", length = 35, nullable = false)
 	@Enumerated(EnumType.STRING)
-	private HttpMethCd httpMethCd;
+	private HttpMethodCd httpMethodCd;
 
 	@Column(name = "MENU_DTL_NM", length = 30, nullable = false)
 	private String menuDtlNm;

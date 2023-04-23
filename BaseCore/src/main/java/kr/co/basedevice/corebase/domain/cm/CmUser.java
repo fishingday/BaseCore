@@ -21,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,7 +59,8 @@ public class CmUser implements Serializable{
 	private String lastLoginIp;
 
 	@Column(name = "USER_STAT_CD", length = 35)
-	private String userStatCd;
+	@Enumerated(EnumType.STRING)
+	private UserStatCd userStatCd;
 
 	@Column(name = "ACUNT_EXP_DT", length = 8)
 	private LocalDate acuntExpDt;

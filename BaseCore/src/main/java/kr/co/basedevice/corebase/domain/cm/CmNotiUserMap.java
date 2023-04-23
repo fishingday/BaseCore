@@ -18,6 +18,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.SendMediaTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,14 +43,16 @@ public class CmNotiUserMap implements Serializable{
 	@Column(name = "NOTI_SEQ")
 	private Long notiSeq;
 	
-	@Column(name = "SEND_MEDIA_TYP_CD", length = 1, nullable = false)
-	private String sendMediaTypCd;
+	@Column(name = "SEND_MEDIA_TYP_CD", length = 35, nullable = false)
+	@Enumerated(EnumType.STRING)
+	private SendMediaTypCd sendMediaTypCd;
 	
 	@Column(name = "VIEW_CNT", nullable = false)
 	private Integer viewCnt;
 	
 	@Column(name = "CLOSE_YN", length = 1, nullable = false)
-	private String closeYn;
+	@Enumerated(EnumType.STRING)
+	private Yn closeYn;
 	
 	@Column(name = "QRY_DT")
 	private LocalDateTime qryDt;

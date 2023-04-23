@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import kr.co.basedevice.corebase.domain.code.RoleChgCd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,7 +41,8 @@ public class CmRoleChgLog {
 	private String roleChgReason;
 		
 	@Column(name = "ROLE_CHG_CD", length = 35, nullable = false)
-	private String roleChgCd;
+	@Enumerated(EnumType.STRING)
+	private RoleChgCd roleChgCd;
 	
 	@Column(name = "EXCUTOR_SEQ", nullable = false)
 	private Long excutorSeq;

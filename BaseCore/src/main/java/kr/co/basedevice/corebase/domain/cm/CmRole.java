@@ -21,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.code.RoleCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +41,8 @@ public class CmRole implements Serializable{
 	private Long roleSeq;
 
 	@Column(name = "ROLE_CD", nullable = false, length = 35, unique = true)
-	private String roleCd;
+	@Enumerated(EnumType.STRING)
+	private RoleCd roleCd;
 
 	@Column(name = "ROLE_NM", length = 30)
 	private String roleNm;

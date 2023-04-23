@@ -54,7 +54,7 @@ public class CmMenu implements Serializable{
 	
 	@Column(name = "CM_SCREN_YN", length = 1, nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Yn cmScrenYn;	
+	private Yn cmScrenYn;
 		
 	@Column(name = "PRNT_YN", length = 1, nullable = false)
 	@Enumerated(EnumType.STRING)

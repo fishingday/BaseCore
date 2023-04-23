@@ -4,12 +4,16 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import kr.co.basedevice.corebase.domain.code.AccesLogTypCd;
+import kr.co.basedevice.corebase.domain.code.HttpMethodCd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +36,8 @@ public class CmUserAccesLog {
 	private String reqIp;
 	
 	@Column(name = "HTTP_METHOD_CD", length = 255, nullable = false)
-	private String httpMethodCd;
+	@Enumerated(EnumType.STRING)
+	private HttpMethodCd httpMethodCd;
 	
 	@Column(name = "REQ_CONT", length = 2000)
 	private String reqCont;	
@@ -41,7 +46,8 @@ public class CmUserAccesLog {
 	private String sessId;
 	
 	@Column(name = "ACCES_LOG_TYP_CD", length = 255)
-	private String accesLogTypCd;
+	@Enumerated(EnumType.STRING)
+	private AccesLogTypCd accesLogTypCd;
 	
 	@Column(name = "USER_AGENT", length = 255)
 	private String userAgent;
