@@ -1,6 +1,8 @@
 package kr.co.basedevice.corebase.domain.cm;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -59,4 +63,5 @@ public class CmMenuDtlRoleMap {
 	@JsonIgnore
 	@JoinColumn(name = "ROLE_SEQ", updatable = false, insertable = false)
 	private CmRole cmRole;
+	
 }

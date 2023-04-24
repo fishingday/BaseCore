@@ -5,6 +5,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -18,11 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import kr.co.basedevice.corebase.domain.cm.CmMenu;
+import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMap;
+import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
+
 @SpringBootTest
 class CoreBaseApplicationTests {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private CmMenuRepository cmMenuRepository;
 
     @Test
     void metchPwd() {
@@ -56,5 +64,20 @@ class CoreBaseApplicationTests {
          String outText = Base64.getEncoder().encodeToString(encrypted);
          
          System.err.println("##################" + outText);
+    }
+    
+    @Test
+    void testMenuList() {
+    	
+    	List<CmMenu> cmMenuList = cmMenuRepository.findAllMainMenu();
+    	
+    	for(CmMenu cmMenu : cmMenuList) {
+    		System.err.println(cmMenu.getMenuNm());
+    		if(!cmMenu.getCmRoleMenuMapList().isEmpty()) {
+	    		for(CmRoleMenuMap cmRoleMenuMap : cmMenu.getCmRoleMenuMapList()) {
+	    			System.err.println(cmMenu.getMenuNm() + "-" + cmRoleMenuMap.getCmRole().getRoleNm() + ":" + cmRoleMenuMap.getCmRole().getRoleNm());
+	    		}
+    		}
+    	}
     }
 }

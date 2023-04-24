@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .anyRequest().authenticated()
-                .and()
+        .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login_proc")
@@ -75,6 +75,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler())
         .and()
                 .addFilterAt(customFilterSecurityInterceptor, FilterSecurityInterceptor.class);
+/*        
+        http.sessionManagement()
+   	 		.maximumSessions(1)                 // 최대 허용 가능 세션 수 , -1 : 무제한 로그인 세션 허용
+   	 		.maxSessionsPreventsLogin(false) 	// 동시 로그인 차단함,  false : 기존 세션 만료(default)
+   	 		.invalidSessionUrl("/invalid")      // 세션이 유효하지 않을 때 이동 할 페이지
+   	 		.expiredUrl("/expired ");  	        // 세션이 만료된 경우 이동 할 페이지
+*/
 
         http.csrf().disable();
 
