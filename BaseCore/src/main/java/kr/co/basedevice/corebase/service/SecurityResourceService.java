@@ -22,7 +22,9 @@ public class SecurityResourceService {
     }
 
     public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> getResourceList() {
-
+    	// TODO : 소팅하기...
+    	//Collections.sort( userList, (o1,o2) -> o1.age - o2.age );
+    	
         LinkedHashMap<RequestMatcher, List<ConfigAttribute>> result = new LinkedHashMap<>();
         List<Resources> resourcesList = resourcesRepository.findAllResources();
 
