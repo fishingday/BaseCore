@@ -1,8 +1,7 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -28,8 +25,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_MENU_DTL_ROLE_MAP")
 @IdClass(CmMenuDtlRoleMapId.class)
-public class CmMenuDtlRoleMap {
+public class CmMenuDtlRoleMap implements Serializable{
 	
+	private static final long serialVersionUID = -1643591832531083795L;
+
 	@Id
 	@Column(name = "MENU_DTL_SEQ", nullable = false)
 	private Long menuDtlSeq;

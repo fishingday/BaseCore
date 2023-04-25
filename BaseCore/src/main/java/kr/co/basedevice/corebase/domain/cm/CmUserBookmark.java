@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -24,8 +25,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_USER_BOOKMARK")
 @IdClass(CmUserBookmarkId.class)
-public class CmUserBookmark {
-	
+public class CmUserBookmark implements Serializable {
+
+	private static final long serialVersionUID = -7053190443539105272L;
+
 	@Id
 	@Column(name = "USER_SEQ", nullable = false)
 	private Long userSeq;

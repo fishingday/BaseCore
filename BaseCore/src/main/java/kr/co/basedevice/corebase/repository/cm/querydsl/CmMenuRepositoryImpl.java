@@ -9,6 +9,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmMenuDtl;
 import kr.co.basedevice.corebase.domain.cm.QCmMenu;
+import kr.co.basedevice.corebase.domain.cm.QCmMenuDtl;
+import kr.co.basedevice.corebase.domain.cm.QCmMenuDtlRoleMap;
 import kr.co.basedevice.corebase.domain.cm.QCmRole;
 import kr.co.basedevice.corebase.domain.cm.QCmRoleMenuMap;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -21,7 +23,7 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 	private final JPAQueryFactory jpaQueryFactory;
 	
 	@Override
-	public List<CmMenu> findAllMainMenu() {
+	public List<CmMenu> findAllMenu() {
 		QCmMenu cmMenu = QCmMenu.cmMenu;
 		QCmRoleMenuMap cmRoleMenuMap = QCmRoleMenuMap.cmRoleMenuMap;
 		QCmRole cmRole = QCmRole.cmRole;
@@ -39,9 +41,25 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 	}
 
 	@Override
-	public List<CmMenuDtl> findAllDtlMenu() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CmMenuDtl> findAllMenuDtl() {
+		QCmMenu cmMenu = QCmMenu.cmMenu;
+		QCmMenuDtl cmMenuDtl = QCmMenuDtl.cmMenuDtl;
+		QCmMenuDtlRoleMap cmMenuDtlRoleMap = QCmMenuDtlRoleMap.cmMenuDtlRoleMap; 
+		QCmRole cmRole = QCmRole.cmRole;
+		
+		return jpaQueryFactory.selectFrom(cmMenuDtl)
+				.innerJoin(cmMenuDtl.cmMenu(), cmMenu).fetchJoin()
+				.innerJoin(cmMenuDtl.cmMenuDtlRoleMapList, cmMenuDtlRoleMap).fetchJoin()
+				.innerJoin(cmMenuDtlRoleMap.cmRole(), cmRole).fetchJoin()
+		.where(
+				cmMenu.delYn.eq(Yn.N),
+				cmMenu.cmScrenYn.eq(Yn.N),
+				cmMenu.menuPath.isNotEmpty(),
+				cmMenuDtl.delYn.eq(Yn.N),
+				cmMenuDtl.menuDtlPath.isNotEmpty(),
+				cmMenuDtlRoleMap.delYn.eq(Yn.N), 
+				cmRole.delYn.eq(Yn.N))
+		.fetch();
 	}
 
 }

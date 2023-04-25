@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CmCdDtlId  implements Serializable {
+public class CmCdDtlId implements Serializable {
 	
 	private static final long serialVersionUID = 4177649224438128386L;
 

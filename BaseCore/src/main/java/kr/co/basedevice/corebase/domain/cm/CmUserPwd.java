@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -27,7 +28,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_USER_PWD")
 @SequenceGenerator(name = "SEQGEN_CM_USER_PWD", sequenceName = "SEQ_CM_USER_PWD", initialValue = 1000, allocationSize = 1)
-public class CmUserPwd {
+public class CmUserPwd implements Serializable {
+
+	private static final long serialVersionUID = -8303293010611426407L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU_DTL")

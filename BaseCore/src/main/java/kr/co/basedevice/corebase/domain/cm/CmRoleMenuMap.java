@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -25,7 +26,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_ROLE_MENU_MAP")
 @IdClass(CmRoleMenuMapId.class)
-public class CmRoleMenuMap {
+public class CmRoleMenuMap implements Serializable {
+
+	private static final long serialVersionUID = 7355846365503832864L;
 
 	@Id
 	@Column(name = "ROLE_SEQ", nullable = false)

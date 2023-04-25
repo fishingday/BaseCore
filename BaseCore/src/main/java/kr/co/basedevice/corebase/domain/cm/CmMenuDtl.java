@@ -1,7 +1,11 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,7 +24,6 @@ import org.hibernate.proxy.HibernateProxy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import kr.co.basedevice.corebase.domain.code.HttpMethodCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,8 +33,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_MENU_DTL")
 @SequenceGenerator(name = "SEQGEN_CM_MENU_DTL", sequenceName = "SEQ_CM_MENU_DTL", initialValue = 1000, allocationSize = 1)
-public class CmMenuDtl {
-	
+public class CmMenuDtl implements Serializable{
+
+	private static final long serialVersionUID = -220508149793619902L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU_DTL")
 	@Column(name = "MENU_DTL_SEQ", nullable = false)
@@ -42,10 +48,6 @@ public class CmMenuDtl {
 	@Column(name = "MENU_DTL_PATH", length = 255, nullable = false)
 	private String menuDtlPath;
 	
-	@Column(name = "HTTP_METHOD_CD", length = 35, nullable = false)
-	@Enumerated(EnumType.STRING)
-	private HttpMethodCd httpMethodCd;
-
 	@Column(name = "MENU_DTL_NM", length = 30, nullable = false)
 	private String menuDtlNm;
 	
@@ -72,6 +74,11 @@ public class CmMenuDtl {
 	@JsonIgnore
 	@JoinColumn(name = "MENU_SEQ", updatable = false, insertable = false)
 	private CmMenu cmMenu;
+	
+	@OneToMany(mappedBy = "cmMenuDtl", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmMenuDtlRoleMap> cmMenuDtlRoleMapList = new ArrayList<>(1);
+	
 	
 	//------------
 	/**

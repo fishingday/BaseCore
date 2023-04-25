@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -24,8 +25,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_USER_ROLE_MAP")
 @IdClass(CmUserRoleMapId.class)
-public class CmUserRoleMap {
-	
+public class CmUserRoleMap implements Serializable {
+
+	private static final long serialVersionUID = 3510177415748359434L;
+
 	@Id
 	@Column(name = "USER_SEQ", nullable = false)
 	private Long userSeq;

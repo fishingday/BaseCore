@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_GRP_CD")
-public class CmGrpCd {
+public class CmGrpCd implements Serializable {
 	
+	private static final long serialVersionUID = -3619896827890455517L;
+
 	@Id
 	@Column(name = "GRP_CD", nullable = false, length = 35)
 	private String grpCd;

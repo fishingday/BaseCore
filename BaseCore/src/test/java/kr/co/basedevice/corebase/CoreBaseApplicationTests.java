@@ -20,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
+import kr.co.basedevice.corebase.domain.cm.CmMenuDtl;
+import kr.co.basedevice.corebase.domain.cm.CmMenuDtlRoleMap;
 import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMap;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 
@@ -67,9 +69,26 @@ class CoreBaseApplicationTests {
     }
     
     @Test
+    void testMenuDtlList() {
+    	
+    	List<CmMenuDtl> cmMenuDtlList = cmMenuRepository.findAllMenuDtl();
+    	
+    	for(CmMenuDtl cmMenuDtl : cmMenuDtlList) {
+    		System.err.println(cmMenuDtl.getCmMenu().getMenuNm() + "-" + cmMenuDtl.getMenuDtlNm());
+    		if(!cmMenuDtl.getCmMenuDtlRoleMapList().isEmpty()) {
+	    		for(CmMenuDtlRoleMap cmMenuDtlRoleMap : cmMenuDtl.getCmMenuDtlRoleMapList()) {
+	    			System.err.println(cmMenuDtl.getCmMenu().getMenuNm() +"-"+ cmMenuDtl.getMenuDtlNm() 
+	    				+ "(" + cmMenuDtl.getCmMenu().getMenuPath() + cmMenuDtl.getMenuDtlPath() + " : " + cmMenuDtl.getDepth() + ")-" 
+	    				+ cmMenuDtlRoleMap.getCmRole().getRoleNm() + ":" + cmMenuDtlRoleMap.getCmRole().getRoleNm());
+	    		}
+    		}
+    	}
+    }
+    
+    @Test
     void testMenuList() {
     	
-    	List<CmMenu> cmMenuList = cmMenuRepository.findAllMainMenu();
+    	List<CmMenu> cmMenuList = cmMenuRepository.findAllMenu();
     	
     	for(CmMenu cmMenu : cmMenuList) {
     		System.err.println(cmMenu.getMenuNm());

@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -22,7 +23,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_USER_ACCES_LOG")
 @SequenceGenerator(name = "SEQGEN_CM_USER_ACCES_LOG", sequenceName = "SEQ_CM_USER_ACCES_LOG", initialValue = 1000, allocationSize = 1)
-public class CmUserAccesLog {
+public class CmUserAccesLog implements Serializable {
+
+	private static final long serialVersionUID = 5745828499337706974L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_USER_ACCES_LOG")

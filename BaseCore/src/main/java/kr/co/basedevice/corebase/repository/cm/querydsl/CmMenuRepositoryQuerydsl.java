@@ -12,12 +12,12 @@ public interface CmMenuRepositoryQuerydsl {
 	 * 
 	 * @return
 	 */
-	List<CmMenu> findAllMainMenu();
+	List<CmMenu> findAllMenu();
 	
 	/**
 	 * 역할이 할당된 모든 상세 메뉴 조회
 	 * 
 	 * @return
 	 */
-	List<CmMenuDtl> findAllDtlMenu();
+	List<CmMenuDtl> findAllMenuDtl();
 }
