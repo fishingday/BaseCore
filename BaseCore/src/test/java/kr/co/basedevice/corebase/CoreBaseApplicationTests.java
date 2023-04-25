@@ -75,7 +75,7 @@ class CoreBaseApplicationTests {
     		System.err.println(cmMenu.getMenuNm());
     		if(!cmMenu.getCmRoleMenuMapList().isEmpty()) {
 	    		for(CmRoleMenuMap cmRoleMenuMap : cmMenu.getCmRoleMenuMapList()) {
-	    			System.err.println(cmMenu.getMenuNm() + "-" + cmRoleMenuMap.getCmRole().getRoleNm() + ":" + cmRoleMenuMap.getCmRole().getRoleNm());
+	    			System.err.println(cmMenu.getMenuNm() + "(" + cmMenu.getMenuPath() + " : " + cmMenu.getDepth() + ")-" + cmRoleMenuMap.getCmRole().getRoleNm() + ":" + cmRoleMenuMap.getCmRole().getRoleNm());
 	    		}
     		}
     	}

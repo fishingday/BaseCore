@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -96,5 +97,19 @@ public class CmMenu implements Serializable{
 	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmUserBookmark> cmUserBookmarkList = new ArrayList<>(1);
+	
+	//------------
+	/**
+	 * 깊이를 반환한다.
+	 * 
+	 * @return
+	 */
+	public int getDepth() {
+		if(this.menuPath != null) {
+			return this.menuPath.length() - this.menuPath.replace("/", "").length();
+		}else {
+			return -1;
+		}
+	} 
 	
 }

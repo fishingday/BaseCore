@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
+import kr.co.basedevice.corebase.domain.cm.CmMenuDtl;
 import kr.co.basedevice.corebase.domain.cm.QCmMenu;
 import kr.co.basedevice.corebase.domain.cm.QCmRole;
 import kr.co.basedevice.corebase.domain.cm.QCmRoleMenuMap;
@@ -34,8 +35,13 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 			cmMenu.menuPath.isNotEmpty(),
 			cmRoleMenuMap.delYn.eq(Yn.N), 
 			cmRole.delYn.eq(Yn.N))
-		.orderBy(cmMenu.prntOrd.asc())
 		.fetch();
+	}
+
+	@Override
+	public List<CmMenuDtl> findAllDtlMenu() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.proxy.HibernateProxy;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.code.HttpMethodCd;
@@ -70,4 +72,24 @@ public class CmMenuDtl {
 	@JsonIgnore
 	@JoinColumn(name = "MENU_SEQ", updatable = false, insertable = false)
 	private CmMenu cmMenu;
+	
+	//------------
+	/**
+	 * 깊이를 반환한다.
+	 * 
+	 * @return
+	 */
+	public int getDepth() {
+		if(cmMenu == null || cmMenu instanceof HibernateProxy  ) {
+			return -1;
+		}
+		
+		String menuUrl = this.cmMenu.getMenuPath() + this.menuDtlPath; 
+		
+		if(this.cmMenu != null) {
+			return menuUrl.length() - menuUrl.replace("/", "").length();
+		}else {
+			return -1;
+		}
+	} 
 }
