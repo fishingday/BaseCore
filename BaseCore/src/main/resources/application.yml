@@ -2,8 +2,16 @@ debug: false
 
 logging:
   level:
-    sql: debug    
+    sql: debug
 
+jasypt:
+  encryptor:
+    password: corebase
+    bean: jasyptStringEncryptor
+    property:
+      prefix: ENC(
+      suffix: )
+    
 spring:
   config:
     import:
@@ -11,9 +19,12 @@ spring:
 
 
   datasource:
+#    url: ENC(LxUVl49zMHQtEnruFywZTEKwY6u37cax13PzAeoHPvQ2IqjuxVNVaA==)
+#    username: ENC(ErV73L8sSNyMoftBj+MHnw==)
+#    password: 
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
-    password: 
+    password:
     
   flyway:
     enabled: true
@@ -62,7 +73,3 @@ spring:
 #  swagger-ui:
 #    path: /swagger-ui.html
 #    use-root-path: true
-
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor

@@ -13,9 +13,9 @@ class JasyptApplicationTests {
 
     @Test
     void jasypt() {
-        String url = "my_db_url";
-        String username = "my_db_username";
-        String password = "my_db_password";
+        String url = "jdbc:h2:tcp://localhost/~/test";
+        String username = "sa";
+        String password = "";
 
         System.err.println(jasyptEncoding(url));
         System.err.println(jasyptEncoding(username));
