@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import kr.co.basedevice.corebase.domain.cm.Account;
 
 public interface UserRepository extends JpaRepository<Account, Long> {
-  Account findByUsername(String username);
-  int countByUsername(String username);
+//  Account findByUsername(String username);
+//  int countByUsername(String username);
 }

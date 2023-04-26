@@ -7,9 +7,9 @@ import kr.co.basedevice.corebase.domain.cm.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    Role findByRoleName(String name);
-
-    @Override
-    void delete(Role role);
+//    Role findByRoleName(String name);
+//
+//    @Override
+//    void delete(Role role);
 
 }

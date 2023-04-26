@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
+import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserPwdRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
@@ -29,12 +30,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
 
-        CmUser cmUser = cmUserRepository.findByLoginIdAndDelYn(loginId, "N");
+        CmUser cmUser = cmUserRepository.findByLoginIdAndDelYn(loginId, Yn.N);
         if (cmUser == null) {        	
         	throw new UsernameNotFoundException("No user found with username: " + loginId);
         }
         
-        List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYnOrderByUserPwdSeqDesc(cmUser.getUserSeq(), "N");
+        List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYnOrderByUserPwdSeqDesc(cmUser.getUserSeq(), Yn.N);
         if (cmUserPwdList == null || cmUserPwdList.isEmpty()) {        	
         	throw new UsernameNotFoundException("No user found with username or password :" + loginId);
         }

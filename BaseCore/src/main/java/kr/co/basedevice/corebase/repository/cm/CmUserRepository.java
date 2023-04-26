@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.repository.cm;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.code.Yn;
 
 public interface CmUserRepository extends JpaRepository<CmUser, Long>{
 
@@ -12,6 +13,6 @@ public interface CmUserRepository extends JpaRepository<CmUser, Long>{
 	 * @param loginId
 	 * @return
 	 */
-	CmUser findByLoginIdAndDelYn(String loginId, String yn);
+	CmUser findByLoginIdAndDelYn(String loginId, Yn yn);
 
 }
