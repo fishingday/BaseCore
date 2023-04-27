@@ -40,7 +40,7 @@ public class CmMenu implements Serializable{
 	@Column(name = "UP_MENU_SEQ")
 	private Long upMenuSeq;
 	
-	@Column(name = "MENU_PATH", length = 255)
+	@Column(name = "MENU_PATH", nullable = false, length = 255)
 	private String menuPath;
 	
 	@Column(name = "MENU_NM", length = 30, nullable = false)
@@ -48,17 +48,17 @@ public class CmMenu implements Serializable{
 	
 	@Column(name = "MENU_DESC", length = 2000)
 	private String menuDesc;
-	
+
 	@Column(name = "ICON_URL", length = 255)
 	private String iConUrl;
 	
-	@Column(name = "CM_SCREN_YN", length = 1, nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Yn cmScrenYn;
-		
 	@Column(name = "PRNT_YN", length = 1, nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Yn prntYn;
+		
+	@Column(name = "CM_SCREN_YN", length = 1, nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Yn cmScrenYn;
 	
 	@Column(name = "PRNT_ORD", nullable = false)
 	private Integer prntOrd;

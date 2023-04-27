@@ -50,6 +50,6 @@ public class CmRoleChgLog implements Serializable {
 	@Column(name = "EXCUTOR_SEQ", nullable = false)
 	private Long excutorSeq;
 	
-	@Column(name = "ROLE_CHG_DT")
+	@Column(name = "ROLE_CHG_DT", nullable = false)
 	private LocalDateTime roleChgDt;
 }

@@ -43,13 +43,13 @@ public class CmUser implements Serializable{
 	@Column(name = "LOGIN_ID", nullable = false, unique = true)
 	private String loginId;
 
-	@Column(name = "USER_NM", length = 30)
+	@Column(name = "USER_NM", nullable = false, length = 30)
 	private String userNm;
 
 	@Column(name = "USER_TEL_NO", length = 20)
 	private String userTelNo;
 
-	@Column(name = "LOGIN_FAIL_CNT")
+	@Column(name = "LOGIN_FAIL_CNT", nullable = false)
 	private Integer loginFailCnt;
 
 	@Column(name = "LOGIN_DT")
@@ -58,27 +58,27 @@ public class CmUser implements Serializable{
 	@Column(name = "LAST_LOGIN_IP", length = 23)
 	private String lastLoginIp;
 
-	@Column(name = "USER_STAT_CD", length = 35)
+	@Column(name = "USER_STAT_CD", nullable = false, length = 35)
 	@Enumerated(EnumType.STRING)
 	private UserStatCd userStatCd;
 
-	@Column(name = "ACUNT_EXP_DT", length = 8)
+	@Column(name = "ACUNT_EXP_DT", nullable = false, length = 8)
 	private LocalDate acuntExpDt;
 
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 
-	@Column(name = "CREATOR_SEQ", updatable = false)
+	@Column(name = "CREATOR_SEQ", nullable = false, updatable = false)
 	private Long creatorSeq;
 
-	@Column(name = "CRE_DT", updatable = false)
+	@Column(name = "CRE_DT", nullable = false, updatable = false)
 	private LocalDateTime creDt;
 
-	@Column(name = "UPDATOR_SEQ")
+	@Column(name = "UPDATOR_SEQ", nullable = false)
 	private Long updatorSeq;
 
-	@Column(name = "UPD_DT")
+	@Column(name = "UPD_DT", nullable = false)
 	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)

@@ -48,10 +48,10 @@ public class CmRoleMenuMap implements Serializable {
 	@Column(name = "CRE_DT", updatable = false)
 	private LocalDateTime creDt;
 
-	@Column(name = "UPDATOR_SEQ")
+	@Column(name = "UPDATOR_SEQ", nullable = false)
 	private Long updatorSeq;
 
-	@Column(name = "UPD_DT")
+	@Column(name = "UPD_DT", nullable = false)
 	private LocalDateTime updDt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

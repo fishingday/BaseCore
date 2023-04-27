@@ -65,16 +65,16 @@ public class CmCdDtl implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 
-	@Column(name = "CREATOR_SEQ", updatable = false)
+	@Column(name = "CREATOR_SEQ", nullable = false, updatable = false)
 	private Long creatorSeq;
 
-	@Column(name = "CRE_DT", updatable = false)
+	@Column(name = "CRE_DT", nullable = false, updatable = false)
 	private LocalDateTime creDt;
 
-	@Column(name = "UPDATOR_SEQ")
+	@Column(name = "UPDATOR_SEQ", nullable = false)
 	private Long updatorSeq;
 
-	@Column(name = "UPD_DT")
+	@Column(name = "UPD_DT", nullable = false)
 	private LocalDateTime updDt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

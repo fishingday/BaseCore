@@ -58,10 +58,10 @@ public class CmUserAccesLog implements Serializable {
 	@Column(name = "REFERER", length = 255)
 	private String referer;
 	
-	@Column(name = "ACCEPT", length = 128)
+	@Column(name = "ACCEPT", length = 255)
 	private String accept;
 	
-	@Column(name = "ACCEPT_CHARSET", length = 128)
+	@Column(name = "ACCEPT_CHARSET", length = 255)
 	private String acceptCharset;
 	
 	@Column(name = "HTTP_STAT_NO", length = 20)

@@ -37,10 +37,10 @@ public class CmNotiUserMap implements Serializable{
 	@Column(name = "NOTI_USER_MAP_SEQ", nullable = false)
 	private Long menuSeq;
 	
-	@Column(name = "USER_SEQ")
+	@Column(name = "USER_SEQ", nullable = false)
 	private Long userSeq;
 	
-	@Column(name = "NOTI_SEQ")
+	@Column(name = "NOTI_SEQ", nullable = false)
 	private Long notiSeq;
 	
 	@Column(name = "SEND_MEDIA_TYP_CD", length = 35, nullable = false)

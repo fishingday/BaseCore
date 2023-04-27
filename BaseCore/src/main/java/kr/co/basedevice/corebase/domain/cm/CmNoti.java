@@ -53,16 +53,16 @@ public class CmNoti implements Serializable{
 	private NotiSendGrdCd notiSendGrdCd;
 
 	@Column(name = "NOTI_SEND_DT", length = 14, nullable = false)
-	private String notiSendDt;
+	private LocalDateTime notiSendDt;
 
 	@Column(name = "NOTI_END_DT", length = 14, nullable = false)
-	private String notiEndDt;
+	private LocalDateTime notiEndDt;
 
-	@Column(name = "SEND_MEDIA_TYP_CD", length = 35, nullable = false)
+	@Column(name = "SEND_MEDIA_TYP_CD", nullable = false, length = 35)
 	@Enumerated(EnumType.STRING)
 	private SendMediaTypCd sendMediaTypCd;	
 
-	@Column(name = "SEND_YN", length = 1, nullable = false)
+	@Column(name = "SEND_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn sendYn;
 
