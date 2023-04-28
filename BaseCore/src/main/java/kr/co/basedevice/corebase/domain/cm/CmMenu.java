@@ -40,7 +40,7 @@ public class CmMenu implements Serializable{
 	@Column(name = "UP_MENU_SEQ")
 	private Long upMenuSeq;
 	
-	@Column(name = "MENU_PATH", nullable = false, length = 255)
+	@Column(name = "MENU_PATH", length = 255)
 	private String menuPath;
 	
 	@Column(name = "MENU_NM", length = 30, nullable = false)

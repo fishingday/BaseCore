@@ -1,6 +1,7 @@
 package kr.co.basedevice.corebase.security.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,22 @@ import kr.co.basedevice.corebase.security.provider.FormAuthenticationProvider;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Value("${login.set.login-page:/common/login.html}")
+	private String loginPage;
+	
+	@Value("${login.set.login-login-processing-url:/common/login_proc.html}")
+	private String loginProcessingUrl;
+	
+	@Value("${login.set.access-denied-page:/common/denied.html}")
+	private String accessDeniedPage;
+	
+	@Value("${login.username-parameter:username}")
+	private String usernameParameter;
+	
+	@Value("${login.password-parameter:password}")
+	private String passwordParameter;
+	
 
     @Autowired
     private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
@@ -63,16 +80,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
         .and()
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login_proc")
+                .loginPage(this.loginPage)
+                .usernameParameter(this.usernameParameter)
+                .passwordParameter(this.passwordParameter)
+                .loginProcessingUrl(this.loginProcessingUrl)
                 .authenticationDetailsSource(formWebAuthenticationDetailsSource)
                 .successHandler(formAuthenticationSuccessHandler)
                 .failureHandler(formAuthenticationFailureHandler)
                 .permitAll()
         .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-                .accessDeniedPage("/denied")
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(this.loginPage))
+                .accessDeniedPage(this.accessDeniedPage)
                 .accessDeniedHandler(accessDeniedHandler())
         .and()
                 .addFilterAt(customFilterSecurityInterceptor, FilterSecurityInterceptor.class);

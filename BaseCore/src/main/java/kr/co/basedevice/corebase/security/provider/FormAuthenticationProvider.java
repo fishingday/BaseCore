@@ -39,7 +39,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
          AccountContext accountContext = (AccountContext)userDetailsService.loadUserByUsername(loginId);
 
         if (!passwordEncoder.matches(password, accountContext.getPassword())) {
-            throw new BadCredentialsException("Invalid password");
+        	throw new BadCredentialsException("Invalid password");
         }
 
         if(use2factor) { // 추가 인증 구현 시 적용
