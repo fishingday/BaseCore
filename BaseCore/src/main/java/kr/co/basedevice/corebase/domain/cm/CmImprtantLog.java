@@ -1,5 +1,7 @@
 package kr.co.basedevice.corebase.domain.cm;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,7 +42,7 @@ public class CmImprtantLog {
 	private String sessId;
 	
 	@Column(name = "USER_SEQ")
-	private Long userSeq;	
+	private Long userSeq;
 	
 	@Column(name = "USER_AGENT", length = 255)
 	private String userAgent;
@@ -56,7 +58,10 @@ public class CmImprtantLog {
 	
 	@Column(name = "ACCEPT_LANGUAGE", length = 255)
 	private String acceptLanguage;
+	
+	@Column(name = "ACCEPT_CHARSET", length = 255)
+	private String acceptCharset;
 
-	@Column(name = "CREATOR_SEQ", nullable = false, updatable = false)
-	private Long creatorSeq;
+	@Column(name = "CREATOR_DT", nullable = false, updatable = false)
+	private LocalDateTime creatorDt;
 }

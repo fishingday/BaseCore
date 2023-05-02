@@ -2,7 +2,6 @@ package kr.co.basedevice.corebase.security.handler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +17,12 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
+import kr.co.basedevice.corebase.domain.cm.CmImprtantLog;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.repository.cm.CmImprtantLogRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
+import kr.co.basedevice.corebase.util.RequestUtil;
 
 @Component
 public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -29,6 +32,9 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	
 	@Autowired
 	private CmUserRepository cmUserRepository;
+	
+	@Autowired
+	private CmImprtantLogRepository cmImprtantLogRepository;
 	
     private RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -45,7 +51,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 		CmUser cmUser = (CmUser) authentication.getPrincipal();
 		cmUser.setLoginFailCnt(0);
 		cmUser.setLoginDt(LocalDateTime.now());
-        cmUser.setLastLoginIp(getClientIp(request));
+        cmUser.setLastLoginIp(RequestUtil.getClientIp(request));
         cmUser.setUpdDt(LocalDateTime.now());
         cmUser.setUpdatorSeq(cmUser.getUserSeq());
         
@@ -58,33 +64,20 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
             redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
         }
         
-//        // 세션 ID
-//        request.getScheme();
-//        request.getRemoteHost();
-//        request.getRemoteAddr();
-//        request.getRequestedSessionId();
- 
-//     
-//      Request Name : [user-agent]:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36]        
-//      Request Name : [accept]:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7]
-//		Request Name : [referer]:[http://localhost:8080/common/login.html]
-//		Request Name : [accept-encoding]:[gzip, deflate, br]
-//		Request Name : [accept-language]:[ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7]
+        CmImprtantLog log = new CmImprtantLog();
         
-//        
-//        Enumeration<String> eHeader = request.getHeaderNames();
-//        while(eHeader.hasMoreElements()) {
-//        	String name = eHeader.nextElement();
-//        	String value = request.getHeader(name);
-//        	
-//        	System.err.println("Request Name : [" + name + "]:[" + value + "]" );
-//        }
-       
-    }
-    
-    private String getClientIp(HttpServletRequest req) {
-        String ip = req.getHeader("X-Forwarded-For");
-        if (ip == null) ip = req.getRemoteAddr();
-        return ip;
+        log.setWriteMakrCd(WriteMakrCd.LOGIN_SUCCESS_FORM);
+        log.setReqIp(RequestUtil.getClientIp(request));
+        log.setSessId(request.getSession().getId());
+        log.setUserSeq(cmUser.getUserSeq());        
+        log.setUserAgent(request.getHeader("user-agent"));
+        log.setAccept(request.getHeader("accept"));
+        log.setReferer(request.getHeader("referer"));
+        log.setAcceptEncoding(request.getHeader("accept-encoding"));
+        log.setAcceptLanguage(request.getHeader("accept-language"));
+        log.setAcceptCharset(request.getHeader("accept-charset"));
+        log.setCreatorDt(LocalDateTime.now());
+        
+        cmImprtantLogRepository.save(log);
     }
 }
