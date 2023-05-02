@@ -2,6 +2,7 @@ package kr.co.basedevice.corebase.security.handler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +57,29 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         } else {
             redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
         }
+        
+//        // 세션 ID
+//        request.getScheme();
+//        request.getRemoteHost();
+//        request.getRemoteAddr();
+//        request.getRequestedSessionId();
+ 
+//     
+//      Request Name : [user-agent]:[Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36]        
+//      Request Name : [accept]:[text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7]
+//		Request Name : [referer]:[http://localhost:8080/common/login.html]
+//		Request Name : [accept-encoding]:[gzip, deflate, br]
+//		Request Name : [accept-language]:[ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7]
+        
+//        
+//        Enumeration<String> eHeader = request.getHeaderNames();
+//        while(eHeader.hasMoreElements()) {
+//        	String name = eHeader.nextElement();
+//        	String value = request.getHeader(name);
+//        	
+//        	System.err.println("Request Name : [" + name + "]:[" + value + "]" );
+//        }
+       
     }
     
     private String getClientIp(HttpServletRequest req) {
