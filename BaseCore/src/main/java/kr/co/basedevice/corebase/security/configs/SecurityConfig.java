@@ -27,6 +27,7 @@ import kr.co.basedevice.corebase.security.handler.FormAccessDeniedHandler;
 import kr.co.basedevice.corebase.security.handler.LogoutSuccessHandler;
 import kr.co.basedevice.corebase.security.provider.AjaxAuthenticationProvider;
 import kr.co.basedevice.corebase.security.provider.FormAuthenticationProvider;
+import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${login.password-parameter:password}")
 	private String passwordParameter;
 	
+	@Autowired
+	private CmImprtantLogService cmImprtantLogService;
 
     @Autowired
     private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
@@ -159,6 +162,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AccessDeniedHandler accessDeniedHandler() {
         FormAccessDeniedHandler commonAccessDeniedHandler = new FormAccessDeniedHandler();
         commonAccessDeniedHandler.setErrorPage("/denied");
+        commonAccessDeniedHandler.setCmImprtantLogService(cmImprtantLogService);
         return commonAccessDeniedHandler;
     }
 }

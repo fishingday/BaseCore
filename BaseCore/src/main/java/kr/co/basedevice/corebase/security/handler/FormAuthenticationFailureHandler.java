@@ -16,13 +16,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
-import kr.co.basedevice.corebase.domain.cm.CmImprtantLog;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.repository.cm.CmImprtantLogRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
-import kr.co.basedevice.corebase.util.RequestUtil;
+import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
 
 @Component
 public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -35,7 +33,7 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 	private CmUserRepository cmUserRepository;
 	
 	@Autowired
-	private CmImprtantLogRepository cmImprtantLogRepository;
+	private CmImprtantLogService cmImprtantLogService;
 	
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
@@ -52,7 +50,6 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
                 
         CmUser cmUser = cmUserRepository.findByLoginIdAndDelYn(request.getParameter(this.usernameParameter), Yn.N);
         
-        CmImprtantLog log = new CmImprtantLog();
         if(cmUser != null) { 
         	// 굳이 실패한 로그인 정보를 꺼내서... 조치를 하는 것은 계정을 보호하기 위한 것이다.  
         	Integer failCnt = cmUser.getLoginFailCnt() + 1;
@@ -60,26 +57,10 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         	cmUser.setUpdDt(LocalDateTime.now());
         	cmUser.setUpdatorSeq(0L);
         	
-        	cmUserRepository.save(cmUser);
-        	
-            log.setUserSeq(cmUser.getUserSeq());        
+        	cmUserRepository.save(cmUser);     
         }
-                
-        log.setWriteMakrCd(WriteMakrCd.LOGIN_FAIL_FORM);
-        log.setReqIp(RequestUtil.getClientIp(request));
-        log.setSessId(request.getSession().getId());
-        log.setUserAgent(request.getHeader("user-agent"));
-        log.setAccept(request.getHeader("accept"));
-        log.setReferer(request.getHeader("referer"));
-        log.setAcceptEncoding(request.getHeader("accept-encoding"));
-        log.setAcceptLanguage(request.getHeader("accept-language"));
-        String param = request.getQueryString();
-        if(param != null && param.length() > 2000) {
-        	param = param.substring(0, 2000);
-        }
-        log.setCreatorDt(LocalDateTime.now());
         
-        cmImprtantLogRepository.save(log);
+        cmImprtantLogService.logging(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
         
         setDefaultFailureUrl("/common/login.html?error=true&exception=" + errorMessage);
 

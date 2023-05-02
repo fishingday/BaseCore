@@ -17,8 +17,7 @@ public class DashBoardController {
 		String rolePage = null;
 		
 		if(authentication != null && authentication.isAuthenticated()) {
-			CmUser cmUser = (CmUser) authentication.getPrincipal();
-			
+			CmUser cmUser = (CmUser) authentication.getPrincipal();			
 			rolePage =  cmUser.getCurrRole().getDefPage();
 			
 		}else{

@@ -18,13 +18,12 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
-import kr.co.basedevice.corebase.domain.cm.CmImprtantLog;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
-import kr.co.basedevice.corebase.repository.cm.CmImprtantLogRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
+import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
 import kr.co.basedevice.corebase.util.RequestUtil;
 
 @Component
@@ -40,7 +39,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	private CmRoleRepository cmRoleRepository;
 	
 	@Autowired
-	private CmImprtantLogRepository cmImprtantLogRepository;
+	private CmImprtantLogService cmImprtantLogService;
 	
 	
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -67,27 +66,8 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         List<CmRole> cmRoleList = cmRoleRepository.findByUserSeq(cmUser.getUserSeq());
         cmUser.setCurrRole(cmRoleList.get(0));
         
-        // 로그 적고...
-        CmImprtantLog log = new CmImprtantLog();
-        
-        log.setWriteMakrCd(WriteMakrCd.LOGIN_SUCCESS_FORM);
-        log.setReqIp(RequestUtil.getClientIp(request));
-        log.setSessId(request.getSession().getId());
-        log.setUserSeq(cmUser.getUserSeq());        
-        log.setUserAgent(request.getHeader("user-agent"));
-        log.setAccept(request.getHeader("accept"));
-        log.setReferer(request.getHeader("referer"));
-        log.setAcceptEncoding(request.getHeader("accept-encoding"));
-        log.setAcceptLanguage(request.getHeader("accept-language"));
-        log.setAcceptCharset(request.getHeader("accept-charset"));        
-        String param = request.getQueryString();
-        if(param != null && param.length() > 2000) {
-        	param = param.substring(0, 2000);
-        }
-        log.setParam(param);
-        log.setCreatorDt(LocalDateTime.now());
-        
-        cmImprtantLogRepository.save(log);
+        // 로깅..
+        cmImprtantLogService.logging(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
 
         if(savedRequest!=null) {
             String targetUrl = savedRequest.getRedirectUrl();
