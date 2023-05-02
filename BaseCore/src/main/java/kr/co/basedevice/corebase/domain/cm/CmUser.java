@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -92,5 +93,9 @@ public class CmUser implements Serializable{
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmUserAlowIp> cmUserAlowIpList = new ArrayList<>(1);
+	
+	// Currect Role
+	@Transient
+	private CmRole currRole;
 
 }

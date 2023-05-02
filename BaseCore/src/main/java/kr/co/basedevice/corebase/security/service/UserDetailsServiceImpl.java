@@ -6,6 +6,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +28,9 @@ import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+	@Value("${login.fail-cnt.limit:5}")
+	private Integer limitfailCnt;
+	
     @Autowired private CmUserRepository cmUserRepository;
     @Autowired private CmUserPwdRepository cmUserPwdRepository;
     @Autowired private CmRoleRepository cmRoleRepository;
@@ -52,8 +59,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		boolean enabled = UserStatCd.ENABLED.equals(cmUser.getUserStatCd());
 		boolean accountNonExpired = cmUser.getAcuntExpDt() != null && now.isBefore(cmUser.getAcuntExpDt());
 		boolean credentialsNonExpired = cmUserPwdList.get(0).getPwdExpDt() != null && now.isBefore(cmUserPwdList.get(0).getPwdExpDt());
-		boolean accountNonLocked = UserStatCd.ENABLED.equals(cmUser.getUserStatCd()) || !UserStatCd.LOCKED.equals(cmUser.getUserStatCd());
-        
-        return new AccountContext(cmUser, cmUserPwdList.get(0), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, collect);
+		boolean accountNonLocked = cmUser.getLoginFailCnt() < limitfailCnt;
+		
+		if(!enabled) {
+			throw new DisabledException("Not Enabled"); 
+		}
+		
+		if(!accountNonExpired) {
+			throw new DisabledException("Account Expired : " + cmUser.getAcuntExpDt()); 
+		}
+		
+		if(!credentialsNonExpired) {
+			throw new CredentialsExpiredException("Password Expired : " + cmUserPwdList.get(0).getPwdExpDt()); 
+		}        
+
+		if(!accountNonLocked) {
+			throw new LockedException("Account Locked : Login Fail Count " + cmUser.getLoginFailCnt()); 
+		}
+				
+        return new AccountContext(cmUser, cmUserPwdList.get(0), collect);
     }
 }

@@ -47,6 +47,9 @@ public class CmRole implements Serializable{
 	@Column(name = "ROLE_NM", length = 30)
 	private String roleNm;
 
+	@Column(name = "DEF_PAGE", length = 256)
+	private String defPage;
+	
 	@Column(name = "ROLE_DESC", length = 2000)
 	private String roleDesc;
 

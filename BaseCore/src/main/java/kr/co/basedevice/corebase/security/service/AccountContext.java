@@ -21,13 +21,9 @@ public class AccountContext extends User {
 	public AccountContext(
 			CmUser cmUser, 
 			CmUserPwd cmUserPwd, 
-			boolean enabled, 
-			boolean accountNonExpired,
-			boolean credentialsNonExpired, 
-			boolean accountNonLocked,
 			List<GrantedAuthority> roles) {
-
-		super(cmUser.getLoginId(), cmUserPwd.getUserPwd(), enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, roles);
+		super(cmUser.getLoginId(), cmUserPwd.getUserPwd(), roles);
+		
 		this.cmUser = cmUser;
 	}
 }

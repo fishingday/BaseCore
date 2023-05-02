@@ -2,6 +2,7 @@ package kr.co.basedevice.corebase.security.handler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,9 +19,11 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmImprtantLog;
+import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.repository.cm.CmImprtantLogRepository;
+import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.util.RequestUtil;
 
@@ -32,9 +35,13 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	
 	@Autowired
 	private CmUserRepository cmUserRepository;
+
+	@Autowired
+	private CmRoleRepository cmRoleRepository;
 	
 	@Autowired
 	private CmImprtantLogRepository cmImprtantLogRepository;
+	
 	
     private RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -56,14 +63,11 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         cmUser.setUpdatorSeq(cmUser.getUserSeq());
         
         cmUserRepository.save(cmUser);
-
-        if(savedRequest!=null) {
-            String targetUrl = savedRequest.getRedirectUrl();
-            redirectStrategy.sendRedirect(request, response, targetUrl);
-        } else {
-            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
-        }
         
+        List<CmRole> cmRoleList = cmRoleRepository.findByUserSeq(cmUser.getUserSeq());
+        cmUser.setCurrRole(cmRoleList.get(0));
+        
+        // 로그 적고...
         CmImprtantLog log = new CmImprtantLog();
         
         log.setWriteMakrCd(WriteMakrCd.LOGIN_SUCCESS_FORM);
@@ -75,9 +79,21 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         log.setReferer(request.getHeader("referer"));
         log.setAcceptEncoding(request.getHeader("accept-encoding"));
         log.setAcceptLanguage(request.getHeader("accept-language"));
-        log.setAcceptCharset(request.getHeader("accept-charset"));
+        log.setAcceptCharset(request.getHeader("accept-charset"));        
+        String param = request.getQueryString();
+        if(param != null && param.length() > 2000) {
+        	param = param.substring(0, 2000);
+        }
+        log.setParam(param);
         log.setCreatorDt(LocalDateTime.now());
         
         cmImprtantLogRepository.save(log);
+
+        if(savedRequest!=null) {
+            String targetUrl = savedRequest.getRedirectUrl();
+            redirectStrategy.sendRedirect(request, response, targetUrl);
+        } else {
+            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
+        }
     }
 }

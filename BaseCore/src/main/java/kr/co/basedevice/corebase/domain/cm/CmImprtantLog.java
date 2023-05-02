@@ -61,6 +61,9 @@ public class CmImprtantLog {
 	
 	@Column(name = "ACCEPT_CHARSET", length = 255)
 	private String acceptCharset;
+	
+	@Column(name = "PARAM", length = 4000)
+	private String param;
 
 	@Column(name = "CREATOR_DT", nullable = false, updatable = false)
 	private LocalDateTime creatorDt;

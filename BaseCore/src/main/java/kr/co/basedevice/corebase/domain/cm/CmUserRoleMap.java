@@ -36,7 +36,9 @@ public class CmUserRoleMap implements Serializable {
 	@Id
 	@Column(name = "ROLE_SEQ", nullable = false)
 	private Long roleSeq;
-
+	
+	@Column(name = "PRNT_ORD", nullable = false)
+	private Integer prntOrd;
 
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)

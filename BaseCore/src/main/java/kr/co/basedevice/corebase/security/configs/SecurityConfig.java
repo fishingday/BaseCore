@@ -24,6 +24,7 @@ import kr.co.basedevice.corebase.security.common.FormWebAuthenticationDetailsSou
 import kr.co.basedevice.corebase.security.handler.AjaxAuthenticationFailureHandler;
 import kr.co.basedevice.corebase.security.handler.AjaxAuthenticationSuccessHandler;
 import kr.co.basedevice.corebase.security.handler.FormAccessDeniedHandler;
+import kr.co.basedevice.corebase.security.handler.LogoutSuccessHandler;
 import kr.co.basedevice.corebase.security.provider.AjaxAuthenticationProvider;
 import kr.co.basedevice.corebase.security.provider.FormAuthenticationProvider;
 
@@ -40,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${login.set.access-denied-page:/common/denied.html}")
 	private String accessDeniedPage;
 	
+	@Value("${login.set.logout-page:/common/logout.html}")
+	private String logoutPage;
+	
 	@Value("${login.username-parameter:username}")
 	private String usernameParameter;
 	
@@ -49,13 +53,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
+    
     @Autowired
     private AuthenticationSuccessHandler formAuthenticationSuccessHandler;
+    
     @Autowired
     private AuthenticationFailureHandler formAuthenticationFailureHandler;
+    
     @Autowired
     private FilterSecurityInterceptor customFilterSecurityInterceptor;
-
+    
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+    
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -88,6 +98,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(formAuthenticationSuccessHandler)
                 .failureHandler(formAuthenticationFailureHandler)
                 .permitAll()
+        .and()
+        		.logout()
+        		.logoutUrl(logoutPage)
+        		.logoutSuccessHandler(logoutSuccessHandler)
         .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(this.loginPage))
