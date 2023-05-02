@@ -23,7 +23,7 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
-import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.util.RequestUtil;
 
 @Component
@@ -39,7 +39,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	private CmRoleRepository cmRoleRepository;
 	
 	@Autowired
-	private CmImprtantLogService cmImprtantLogService;
+	private LoggingService loggingService;
 	
 	
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -67,7 +67,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         cmUser.setCurrRole(cmRoleList.get(0));
         
         // 로깅..
-        cmImprtantLogService.logging(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
+        loggingService.writeImportantLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
 
         if(savedRequest!=null) {
             String targetUrl = savedRequest.getRedirectUrl();

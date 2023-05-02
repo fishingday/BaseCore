@@ -23,7 +23,7 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
-import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 
 public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
@@ -36,7 +36,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
 	private CmUserRepository cmUserRepository;
 
 	@Autowired
-	private CmImprtantLogService cmImprtantLogService;
+	private LoggingService loggingService;
     
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -66,7 +66,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
         	cmUserRepository.save(cmUser);     
         }
                 
-        cmImprtantLogService.logging(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeImportantLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
 
 		mapper.writeValue(response.getWriter(), errorMessage);
 	}

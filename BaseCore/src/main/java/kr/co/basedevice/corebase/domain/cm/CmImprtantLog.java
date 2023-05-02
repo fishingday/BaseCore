@@ -22,8 +22,6 @@ import lombok.Setter;
 @Table(name = "CM_IMPORTANT_LOG")
 @SequenceGenerator(name = "SEQGEN_CM_IMPORTANT_LOG", sequenceName = "SEQ_CM_IMPORTANT_LOG", initialValue = 1000, allocationSize = 1)
 public class CmImprtantLog {
-
-	// TODO : 중요도 지워 주세요.
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_IMPORTANT_LOG")
@@ -65,6 +63,6 @@ public class CmImprtantLog {
 	@Column(name = "PARAM", length = 4000)
 	private String param;
 
-	@Column(name = "CREATOR_DT", nullable = false, updatable = false)
-	private LocalDateTime creatorDt;
+	@Column(name = "CRE_DT", nullable = false, updatable = false)
+	private LocalDateTime creDt;
 }

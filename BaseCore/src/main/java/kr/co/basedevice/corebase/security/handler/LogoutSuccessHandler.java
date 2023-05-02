@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
-import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 
 @Component
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
 	@Autowired
-	private CmImprtantLogService cmImprtantLogService;
+	private LoggingService loggingService;
  
     @Override
     public void onLogoutSuccess(HttpServletRequest request,
@@ -29,7 +29,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
                  
         Long userSeq = cmUser != null ? cmUser.getUserSeq() : null;
         
-        cmImprtantLogService.logging(request, WriteMakrCd.LOGOUT_SUCCESS, userSeq);
+        loggingService.writeImportantLog(request, WriteMakrCd.LOGOUT_SUCCESS, userSeq);
          
         super.onLogoutSuccess(request, response, authentication);
     }  

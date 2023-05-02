@@ -27,7 +27,7 @@ import kr.co.basedevice.corebase.security.handler.FormAccessDeniedHandler;
 import kr.co.basedevice.corebase.security.handler.LogoutSuccessHandler;
 import kr.co.basedevice.corebase.security.provider.AjaxAuthenticationProvider;
 import kr.co.basedevice.corebase.security.provider.FormAuthenticationProvider;
-import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 
 @Configuration
 @EnableWebSecurity
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private String passwordParameter;
 	
 	@Autowired
-	private CmImprtantLogService cmImprtantLogService;
+	private LoggingService cmImprtantLogService;
 
     @Autowired
     private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;

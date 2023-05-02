@@ -20,7 +20,7 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
-import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 
 @Component
 public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -33,7 +33,7 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 	private CmUserRepository cmUserRepository;
 	
 	@Autowired
-	private CmImprtantLogService cmImprtantLogService;
+	private LoggingService loggingService;
 	
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
@@ -60,7 +60,7 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         	cmUserRepository.save(cmUser);     
         }
         
-        cmImprtantLogService.logging(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeImportantLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
         
         setDefaultFailureUrl("/common/login.html?error=true&exception=" + errorMessage);
 

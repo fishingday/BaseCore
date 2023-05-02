@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
-import kr.co.basedevice.corebase.security.service.common.CmImprtantLogService;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.util.WebUtil;
 
 @Component
@@ -33,7 +33,7 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	
-	private CmImprtantLogService cmImprtantLogService;
+	private LoggingService loggingService;
 	
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
@@ -42,7 +42,7 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CmUser cmUser = (CmUser) authentication.getPrincipal();		
         
-        cmImprtantLogService.logging(request, WriteMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeImportantLog(request, WriteMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
 		
 		if (WebUtil.isAjax(request)) {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -62,8 +62,8 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
         this.errorPage = errorPage;
     }
 	
-	public void setCmImprtantLogService(CmImprtantLogService cmImprtantLogService) {
-		this.cmImprtantLogService = cmImprtantLogService;
+	public void setCmImprtantLogService(LoggingService cmImprtantLogService) {
+		this.loggingService = cmImprtantLogService;
 	}
 
 }

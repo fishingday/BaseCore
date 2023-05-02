@@ -42,8 +42,8 @@ public class CmUserAccesLog implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private HttpMethodCd httpMethodCd;
 	
-	@Column(name = "REQ_CONT", length = 2000)
-	private String reqCont;	
+	@Column(name = "PARAM", length = 4000)
+	private String param;
 	
 	@Column(name = "SESS_ID", length = 50)
 	private String sessId;
@@ -55,18 +55,15 @@ public class CmUserAccesLog implements Serializable {
 	@Column(name = "USER_AGENT", length = 255)
 	private String userAgent;
 	
-	@Column(name = "REFERER", length = 255)
-	private String referer;
-	
 	@Column(name = "ACCEPT", length = 255)
 	private String accept;
+	
+	@Column(name = "REFERER", length = 255)
+	private String referer;	
 	
 	@Column(name = "ACCEPT_CHARSET", length = 255)
 	private String acceptCharset;
 	
-	@Column(name = "HTTP_STAT_NO", length = 20)
-	private String httpStatNo;
-
 	@Column(name = "CRE_DT", updatable = false)
 	private LocalDateTime creDt;
 }
