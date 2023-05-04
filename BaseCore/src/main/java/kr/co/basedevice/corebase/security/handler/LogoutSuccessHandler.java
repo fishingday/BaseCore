@@ -25,9 +25,12 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request,
                 HttpServletResponse response, Authentication authentication) throws IOException, ServletException {         
 
-		CmUser cmUser = (CmUser) authentication.getPrincipal();
-                 
-        Long userSeq = cmUser != null ? cmUser.getUserSeq() : null;
+    	Long userSeq = null;
+    	
+    	if(authentication != null && authentication.getPrincipal() != null) {
+    		CmUser cmUser = (CmUser) authentication.getPrincipal();
+    		userSeq =  cmUser != null ? cmUser.getUserSeq() : null;
+    	}
         
         loggingService.writeImportantLog(request, WriteMakrCd.LOGOUT_SUCCESS, userSeq);
          

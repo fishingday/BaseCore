@@ -14,7 +14,12 @@ public class UserController {
 	}
 	
 	@GetMapping(value={"/bookmark", "/bookmark/init.html"})
-	public String viewBookmark() {
+	public String viewBookmark() throws Exception {
+		
+		if(true) {
+			throw new Exception("오류 오류 오류!!");
+		}
+		
 		return "/user/bookmark/bookmark.html";
 	}
 	
