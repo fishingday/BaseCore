@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.restController;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,11 +9,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class RestGlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    public String handleException(Exception e,Model model){
+    public String handleException(Exception e){
     	
     	System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     	
-        model.addAttribute("errorMessage",e.getMessage());
+        
         return "errorView";
     }
 }
