@@ -1,21 +1,20 @@
 package kr.co.basedevice.corebase.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
-//@ControllerAdvice(basePackages = "kr.co.basedevice.corebase.controller")
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalExceptionHandler {
 	
     @ExceptionHandler(value = Exception.class)
-    public String handleException(Exception e,Model model){
+    public String pageException(Exception e, HttpServletRequest request){
     	
     	System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     	
-        model.addAttribute("errorMessage",e.getMessage());
-        return "error";
+        return "common/error";
     }
 }

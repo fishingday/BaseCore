@@ -27,7 +27,7 @@ public class CommonController {
 						@RequestParam(value = "exception", required = false) String exception, Model model){
 		model.addAttribute("error",error);
 		model.addAttribute("exception",exception);
-		return "login";
+		return "common/login";
 	}
 
 	@GetMapping(value = "/logout.html")
@@ -38,7 +38,7 @@ public class CommonController {
 			new SecurityContextLogoutHandler().logout(request, response, authentication);
 		}
 
-		return "redirect:/login";
+		return "redirect:/common/login";
 	}
 
 	@GetMapping(value="/denied.html")

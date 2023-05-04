@@ -1,5 +1,11 @@
 debug: false
 
+server:
+  error:
+    path: /error/404.html
+    whitelabel:
+      enabled: false
+
 logging:
   level:
     sql: debug

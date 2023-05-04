@@ -161,7 +161,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public AccessDeniedHandler accessDeniedHandler() {
         FormAccessDeniedHandler commonAccessDeniedHandler = new FormAccessDeniedHandler();
-        commonAccessDeniedHandler.setErrorPage("/denied");
+        commonAccessDeniedHandler.setErrorPage(accessDeniedPage);
         commonAccessDeniedHandler.setCmImprtantLogService(cmImprtantLogService);
         return commonAccessDeniedHandler;
     }
