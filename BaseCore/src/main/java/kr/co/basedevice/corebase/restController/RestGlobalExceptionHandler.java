@@ -1,9 +1,11 @@
 package kr.co.basedevice.corebase.restController;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackages = "kr.co.basedevice.corebase.restController")
+@RestController
+@RestControllerAdvice(annotations = RestController.class)
 public class RestGlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)

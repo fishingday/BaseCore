@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.co.basedevice.corebase.domain.cm.CmUser;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -15,9 +17,10 @@ public class UserController {
 	
 	@GetMapping(value={"/bookmark", "/bookmark/init.html"})
 	public String viewBookmark() throws Exception {
+		CmUser user = null;
 		
 		if(true) {
-			throw new Exception("오류 오류 오류!!");
+			user.getCreDt();
 		}
 		
 		return "/user/bookmark/bookmark.html";
