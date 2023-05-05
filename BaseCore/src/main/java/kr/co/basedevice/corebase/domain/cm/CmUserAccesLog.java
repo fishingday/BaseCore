@@ -13,8 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+
 import kr.co.basedevice.corebase.domain.code.AccesLogTypCd;
-import kr.co.basedevice.corebase.domain.code.HttpMethodCd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,9 +40,9 @@ public class CmUserAccesLog implements Serializable {
 	@Column(name = "REQ_IP", length = 20, nullable = false)
 	private String reqIp;
 	
-	@Column(name = "HTTP_METHOD_CD", length = 255, nullable = false)
+	@Column(name = "HTTP_METHOD", length = 255, nullable = false)
 	@Enumerated(EnumType.STRING)
-	private HttpMethodCd httpMethodCd;
+	private HttpMethod httpMethod;
 	
 	@Column(name = "PARAM", length = 4000)
 	private String param;
@@ -60,9 +62,19 @@ public class CmUserAccesLog implements Serializable {
 	
 	@Column(name = "REFERER", length = 255)
 	private String referer;	
+
+	@Column(name = "ACCEPT_ENCODING", length = 255)
+	private String acceptEncoding;
+	
+	@Column(name = "ACCEPT_LANGUAGE", length = 255)
+	private String acceptLanguage;
 	
 	@Column(name = "ACCEPT_CHARSET", length = 255)
-	private String acceptCharset;
+	private String acceptCharset;	
+
+	@Column(name = "HTTP_STATUS", length = 35)
+	@Enumerated(EnumType.STRING)
+	private HttpStatus httpStatus;
 	
 	@Column(name = "CRE_DT", updatable = false)
 	private LocalDateTime creDt;

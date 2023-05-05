@@ -67,7 +67,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         cmUser.setCurrRole(cmRoleList.get(0));
         
         // 로깅..
-        loggingService.writeImportantLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
+        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
 
         if(savedRequest!=null) {
             String targetUrl = savedRequest.getRedirectUrl();

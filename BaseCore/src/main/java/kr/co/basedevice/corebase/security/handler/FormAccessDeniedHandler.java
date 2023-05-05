@@ -42,7 +42,7 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CmUser cmUser = (CmUser) authentication.getPrincipal();		
         
-        loggingService.writeImportantLog(request, WriteMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeCriticalLog(request, WriteMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
 		
 		if (WebUtil.isAjax(request)) {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -62,8 +62,8 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
         this.errorPage = errorPage;
     }
 	
-	public void setCmImprtantLogService(LoggingService cmImprtantLogService) {
-		this.loggingService = cmImprtantLogService;
+	public void setLoggingService(LoggingService loggingService) {
+		this.loggingService = loggingService;
 	}
 
 }

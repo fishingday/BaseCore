@@ -66,7 +66,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
         	cmUserRepository.save(cmUser);     
         }
                 
-        loggingService.writeImportantLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
 
 		mapper.writeValue(response.getWriter(), errorMessage);
 	}

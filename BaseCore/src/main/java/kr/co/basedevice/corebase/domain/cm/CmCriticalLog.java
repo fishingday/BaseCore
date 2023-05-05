@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.http.HttpStatus;
+
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,14 +21,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "CM_IMPORTANT_LOG")
-@SequenceGenerator(name = "SEQGEN_CM_IMPORTANT_LOG", sequenceName = "SEQ_CM_IMPORTANT_LOG", initialValue = 1000, allocationSize = 1)
-public class CmImprtantLog {
+@Table(name = "CM_CRITICAL_LOG")
+@SequenceGenerator(name = "SEQGEN_CM_CRITICAL_LOG", sequenceName = "SEQ_CM_CRITICAL_LOG", initialValue = 1000, allocationSize = 1)
+public class CmCriticalLog {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_IMPORTANT_LOG")
-	@Column(name = "IMPORTANT_LOG_SEQ", nullable = false)
-	private Long immportantLogSeq;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_CRITICAL_LOG")
+	@Column(name = "CRITICAL_LOG_SEQ", nullable = false)
+	private Long criticalLogSeq;
 	
 	// 기록 제조 코드
 	@Column(name = "WRITE_MAKR_CD", length = 255, nullable = false)
@@ -35,6 +37,9 @@ public class CmImprtantLog {
 	
 	@Column(name = "REQ_IP", length = 20, nullable = false)
 	private String reqIp;
+	
+	@Column(name = "PARAM", length = 4000)
+	private String param;
 	
 	@Column(name = "SESS_ID", length = 50)
 	private String sessId;
@@ -59,9 +64,10 @@ public class CmImprtantLog {
 	
 	@Column(name = "ACCEPT_CHARSET", length = 255)
 	private String acceptCharset;
-	
-	@Column(name = "PARAM", length = 4000)
-	private String param;
+		
+	@Column(name = "HTTP_STATUS", length = 35)
+	@Enumerated(EnumType.STRING)
+	private HttpStatus HttpStatus;
 
 	@Column(name = "CRE_DT", nullable = false, updatable = false)
 	private LocalDateTime creDt;

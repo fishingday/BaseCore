@@ -60,7 +60,7 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         	cmUserRepository.save(cmUser);     
         }
         
-        loggingService.writeImportantLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
         
         setDefaultFailureUrl("/common/login.html?error=true&exception=" + errorMessage);
 

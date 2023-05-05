@@ -32,7 +32,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
     		userSeq =  cmUser != null ? cmUser.getUserSeq() : null;
     	}
         
-        loggingService.writeImportantLog(request, WriteMakrCd.LOGOUT_SUCCESS, userSeq);
+        loggingService.writeCriticalLog(request, WriteMakrCd.LOGOUT_SUCCESS, userSeq);
          
         super.onLogoutSuccess(request, response, authentication);
     }  
