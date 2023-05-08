@@ -21,9 +21,8 @@ import org.springframework.stereotype.Component;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
-import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
-import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.service.common.LoggingService;
+import kr.co.basedevice.corebase.service.common.UserService;
 import kr.co.basedevice.corebase.util.RequestUtil;
 
 @Component
@@ -31,15 +30,12 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	
 	@Value("${login.defaulturl:/dashboard/init.html}")
 	private String defaultUrl;
-	
-	@Autowired
-	private CmUserRepository cmUserRepository;
-
-	@Autowired
-	private CmRoleRepository cmRoleRepository;
-	
+		
 	@Autowired
 	private LoggingService loggingService;
+	
+	@Autowired
+	private UserService userService;
 	
 	
     private RequestCache requestCache = new HttpSessionRequestCache();
@@ -61,10 +57,15 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         cmUser.setUpdDt(LocalDateTime.now());
         cmUser.setUpdatorSeq(cmUser.getUserSeq());
         
-        cmUserRepository.save(cmUser);
+        userService.saveCmUser(cmUser);
         
-        List<CmRole> cmRoleList = cmRoleRepository.findByUserSeq(cmUser.getUserSeq());
+        // 현재 권한을 .. 설정
+        List<CmRole> cmRoleList = userService.findByUserSeq4CmRole(cmUser.getUserSeq());
         cmUser.setCurrRole(cmRoleList.get(0));
+        
+        // 현재 권한의 메뉴 목록을 설정한다.
+        cmUser.setMyMenu(userService.findOneMyMenuWithSetting(cmUser.getUserSeq(), true));
+        
         
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());

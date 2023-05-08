@@ -8,7 +8,6 @@ create sequence seq_cm_role_chg_log start with 1000 increment by 1;
 create sequence seq_cm_user start with 1000 increment by 1;
 create sequence seq_cm_user_acces_log start with 1000 increment by 1;
 create sequence seq_cm_user_alow_ip start with 1000 increment by 1;
-create table account (id bigint not null, age integer, email varchar(255), password varchar(255), username varchar(255), primary key (id));
 create table cm_cd_dtl (cd varchar(35) not null, grp_cd varchar(35) not null, cd_nm varchar(30) not null, cd_desc varchar(2000), cre_dt timestamp not null, creator_seq bigint not null, del_yn varchar(1) not null, opt_1 varchar(256), opt_2 varchar(256), opt_3 varchar(256), opt_4 varchar(256), opt_5 varchar(256), prnt_ord integer not null, upd_dt timestamp not null, updator_seq bigint not null, primary key (cd, grp_cd));
 create table cm_critical_log (critical_log_seq bigint not null, http_status varchar(35), accept varchar(255), accept_charset varchar(255), accept_encoding varchar(255), accept_language varchar(255), cre_dt timestamp not null, param varchar(4000), referer varchar(255), req_ip varchar(20) not null, sess_id varchar(50), user_agent varchar(255), user_seq bigint, write_makr_cd varchar(255) not null, primary key (critical_log_seq));
 create table cm_grp_cd (grp_cd varchar(35) not null, cre_dt timestamp not null, creator_seq bigint not null, del_yn varchar(1) not null, grp_cd_desc varchar(2000), grp_cd_nm varchar(30) not null, upd_dt timestamp not null, updator_seq bigint not null, primary key (grp_cd));
@@ -26,10 +25,6 @@ create table cm_user_alow_ip (user_alow_ip_seq bigint not null, alow_ip varchar(
 create table cm_user_bookmark (menu_seq bigint not null, role_seq bigint not null, user_seq bigint not null, book_mark_nm varchar(30) not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1) not null, upd_dt timestamp, updator_seq bigint, primary key (menu_seq, role_seq, user_seq));
 create table cm_user_pwd (user_pwd_seq bigint not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1) not null, pwd_exp_dt date, upd_dt timestamp, updator_seq bigint, user_pwd varchar(256) not null, user_seq bigint not null, primary key (user_pwd_seq));
 create table cm_user_role_map (role_seq bigint not null, user_seq bigint not null, cre_dt timestamp, creator_seq bigint, del_yn varchar(1) not null, prnt_ord integer not null, upd_dt timestamp, updator_seq bigint, primary key (role_seq, user_seq));
-create table resources (resource_id bigint not null, http_method varchar(255), order_num integer, resource_name varchar(255), resource_type varchar(255), primary key (resource_id));
-create table role (role_id bigint not null, role_desc varchar(255), role_name varchar(255), primary key (role_id));
-create table role_resources (resource_id bigint not null, role_id bigint not null, primary key (resource_id, role_id));
-create table user_roles (user_id bigint not null, role_id bigint not null, primary key (user_id, role_id));
 alter table cm_role add constraint UK_2j7vpbi7ekt471wc03y5kbs5f unique (role_cd);
 alter table cm_user add constraint UK_k3f18xcjet2p2id7v534udwsg unique (login_id);
 alter table cm_cd_dtl add constraint FKbjefm6avhx0q92i0heapgfk4m foreign key (grp_cd) references cm_grp_cd;
@@ -47,7 +42,3 @@ alter table cm_user_bookmark add constraint FKacck0ttob0cdiwbti3hq1axyc foreign 
 alter table cm_user_pwd add constraint FKm9116j3ixgqvm8l93b3m7ej0x foreign key (user_seq) references cm_user;
 alter table cm_user_role_map add constraint FKhvlbfv98praqwf9bbbtrbsygi foreign key (role_seq) references cm_role;
 alter table cm_user_role_map add constraint FK4mgsb5kifk6x8enwi10fnyf2t foreign key (user_seq) references cm_user;
-alter table role_resources add constraint FK7k960kk6pu1pwsk7ml4hycp53 foreign key (role_id) references role;
-alter table role_resources add constraint FK8k22y1jmevnedy4v80tl1yop7 foreign key (resource_id) references resources;
-alter table user_roles add constraint FKrhfovtciq1l558cw6udg0h0d3 foreign key (role_id) references role;
-alter table user_roles add constraint FKn6rghlrxo1uta1ffpj0puglmp foreign key (user_id) references account;
