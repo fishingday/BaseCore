@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import kr.co.basedevice.corebase.domain.cm.Resources;
-import kr.co.basedevice.corebase.domain.cm.Role;
-import kr.co.basedevice.corebase.dto.ResourcesDto;
-import kr.co.basedevice.corebase.repository.RoleRepository;
 import kr.co.basedevice.corebase.security.metadatasource.UrlSecurityMetadataSource;
 //import kr.co.basedevice.corebase.service.ResourcesService;
 //import kr.co.basedevice.corebase.service.RoleService;
