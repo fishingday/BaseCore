@@ -66,7 +66,6 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         // 현재 권한의 메뉴 목록을 설정한다.
         cmUser.setMyMenu(userService.findRoleMenuWithSetting(cmUser.getUserSeq(), cmUser.getCurrRole().getRoleSeq()));
         
-        
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
 

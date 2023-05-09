@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,8 +66,7 @@ public class UserService {
 		}
 		
 		// 사용자가 가진 메뉴 목록을 포함하는 최상위 메뉴 목록을....
-		MyMenuDto myMenuDto = new MyMenuDto(topMenuSet);
-				
+		MyMenuDto myMenuDto = new MyMenuDto(topMenuSet);				
 				
 		return myMenuDto;
 	}
@@ -84,7 +82,7 @@ public class UserService {
 		MenuDto upMenu = upMenuMap.get(leafMenu.getUpMenuSeq());
 		
 		if(upMenu == null) {
-			CmMenu cmMenu = cmMenuRepository.findByUpMenuSeqAndDelYn(leafMenu.getUpMenuSeq(), Yn.N);
+			CmMenu cmMenu = cmMenuRepository.findByMenuSeqAndDelYn(leafMenu.getUpMenuSeq(), Yn.N);
 			if(cmMenu != null) {
 				upMenu = new MenuDto(cmMenu);
 				upMenuMap.put(cmMenu.getMenuSeq(), upMenu);

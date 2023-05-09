@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
-import kr.co.basedevice.corebase.service.SecurityResourceService;
+import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 
 @Configuration
 public class AppConfig {

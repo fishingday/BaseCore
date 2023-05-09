@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.service;
+package kr.co.basedevice.corebase.security.service;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -17,7 +17,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 
 import kr.co.basedevice.corebase.security.factory.UrlResourcesMapFactoryBean;
 import kr.co.basedevice.corebase.security.metadatasource.UrlSecurityMetadataSource;
-import kr.co.basedevice.corebase.service.SecurityResourceService;
+import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)

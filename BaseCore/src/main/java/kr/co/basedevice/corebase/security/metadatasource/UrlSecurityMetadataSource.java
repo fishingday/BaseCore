@@ -14,7 +14,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import kr.co.basedevice.corebase.service.SecurityResourceService;
+import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 
 public class UrlSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 

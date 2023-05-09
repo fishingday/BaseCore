@@ -8,6 +8,6 @@ import kr.co.basedevice.corebase.repository.cm.querydsl.CmMenuRepositoryQuerydsl
 
 public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRepositoryQuerydsl{
 
-	CmMenu findByUpMenuSeqAndDelYn(Long upMenuSeq, Yn n);
+	CmMenu findByMenuSeqAndDelYn(Long upMenuSeq, Yn yn);
 
 }

@@ -13,7 +13,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "upMenu")
 @NoArgsConstructor
 public class MenuDto implements Comparable<MenuDto>{
 	
