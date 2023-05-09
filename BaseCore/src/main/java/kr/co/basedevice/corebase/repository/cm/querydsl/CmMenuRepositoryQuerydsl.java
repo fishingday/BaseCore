@@ -20,4 +20,13 @@ public interface CmMenuRepositoryQuerydsl {
 	 * @return
 	 */
 	List<CmMenuDtl> findAllMenuDtl();
+	
+	/**
+	 * 사용자 역할별 메뉴 목록
+	 * 
+	 * @param userSeq
+	 * @param roleSeq
+	 * @return
+	 */
+	List<CmMenu> findUserRoleMenu(Long userSeq, Long roleSeq);
 }

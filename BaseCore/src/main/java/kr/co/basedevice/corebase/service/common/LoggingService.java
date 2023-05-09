@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import kr.co.basedevice.corebase.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class LoggingService {
 

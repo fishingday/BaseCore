@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.dto.MyMentDto;
+import kr.co.basedevice.corebase.dto.MyMenuDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -100,5 +100,5 @@ public class CmUser implements Serializable{
 	private CmRole currRole;
 	
 	@Transient
-	private MyMentDto myMenu;
+	private MyMenuDto myMenu;
 }
