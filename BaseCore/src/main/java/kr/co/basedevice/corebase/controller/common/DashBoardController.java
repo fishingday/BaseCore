@@ -21,7 +21,7 @@ public class DashBoardController {
 			rolePage =  cmUser.getCurrRole().getDefPage();
 			
 		}else{
-			rolePage = "/dashboard/premit-all";
+			rolePage = "/dashboard/default";
 		}
 		
 		return rolePage;

@@ -48,9 +48,9 @@ public class UserService {
 	 * @param roleSeq
 	 * @return
 	 */	
-	public MyMenuDto findRoleMenuWithSetting(Long userSeq, Long roleSeq ) {
+	public MyMenuDto findRolesMenuWithSetting(Long userSeq, List<Long> roleSeqList ) {
 		// 일단... 사용자 역할에 할당된 말단 메뉴 목록을 조회하고..
-		List<CmMenu> userRoleMenuList = cmMenuRepository.findUserRoleMenu(userSeq, roleSeq);
+		List<CmMenu> userRoleMenuList = cmMenuRepository.findUserRolesMenu(userSeq, roleSeqList);
 		
 		Map<Long, MenuDto> upMenuMap = new HashMap<>(1);
 		

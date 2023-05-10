@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,8 +26,11 @@ public class GlobalExceptionHandler {
     	
     	CmUser cmUser = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication != null && authentication.getPrincipal() != null) {
-			cmUser = (CmUser) authentication.getPrincipal();	
+		if(authentication != null && authentication.isAuthenticated()) {
+			Object o = authentication.getPrincipal();
+			if (o instanceof UserDetails) {
+				cmUser = (CmUser) o;
+			}	
 		}
     	
     	loggingService.writeCriticalLog(request, WriteMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);

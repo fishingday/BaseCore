@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.security.handler;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,8 +64,12 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         List<CmRole> cmRoleList = userService.findByUserSeq4CmRole(cmUser.getUserSeq());
         cmUser.setCurrRole(cmRoleList.get(0));
         
+        List <Long> roleSeqList = cmRoleList.stream()
+    			.map(CmRole::getRoleSeq)
+        		.collect(Collectors.toList());;
+        
         // 현재 권한의 메뉴 목록을 설정한다.
-        cmUser.setMyMenu(userService.findRoleMenuWithSetting(cmUser.getUserSeq(), cmUser.getCurrRole().getRoleSeq()));
+        cmUser.setMyMenu(userService.findRolesMenuWithSetting(cmUser.getUserSeq(), roleSeqList));
         
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());

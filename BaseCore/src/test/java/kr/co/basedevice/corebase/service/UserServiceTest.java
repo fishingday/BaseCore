@@ -2,6 +2,9 @@ package kr.co.basedevice.corebase.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,10 +21,10 @@ public class UserServiceTest {
 	@Test
 	public void findRoleMenuWithSetting() {
 		
-		Long userSeq = 101L;
-		Long roleSeq = 100L;
+		Long userSeq = 102L;
+		List<Long> roleSeqList = Arrays.asList(101L, 104L);
 		
-		MyMenuDto myMenuDto = userService.findRoleMenuWithSetting(userSeq, roleSeq);
+		MyMenuDto myMenuDto = userService.findRolesMenuWithSetting(userSeq, roleSeqList);
 				
 		assertNotNull(myMenuDto);
 		

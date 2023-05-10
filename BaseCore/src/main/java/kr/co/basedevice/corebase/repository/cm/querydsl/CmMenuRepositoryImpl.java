@@ -65,7 +65,7 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 	}
 
 	@Override
-	public List<CmMenu> findUserRoleMenu(Long userSeq, Long roleSeq) {
+	public List<CmMenu> findUserRolesMenu(Long userSeq, List<Long> roleSeqList) {
 
 		QCmMenu cmMenu = QCmMenu.cmMenu;
 		QCmRole cmRole = QCmRole.cmRole;
@@ -84,11 +84,12 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 			cmMenu.menuPath.isNotEmpty(),
 			cmRoleMenuMap.delYn.eq(Yn.N), 
 			cmRole.delYn.eq(Yn.N),
-		    cmRole.roleSeq.eq(roleSeq),
+		    cmRole.roleSeq.in(roleSeqList),
 		    cmUserRoleMap.delYn.eq(Yn.N),
 		    cmUser.userSeq.eq(userSeq),
 		    cmUser.delYn.eq(Yn.N)
 		)
+		.distinct()
 		.orderBy(cmMenu.prntOrd.asc())
 		.fetch();
 	}
