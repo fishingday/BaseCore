@@ -29,8 +29,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "CM_GRP_CD")
-public class CmGrpCd implements Serializable {
+@Table(name = "CM_CD_GRP")
+public class CmCdGrp implements Serializable {
 	
 	private static final long serialVersionUID = -3619896827890455517L;
 
@@ -60,7 +60,7 @@ public class CmGrpCd implements Serializable {
 	@Column(name = "UPD_DT", nullable = false)
 	private LocalDateTime updDt;
 	
-	@OneToMany(mappedBy = "cmGrpCd", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cmCdGrp", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmCdDtl> cmCdDtlList = new ArrayList<>(1);
 }

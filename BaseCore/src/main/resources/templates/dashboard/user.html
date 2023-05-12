@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout/header::userHead"></head>
-<body>
-<div th:replace="layout/top::header"></div>
-<div class="container">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_dashboard}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>사용자 대시보드</title>
+</head>
+
+<div layout:fragment="content">
     <div class="row align-items-start">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
             <div class="sidebar-sticky">
@@ -23,11 +28,9 @@
             <div class="container text-center">
                 <h1 class="text-primary">DASHBOARD</h1>
                 <div class="security"></div>
-                <h1>사용자 환영합니다.</h1>
+                <h1>사용자님 환영합니다.</h1>
             </div>
         </div>
     </div>
 </div>
-<div th:replace="layout/footer::footer"></div>
-</body>
 </html>

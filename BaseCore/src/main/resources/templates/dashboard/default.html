@@ -2,17 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/default_layout}">
-
-<!-- index.html 고유 CSS 추가 -->
-<th:block layout:fragment="css">
-    <!--    <link rel="stylesheet" th:href="@{/css/page/home.css}" >-->
-</th:block>
-<!-- index.html 고유 스크립트 추가 -->
-<th:block layout:fragment="script">
-    <!--    <script th:src="@{/js/page/home.js}"></script>-->
-</th:block>
-
+      layout:decorate="~{layouts/default_dashboard}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>기본 대시보드</title>
+</head>
 <!-- Content -->
 <div layout:fragment="content">
     <div style="padding-top:50px;"  class="col">

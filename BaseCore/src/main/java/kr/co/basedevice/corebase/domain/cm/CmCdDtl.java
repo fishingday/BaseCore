@@ -80,5 +80,5 @@ public class CmCdDtl implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinColumn(name = "GRP_CD", updatable = false, insertable = false)
-	private CmGrpCd cmGrpCd;
+	private CmCdGrp cmCdGrp;
 }
