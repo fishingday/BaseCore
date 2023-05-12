@@ -1,7 +1,7 @@
 drop table if exists account CASCADE ;
 drop table if exists cm_cd_dtl CASCADE ;
 drop table if exists cm_critical_log CASCADE; 
-drop table if exists cm_grp_cd CASCADE ;
+drop table if exists cm_cd_grp CASCADE ;
 drop table if exists cm_menu CASCADE ;
 drop table if exists cm_menu_dtl CASCADE ;
 drop table if exists cm_menu_dtl_role_map CASCADE; 
@@ -43,4 +43,6 @@ DROP TABLE QRTZ_CALENDARS;
 DROP TABLE QRTZ_BLOB_TRIGGERS;
 DROP TABLE QRTZ_LOCKS;
 
-DROP TABLE "flyway_schema_history"
+DROP TABLE "flyway_schema_history";
+
+drop table if exists cm_grp_cd CASCADE ;
