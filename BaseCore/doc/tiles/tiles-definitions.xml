@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+    
+    <!-- 공통 기본 템플릿 -->    
+    <definition name="defaultTemplate" template="/WEB-INF/tiles/common/commonDefaultTemplate.jsp">
+        <put-attribute name="header"    value="/WEB-INF/tiles/common/header.jsp" />
+		<put-attribute name="lnb"       value="/WEB-INF/tiles/common/menu.jsp" />
+		<put-attribute name="content"   value="" />
+		<put-attribute name="bottom"    value="/WEB-INF/tiles/common/footer.jsp" />
+    </definition>
+    
+    <definition name="*.common" extends="defaultTemplate">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+	<definition name="*/*.common" extends="defaultTemplate">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	<definition name="*/*/*.common" extends="defaultTemplate">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+	<definition name="*/*/*/*.common" extends="defaultTemplate">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
+	</definition>
+	<definition name="*/*/*/*/*.common" extends="defaultTemplate">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}/{4}/{5}.jsp" />
+	</definition>
+
+    <!-- Template for DashBoard -->    
+    <definition name="defaultTemplateForDash" template="/WEB-INF/tiles/common/dashTemplate.jsp">
+        <put-attribute name="header"    value="/WEB-INF/tiles/common/header.jsp" />
+        <put-attribute name="content"   value="" />
+        <put-attribute name="bottom"    value="/WEB-INF/tiles/common/footer.jsp" />
+    </definition>
+    <definition name="*/*/*/*.dash" extends="defaultTemplateForDash">
+        <put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
+    </definition>
+	<definition name="*/*/*.dash" extends="defaultTemplateForDash">
+		<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+
+	
+	<!-- 공통 팝업 템플릿 -->
+	
+	<definition name="defaultPopup" template="/WEB-INF/tiles/common/popupTemplate.jsp">
+	  	<put-attribute name="content" value="" />
+	</definition>
+
+    <definition name="*.popcommon" extends="defaultPopup">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+	<definition name="*/*.popcommon" extends="defaultPopup">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	<definition name="*/*/*.popcommon" extends="defaultPopup">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+	<definition name="*/*/*/*.popcommon" extends="defaultPopup">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
+	</definition>
+	<definition name="*/*/*/*/*.popcommon" extends="defaultPopup">
+	  	<put-attribute name="content"   value="/WEB-INF/views/{1}/{2}/{3}/{4}/{5}.jsp" />
+	</definition>	
+    
+</tiles-definitions>
