@@ -1,12 +1,21 @@
 package kr.co.basedevice.corebase.interceptor;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import kr.co.basedevice.corebase.security.factory.UrlResourcesMapFactoryBean;
+import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 
 /**
  * 1. 사용자가 요청한 URI의 정보를 조회
@@ -16,9 +25,16 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class SessionTracerInterceptor implements HandlerInterceptor {
 	
-	PathMatcher pathMatcher = new AntPathMatcher();
+	private PathMatcher pathMatcher = new AntPathMatcher();
+	private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap;
+	
+	
+	public SessionTracerInterceptor(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
+		this.resourcesMap = resourcesMap;
+	}
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		
 		// 요청한 URL을 확인하고....
 		String contextRoot = request.getContextPath();
 		String url = request.getRequestURI();

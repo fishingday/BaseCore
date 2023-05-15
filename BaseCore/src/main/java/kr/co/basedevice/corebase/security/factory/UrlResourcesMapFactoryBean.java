@@ -11,13 +11,13 @@ import java.util.List;
 
 public class UrlResourcesMapFactoryBean implements FactoryBean<LinkedHashMap<RequestMatcher, List<ConfigAttribute>>> {
 
+    private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap;
     private SecurityResourceService securityResourceService;
 
     public void setSecurityResourceService(SecurityResourceService securityResourceService) {
         this.securityResourceService = securityResourceService;
     }
 
-    private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap;
 
     public void init() {
             resourcesMap = securityResourceService.getResourceList();
@@ -37,5 +37,9 @@ public class UrlResourcesMapFactoryBean implements FactoryBean<LinkedHashMap<Req
 
     public boolean isSingleton() {
         return true;
+    }
+    
+    public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> getResourcesMap(){
+    	return this.resourcesMap;
     }
 }
