@@ -10,7 +10,7 @@
 			<a href="<c:url value='${user.firstMenu.menuUrl}'/>" target="_self"><h1 class="headerLogo"><s:message code="tiles.header.title" text="CIMS-EVM"/></h1></a>
             <div style="margin-left: 210px; padding-top: 20px; color: #000;">남은 세션 시간<b><span id="sessionTimer" style="margin-left: 10px;">00:00</span></b><span style="margin-left: 10px; text-decoration: underline; cursor:pointer;" onclick="extendSession()">세션 연장</span></div>
             <ul class="gnb">
-                <li>자산 수집 및 취약점 점검 모듈
+                <li>ㄴㅇㄻㄴㄻㄴㄹㄴㅁ
                     <button class="AXButton Green" onclick="location.href='https://cims.mnd.mil/bigfile/filedown/CIMS_installer.ls';">다운로드(전체)</button>
                     <button class="AXButton Blue" onclick="location.href='https://cims.mnd.mil/bigfile/filedown/CIMS_patcher.ls';">다운로드(패치)</button>
                 </li>
