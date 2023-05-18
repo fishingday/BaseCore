@@ -50,7 +50,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 	        }
         }
 
-        return new AjaxAuthenticationToken(accountContext.getCmUser(), null, accountContext.getAuthorities());
+        return new AjaxAuthenticationToken(accountContext, null, accountContext.getAuthorities());
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +30,7 @@ public class GlobalExceptionHandler {
 		if(authentication != null && authentication.isAuthenticated()) {
 			Object o = authentication.getPrincipal();
 			if (o instanceof UserDetails) {
-				cmUser = (CmUser) o;
+				cmUser = ((AccountContext) o).getCmUser();
 			}	
 		}
     	

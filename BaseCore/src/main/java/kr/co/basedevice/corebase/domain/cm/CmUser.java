@@ -17,14 +17,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.dto.MyMenuDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -95,10 +93,4 @@ public class CmUser implements Serializable{
 	@JsonIgnore
 	private List<CmUserAlowIp> cmUserAlowIpList = new ArrayList<>(1);
 	
-	// Currect Role
-	@Transient
-	private CmRole currRole;
-	
-	@Transient
-	private MyMenuDto myMenu;
 }

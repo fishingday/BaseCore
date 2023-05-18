@@ -22,6 +22,7 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.util.RequestUtil;
 
@@ -44,7 +45,9 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        CmUser cmUser = (CmUser) authentication.getPrincipal();
+    	
+    	AccountContext account = (AccountContext) authentication.getPrincipal();
+        CmUser cmUser = account.getCmUser();
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -60,7 +63,7 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
         cmUserRepository.save(cmUser);
                 
         List<CmRole> cmRoleList = cmRoleRepository.findByUserSeq(cmUser.getUserSeq());
-        cmUser.setCurrRole(cmRoleList.get(0));
+        account.setCurrRole(cmRoleList.get(0));
         
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());

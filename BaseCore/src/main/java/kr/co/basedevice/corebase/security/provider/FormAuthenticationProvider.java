@@ -49,7 +49,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 	        }
         }
 
-        return new UsernamePasswordAuthenticationToken(accountContext.getCmUser(), null, accountContext.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(accountContext, null, accountContext.getAuthorities());
     }
 
     @Override

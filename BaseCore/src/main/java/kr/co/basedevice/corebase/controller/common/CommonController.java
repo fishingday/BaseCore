@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
 
 @Controller
@@ -47,10 +48,10 @@ public class CommonController {
 		CmUser cmUser = null;
 
 		if (principal instanceof UsernamePasswordAuthenticationToken) {
-			cmUser = (CmUser) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+			cmUser = ((AccountContext) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getCmUser();
 
 		}else if(principal instanceof AjaxAuthenticationToken){
-			cmUser = (CmUser) ((AjaxAuthenticationToken) principal).getPrincipal();
+			cmUser = ((AccountContext) ((AjaxAuthenticationToken) principal).getPrincipal()).getCmUser();
 		}
 
 		model.addAttribute("username", cmUser.getUserNm());

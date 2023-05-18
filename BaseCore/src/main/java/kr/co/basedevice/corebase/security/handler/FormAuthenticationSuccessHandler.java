@@ -3,7 +3,6 @@ package kr.co.basedevice.corebase.security.handler;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Component;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.service.common.UserService;
 import kr.co.basedevice.corebase.util.RequestUtil;
@@ -51,7 +51,8 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         
         // 로그인에 성공 했다면 ...
         // 로그인 실패 카운트 0 
-		CmUser cmUser = (CmUser) authentication.getPrincipal();
+        AccountContext account = (AccountContext) authentication.getPrincipal();
+        CmUser cmUser = account.getCmUser();
 		cmUser.setLoginFailCnt(0);
 		cmUser.setLoginDt(LocalDateTime.now());
         cmUser.setLastLoginIp(RequestUtil.getClientIp(request));
@@ -62,14 +63,10 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         
         // 현재 권한을 .. 설정
         List<CmRole> cmRoleList = userService.findByUserSeq4CmRole(cmUser.getUserSeq());
-        cmUser.setCurrRole(cmRoleList.get(0));
-        
-        List <Long> roleSeqList = cmRoleList.stream()
-    			.map(CmRole::getRoleSeq)
-        		.collect(Collectors.toList());;
-        
+        account.setCurrRole(cmRoleList.get(0));
+                
         // 현재 권한의 메뉴 목록을 설정한다.
-        cmUser.setMyMenu(userService.findRolesMenuWithSetting(cmUser.getUserSeq(), roleSeqList));
+        account.setMyMenu(userService.findRolesMenuWithSetting(cmUser.getUserSeq(), account.getCurrRole().getRoleSeq()));
         
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());

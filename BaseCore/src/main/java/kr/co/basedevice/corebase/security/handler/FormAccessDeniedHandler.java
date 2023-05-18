@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.util.WebUtil;
 
@@ -40,7 +41,7 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
 
 		// 사용자 정보는...
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CmUser cmUser = (CmUser) authentication.getPrincipal();		
+		CmUser cmUser = ((AccountContext) authentication.getPrincipal()).getCmUser();		
         
         loggingService.writeCriticalLog(request, WriteMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
 		

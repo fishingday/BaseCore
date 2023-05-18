@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 
 @Component
@@ -28,7 +29,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
     	Long userSeq = null;
     	
     	if(authentication != null && authentication.getPrincipal() != null) {
-    		CmUser cmUser = (CmUser) authentication.getPrincipal();
+    		CmUser cmUser = ((AccountContext) authentication.getPrincipal()).getCmUser();
     		userSeq =  cmUser != null ? cmUser.getUserSeq() : null;
     	}
         

@@ -94,4 +94,33 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		.fetch();
 	}
 
+	@Override
+	public List<CmMenu> findUserRoleMenu(Long userSeq, Long roleSeq) {
+		QCmMenu cmMenu = QCmMenu.cmMenu;
+		QCmRole cmRole = QCmRole.cmRole;
+		QCmUser cmUser = QCmUser.cmUser;
+		QCmUserRoleMap cmUserRoleMap = QCmUserRoleMap.cmUserRoleMap;
+		QCmRoleMenuMap cmRoleMenuMap = QCmRoleMenuMap.cmRoleMenuMap;
+		
+		return jpaQueryFactory.selectFrom(cmMenu)
+				.innerJoin(cmMenu.cmRoleMenuMapList, cmRoleMenuMap)
+				.innerJoin(cmRoleMenuMap.cmRole(), cmRole)
+				.innerJoin(cmRole.cmUserRoleMapList, cmUserRoleMap)
+				.innerJoin(cmUserRoleMap.cmUser(), cmUser)
+		.where(
+			cmMenu.delYn.eq(Yn.N),
+			cmMenu.cmScrenYn.eq(Yn.N),
+			cmMenu.menuPath.isNotEmpty(),
+			cmRoleMenuMap.delYn.eq(Yn.N), 
+			cmRole.delYn.eq(Yn.N),
+		    cmRole.roleSeq.eq(roleSeq),
+		    cmUserRoleMap.delYn.eq(Yn.N),
+		    cmUser.userSeq.eq(userSeq),
+		    cmUser.delYn.eq(Yn.N)
+		)
+		.distinct()
+		.orderBy(cmMenu.prntOrd.asc())
+		.fetch();
+	}
+
 }

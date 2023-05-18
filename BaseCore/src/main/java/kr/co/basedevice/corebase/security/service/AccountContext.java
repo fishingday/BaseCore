@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
+import kr.co.basedevice.corebase.dto.MyMenuDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +19,10 @@ public class AccountContext extends User {
 	private static final long serialVersionUID = 8334928817269522057L;
 
 	private CmUser cmUser;
+	
+	private CmRole currRole;
+	
+	private MyMenuDto myMenu;
 
 	public AccountContext(
 			CmUser cmUser, 
