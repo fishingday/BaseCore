@@ -35,10 +35,10 @@ public class MenuDto implements Comparable<MenuDto>{
 	
 	private Integer prntOrd;
 	
-	List<MenuDto> subMenuList = new ArrayList<>();
+	List<MenuDto> subMenuList = new ArrayList<>(1);
 
 	private MenuDto upMenu;
-	
+
 	public MenuDto(CmMenu cmMenu) {
 		this.menuSeq = cmMenu.getMenuSeq();
 		this.upMenuSeq = cmMenu.getUpMenuSeq();
@@ -67,7 +67,30 @@ public class MenuDto implements Comparable<MenuDto>{
 	 * @return
 	 */
 	public List<MenuDto> getSubMenuList(){
-		Collections.sort(subMenuList);
 		return subMenuList;
 	}
+	
+	/**
+	 * 넣을 때 마다 정렬한다.
+	 * 
+	 * @param menuDto
+	 */
+	public void addSubMenu(MenuDto menuDto) {
+		subMenuList.add(menuDto);
+		Collections.sort(subMenuList);
+	}
+	
+	/**
+	 * 최초의 메뉴 URI를 반환
+	 * 
+	 * @return
+	 */
+	public MenuDto firstMenu() {
+		if(!subMenuList.isEmpty()) {
+			return subMenuList.get(0).firstMenu();
+		}else {
+			return this;
+		}
+	}
+	
 }

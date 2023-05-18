@@ -38,6 +38,9 @@ public class CmCriticalLog {
 	@Column(name = "REQ_IP", length = 20, nullable = false)
 	private String reqIp;
 	
+	@Column(name = "REQ_URI", length = 2000, nullable = false)
+	private String reqUri;	
+	
 	@Column(name = "PARAM", length = 4000)
 	private String param;
 	

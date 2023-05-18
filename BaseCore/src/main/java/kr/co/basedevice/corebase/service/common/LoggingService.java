@@ -43,7 +43,8 @@ public class LoggingService {
         log.setReferer(request.getHeader("referer"));
         log.setAcceptEncoding(request.getHeader("accept-encoding"));
         log.setAcceptLanguage(request.getHeader("accept-language"));
-        log.setAcceptCharset(request.getCharacterEncoding());        
+        log.setAcceptCharset(request.getCharacterEncoding());
+        log.setReqUri(request.getRequestURI());
         String param = request.getQueryString();
         if(param != null && param.length() > 2000) {
         	param = param.substring(0, 2000);

@@ -93,7 +93,7 @@ public class UserService {
 		
 		if(upMenu != null) {
 			leafMenu.setUpMenu(upMenu); // 상위 메뉴를 세팅하고..
-			upMenu.getSubMenuList().add(leafMenu); // 상위 메뉴 아래 ...
+			upMenu.addSubMenu(leafMenu); // 상위 메뉴 아래 ...
 		}
 		
 		if(upMenu.getUpMenuSeq() != null) { // 조상이 있다.

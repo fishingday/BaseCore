@@ -10,14 +10,20 @@
 	
 	<div th:fragment="topFragment">
 	    <nav class="navbar navbar-dark sticky-top bg-dark ">
+			<div class="container">
+				<ul class="nav justify-content-end">
+					<th:block sec:authorize="isAuthenticated()" th:with="auth=${#authentication.principal}">
+						<li class="nav-item" ><a class="nav-link text-light" href="/"><span th:text="${auth.userNm}"></span>님 환영합니다.</a></li>
+						<li class="nav-item" ><a class="nav-link text-light" href="/">현재 권한은 <b>[[${auth.currRole.roleNm}]]</b> 입니다.</a></li>
+						<li class="nav-item" ><a class="nav-link text-light" href="/">로그인시간 :<div th:text="${#temporals.format(auth.loginDt, 'yyyy.MM.dd HH:mm:ss')}"></div></a></li>
+					</th:block>
+				</ul>
+			</div>
 	        <div class="container">
 	            <a class="text-light" href="#"><h4>Core Base</h4></a>
 	            <ul class="nav justify-content-end">
-					<th:block th:with="auth=${#authentication.principal}">
-						<li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-light" href="/"><span th:text="${auth.userNm}"></span></a></li>
-					</th:block>
 					<th:block sec:authorize="isAuthenticated()" th:each="topMenu : ${#authentication.principal.myMenu.topMenuList}">
-						<li class="nav-item"><a class="nav-link text-light" href="/"><span th:text="${topMenu.menuNm}"></span></a></li>
+						<li class="nav-item"><a class="nav-link text-light" th:href="@{topMenu.firstMenu.menuPath}"><span th:text="${topMenu.menuNm}"></span></a></li>
 					</th:block>
 	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/common/login.html}">로그인</a></li>
 	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/users}">회원가입</a></li>
