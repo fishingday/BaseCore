@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
+import kr.co.basedevice.corebase.dto.MenuDto;
 import kr.co.basedevice.corebase.dto.MyMenuDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,8 @@ public class AccountContext extends User {
 	private CmRole currRole;
 	
 	private MyMenuDto myMenu;
+	
+	private MenuDto currMenu;
 
 	public AccountContext(
 			CmUser cmUser, 

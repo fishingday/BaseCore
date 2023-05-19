@@ -76,7 +76,7 @@ public class MenuDto implements Comparable<MenuDto>{
 	 * @param menuDto
 	 */
 	public void addSubMenu(MenuDto menuDto) {
-		subMenuList.add(menuDto);
+		this.subMenuList.add(menuDto);
 		Collections.sort(subMenuList);
 	}
 	
@@ -93,4 +93,16 @@ public class MenuDto implements Comparable<MenuDto>{
 		}
 	}
 	
+	/**
+	 * 최상위 부모 메뉴를 반환
+	 * 
+	 * @return
+	 */
+	public MenuDto topMenu() {
+		if(this.upMenu == null) {
+			return this;
+		}else{
+			return upMenu.topMenu();
+		}
+	}
 }

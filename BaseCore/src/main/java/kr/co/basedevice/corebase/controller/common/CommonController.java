@@ -59,4 +59,10 @@ public class CommonController {
 
 		return "user/login/denied";
 	}
+	
+	@GetMapping("/join_us.html")
+	public String joinUs() {
+		
+		return "/common/register";
+	}
 }
