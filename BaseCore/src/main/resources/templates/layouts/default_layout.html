@@ -9,11 +9,21 @@
 	    <div th:replace="fragments/default_frag::headerFragment"></div>
 	</head>
 	<body>
-	    <!-- header fragment 사용 -->
-	    <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-	    <!-- content fragment 사용 -->
-	    <th:block layout:fragment="content"></th:block>
-	    <!-- footer fragment 사용 -->
-	    <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
+		<div class="wrap">
+			<th:block th:replace="fragments/default_frag :: topFragment"></th:block>
+			<!-- LnB -->
+			<div class="contentWrap" id="container">
+			    <div class="content">
+	                <div class="naviWrap">
+	                    <div class="navi">
+						</div>
+					</div>
+					<div class="contents_area">
+	 					<th:block layout:fragment="content"></th:block>
+	                </div>
+				</div>
+			</div>
+			<th:block th:replace="fragments/default_frag :: footerFragment"></th:block>			
+		</div>	    
 	</body>
 </html>
