@@ -35,12 +35,15 @@
 	    </nav>
 	</div>
 	
-	<div th:fragment="footerFragment">
-	    <footer class="page-footer font-small blue">
-	        <div class="footer-copyright text-center py-3 border-top">
-	            <p class="text-primary">Copyright 2023 Core Device. All Right Reserved</p>
-	        </div>
-	    </footer>
+	<div th:fragment="footerFragment" class="footerWrap" >
+		<div class="footer" >
+			<ul class="floatLeft">
+			  <li><a class="footerVersion">버전정보 : Ver 1.0</a> </li>
+			</ul>
+			<ul class="floatRight">
+			  <li><p class="footerCopy">Copy Right @ 2023</p></li>
+			</ul>
+		</div>
 	</div>
 	
 </html>

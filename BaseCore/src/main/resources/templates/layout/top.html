@@ -4,12 +4,16 @@
 	    <nav class="navbar navbar-dark sticky-top bg-dark ">
 	        <div class="container">
 	            <a class="text-light" href="#"><h4>Core Base</h4></a>
-	            <ul class="nav justify-content-end">
-	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/common/login.html}">로그인</a></li>
+	            <ul class="nav justify-content-end" th:with="auth=${#authentication.principal}">
+	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/common/login.html}">로그인!</a></li>
 	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/users}">회원가입</a></li>
 	                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-light" th:href="@{/common/logout.html}">로그아웃</a></li>
-	                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')"><a class="nav-link text-light" th:href="@{/admin}">관리자</a></li>
-	                <li class="nav-item" ><a class="nav-link text-light" href="/">HOME</a></li>
+	                <li class="nav-item" sec:authorize="isAuthenticated()">
+						<a class="nav-link text-light" href="/">로그인시간 :<div th:text="${#temporals.format(auth.cmUser.loginDt, 'yyyy.MM.dd HH:mm:ss')}"></div></a>
+					</li>
+	                <li class="nav-item" sec:authorize="isAuthenticated()">
+						<span class="nav-link text-light" th:text="${auth.cmUser.userNm}"></span> 
+					</li>
 	            </ul>
 	        </div>
 	    </nav>
