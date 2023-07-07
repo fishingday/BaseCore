@@ -81,3 +81,35 @@
 }
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+/* 공통 로그인 사용자 아이콘 메뉴 */
+input#head_user_menu{ display: none; }
+nav#head_user_menu_nav{	display: none; }
+input#head_user_menu:checked + nav#head_user_menu_nav{ display: block; }
+
+input#head_auth_menu{ display: none; }
+nav#head_auth_menu_nav{	display: none; }
+input#head_auth_menu:checked + nav#head_auth_menu_nav{ display: block; }
+
+.ham-nav{
+  width:150px;
+  line-height: 35px;
+  position: fixed;
+  color: #777;
+  background-color: whitesmoke;
+  padding: 5px;
+  border:1px solid #444;
+  border-left:0px;
+}
+
+.ham-con{
+  width:150px;
+  line-height: 35px;
+  position:  fixed;
+  color: #777;
+  background-color: whitesmoke;
+  padding: 5px;
+  margin-left: 160px;
+  border:1px solid #444;
+  border-left:0px;
+}
