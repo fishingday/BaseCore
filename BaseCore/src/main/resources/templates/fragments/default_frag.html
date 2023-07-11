@@ -1,92 +1,94 @@
-<html lagn="ko" 
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-	
-	<div th:fragment="headerFragment">
-	    <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
-	    <script th:src="@{/webjars/font-awesome/6.4.0/js/all.min.js}"></script>
-	    <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.min.js}"></script>
-	    <script th:src="@{/webjars/jquery-i18n-properties/1.10.2/jquery.i18n.properties.min.js}"></script>
-	    <link rel="stylesheet" th:href="@{/css/base.css}" />
-	    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
-	    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.0/css/all.min.css}" />
-	</div>
-	
-	<div th:fragment="topFragment">
-	    <nav class="navbar navbar-dark sticky-top bg-dark ">
-			<div class="container">
-				<ul class="nav justify-content-end">
-					<!--/* 로그인 사용자의 경우 상단에 로그인 정보 표시 */-->
-					<th:block sec:authorize="isAuthenticated()" th:with="auth=${#authentication.principal}">
-						<li class="nav-item" ><a class="nav-link text-light" href="/"><span th:text="|로그인시간 : ${#temporals.format(auth.cmUser.loginDt, 'yyyy.MM.dd HH:mm:ss')}|"></span></a></li>
-						<li class="nav-item" >
-							<span class="nav-link text-light">
-								<label for="head_user_menu"><i class="fa-solid fa-circle-user"></i> [[${auth.cmUser.userNm}]]</label>
-								<input id="head_user_menu" type="checkbox">
-								<nav id="head_user_menu_nav" class="ham-nav">
-									<ul>
-										<li>개인정보</li>
-										<li>패스워드</li>
-										<li><a th:href="@{/common/logout.html}">로그아웃</a></li>
-									</ul>
-								</nav>
-								<label for="head_auth_menu"><i class="fa-brands fa-autoprefixer"></i> [[${auth.currRole.roleNm}]]</label>
-								<input id="head_auth_menu" type="checkbox">
-								<nav id="head_auth_menu_nav" class="ham-con">
-									<ul th:each="roleItem: ${auth.authRoleList}">
-										<li>[[${roleItem.roleNm}]]</li>					
-									</ul>
-									<tr th:each="item: ${items}">
-								</nav>
-							</span>
-						</li>
-					</th:block>
-				</ul>
-			</div>
-	        <div class="container">
-	            <a class="text-light" href="#"><h4>Core Base</h4></a>
-	            <ul class="nav justify-content-end">
-					<th:block sec:authorize="isAuthenticated()" th:each="topMenu : ${#authentication.principal.myMenu.topMenuList}">
-						<!--/* 로그인 사용자의 탑 메뉴 표시 */-->
-						<li class="nav-item"><a class="nav-link text-light" th:href="@{${topMenu.firstMenu.menuPath}}"><span th:text="${topMenu.menuNm}"></span></a></li>
-					</th:block>
-	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/common/login.html}">로그인</a></li>
-	                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/users}">회원가입</a></li>
-	            </ul>
-	        </div>
-	    </nav>
-	</div>
-	
-	<nav th:fragment="lnbFragment" class="col-md-2 d-none d-md-block bg-light sidebar" th:with="currMenu=${#authentication.principal.currMenu}">
+<html lagn="ko"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <div th:fragment="headerFragment">
+        <script th:src="@{/webjars/jquery/3.6.4/jquery.min.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.13.2/jquery-ui.js}"></script>
+        <script th:src="@{/webjars/font-awesome/6.4.0/js/all.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.min.js}"></script>
+        <script th:src="@{/webjars/jquery-i18n-properties/1.10.2/jquery.i18n.properties.min.js}"></script>
+        <link rel="stylesheet" th:href="@{/css/base.css}" />
+        <link rel="stylesheet" th:href="@{/webjars/jquery-ui/1.13.2/jquery-ui.css}" />
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" />
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.0/css/all.min.css}" />
+    </div>
+
+    <div th:fragment="topFragment">
+        <nav class="navbar navbar-dark sticky-top bg-dark ">
+            <div class="container">
+                <ul class="nav justify-content-end">
+                    <!--/* 로그인 사용자의 경우 상단에 로그인 정보 표시 */-->
+                    <th:block sec:authorize="isAuthenticated()" th:with="auth=${#authentication.principal}">
+                        <li class="nav-item" ><a class="nav-link text-light" href="/"><span th:text="|로그인시간 : ${#temporals.format(auth.cmUser.loginDt, 'yyyy.MM.dd HH:mm:ss')}|"></span></a></li>
+                        <li class="nav-item" >
+                            <span class="nav-link text-light">
+                                <label for="head_user_menu"><i class="fa-solid fa-circle-user"></i> [[${auth.cmUser.userNm}]]</label>
+                                <input id="head_user_menu" type="checkbox">
+                                <nav id="head_user_menu_nav" class="ham-nav">
+                                    <ul>
+                                        <li>개인정보</li>
+                                        <li>패스워드</li>
+                                        <li><a th:href="@{/common/logout.html}">로그아웃</a></li>
+                                    </ul>
+                                </nav>
+                                <label for="head_auth_menu"><i class="fa-brands fa-autoprefixer"></i> [[${auth.currRole.roleNm}]]</label>
+                                <input id="head_auth_menu" type="checkbox">
+                                <nav id="head_auth_menu_nav" class="ham-con">
+                                    <ul th:each="roleItem: ${auth.authRoleList}">
+                                        <li>[[${roleItem.roleNm}]]</li>
+                                    </ul>
+                                    <tr th:each="item: ${items}">
+                                </nav>
+                            </span>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+            <div class="container">
+                <a class="text-light" href="#"><h4>Core Base</h4></a>
+                <ul class="nav justify-content-end">
+                    <th:block sec:authorize="isAuthenticated()" th:each="topMenu : ${#authentication.principal.myMenu.topMenuList}">
+                        <!--/* 로그인 사용자의 탑 메뉴 표시 */-->
+                        <li class="nav-item"><a class="nav-link text-light" th:href="@{${topMenu.firstMenu.menuPath}}"><span th:text="${topMenu.menuNm}"></span></a></li>
+                    </th:block>
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/common/login.html}">로그인</a></li>
+                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="@{/users}">회원가입</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <nav th:fragment="lnbFragment" class="col-md-2 d-none d-md-block bg-light sidebar" th:with="currMenu=${#authentication.principal.currMenu}">
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
-						<th:block th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
-							<th:block th:each="subMenu : ${topMenu.subMenuList}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
-								<a th:href="@{${subMenu.menuPath}}" style="margin:5px;" 
-								   th:class="'nav-link  '+${subMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}">[[${subMenu.menuNm}]]</a>
-								<th:block th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
-									<a th:href="@{${leafMenu.menuPath}}" style="margin:5px;" 
-									   th:class="'nav-link  '+${leafMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}" >[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
-								</th:block>
-							</th:block>
-						</th:block>
+                        <th:block th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
+                            <th:block th:each="subMenu : ${topMenu.subMenuList}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
+                                <a th:href="@{${subMenu.menuPath}}" style="margin:5px;"
+                                   th:class="'nav-link  '+${subMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}">[[${subMenu.menuNm}]]</a>
+                                <th:block th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
+                                    <a th:href="@{${leafMenu.menuPath}}" style="margin:5px;"
+                                       th:class="'nav-link  '+${leafMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}" >[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
+                                </th:block>
+                            </th:block>
+                        </th:block>
                     </div>
                 </li>
             </ul>
         </div>
     </nav>
-	
-	<div th:fragment="footerFragment" class="footerWrap" >
-		<div class="footer" >
-			<ul class="floatLeft">
-			  <li><a class="footerVersion">버전정보 : Ver 1.0</a> </li>
-			</ul>
-			<ul class="floatRight">
-			  <li><p class="footerCopy">Copy Right @ 2023</p></li>
-			</ul>
-		</div>
-	</div>
-	
+
+    <div th:fragment="footerFragment">
+        <div class="footer">
+            <ul class="floatLeft">
+              <li><a class="footerVersion">버전정보 : Ver 1.0</a> </li>
+            </ul>
+            <ul class="floatRight">
+              <li><p class="footerCopy">Copy Right @ 2023</p></li>
+            </ul>
+        </div>
+    </div>
+
 </html>

@@ -82,6 +82,17 @@
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 
+/* 잡탕밥 */
+.content{
+	display: inline-flex;
+}
+
+/* search box */
+.container {
+  display: flex; /* or inline-flex */
+}
+
+
 /* 공통 로그인 사용자 아이콘 메뉴 */
 input#head_user_menu{ display: none; }
 nav#head_user_menu_nav{	display: none; }
