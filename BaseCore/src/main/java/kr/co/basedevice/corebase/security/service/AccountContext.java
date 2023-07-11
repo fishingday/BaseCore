@@ -23,6 +23,8 @@ public class AccountContext extends User {
 	
 	private CmRole currRole;
 	
+	private List<CmRole> authRoleList;
+	
 	private MyMenuDto myMenu;
 	
 	private MenuDto currMenu;

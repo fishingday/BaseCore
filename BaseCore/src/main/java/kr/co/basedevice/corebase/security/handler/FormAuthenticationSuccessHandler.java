@@ -63,6 +63,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         
         // 현재 권한을 .. 설정
         List<CmRole> cmRoleList = userService.findByUserSeq4CmRole(cmUser.getUserSeq());
+        account.setAuthRoleList(cmRoleList);
         account.setCurrRole(cmRoleList.get(0));
                 
         // 현재 권한의 메뉴 목록을 설정한다.

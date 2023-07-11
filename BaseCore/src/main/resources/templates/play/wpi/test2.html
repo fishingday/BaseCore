@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_dashboard}">
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <title>WPI 테스트</title>
+	</head>
+	
+	<div layout:fragment="content" th:with="currMenu=${#authentication.principal.currMenu}">
+	    <div class="row align-items-start">
+	        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+	            <div class="sidebar-sticky">
+	                <ul class="nav flex-column">
+	                    <li class="nav-item">
+	                        <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
+								<th:block th:with="topMenu=${#authentication.principal.currMenu.topMenu}">
+									<th:block th:each="subMenu : ${topMenu.subMenuList}">
+										<a th:href="@{${subMenu.menuPath}}" style="margin:5px;" 
+										   th:class="'nav-link  '+${subMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}">[[${subMenu.menuNm}]]</a>
+										<th:block th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
+											<a th:href="@{${leafMenu.menuPath}}" style="margin:5px;" 
+											   th:class="'nav-link  '+${leafMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}" >[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
+										</th:block>
+									</th:block>
+								</th:block>
+	                        </div>
+	                    </li>
+	                </ul>
+	            </div>
+	        </nav>
+	        <div style="padding-top:50px;"  class="col">
+	            <div class="container text-center">
+	                <h1 class="text-primary">DASHBOARD</h1>
+	                <div class="security"></div>
+	                <h1>WPI 테스트</h1>
+	                <th:block sec:authorize="isAuthenticated()" th:with="auth=${#authentication.principal}">
+						[[${auth.currMenu.topMenu}]]
+					</th:block>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</html>
