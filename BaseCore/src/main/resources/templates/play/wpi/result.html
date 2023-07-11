@@ -1,36 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/default_dashboard}">
+      layout:decorate="~{layouts/default_layout}">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>WPI 결과</title>
 	</head>
-	
-	<div layout:fragment="content">
-	    <div class="row align-items-start">
-	        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-	            <div class="sidebar-sticky">
-	                <ul class="nav flex-column">
-	                    <li class="nav-item">
-	                        <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
-	                            <a th:href="@{/}" style="margin:5px;" class="nav-link active">대시보드</a>
-	                            <a th:href="@{/mypage}" style="margin:5px;" class="nav-link text-primary">마이페이지</a>
-	                            <a th:href="@{/messages}" style="margin:5px;" class="nav-link text-primary">메시지</a>
-	                            <a th:href="@{/config}" style="margin:5px;" class="nav-link text-primary">환경설정</a>
-	                        </div>
-	                    </li>
-	                </ul>
-	            </div>
-	        </nav>
-	        <div style="padding-top:50px;"  class="col">
-	            <div class="container text-center">
-	                <h1 class="text-primary">DASHBOARD</h1>
-	                <div class="security"></div>
-	                <h1>WPI 결과</h1>
-	            </div>
+
+	<!-- Content 시작 -->
+	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
+	        <div class="container text-center">
+	            <h1 class="text-primary">WPI 결과</h1>
 	        </div>
 	    </div>
-	</div>
+	<!-- Content 종료 -->
 </html>

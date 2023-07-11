@@ -62,8 +62,8 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
-						<th:block th:with="topMenu=${#authentication.principal.currMenu.topMenu}">
-							<th:block th:each="subMenu : ${topMenu.subMenuList}">
+						<th:block th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
+							<th:block th:each="subMenu : ${topMenu.subMenuList}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
 								<a th:href="@{${subMenu.menuPath}}" style="margin:5px;" 
 								   th:class="'nav-link  '+${subMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}">[[${subMenu.menuNm}]]</a>
 								<th:block th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
