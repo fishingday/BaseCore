@@ -178,6 +178,11 @@
 		    <artifactId>jquery-i18n-properties</artifactId>
 		    <version>1.10.2</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>sweetalert2</artifactId>
+		    <version>11.7.12</version>
+		</dependency>
 
     </dependencies>
 
