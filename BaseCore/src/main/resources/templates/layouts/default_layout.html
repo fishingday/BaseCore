@@ -1,36 +1,32 @@
 <!DOCTYPE html>
-<html lagn="ko"
+<html lagn="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Core Device</title>
-        <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
-        <div th:replace="fragments/default_frag::headerFragment"></div>
-        <style>
-			.layout-top {				
-    			height:200px;
-			}
-			
-			.layout-content {
-				height: max-content;
-			}
-			
-			.layout-bottom {
-				height:min-content;
-			}
-		</style>
-    </head>
+	<head>
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <meta name="description" content="Core device">
+		<title>Core Device</title>
+	    <div th:replace="~{fragments/default_common_resources :: css}"></div>	    
+    	<link rel="stylesheet" th:href="@{/css/sidebars.css}" />
+	</head>
     <body>
-		<div class="layout-top container-fluid">
-			<th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-		</div>
-		<div class="layout-content">
-			<div>사이드</div>
+		<div class="container">
+	      <div class="row">
+	        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
+	      </div>
+	      <div class="row">	        
+			<div class="col-3 border border-primary">
+				<!-- lnb -->
+				<th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
+				<!-- lnb -->
+			</div>
 			<th:block layout:fragment="content"></th:block>
-		</div>
-		<div class="layout-bottom container-fluid">
-			<th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
-		</div>
+	      </div>
+	      <div class="row">
+			  <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
+	      </div>
+	    </div>
+		<div th:replace="~{fragments/default_common_resources :: js}"></div>
     </body>
 </html>

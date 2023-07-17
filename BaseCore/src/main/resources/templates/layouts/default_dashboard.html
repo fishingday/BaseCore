@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html lagn="ko"
+<html lagn="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	<head>
-	    <title>Core Device</title>
-	    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
-	    <div th:replace="fragments/default_frag::headerFragment"></div>
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <meta name="description" content="Core device">
+		<title>Core Device</title>
+	    <div th:replace="~{fragments/default_common_resources :: css}"></div>	    
+    	<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 	</head>
-	<body>
-		<div class="dashwrap">
-			<th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-		</div>
-		<div class="dashcontainer">		
-			<div class="containerDashWide" id="container">
-			    <div class="dashcontent"></div>
-			    <div class="contents_area">
-			    	<th:block layout:fragment="content"></th:block>
-			    </div>				
-			</div>
-			<th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
-		</div>
+  	<body class="p-3 m-0 border-0 bd-example bd-example-row">
+	    <div class="container">
+	      <div class="row">
+	        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
+	      </div>
+	      <div class="row">
+	        <th:block layout:fragment="content"></th:block>
+	      </div>
+	      <div class="row">
+			  <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
+	      </div>
+	    </div>
+		<div th:replace="~{fragments/default_common_resources :: js}"></div>
 	</body>
 </html>

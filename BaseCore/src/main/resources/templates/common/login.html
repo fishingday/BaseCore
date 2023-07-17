@@ -1,12 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-	    <meta charset="UTF-8" />
 	    <title>Core Device</title>
-	    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
-	    <!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>-->
-		<!--<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
-	    <div th:replace="fragments/default_frag::headerFragment"></div>
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <meta name="description" content="Core device">
+		<div th:replace="~{fragments/default_common_resources :: css}"></div>
+		<style>
+			html, body {
+			  height: 100%;
+			}			
+			.form-signin {
+			  max-width: 330px;
+			  padding: 1rem;
+			}
+			
+			.form-signin .form-floating:focus-within {
+			  z-index: 2;
+			}
+			
+			.form-signin input[type="email"] {
+			  margin-bottom: -1px;
+			  border-bottom-right-radius: 0;
+			  border-bottom-left-radius: 0;
+			}
+			
+			.form-signin input[type="password"] {
+			  margin-bottom: 10px;
+			  border-top-left-radius: 0;
+			  border-top-right-radius: 0;
+			}
+		</style>  
+	</head>
+	<body class="d-flex align-items-center py-4 bg-body-tertiary"> 
+		<main class="form-signin w-100 m-auto">
+		  <form th:action="@{/common/login_proc.html}" class="form-signin" method="post">
+		    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>		
+		    <div class="form-floating">
+		      <!--input type="email" class="form-control" id="username" placeholder="name@example.com"-->
+		      <input type="text" class="form-control" name="username" id="username" placeholder="login id" required="required" autofocus="autofocus">
+		      <label for="username">Login Id</label>
+		    </div>
+		    <div class="form-floating">
+		      <input type="password" class="form-control"  name="password" id="password" placeholder="Password" required="required">
+		      <label for="password">Password</label>
+		    </div>
+		
+		    <div class="form-check text-start my-3">
+		      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+		      <label class="form-check-label" for="flexCheckDefault">
+		        Remember me
+		      </label>
+		    </div>
+		    <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+		    <p class="mt-5 mb-3 text-body-secondary">&copy; 2023</p>
+		  </form>
+		</main>
+
+		<div th:replace="~{fragments/default_common_resources :: js}"></div>
 	    <script>
 		    function formLogin(e) {
 		
@@ -39,31 +90,5 @@
 		        });
 		    }
 		</script>
-	</head>
-	<body>
-		<th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-		<div class="container text-center">
-		    <div class="login-form d-flex justify-content-center">
-		        <div class="col-sm-5" style="margin-top: 30px;">
-		            <div class="panel">
-		                <p>아이디와 비밀번호를 입력해주세요</p>
-		            </div>
-		            <div th:if="${param.error}" class="form-group">
-		                <span th:text="${exception}" class="alert alert-danger">잘못된 아이디나 암호입니다</span>
-		            </div>
-		            <form th:action="@{/common/login_proc.html}" class="form-signin" method="post">
-		                <input type="hidden" th:value="secret" name="secret_key" />
-		                <div class="form-group">
-		                    <input type="text" class="form-control" name="username" placeholder="아이디" required="required" autofocus="autofocus">
-		                </div>
-		                <div class="form-group">
-		                    <input type="password" class="form-control" name="password" placeholder="비밀번호" required="required">
-		                </div>
-		<!--                <button type="button" onclick="formLogin()" id="formbtn" class="btn btn-lg btn-primary btn-block">로그인</button>-->
-		               <button type="submit" class="btn btn-lg btn-primary btn-block">로그인</button>
-		            </form>
-		        </div>
-		    </div>
-		</div>
-	</body>
+    </body>
 </html>
