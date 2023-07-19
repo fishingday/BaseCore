@@ -16,12 +16,19 @@
 	        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
 	      </div>
 	      <div class="row">	        
-			<div class="col-3 border border-primary">
+			<div class="col-3">
 				<!-- lnb -->
 				<th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
 				<!-- lnb -->
 			</div>
-			<th:block layout:fragment="content"></th:block>
+			<div class="col-9 border border-primary">
+				<div class="container-fluid">					
+					<div class="row float-end">
+						<th:block th:replace="fragments/default_frag :: breadcrumbFragment"></th:block>
+					</div>
+					<th:block layout:fragment="content"></th:block>		
+				</div>		
+			</di>
 	      </div>
 	      <div class="row">
 			  <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>

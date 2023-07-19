@@ -105,4 +105,13 @@ public class MenuDto implements Comparable<MenuDto>{
 			return upMenu.topMenu();
 		}
 	}
+	
+	/**
+	 * 내가 최상위 일까?
+	 * 
+	 * @return
+	 */
+	public boolean isTop() {
+		return this.upMenu == null;
+	}
 }

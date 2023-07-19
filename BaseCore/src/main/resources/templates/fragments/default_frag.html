@@ -22,7 +22,7 @@
 	    <div class="container d-flex flex-wrap">
 	      <ul class="nav me-auto">
 	      <th:block sec:authorize="isAuthenticated()" th:each="topMenu : ${#authentication.principal.myMenu.topMenuList}">
-			<li class="nav-item" th:if="${topMenuStat.index eq 0}"><a href="#" class="nav-link link-body-emphasis px-2" aria-current="page">Home</a></li>
+			<li class="nav-item" th:if="${topMenuStat.index eq 0}"><a th:href="@{/}" class="nav-link link-body-emphasis px-2" aria-current="page">Home</a></li>
             <li class="nav-item"><a class="nav-link link-body-emphasis px-2" th:href="@{${topMenu.firstMenu.menuPath}}"><span th:text="${topMenu.menuNm}"></span></a></li>
           </th:block>
 	      </ul>
@@ -50,11 +50,11 @@
 	        </div>
 	        <div class="dropdown text-end">			          
 	          <ul class="dropdown-menu text-small">
-	            <li><a class="dropdown-item" href="#">New project...</a></li>
-	            <li><a class="dropdown-item" href="#">Settings</a></li>
-	            <li><a class="dropdown-item" href="#">Profile</a></li>
+	            <li><a class="dropdown-item" th:href="@{/user/bookmark}">북마크</a></li>
+	            <li><a class="dropdown-item" th:href="@{/user/user_info}">사용자정보</a></li>
+	            <li><a class="dropdown-item" th:href="@{/user/chg_pwd}">패스워드변경</a></li>
 	            <li><hr class="dropdown-divider"></li>
-	            <li><a class="dropdown-item" th:href="@{/common/logout.html}">Sign out</a></li>
+	            <li><a class="dropdown-item" th:href="@{/common/logout.html}">로그아웃</a></li>
 	          </ul>
 	          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
 	            <i class="fa-regular fa-circle-user fa-2xl"></i>
@@ -68,54 +68,51 @@
 	  <!-- header -->
     </div>
     
-
-  <div class="flex-shrink-0 p-3" style="width: 280px;" th:fragment="lnbFragment"  th:with="currMenu=${#authentication.principal.currMenu}">
-    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-      <i class="fa-brands fa-hashnode  fa-xl"></i>
-      <span class="fs-5 fw-semibold"> [[${currMenu.topMenu.menuNm}]]</span>
-    </a>
-    <ul class="list-unstyled ps-0" th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
-      <li class="mb-1" th:each="subMenu : ${topMenu.subMenuList}">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" 
-        	th:if="${subMenu.menuSeq == currMenu.menuSeq ? 'aria-expanded=true' : 'text-primary'}" th:aria-expanded="${subMenu.menuSeq == currMenu.menuSeq or subMenu.menuSeq == currMenu.upMenu.menuSeq}">
-          [[${subMenu.menuNm}]]
-        </button>
-        <div class="collapse show" id="home-collapse" th:if="${#lists.size(subMenu.subMenuList) > 0}"></div>
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
-				<a th:href="@{${leafMenu.menuPath}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" th:classappend="${leafMenu.menuSeq == currMenu.menuSeq} ? 'fw-bold':''"
+    <!--/* lnb */--> 
+    <div class="flex-shrink-0 p-3" style="width: 280px;" th:fragment="lnbFragment"  th:with="currMenu=${#authentication.principal.currMenu}">
+      <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+        <i class="fa-brands fa-hashnode  fa-xl"></i>
+        <span class="fs-5 fw-semibold"> [[${currMenu.topMenu.menuNm}]]</span><!--/* 최상위 메뉴 제목 */--> 
+      </a>
+      <ul class="list-unstyled ps-0" th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를..  */-->
+        <li class="mb-1" th:each="subMenu : ${topMenu.subMenuList}">
+		  <!--/* 중간 메뉴는 하위를 가질 수도, 아닐 수도 있음. 하위 메뉴가 없으면 본인이 메뉴임.  */-->
+          <a class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-target="#home-collapse" 
+              th:data-bs-toggle="${(#lists.size(subMenu.subMenuList) > 0)? 'collapse' : ''}" 
+        	  th:aria-expanded="${(#lists.size(subMenu.subMenuList) > 0) and (subMenu.menuSeq == currMenu.menuSeq or subMenu.menuSeq == currMenu.upMenu.menuSeq)}"
+        	  th:classappend="${#lists.size(subMenu.subMenuList) eq 0 and subMenu.menuSeq == currMenu.menuSeq} ? 'text-primary':''"
+        	  th:href="@{${(#lists.size(subMenu.subMenuList) eq 0) ? subMenu.menuPath : ''}}"
+        	>
+            [[${subMenu.menuNm}]]
+          </a>
+          <div class="collapse show" id="home-collapse" th:if="${#lists.size(subMenu.subMenuList) > 0}"></div>
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
+		  		<a th:href="@{${leafMenu.menuPath}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" th:classappend="${leafMenu.menuSeq == currMenu.menuSeq} ? 'fw-bold':''"
 					>[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="border-top my-3"></li>
-    </ul>
-  </div>
-
-    <nav th:fragment="lnbFragment2" class="col-md-2 d-none d-md-block bg-light sidebar" th:with="currMenu=${#authentication.principal.currMenu}">
-        <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
-                        <th:block th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
-                            <th:block th:each="subMenu : ${topMenu.subMenuList}"><!--/* 현재 메뉴의 상위 메뉴를  */-->
-                                <a th:href="@{${subMenu.menuPath}}" style="margin:5px;"
-                                   th:class="'nav-link  '+${subMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}">[[${subMenu.menuNm}]]</a>
-                                <th:block th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
-                                    <a th:href="@{${leafMenu.menuPath}}" style="margin:5px;"
-                                       th:class="'nav-link  '+${leafMenu.menuSeq == currMenu.menuSeq ? 'active' : 'text-primary'}" >[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
-                                </th:block>
-                            </th:block>
-                        </th:block>
-                    </div>
-                </li>
+              </li>
             </ul>
-        </div>
-    </nav>
+          </div>
+        </li>
+        <li class="border-top my-3"></li>
+      </ul>
+    </div>
+    <!--/* lnb */--> 
+    <!--/* breadcrumb */--> 
+	<nav  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" 
+		th:with="currMenu=${#authentication.principal.currMenu}"
+		th:fragment="breadcrumbFragment">
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a th:href="@{${currMenu.topMenu.firstMenu.menuPath}}">[[${currMenu.topMenu.menuNm}]]</a></li>
+	    <li class="breadcrumb-item" th:if="${!currMenu.upMenu.isTop}"><a th:href="@{${currMenu.upMenu.firstMenu.menuPath}}">[[${currMenu.upMenu.menuNm}]]</a></li>
+	    <li class="breadcrumb-item active" aria-current="page">[[${currMenu.menuNm}]]</li>
+	  </ol>
+	</nav>
+    <!--/* breadcrumb */--> 
+
 	<footer class="py-3 my-4" th:fragment="footerFragment">
 		<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+			<li class="nav-item"><a th:href="@{/}" class="nav-link px-2 text-body-secondary">Home</a></li>
 			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
 			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
 			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
