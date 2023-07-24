@@ -9,31 +9,125 @@
 
 	<!--/* Content 시작 */-->
 	<body>
-		<section>
-		    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-				
-				<section class="searchBox">
-					<div class="container">
-					  <div class="row">
-					    <div class="col">
-					      Column
-					    </div>
-					    <div class="col">
-					      Column
-					    </div>
-					    <div class="col">
-					      Column
-					    </div>
+	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
+			<div class="card mb-4">
+				<div class="card-header">
+					<div class="row mb-2 text-center">
+					  <div class="col-2">
+						  <label for="email" class="form-label mt-2">E-Mail</label>
 					  </div>
-					</div>		
-				</section>
-				<section class="searchResult">
-			        <div class="container text-center">
-			            <h1 class="text-primary">여기는 사용자관리 페이지 입니다.</h1>
-			        </div>
-			    </section>
-		    </div>		
-		</section>
+					  <div class="col-4">
+						  <input type="text" class="form-control" id="email" placeholder="name@example.com">
+					  </div>
+					  <div class="col-2">
+						  <label for="username" class="form-label mt-2">사용자명</label>
+					  </div>
+					  <div class="col-4">
+						  <input type="text" class="form-control" id="username" placeholder="홍길동">
+					  </div>
+					</div>
+					<div class="row mb-2 text-center">
+					  <div class="col-2">
+						  <label for="userTelNo" class="form-label mt-2">전화번호</label>
+					  </div>
+					  <div class="col-4">
+						  <input type="text" class="form-control" id="userTelNo" placeholder="010-0000-0000">
+					  </div>
+					  <div class="col-2">
+						  <label for="roleSeq" class="form-label mt-2">역할</label>
+					  </div>
+					  <div class="col-4">
+						  <select class="form-select" aria-label="Default select example" id="roleSeq">
+							  <option value="">전체</option>
+							  <option value="1">One</option>
+							  <option value="2">Two</option>
+							  <option value="3">Three</option>
+						  </select>
+					  </div>
+					</div>
+					<a class="btn btn-primary float-end" href="register"> <!-- <i class="fas fa-table me-1"></i> -->
+						<i class="fa-solid fa-magnifying-glass"></i> 조회
+					</a>
+				</div>
+				<div class="card-body">
+					<!-- List begin. -->
+			        <table id="jqGrid"></table>
+					<div id="gridpager"></div>
+					<!-- List end. -->
+				</div>
+			</div>
+			<script >
+				var dataArr = [ 
+				         {ID:"1",javascript:"80",python:"60",jsp:"50"},
+				         {ID:"2",javascript:"57",python:"80",jsp:"50"},
+				         {ID:"3",javascript:"90",python:"40",jsp:"85"},
+				         {ID:"4",javascript:"67",python:"84",jsp:"76"},
+				         {ID:"5",javascript:"35",python:"83",jsp:"85"},
+				         {ID:"6",javascript:"90",python:"67",jsp:"56"},
+				         {ID:"7",javascript:"80",python:"60",jsp:"50"},
+				         {ID:"8",javascript:"45",python:"67",jsp:"100"},
+				         {ID:"9",javascript:"90",python:"40",jsp:"68"},
+				         {ID:"10",javascript:"67",python:"57",jsp:"76"},
+				         {ID:"11",javascript:"36",python:"83",jsp:"35"},
+				         {ID:"12",javascript:"76",python:"35",jsp:"98"},
+				         ]; 
+				         
+					$("#jqGrid").jqGrid({
+				        datatype: "local",
+				        data: dataArr,
+				        height: 250, 
+				        width: 500,
+				        colNames : ['ID','자바스크립트','파이썬','JSP'], 
+				
+				        colModel:[
+				            {name:"ID",
+				            index:"ID",
+				            width:15,
+				            align:'center',
+				            hidden:false
+				            },
+				
+				            {name : 'javascript',
+				            index : 'javascript',
+				            width : 70, 
+				            align : 'left',
+				            hidden:false,
+				            },
+				
+				            {name : 'python',
+				            index : 'python',
+				            width : 70, 
+				            align : 'center',
+				            hidden:false
+				            },
+				
+				            {name : 'jsp',
+				            index : 'jsp',
+				            width : 70, 
+				            resizable : true,
+				            align : 'right',
+				            hidden:false
+				            }],
+				
+				        loadtext: "로딩중일때 표시되는 텍스트!",
+				        caption: "jQuery Grid: jqGrid 샘플",
+				
+				        pager:"#gridpager",
+				        rowNum:5,
+				
+				        //rownumbers:true,
+				        //viewrecords:true,
+				        //pgbuttons:true,
+				        //pginput:true,
+				        //shrinkToFit:true,
+				        //sortable: false,
+				        //loadComplete:function(data){},
+				        //scroll:true,
+				        //loadonce:false,
+				        //hidegrid:true
+				        }); 
+			</script>		
+	    </div>	
 	</body>
 	<!--/* Content 종료 */-->
 </html>
