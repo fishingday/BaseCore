@@ -1,5 +1,6 @@
-package kr.co.basedevice.corebase.dto;
+package kr.co.basedevice.corebase.dto.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +16,10 @@ import lombok.ToString;
 @Setter
 @ToString(exclude = "upMenu")
 @NoArgsConstructor
-public class MenuDto implements Comparable<MenuDto>{
+public class MenuDto implements Comparable<MenuDto>, Serializable{
 	
+	private static final long serialVersionUID = -7693749358822913212L;
+
 	private Long menuSeq;
 
 	private Long upMenuSeq;

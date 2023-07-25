@@ -14,7 +14,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.basedevice.corebase.domain.code.AccesLogTypCd;
-import kr.co.basedevice.corebase.dto.MenuDto;
+import kr.co.basedevice.corebase.dto.common.MenuDto;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 

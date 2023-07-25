@@ -16,7 +16,7 @@ import org.springframework.util.ObjectUtils;
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmMenuDtl;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.dto.MenuDto;
+import kr.co.basedevice.corebase.dto.common.MenuDto;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import lombok.AllArgsConstructor;
 

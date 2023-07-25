@@ -5,6 +5,10 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>사용자관리</title>
+	    <style>
+			/* 사용자 정의 css */
+			
+		</style>
 	</head>
 
 	<!--/* Content 시작 */-->
@@ -56,7 +60,8 @@
 					<!-- List end. -->
 				</div>
 			</div>
-			<script >
+	    </div>
+	    <script language="javascript" type="text/javascript" layout:fragment="page_script">
 				var dataArr = [ 
 				         {ID:"1",javascript:"80",python:"60",jsp:"50"},
 				         {ID:"2",javascript:"57",python:"80",jsp:"50"},
@@ -77,37 +82,20 @@
 				        data: dataArr,
 				        height: 250, 
 				        width: 500,
-				        colNames : ['ID','자바스크립트','파이썬','JSP'], 
+				        colNames : ['순번','E-Mail','사용자명', '연락처', '만료일', '상태', '최종접속IP', '로그인실패수', '역할'], 
 				
 				        colModel:[
-				            {name:"ID",
-				            index:"ID",
-				            width:15,
-				            align:'center',
-				            hidden:false
-				            },
-				
-				            {name : 'javascript',
-				            index : 'javascript',
-				            width : 70, 
-				            align : 'left',
-				            hidden:false,
-				            },
-				
-				            {name : 'python',
-				            index : 'python',
-				            width : 70, 
-				            align : 'center',
-				            hidden:false
-				            },
-				
-				            {name : 'jsp',
-				            index : 'jsp',
-				            width : 70, 
-				            resizable : true,
-				            align : 'right',
-				            hidden:false
-				            }],
+				            {name : "ID", index:"ID", width:15, align:'center', hidden:false},
+				            {name : 'javascript', index : 'javascript', width : 70,  align : 'left', hidden:false, },				
+				            {name : 'python', index : 'python', width : 70,  align : 'center', hidden:false  },
+				            {name : 'jsp',index : 'jsp', width : 70, resizable : true, align : 'right', hidden:false },
+				            
+				            {name : 'acuntExpDt', index : 'acuntExpDt', width : 70,  align : 'center', hidden:false  },
+				            {name : 'status', index : 'status', width : 70,  align : 'center', hidden:false  },
+				            {name : 'lastLoginIp', index : 'lastLoginIp', width : 70,  align : 'center', hidden:false  },
+				            {name : 'loginFailCnt', index : 'loginFailCnt', width : 70,  align : 'center', hidden:false  },
+				            {name : 'roleNm', index : 'roleNm', width : 70,  align : 'center', hidden:false  },
+				        ],
 				
 				        loadtext: "로딩중일때 표시되는 텍스트!",
 				        caption: "jQuery Grid: jqGrid 샘플",
@@ -126,8 +114,7 @@
 				        //loadonce:false,
 				        //hidegrid:true
 				        }); 
-			</script>		
-	    </div>	
+		</script>	
 	</body>
 	<!--/* Content 종료 */-->
 </html>

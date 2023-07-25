@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.User;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
-import kr.co.basedevice.corebase.dto.MenuDto;
 import kr.co.basedevice.corebase.dto.MyMenuDto;
+import kr.co.basedevice.corebase.dto.common.MenuDto;
 import lombok.Getter;
 import lombok.Setter;
 

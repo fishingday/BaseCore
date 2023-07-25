@@ -21,12 +21,12 @@
 				<th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
 				<!-- lnb -->
 			</div>
-			<div class="col-9 border border-primary">
+			<div class="col-9">
 				<div class="container-fluid">					
 					<div class="row float-end">
 						<th:block th:replace="fragments/default_frag :: breadcrumbFragment"></th:block>
 					</div>
-					<th:block layout:fragment="content"></th:block>		
+					<th:block layout:fragment="content"></th:block>
 				</div>		
 			</di>
 	      </div>
@@ -35,5 +35,6 @@
 	      </div>
 	    </div>
 		<div th:replace="~{fragments/default_common_resources :: js}"></div>
+		<th:block layout:fragment="page_script"></th:block>
     </body>
 </html>

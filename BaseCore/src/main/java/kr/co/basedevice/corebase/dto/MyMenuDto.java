@@ -1,11 +1,13 @@
 package kr.co.basedevice.corebase.dto;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import kr.co.basedevice.corebase.dto.common.MenuDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,8 +17,10 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class MyMenuDto{
+public class MyMenuDto implements Serializable{
 	
+	private static final long serialVersionUID = -6471522938276314617L;
+
 	/**
 	 * 탑메뉴 셋을 받아 
 	 * 

@@ -8,18 +8,22 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.dto.MenuDto;
 import kr.co.basedevice.corebase.dto.MyMenuDto;
+import kr.co.basedevice.corebase.dto.common.MenuDto;
+import kr.co.basedevice.corebase.dto.common.UserInfoDto;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
+import kr.co.basedevice.corebase.search.common.SearchUserInfo;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -101,5 +105,17 @@ public class UserService {
 		}else{ // 조상이 없다면... top!
 			return upMenu;
 		}
+	}
+	
+	/**
+	 * 사용자 목록 조회
+	 * 
+	 * @param searchUserInfo
+	 * @param page
+	 * @return
+	 */
+	public Page<UserInfoDto> pageUserInfo(SearchUserInfo searchUserInfo, PageRequest page){
+		
+		return cmUserRepository.pageUserInfo(searchUserInfo, page);
 	}
 }
