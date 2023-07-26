@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
@@ -111,11 +111,20 @@ public class UserService {
 	 * 사용자 목록 조회
 	 * 
 	 * @param searchUserInfo
-	 * @param page
+	 * @param pageable
 	 * @return
 	 */
-	public Page<UserInfoDto> pageUserInfo(SearchUserInfo searchUserInfo, PageRequest page){
+	public Page<UserInfoDto> pageUserInfo(SearchUserInfo searchUserInfo, Pageable pageable){
+		Page<UserInfoDto> pageUserInfo = cmUserRepository.pageUserInfo(searchUserInfo, pageable);
 		
-		return cmUserRepository.pageUserInfo(searchUserInfo, page);
+		if(pageUserInfo != null && !pageUserInfo.isEmpty()) {
+			int num = pageUserInfo.getNumber() * pageUserInfo.getSize() + 1;
+			for(UserInfoDto userInfoDto : pageUserInfo.getContent()) {
+				userInfoDto.setNum(num++);
+				userInfoDto.setCmRoleList(cmRoleRepository.findByUserSeq(userInfoDto.getUserSeq()));
+			}
+		}
+		
+		return pageUserInfo;
 	}
 }
