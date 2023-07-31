@@ -53,67 +53,45 @@
 						<i class="fa-solid fa-magnifying-glass"></i> 조회
 					</a>
 				</div>
-				<div class="card-body">
+				<div class="card-body" id="grid-body">
 					<!-- List begin. -->
-			        <table id="jqGrid"></table>
-					<div id="gridpager"></div>
 					<!-- List end. -->
 				</div>
 			</div>
 	    </div>
 	    <script language="javascript" type="text/javascript" layout:fragment="page_script">
-				var dataArr = [ 
-				         {ID:"1",javascript:"80",python:"60",jsp:"50"},
-				         {ID:"2",javascript:"57",python:"80",jsp:"50"},
-				         {ID:"3",javascript:"90",python:"40",jsp:"85"},
-				         {ID:"4",javascript:"67",python:"84",jsp:"76"},
-				         {ID:"5",javascript:"35",python:"83",jsp:"85"},
-				         {ID:"6",javascript:"90",python:"67",jsp:"56"},
-				         {ID:"7",javascript:"80",python:"60",jsp:"50"},
-				         {ID:"8",javascript:"45",python:"67",jsp:"100"},
-				         {ID:"9",javascript:"90",python:"40",jsp:"68"},
-				         {ID:"10",javascript:"67",python:"57",jsp:"76"},
-				         {ID:"11",javascript:"36",python:"83",jsp:"35"},
-				         {ID:"12",javascript:"76",python:"35",jsp:"98"},
-				         ]; 
-				         
-					$("#jqGrid").jqGrid({
-				        datatype: "local",
-				        data: dataArr,
-				        height: 250, 
-				        width: 500,
-				        colNames : ['순번','E-Mail','사용자명', '연락처', '만료일', '상태', '최종접속IP', '로그인실패수', '역할'], 
-				
-				        colModel:[
-				            {name : "ID", index:"ID", width:15, align:'center', hidden:false},
-				            {name : 'javascript', index : 'javascript', width : 70,  align : 'left', hidden:false, },				
-				            {name : 'python', index : 'python', width : 70,  align : 'center', hidden:false  },
-				            {name : 'jsp',index : 'jsp', width : 70, resizable : true, align : 'right', hidden:false },
-				            
-				            {name : 'acuntExpDt', index : 'acuntExpDt', width : 70,  align : 'center', hidden:false  },
-				            {name : 'status', index : 'status', width : 70,  align : 'center', hidden:false  },
-				            {name : 'lastLoginIp', index : 'lastLoginIp', width : 70,  align : 'center', hidden:false  },
-				            {name : 'loginFailCnt', index : 'loginFailCnt', width : 70,  align : 'center', hidden:false  },
-				            {name : 'roleNm', index : 'roleNm', width : 70,  align : 'center', hidden:false  },
-				        ],
-				
-				        loadtext: "로딩중일때 표시되는 텍스트!",
-				        caption: "jQuery Grid: jqGrid 샘플",
-				
-				        pager:"#gridpager",
-				        rowNum:5,
-				
-				        //rownumbers:true,
-				        //viewrecords:true,
-				        //pgbuttons:true,
-				        //pginput:true,
-				        //shrinkToFit:true,
-				        //sortable: false,
-				        //loadComplete:function(data){},
-				        //scroll:true,
-				        //loadonce:false,
-				        //hidegrid:true
-				        }); 
+			var fnObj = {
+				pageStart: function(){ 
+					fnObj.page.init();
+					fnObj.search.inQry();	
+            	},
+            	page : {
+					init : function (){
+						// 화면에 기본적으로 표시 되어야 하는 컴포넌트 초기화
+						fnObj.search.init();
+						fnObj.grid.init();
+					}
+				},
+            	search : {
+					init : function(){
+						// 검색 영역 초기화
+					},
+					inQry : function(){
+						// 조회를 실행한다.
+					}
+				},
+            	grid : {
+                	init : function() {
+						// 그리드 초기화
+					}
+                }
+			};
+			
+			
+	        $(document.body).ready(function () {
+	            fnObj.pageStart();
+	        });
+			
 		</script>	
 	</body>
 	<!--/* Content 종료 */-->

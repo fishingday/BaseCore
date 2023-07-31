@@ -1,5 +1,88 @@
+# fontawesome
 https://fontawesome.com/v6/
 
 https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=floormw&logNo=220931374142
 
+
+# thymeleaf
 https://jddng.tistory.com/search/thymeleaf
+
+
+
+## datatables
+https://devmoony.tistory.com/93
+https://datatables.net/manual/installation , https://datatables.net/
+https://zamezzz.tistory.com/309
+
+
+
+--------------
+## https://developer.mozilla.org/ko/docs/Web/HTML/Element/input
+# html5 input type 종류
+
+button : 클릭할 수 있는 버튼을 정의함.
+checkbox :체크박스(checkbox)를 정의함.
+color : 색을 선택할 수 있는 입력 필드(color picker)를 정의함.
+date : 날짜를 선택할 수 있는 입력 필드를 정의함. (year, month, day)
+datetime-local : 날짜와 시간을 선택할 수 있는 입력 필드를 정의함. (year, month, day, hour, minute)
+email : 이메일 주소를 입력할 수 있는 입력 필드를 정의함.
+file : 업로드할 파일을 선택할 수 있는 입력 필드와 “파일 선택” 버튼을 정의함.
+hidden : 사용자에게는 보이지 않는 숨겨진 입력 필드를 정의함.
+image : 제출 버튼(submit button)으로 사용될 이미지를 정의함.
+month : 날짜를 선택할 수 있는 입력 필드를 정의함. (year, month)
+number : 숫자를 입력할 수 있는 입력 필드를 정의함.
+password : 비밀번호를 입력할 수 있는 입력 필드를 정의함.
+radio : 라디오 버튼(radio button)을 정의함.
+range : 슬라이드 바를 조정하여 범위 내의 숫자를 선택할 수 있는 입력 필드를 정의함.
+reset : 리셋 버튼(reset button)을 정의함.
+search : 검색어를 입력할 수 있는 텍스트 필드를 정의함.
+submit : 제출 버튼(submit button)을 정의함.
+tel : 전화번호를 입력할 수 있는 입력 필드를 정의함.
+text : type 속성의 기본값으로, 한 줄로 된 텍스트 필드를 정의함.
+time : 시간을 선택할 수 있는 입력 필드를 정의함. (hour, minute)
+url : URL 주소를 입력할 수 있는 입력 필드를 정의함.
+week : 날짜를 선택할 수 있는 입력 필드를 정의함. (year, week)
+
+input-select : <datalist> 를 이용하여 작성가능
+<input list="browsers"/>
+<datalist id="browsers">
+	<option value="">xxxxx</option>
+	...
+</datalist> 
+
+
+# html5 input 속성 종류
+accept(file) : 	파일을 업로드 컨트롤에서 기대하는 파일 유형을 암시
+alt(image) :	이미지 유형에 대한 대체 속성. accessibiltiy 측면에서 필요.
+autocomplete(all) :	양식 자동생성 기능 (form autofill) 암시
+autofocus(all) :	페이지가 로딩될때 양식 제어에 오토포커스
+capture(file): 파일 업로드 제어에서 input 방식에서 미디어 capture
+checked(radio, checkbox) : 커맨드나 컨트롤이 체크 되었는지의 여부
+dirname(text, search) : 양식 전송시 요소의 방향성을 전송할 때 양식 필드의 Name
+disabled(all) : 양식 컨트롤이 비활성화되었는지의 여부
+form(all) :컨트롤을 양식 요소와 연결
+formaction(image, submit):양식 전송시 URL 사용하기
+formenctype(image, submit):양식의 데이터 인코딩 유형이 양식 전송시 사용될 것
+formmethod(image, submit):양식 전송시 HTTP 방식을 사용
+formnovalidate(image, submit):양식 전송시 양식 컨트롤 확인을 무시하기
+formtarget(image, submit):양식 전송시 브라우징 맥락
+height(image):이미지 높이에서 height 속성과 같음
+list(almost all): datalist 자동입력 옵션의 id 속성값
+max	(numeric types):최대값
+maxlength (password, search, tel, text, url): value의 최대 길이 (문자수)
+min	(numeric types) : 최소값
+minlength (password, search, tel, text, url): value의 최소 길이 (문자수)
+multiple (email, file) : 불리언값. 여러 값을 허용할지의 여부
+name (all) : input 양식 컨트롤의 이름. 이름/값 짝(name/value pair)의 일부로서 양식과 함께 전송된다
+pattern	(password, text, tel): value 가 유효하기 위해 일치해야 하는 패턴
+placeholder	(password, search, tel, text, url) : 양식 컨트롤이 비어있는 때 양식 컨트롤에 나타나는 내용
+readonly (en-US)	(almost all) :	불리언값. 이 값은 수정이 불가능함
+required (en-US)	(almost all) :	불리언값. 양식이 전송되기 위해서 반드시 입력하거나 확인이 필요한 값
+size	(email, password, tel, text):	컨트롤의 크기
+src	(image) : 이미지 출처의 주소에서 src 와 같은 속성
+step	(numeric types) :	유효한 증분적인 (Incremental)값
+type	(all) :	input 양식 컨트롤의 유형
+value	(all) :	양식 컨트롤의 현재 값. 이름/값 짝(name/value pair)의 일부로서 양식과 함께 전송된다
+width	(image) : 이미지의 width 속성과 같다
+
+--------- 
