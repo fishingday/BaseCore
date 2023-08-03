@@ -138,11 +138,11 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 		
-		<dependency>
+		<!--dependency>
 		    <groupId>com.github.ulisesbocchio</groupId>
 		    <artifactId>jasypt-spring-boot-starter</artifactId>
 		    <version>2.1.2</version>
-		</dependency>
+		</dependency-->
 		
 		<!-- Swagger -->
 		<!--dependency>
@@ -169,21 +169,25 @@
 		    <version>1.10.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.webjars</groupId>
-		    <artifactId>font-awesome</artifactId>
-		    <version>6.4.0</version>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>bootstrap-icons</artifactId>
+		    <version>1.10.5</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars.npm</groupId>
 		    <artifactId>sweetalert2</artifactId>
 		    <version>11.7.12</version>
+		</dependency>	
+		<dependency>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>bootstrap-table</artifactId>
+		    <version>1.22.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.webjars</groupId>
-		    <artifactId>datatables</artifactId>
-		    <version>1.13.5</version>
+			<groupId>org.webjars.bowergithub.hhurz</groupId>
+			<artifactId>tableexport.jquery.plugin</artifactId>
+			<version>1.26.0</version>
 		</dependency>
-
     </dependencies>
 
     <build>

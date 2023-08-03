@@ -9,10 +9,9 @@ https://jddng.tistory.com/search/thymeleaf
 
 
 
-## datatables
-https://devmoony.tistory.com/93
-https://datatables.net/manual/installation , https://datatables.net/
-https://zamezzz.tistory.com/309
+## bootstrap-table
+https://examples.bootstrap-table.com/
+
 
 
 

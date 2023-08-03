@@ -7,32 +7,31 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <meta name="description" content="Core device">
 		<title>Core Device</title>
-	    <div th:replace="~{fragments/default_common_resources :: css}"></div>	    
-    	<link rel="stylesheet" th:href="@{/css/sidebars.css}" />
+	    <div th:replace="~{fragments/default_common_resources :: css}"></div>
 	</head>
     <body>
 		<div class="container">
-	      <div class="row">
+	      <header class="row">
 	        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-	      </div>
-	      <div class="row">	        
-			<div class="col-3">
+	      </header>
+	      <div class="row row-cols-2">	        
+			<aside class="col-2">
 				<!-- lnb -->
 				<th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
 				<!-- lnb -->
-			</div>
-			<div class="col-9">
-				<div class="container-fluid">					
+			</aside>
+			<main class="col-10">
+				<nav class="container-fluid">					
 					<div class="row float-end">
 						<th:block th:replace="fragments/default_frag :: breadcrumbFragment"></th:block>
 					</div>
 					<th:block layout:fragment="content"></th:block>
-				</div>		
-			</di>
-	      </div>
-	      <div class="row">
+				</nav>
+			</main>
+		  </div>	      
+	      <footer class="row">
 			  <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
-	      </div>
+	      </footer>
 	    </div>
 		<div th:replace="~{fragments/default_common_resources :: js}"></div>
 		<th:block layout:fragment="page_script"></th:block>

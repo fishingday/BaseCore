@@ -10,13 +10,13 @@ logging:
   level:
     sql: debug
 
-jasypt:
-  encryptor:
-    password: corebase
-    bean: jasyptStringEncryptor
-    property:
-      prefix: ENC(
-      suffix: )
+#jasypt:
+#  encryptor:
+#    password: corebase
+#    bean: jasyptStringEncryptor
+#    property:
+#      prefix: ENC(
+#      suffix: )
     
 spring:
   config:
@@ -25,9 +25,6 @@ spring:
 
 
   datasource:
-#    url: ENC(LxUVl49zMHQtEnruFywZTEKwY6u37cax13PzAeoHPvQ2IqjuxVNVaA==)
-#    username: ENC(ErV73L8sSNyMoftBj+MHnw==)
-#    password: 
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
     password:

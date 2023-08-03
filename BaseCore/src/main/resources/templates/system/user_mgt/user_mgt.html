@@ -7,7 +7,7 @@
 	    <title>사용자관리</title>
 	    <style>
 			/* 사용자 정의 css */
-			
+
 		</style>
 	</head>
 
@@ -21,13 +21,13 @@
 						  <label for="email" class="form-label mt-2">E-Mail</label>
 					  </div>
 					  <div class="col-4">
-						  <input type="text" class="form-control" id="email" placeholder="name@example.com">
+						  <input type="search" class="form-control" id="email" placeholder="name@example.com">
 					  </div>
 					  <div class="col-2">
 						  <label for="username" class="form-label mt-2">사용자명</label>
 					  </div>
 					  <div class="col-4">
-						  <input type="text" class="form-control" id="username" placeholder="홍길동">
+						  <input type="search" class="form-control" id="username" placeholder="홍길동">
 					  </div>
 					</div>
 					<div class="row mb-2 text-center">
@@ -35,63 +35,187 @@
 						  <label for="userTelNo" class="form-label mt-2">전화번호</label>
 					  </div>
 					  <div class="col-4">
-						  <input type="text" class="form-control" id="userTelNo" placeholder="010-0000-0000">
+						  <input type="search" class="form-control" id="userTelNo" placeholder="010-0000-0000">
 					  </div>
 					  <div class="col-2">
-						  <label for="roleSeq" class="form-label mt-2">역할</label>
+						  <label for="roleCd" class="form-label mt-2">역할</label>
 					  </div>
 					  <div class="col-4">
-						  <select class="form-select" aria-label="Default select example" id="roleSeq">
+						  <select class="form-select" id="roleCd">
 							  <option value="">전체</option>
-							  <option value="1">One</option>
-							  <option value="2">Two</option>
-							  <option value="3">Three</option>
 						  </select>
 					  </div>
 					</div>
-					<a class="btn btn-primary float-end" href="register"> <!-- <i class="fas fa-table me-1"></i> -->
+					<a class="btn btn-primary float-end" id="btnSearch">
 						<i class="fa-solid fa-magnifying-glass"></i> 조회
 					</a>
 				</div>
 				<div class="card-body" id="grid-body">
 					<!-- List begin. -->
+					<div id="toolbar">
+					  <button id="remove" class="btn btn-danger" disabled>
+					    <i class="fa fa-trash"></i> 삭제
+					  </button>
+					</div>
+					<table
+					  id="table"					  
+					  data-toolbar="#toolbar"
+					  data-show-refresh="true"
+					  data-show-fullscreen="true"
+					  data-show-columns="true"
+					  data-show-columns-toggle-all="true"
+					  data-show-export="true"
+					  data-show-copy-rows="true"
+					  data-click-to-select="true"
+					  data-minimum-count-columns="2"
+					  data-show-pagination-switch="true"
+					  data-pagination="true"
+					  data-id-field="id"
+					  data-page-list="[10, 25, 50, 100]"
+					  data-side-pagination="server"
+					  data-server-sort="true"
+					  th:data-url="@{/system/user_mgt/user_info_list.json}">
+					</table>
 					<!-- List end. -->
 				</div>
 			</div>
 	    </div>
 	    <script language="javascript" type="text/javascript" layout:fragment="page_script">
-			var fnObj = {
-				pageStart: function(){ 
-					fnObj.page.init();
-					fnObj.search.inQry();	
+			  var $table = $('#table');
+			  var $remove = $('#remove');
+			  var selections = [];
+			
+			let fnObj = {
+				pageStart: function(){ // 화면 오픈 시 document.body.readㅛ
+					fnObj.page.init();				
             	},
-            	page : {
-					init : function (){
-						// 화면에 기본적으로 표시 되어야 하는 컴포넌트 초기화
-						fnObj.search.init();
+            	page : { // 화면의 기본적인 설정
+					init : function(){ // 화면 초기화
 						fnObj.grid.init();
-					}
-				},
-            	search : {
-					init : function(){
-						// 검색 영역 초기화
+						fnObj.page.setRoleData();
+						
+						$("#btnSearch").bind("click", function(){ // 조회 
+							$table.bootstrapTable('selectPage', 1)
+						});
+						
 					},
-					inQry : function(){
-						// 조회를 실행한다.
+					setRoleData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
+						$.get("/common/role_list.json", {},
+						    function(data, status) {
+								if(status === 'success'){
+									for(var i = 0; i < data.length; i++ ){
+										$("#roleCd option:last").after("<option value='" + data[i].roleCd + "'>" + data[i].roleNm + "</option>");
+									}
+								}
+						    }
+						);
 					}
 				},
-            	grid : {
+            	action : { // 동작에 관련된 행위를 한다.
+							
+				},
+            	grid : { // 그리드와 관련된 ... 
                 	init : function() {
-						// 그리드 초기화
-					}
+					    $table.bootstrapTable('destroy').bootstrapTable({
+					      height: 'auto',
+					      locale: 'ko-KR',
+					      columns: [
+					        [{field: 'state',  checkbox: true,         	align: 'center', valign: 'middle'}, 				         
+					         {field: 'num',          title: 'No.',     	align: 'center', valign: 'middle', sortable: false},	
+					         {field: 'loginId',      title: 'Email',    align: 'center', valign: 'middle', sortable: true}, 
+					         {field: 'userNm',       title: '사용자명', 	align: 'center', valign: 'middle', sortable: true}, 
+					         {field: 'userTelNo',    title: '전화번호',  	align: 'center', valign: 'middle', sortable: true},					         
+					         {field: 'roleNames',    title: '역할',   	align: 'center', valign: 'middle', sortable: false},	
+					         				         
+					         {field: 'userStatCd',   title: '상태',   	align: 'center', valign: 'middle', sortable: true}, 
+					         {field: 'acuntExpDt',   title: '만료일',   	align: 'center', valign: 'middle', sortable: true},
+					         {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', sortable: true},					         
+					         {field: 'lastLoginIp',  title: '로그인IP',  	align: 'center', valign: 'middle', sortable: true},					         
+					         {field: 'loginFailCnt', title: '실패수',   	align: 'center', valign: 'middle', sortable: true}, 
+					         {field: 'operate',title: 'Item Operate', align: 'center', valign: 'middle', clickToSelect: false},
+					         
+					         {field: 'userSeq',      title: '사용자순번', 	align: 'center', valign: 'middle', visible: false, switchable: false}
+					         ]
+					      ],
+					      responseHandler: function (data) { // 데이터 처리
+					      	  data.rows = data.content; // 이름을 변경해 줘야 한다.
+					      	  delete data.content;
+							  $.each(data.row, function (i, row) {
+							      row.state = $.inArray(row.userSeq, selections) !== -1
+							  })
+							  data.total = data.totalElements;
+							  data.totalNotFiltered = data.totalElements;
+							  return data;
+						  },
+						  queryParams: function(params){
+							  
+							  if(params.offset !== undefined){
+								params.size = params.limit; 
+							    params.page = params.offset/params.limit;  
+							  }else{
+								params.size = 10000; 
+							    params.page = 0;   
+							  }
+							  
+							  if($("#email").val() !== ''){
+								  params.loginId = $("#email").val();
+							  }
+							  
+							  if($("#username").val() !== ''){
+								  params.userNm = $("#username").val();
+							  }
+							  
+							  if($("#userTelNo").val() !== ''){
+								  params.userTelNo = $("#userTelNo").val();
+							  }
+							  
+							  if($("#roleCd").val() !== ''){								  
+								  params.roleCd = $("#roleCd").val();
+							  }
+							  
+							  console.log(params);
+							  return params;
+						  }
+					    })
+					    $table.on('check.bs.table uncheck.bs.table ' + 'check-all.bs.table uncheck-all.bs.table',
+					    function () {
+					      $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)					
+					      // save your data, here just save the current page
+					      selections = fnObj.grid.getIdSelections();
+					      // push or splice the selections if you want to save all data selections
+					    })
+					    $table.on('all.bs.table', function (e, name, args) {
+					      console.log(name, args)
+					    })
+					    $remove.click(function () {
+					      var ids = getIdSelections()
+					      $table.bootstrapTable('remove', {
+					        field: 'id',
+					        values: ids
+					      })
+					      $remove.prop('disabled', true)
+					    })
+					},
+					getIdSelections : function() {
+					    return $.map($table.bootstrapTable('getSelections'), function (row) {
+					      return row.id
+					    });
+				    }
                 }
 			};
 			
-			
+			// 페이지 초기 쿼리를 실행한다.
 	        $(document.body).ready(function () {
 	            fnObj.pageStart();
 	        });
-			
+  /*
+  function responseHandler(res) {
+    $.each(res.rows, function (i, row) {
+      row.state = $.inArray(row.id, selections) !== -1
+    })
+    return res
+  }
+  */
 		</script>	
 	</body>
 	<!--/* Content 종료 */-->
