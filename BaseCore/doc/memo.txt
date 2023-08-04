@@ -1,19 +1,16 @@
-# fontawesome
-https://fontawesome.com/v6/
-
-https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=floormw&logNo=220931374142
-
-
 # thymeleaf
 https://jddng.tistory.com/search/thymeleaf
 
 
-
-## bootstrap-table
+# bootstrap-table
 https://examples.bootstrap-table.com/
 
 
+# bootstrap
+https://getbootstrap.com
 
+# sweetalert2
+https://sweetalert2.github.io/
 
 --------------
 ## https://developer.mozilla.org/ko/docs/Web/HTML/Element/input

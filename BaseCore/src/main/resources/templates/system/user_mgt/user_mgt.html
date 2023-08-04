@@ -14,47 +14,51 @@
 	<!--/* Content 시작 */-->
 	<body>
 	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-			<div class="card mb-4">
-				<div class="card-header">
-					<div class="row mb-2 text-center">
+			<div class="container-fluid">
+				<div class="row border border-secondary-subtle p-2">
 					  <div class="col-2">
-						  <label for="email" class="form-label mt-2">E-Mail</label>
+						  <label for="search_email" class="form-label mt-2">E-Mail</label>
 					  </div>
 					  <div class="col-4">
-						  <input type="search" class="form-control" id="email" placeholder="name@example.com">
+						  <input type="search" class="form-control" id="search_email" placeholder="name@example.com">
 					  </div>
 					  <div class="col-2">
-						  <label for="username" class="form-label mt-2">사용자명</label>
+						  <label for="search_username" class="form-label mt-2">사용자명</label>
 					  </div>
 					  <div class="col-4">
-						  <input type="search" class="form-control" id="username" placeholder="홍길동">
-					  </div>
-					</div>
-					<div class="row mb-2 text-center">
-					  <div class="col-2">
-						  <label for="userTelNo" class="form-label mt-2">전화번호</label>
-					  </div>
-					  <div class="col-4">
-						  <input type="search" class="form-control" id="userTelNo" placeholder="010-0000-0000">
+						  <input type="search" class="form-control" id="search_username" placeholder="홍길동">
 					  </div>
 					  <div class="col-2">
-						  <label for="roleCd" class="form-label mt-2">역할</label>
+						  <label for="search_userTelNo" class="form-label mt-2">전화번호</label>
 					  </div>
 					  <div class="col-4">
-						  <select class="form-select" id="roleCd">
+						  <input type="search" class="form-control" id="search_userTelNo" placeholder="010-0000-0000">
+					  </div>
+					  <div class="col-2">
+						  <label for="search_roleCd" class="form-label mt-2">역할</label>
+					  </div>
+					  <div class="col-4">
+						  <select class="form-select" id="search_roleCd">
 							  <option value="">전체</option>
 						  </select>
 					  </div>
-					</div>
-					<a class="btn btn-primary float-end" id="btnSearch">
-						<i class="fa-solid fa-magnifying-glass"></i> 조회
-					</a>
+					  <div class="mt-2">
+						<a class="btn btn-primary float-end" id="btnSearch">
+							<i class="fa-solid fa-magnifying-glass"></i> 조회
+						</a>
+					  </div>
 				</div>
-				<div class="card-body" id="grid-body">
+				<div class="row" id="grid-body">
 					<!-- List begin. -->
 					<div id="toolbar">
-					  <button id="remove" class="btn btn-danger" disabled>
-					    <i class="fa fa-trash"></i> 삭제
+					  <button id="remove" class="btn btn-danger chg-btn" disabled>
+					    <i class="bi bi-trash"></i> 삭제
+					  </button>
+					  <button id="chg-passwd" class="btn btn-secondary chg-btn" disabled>
+					    <i class="bi bi-file-earmark-lock"></i> 비밀번호변경
+					  </button>
+					  <button id="chg-role" class="btn btn-secondary chg-btn" disabled>
+					    <i class="bi bi-gear"></i> 권한조정
 					  </button>
 					</div>
 					<table
@@ -64,28 +68,118 @@
 					  data-show-fullscreen="true"
 					  data-show-columns="true"
 					  data-show-columns-toggle-all="true"
-					  data-show-export="true"
 					  data-show-copy-rows="true"
 					  data-click-to-select="true"
 					  data-minimum-count-columns="2"
-					  data-show-pagination-switch="true"
 					  data-pagination="true"
-					  data-id-field="id"
+					  data-pagination-loop="false"
+					  data-id-field="userSeq"
 					  data-page-list="[10, 25, 50, 100]"
 					  data-side-pagination="server"
 					  data-server-sort="true"
-					  th:data-url="@{/system/user_mgt/user_info_list.json}">
+					  th:data-url="@{/system/user_mgt/user_info_list.json}"
+					  data-resizable="true">
 					</table>
 					<!-- List end. -->
 				</div>
 			</div>
+			<!-- modal -->
+			<div class="modal-staging">
+	    		<!--/* 사용자 정보 편집 */-->
+				<div class="modal fade" id="popupUserInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="staticBackdropLabel">사용자 정보</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+						  <div class="mb-3 row">
+						    <label for="userNm" class="col-sm-4 col-form-label">사용자명</label>
+						    <div class="col-sm-8">
+							  <input type="hidden" id="userSeq">
+						      <input type="text" class="form-control" id="userNm">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="loginId" class="col-sm-4 col-form-label">이메일</label>
+						    <div class="col-sm-8">
+						      <input type="email" class="form-control" id="loginId" placeholder="email@example.com">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="userTelNo" class="col-sm-4 col-form-label">전화번호</label>
+						    <div class="col-sm-8">
+						      <input type="tel" class="form-control" id="userTelNo">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="acuntExpDt" class="col-sm-4 col-form-label">계정만료일</label>
+						    <div class="col-sm-8">
+						      <input type="date" class="form-control" id="acuntExpDt">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label class="col-sm-4 col-form-label">역할(권한)</label>
+						    <div class="col-sm-8">
+						      <ul class="list-group role-list"></ul>
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="userStatCd" class="col-sm-4 col-form-label">계정상태</label>
+						    <div class="col-sm-8">
+						      <select class="form-select" id="userStatCd"></select>
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="loginFailCnt" class="col-sm-4 col-form-label">로그인실패횟수</label>
+						    <div class="col-sm-8">
+						      <input type="number" class="form-control" id="loginFailCnt">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="loginDt" class="col-sm-4 col-form-label">최종로그인일시</label>
+						    <div class="col-sm-8">
+						      <input type="datetime-local" readonly class="form-control-plaintext" id="loginDt">
+						    </div>
+						  </div>
+						  <div class="mb-3 row">
+						    <label for="lastLoginIp" class="col-sm-4 col-form-label">마지막로그인IP</label>
+						    <div class="col-sm-8">
+						      <input type="text" readonly class="form-control-plaintext" id="lastLoginIp">
+						    </div>
+						  </div>
+				      </div>
+				      <div class="modal-footer row justify-content-between">
+					    <div class="col-2">
+				          <button type="button" class="btn btn-primary" id="btnSaveUserInfo">저장</button>
+					    </div>
+				        <div class="col-6">
+					      <button type="button" class="btn btn-light" data-bs-toggle="button" id="btnPopupPwdEdit">패스워드 초기화</button>
+					      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					    </div>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+	    				
+			</div>
+			<!-- modal -->	
 	    </div>
+
 	    <script language="javascript" type="text/javascript" layout:fragment="page_script">
-			  var $table = $('#table');
-			  var $remove = $('#remove');
-			  var selections = [];
+			var $table = $('#table');
+			var $remove = $('#remove');
+			var selections = [];
 			
-			let fnObj = {
+			window.operateEvents = { // 그리드 내 버튼 이벤트
+				'click .userinfo-edit': function (e, value, row, index) {
+					
+					fnObj.action.setUserInfo(row);
+				}
+			};
+			
+			var fnObj = {
 				pageStart: function(){ // 화면 오픈 시 document.body.readㅛ
 					fnObj.page.init();				
             	},
@@ -93,18 +187,35 @@
 					init : function(){ // 화면 초기화
 						fnObj.grid.init();
 						fnObj.page.setRoleData();
+						fnObj.page.setUserStatCdData();
 						
 						$("#btnSearch").bind("click", function(){ // 조회 
-							$table.bootstrapTable('selectPage', 1)
+							$table.bootstrapTable('selectPage', 1);
 						});
 						
+						$("#btnSaveUserInfo").bind("click", function(){ // 조회 
+							fnObj.action.saveUserInfo();
+						});
 					},
 					setRoleData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
-						$.get("/common/role_list.json", {},
+						$.get("[[@{/common/role_list.json}]]", {},
 						    function(data, status) {
 								if(status === 'success'){
 									for(var i = 0; i < data.length; i++ ){
-										$("#roleCd option:last").after("<option value='" + data[i].roleCd + "'>" + data[i].roleNm + "</option>");
+										$("#search_roleCd").append("<option value='" + data[i].roleCd + "'>" + data[i].roleNm + "</option>");
+										$(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleCd" value="'+ data[i].roleCd +'" id="roleCd-'+ data[i].roleCd +'">' 
+										+ '<label class="form-check-label" for="roleCd-'+ data[i].roleCd +'">' + data[i].roleNm + '</label></li>');
+									}
+								}
+						    }
+						);
+					},
+					setUserStatCdData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
+						$.get("[[@{/common/code_dtl_list.json}]]", {grpCd:'USER_STAT_CD'},
+						    function(data, status) {
+								if(status === 'success'){
+									for(var i = 0; i < data.length; i++ ){
+										$("#userStatCd").append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
 									}
 								}
 						    }
@@ -112,15 +223,159 @@
 					}
 				},
             	action : { // 동작에 관련된 행위를 한다.
-							
+					setUserInfo : function(userInfo){
+						fnObj.action.initUserInfo();
+						
+						$("#userSeq").val(userInfo.userSeq);
+						$("#userNm").val(userInfo.userNm);
+						$("#loginId").val(userInfo.loginId);
+						$("#userTelNo").val(userInfo.userTelNo);
+						$("#acuntExpDt").val(userInfo.acuntExpDt);
+						
+						if(userInfo.cmRoleList){
+							for (var i = 0; i < userInfo.cmRoleList.length; i++) {
+							  $("#roleCd-" + userInfo.cmRoleList[i].roleCd).attr("checked", true);
+							}
+						}
+						
+						$("#userStatCd").val(userInfo.userStatCd);
+						$("#loginFailCnt").val(userInfo.loginFailCnt);
+						$("#loginDt").val(userInfo.loginDt);
+						$("#lastLoginIp").val(userInfo.lastLoginIp);
+					},
+					initUserInfo : function(){
+						$("#userSeq").val('');
+						$("#userNm").val('');
+						$("#loginId").val('');
+						$("#userTelNo").val('');
+						$("#acuntExpDt").val('');						
+						$('input:checkbox[name="roleCd"]').attr("checked", false);						
+						$("#userStatCd").val('');
+						$("#loginFailCnt").val('');
+						$("#loginDt").val('');
+						$("#lastLoginIp").val('');
+					},
+					saveUserInfo : function(){
+						
+						if($("#userSeq").val() === ''){
+							Swal.fire({
+							  title: 'Error!',
+							  text: '사용자 정보가 없습니다.',
+							  icon: 'error',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						if($("#userNm").val() === ''){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '사용자 명은 필수 입력 사항입니다.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						if($("#loginId").val() === ''){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '이메일은은 필수 입력 사항입니다.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						if($("#userTelNo").val() === ''){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '전화번호는 필수 입력 사항입니다.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						if($("#userStatCd").val() === ''){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '계정상태를 선택해야 합니다.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						if($("#loginFailCnt").val() === ''){
+							$("#loginFailCnt").val(0);
+						}						
+						
+						let userInfo = {};
+						userInfo.userSeq = $("#userSeq").val();
+						userInfo.userNm = $("#userNm").val();
+						userInfo.loginId = $("#loginId").val();
+						userInfo.userTelNo = $("#userTelNo").val();
+						userInfo.acuntExpDt = $("#acuntExpDt").val();						
+						userInfo.userStatCd = $("#userStatCd").val();
+						userInfo.loginFailCnt = $("#loginFailCnt").val();
+						
+						userInfo.roleCd = []; 
+						$('input:checkbox[name="roleCd"]').each(function() {
+							if(this.checked){
+								userInfo.roleCd.push(this.value);
+							}
+						});
+						
+						if(userInfo.roleCd.length === 0){
+							Swal.fire({
+							  title: 'Error!',
+							  text: '최소 하나의 역할이 있어야 합니다.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						
+						$.post("[[@{/system/user_mgt/save_user_info.json}]]", userInfo, function(data, status){
+							if(status === 'success'){
+								if(data === true){
+									$("#popupUserInfo").modal("hide");
+									var pageIdx = $("li.page-item.active > .page-link").text();
+									if(pageIdx !== undefined){
+										$table.bootstrapTable('selectPage', pageIdx);
+									}
+								}else{
+									Swal.fire({
+									  title: 'Error!',
+									  text: '저장에 실패 했습니다.',
+									  icon: 'error',
+									  confirmButtonText: '닫기'
+									});
+								}								
+							}else{
+								Swal.fire({
+								  title: 'Error!',
+								  text: '저장 중 문제가 발생했습니다.',
+								  icon: 'error',
+								  confirmButtonText: '닫기'
+								});
+							}
+						});
+					}
 				},
             	grid : { // 그리드와 관련된 ... 
                 	init : function() {
 					    $table.bootstrapTable('destroy').bootstrapTable({
-					      height: 'auto',
 					      locale: 'ko-KR',
+					      classes: 'table table-bordered table-striped table-hover',
+					      headerStyle : function(){
+							  return {classes: 'table-primary'};
+						  },
 					      columns: [
-					        [{field: 'state',  checkbox: true,         	align: 'center', valign: 'middle'}, 				         
+					        [{field: 'state',       checkbox: true,     align: 'center', valign: 'middle', class : 'table-primary'},
+							 {field: 'userSeq',      title: '사용자순번', 	align: 'center', valign: 'middle', visible: false, switchable: false},       
 					         {field: 'num',          title: 'No.',     	align: 'center', valign: 'middle', sortable: false},	
 					         {field: 'loginId',      title: 'Email',    align: 'center', valign: 'middle', sortable: true}, 
 					         {field: 'userNm',       title: '사용자명', 	align: 'center', valign: 'middle', sortable: true}, 
@@ -132,11 +387,17 @@
 					         {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', sortable: true},					         
 					         {field: 'lastLoginIp',  title: '로그인IP',  	align: 'center', valign: 'middle', sortable: true},					         
 					         {field: 'loginFailCnt', title: '실패수',   	align: 'center', valign: 'middle', sortable: true}, 
-					         {field: 'operate',title: 'Item Operate', align: 'center', valign: 'middle', clickToSelect: false},
-					         
-					         {field: 'userSeq',      title: '사용자순번', 	align: 'center', valign: 'middle', visible: false, switchable: false}
-					         ]
-					      ],
+					         {field: 'operate',      title: '상세보기',   align: 'center', valign: 'middle', clickToSelect: false,
+					          events: window.operateEvents,
+                              formatter: function(value, row, index) {
+							    return [
+							      '<a class="userinfo-edit" href="javascript:void(0)" title="사용자정보" data-bs-toggle="modal" data-bs-target="#popupUserInfo" >',
+							      '<i class="bi bi-pencil-square"></i>',
+							      '</a>'
+							    ].join('')
+							  }
+					         }
+					      ]],
 					      responseHandler: function (data) { // 데이터 처리
 					      	  data.rows = data.content; // 이름을 변경해 줘야 한다.
 					      	  delete data.content;
@@ -157,40 +418,40 @@
 							    params.page = 0;   
 							  }
 							  
-							  if($("#email").val() !== ''){
-								  params.loginId = $("#email").val();
+							  if($("#search_email").val() !== ''){
+								  params.loginId = $("#search_email").val();
 							  }
 							  
-							  if($("#username").val() !== ''){
-								  params.userNm = $("#username").val();
+							  if($("#search_username").val() !== ''){
+								  params.userNm = $("#search_username").val();
 							  }
 							  
-							  if($("#userTelNo").val() !== ''){
-								  params.userTelNo = $("#userTelNo").val();
+							  if($("#search_userTelNo").val() !== ''){
+								  params.userTelNo = $("#search_userTelNo").val();
 							  }
 							  
-							  if($("#roleCd").val() !== ''){								  
-								  params.roleCd = $("#roleCd").val();
+							  if($("#search_roleCd").val() !== ''){								  
+								  params.roleCd = $("#search_roleCd").val();
 							  }
 							  
-							  console.log(params);
 							  return params;
 						  }
 					    })
 					    $table.on('check.bs.table uncheck.bs.table ' + 'check-all.bs.table uncheck-all.bs.table',
-					    function () {
-					      $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)					
-					      // save your data, here just save the current page
-					      selections = fnObj.grid.getIdSelections();
-					      // push or splice the selections if you want to save all data selections
-					    })
+						    function () {
+						      $(".chg-btn").prop('disabled', !$table.bootstrapTable('getSelections').length);
+						      // save your data, here just save the current page
+						      selections = fnObj.grid.getIdSelections();
+						      // push or splice the selections if you want to save all data selections
+						    }
+					    )
 					    $table.on('all.bs.table', function (e, name, args) {
-					      console.log(name, args)
+					      //console.log(name, args)
 					    })
 					    $remove.click(function () {
-					      var ids = getIdSelections()
+					      var ids = fnObj.grid.getIdSelections();
 					      $table.bootstrapTable('remove', {
-					        field: 'id',
+					        field: 'userSeq',
 					        values: ids
 					      })
 					      $remove.prop('disabled', true)
@@ -198,7 +459,7 @@
 					},
 					getIdSelections : function() {
 					    return $.map($table.bootstrapTable('getSelections'), function (row) {
-					      return row.id
+					      return row.userSeq
 					    });
 				    }
                 }
@@ -208,14 +469,6 @@
 	        $(document.body).ready(function () {
 	            fnObj.pageStart();
 	        });
-  /*
-  function responseHandler(res) {
-    $.each(res.rows, function (i, row) {
-      row.state = $.inArray(row.id, selections) !== -1
-    })
-    return res
-  }
-  */
 		</script>	
 	</body>
 	<!--/* Content 종료 */-->

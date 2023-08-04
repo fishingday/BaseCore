@@ -6,11 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
+import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.UserService;
@@ -46,11 +48,15 @@ public class UserMgtRestController {
 		return ResponseEntity.ok(pageUserInfo);
 	}
 	
-	
-
-	public CmUser sssd() {
+	@PostMapping("/save_user_info.json")
+	public ResponseEntity<Boolean> saveUserInfo(SaveUserInfo userInfo) {
+		
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
-		return cmUser;
+		boolean isSave = userService.editUserInfo(userInfo, cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(isSave);
 	}
+	
+
 }

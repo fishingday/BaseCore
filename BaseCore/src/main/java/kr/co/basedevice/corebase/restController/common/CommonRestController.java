@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.service.common.CommonService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,16 @@ public class CommonRestController {
 	 */
 	@GetMapping("/role_list.json")
 	public ResponseEntity<List<CmRole>> getRoleList(){
-		List<CmRole> cmRoleList = commonService.getCmRole();
+		List<CmRole> cmRoleList = commonService.getCmRoleList();
 		
 		return ResponseEntity.ok(cmRoleList);
+	}
+	
+	
+	@GetMapping("/code_dtl_list.json")
+	public ResponseEntity<List<CmCdDtl>> getCodeDtlList(String grpCd){
+		List<CmCdDtl> cmCdDtlList = commonService.getCmCdDtlList(grpCd);
+		
+		return ResponseEntity.ok(cmCdDtlList);
 	}
 }

@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.service.common;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,14 +16,18 @@ import org.springframework.stereotype.Service;
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.cm.CmUserRoleMap;
+import kr.co.basedevice.corebase.domain.code.RoleCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.MyMenuDto;
 import kr.co.basedevice.corebase.dto.common.MenuDto;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
+import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
+import kr.co.basedevice.corebase.repository.cm.CmUserRoleMapRepository;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +38,7 @@ public class UserService {
 
 	final private CmUserRepository cmUserRepository;
 	final private CmRoleRepository cmRoleRepository;
+	final private CmUserRoleMapRepository cmUserRoleMapRepository;  
 	final private CmMenuRepository cmMenuRepository;
 
 	
@@ -126,5 +132,67 @@ public class UserService {
 		}
 		
 		return pageUserInfo;
+	}
+
+	/**
+	 * 사용자 정보 편집
+	 * - 이미 있는 사용자를 대상으로 한다.
+	 * 
+	 * @param saveUserInfo
+	 * @param userSeq
+	 */
+	public boolean editUserInfo(SaveUserInfo saveUserInfo, Long updatorSeq) {
+		
+		CmUser cmUser = cmUserRepository.getById(saveUserInfo.getUserSeq());		
+		if(cmUser != null) {
+			cmUser.setLoginId(saveUserInfo.getLoginId());
+			cmUser.setUserNm(saveUserInfo.getUserNm());
+			cmUser.setUserTelNo(saveUserInfo.getUserTelNo());
+			cmUser.setLoginFailCnt(saveUserInfo.getLoginFailCnt());
+			cmUser.setUserStatCd(saveUserInfo.getUserStatCd());
+			
+			cmUser.setDelYn(Yn.N);
+			cmUser.setUpdatorSeq(updatorSeq);
+			cmUser.setUpdDt(LocalDateTime.now());
+			cmUserRepository.save(cmUser);
+			
+			// 일단 모든 역할을 제거한다.
+			List<CmUserRoleMap> cmUserRoleMapList = cmUserRoleMapRepository.findByUserSeqAndDelYn(saveUserInfo.getUserSeq(), Yn.N);
+			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
+				for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
+					cmUserRoleMap.setDelYn(Yn.Y);
+					cmUserRoleMap.setUpdatorSeq(updatorSeq);
+					cmUserRoleMap.setUpdDt(LocalDateTime.now());
+				}
+				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
+			}
+			
+			// 역할을 찾아 저장한다.
+			if(saveUserInfo.getRoleCd() != null && !saveUserInfo.getRoleCd().isEmpty()) {
+				int prntOrd = 1;
+				for(String roleCd : saveUserInfo.getRoleCd()) {
+					List<CmRole> cmRoleList = cmRoleRepository.findByRoleCdAndDelYn(RoleCd.valueOf(roleCd), Yn.N);
+					if(cmRoleList != null && !cmRoleList.isEmpty()) {
+						for(CmRole cmRole : cmRoleList) {
+							CmUserRoleMap cmUserRoleMap = new CmUserRoleMap();
+							cmUserRoleMap.setUserSeq(saveUserInfo.getUserSeq());
+							cmUserRoleMap.setRoleSeq(cmRole.getRoleSeq());
+							cmUserRoleMap.setPrntOrd(prntOrd++);
+							
+							cmUserRoleMap.setDelYn(Yn.N);
+							cmUserRoleMap.setCreatorSeq(updatorSeq);
+							cmUserRoleMap.setCreDt(LocalDateTime.now());
+							cmUserRoleMap.setUpdatorSeq(updatorSeq);
+							cmUserRoleMap.setUpdDt(LocalDateTime.now());
+							
+							cmUserRoleMapRepository.save(cmUserRoleMap);
+						}
+					}
+				}
+			}
+			return true;
+		}
+		
+		return false;
 	}
 }

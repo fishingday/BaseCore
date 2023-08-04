@@ -184,9 +184,9 @@
 		    <version>1.22.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.webjars.bowergithub.hhurz</groupId>
-			<artifactId>tableexport.jquery.plugin</artifactId>
-			<version>1.26.0</version>
+		    <groupId>org.webjars.npm</groupId>
+		    <artifactId>jquery-resizable-columns</artifactId>
+		    <version>0.2.3</version>
 		</dependency>
     </dependencies>
 

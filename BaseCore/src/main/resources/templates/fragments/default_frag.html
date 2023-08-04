@@ -90,7 +90,7 @@
 		th:with="currMenu=${#authentication.principal.currMenu}"
 		th:fragment="breadcrumbFragment">
 	  <ol class="breadcrumb">
-	    <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa-solid fa-house"></i></a></li>
+	    <li class="breadcrumb-item"><a th:href="@{/}"><i class="bi bi-house-heart"></i></a></li>
 	    <li class="breadcrumb-item"><a th:href="@{${currMenu.topMenu.firstMenu.menuPath}}">[[${currMenu.topMenu.menuNm}]]</a></li>
 	    <li class="breadcrumb-item" th:if="${!currMenu.upMenu.isTop}"><a th:href="@{${currMenu.upMenu.firstMenu.menuPath}}">[[${currMenu.upMenu.menuNm}]]</a></li>
 	    <li class="breadcrumb-item active" aria-current="page">[[${currMenu.menuNm}]]</li>

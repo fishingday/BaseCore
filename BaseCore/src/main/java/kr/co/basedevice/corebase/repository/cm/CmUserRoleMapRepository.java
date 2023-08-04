@@ -12,4 +12,6 @@ public interface CmUserRoleMapRepository extends JpaRepository<CmUserRoleMap, Cm
 
 	List<CmUserRoleMap> findByRoleSeqAndDelYn(Long roleSeq, Yn n);
 
+	List<CmUserRoleMap> findByUserSeqAndDelYn(Long userSeq, Yn n);
+
 }
