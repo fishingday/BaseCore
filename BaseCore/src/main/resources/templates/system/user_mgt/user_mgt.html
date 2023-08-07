@@ -35,10 +35,10 @@
 						  <input type="search" class="form-control" id="search_userTelNo" placeholder="010-0000-0000">
 					  </div>
 					  <div class="col-2">
-						  <label for="search_roleCd" class="form-label mt-2">역할</label>
+						  <label for="search_roleSeq" class="form-label mt-2">역할</label>
 					  </div>
 					  <div class="col-4">
-						  <select class="form-select" id="search_roleCd">
+						  <select class="form-select" id="search_roleSeq">
 							  <option value="">전체</option>
 						  </select>
 					  </div>
@@ -173,8 +173,7 @@
 			var selections = [];
 			
 			window.operateEvents = { // 그리드 내 버튼 이벤트
-				'click .userinfo-edit': function (e, value, row, index) {
-					
+				'click .userinfo-edit': function (e, value, row, index) {					
 					fnObj.action.setUserInfo(row);
 				}
 			};
@@ -196,21 +195,25 @@
 						$("#btnSaveUserInfo").bind("click", function(){ // 조회 
 							fnObj.action.saveUserInfo();
 						});
+						
+						$("#btnPopupPwdEdit").bind("click", function(){ // 조회 
+							fnObj.action.chgUserPwd();
+						});
 					},
 					setRoleData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
 						$.get("[[@{/common/role_list.json}]]", {},
 						    function(data, status) {
 								if(status === 'success'){
 									for(var i = 0; i < data.length; i++ ){
-										$("#search_roleCd").append("<option value='" + data[i].roleCd + "'>" + data[i].roleNm + "</option>");
-										$(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleCd" value="'+ data[i].roleCd +'" id="roleCd-'+ data[i].roleCd +'">' 
-										+ '<label class="form-check-label" for="roleCd-'+ data[i].roleCd +'">' + data[i].roleNm + '</label></li>');
+										$("#search_roleSeq").append("<option value='" + data[i].roleSeq + "'>" + data[i].roleNm + "</option>");
+										$(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">' 
+										+ '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
 									}
 								}
 						    }
 						);
 					},
-					setUserStatCdData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
+					setUserStatCdData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.	
 						$.get("[[@{/common/code_dtl_list.json}]]", {grpCd:'USER_STAT_CD'},
 						    function(data, status) {
 								if(status === 'success'){
@@ -234,7 +237,7 @@
 						
 						if(userInfo.cmRoleList){
 							for (var i = 0; i < userInfo.cmRoleList.length; i++) {
-							  $("#roleCd-" + userInfo.cmRoleList[i].roleCd).attr("checked", true);
+							  $("#roleSeq-" + userInfo.cmRoleList[i].roleSeq).prop("checked", true);
 							}
 						}
 						
@@ -249,7 +252,7 @@
 						$("#loginId").val('');
 						$("#userTelNo").val('');
 						$("#acuntExpDt").val('');						
-						$('input:checkbox[name="roleCd"]').attr("checked", false);						
+						$('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);			
 						$("#userStatCd").val('');
 						$("#loginFailCnt").val('');
 						$("#loginDt").val('');
@@ -320,14 +323,14 @@
 						userInfo.userStatCd = $("#userStatCd").val();
 						userInfo.loginFailCnt = $("#loginFailCnt").val();
 						
-						userInfo.roleCd = []; 
-						$('input:checkbox[name="roleCd"]').each(function() {
+						userInfo.roleSeqList = []; 
+						$('input:checkbox[name="roleSeqList"]').each(function() {
 							if(this.checked){
-								userInfo.roleCd.push(this.value);
+								userInfo.roleSeqList.push(this.value);
 							}
 						});
 						
-						if(userInfo.roleCd.length === 0){
+						if(userInfo.roleSeqList.length === 0){
 							Swal.fire({
 							  title: 'Error!',
 							  text: '최소 하나의 역할이 있어야 합니다.',
@@ -338,31 +341,30 @@
 						}
 						
 						
-						$.post("[[@{/system/user_mgt/save_user_info.json}]]", userInfo, function(data, status){
-							if(status === 'success'){
-								if(data === true){
+						$.ajax({
+							url: "[[@{/system/user_mgt/chg_user_info.json}]]", 
+							type: "PUT",
+							async: true,
+							dataType : "json",
+							data : userInfo, 
+							success: function(data, status){
+								if(status === 'success'){
 									$("#popupUserInfo").modal("hide");
 									var pageIdx = $("li.page-item.active > .page-link").text();
-									if(pageIdx !== undefined){
-										$table.bootstrapTable('selectPage', pageIdx);
-									}
+									$table.bootstrapTable('selectPage', Number(pageIdx));
 								}else{
 									Swal.fire({
 									  title: 'Error!',
-									  text: '저장에 실패 했습니다.',
+									  text: '저장 중 문제가 발생했습니다.',
 									  icon: 'error',
 									  confirmButtonText: '닫기'
 									});
-								}								
-							}else{
-								Swal.fire({
-								  title: 'Error!',
-								  text: '저장 중 문제가 발생했습니다.',
-								  icon: 'error',
-								  confirmButtonText: '닫기'
-								});
+								}
 							}
 						});
+					},
+					chgUserPwd : function(){ // 사용자 패스워드 변경
+						alert('그냥 모달이나 띄우자.');
 					}
 				},
             	grid : { // 그리드와 관련된 ... 
@@ -406,6 +408,8 @@
 							  })
 							  data.total = data.totalElements;
 							  data.totalNotFiltered = data.totalElements;
+							  
+							  console.log(data);
 							  return data;
 						  },
 						  queryParams: function(params){
@@ -430,8 +434,8 @@
 								  params.userTelNo = $("#search_userTelNo").val();
 							  }
 							  
-							  if($("#search_roleCd").val() !== ''){								  
-								  params.roleCd = $("#search_roleCd").val();
+							  if($("#search_roleSeq").val() !== ''){
+								  params.roleSeq = $("#search_roleSeq").val();
 							  }
 							  
 							  return params;

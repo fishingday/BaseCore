@@ -18,4 +18,5 @@ public interface CmUserPwdRepository extends JpaRepository<CmUserPwd, Long>{
 	 */
 	List<CmUserPwd> findByUserSeqAndDelYnOrderByUserPwdSeqDesc(Long userSeq, Yn yn);
 
+
 }

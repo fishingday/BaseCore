@@ -1,6 +1,8 @@
 package kr.co.basedevice.corebase.service.common;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,8 +19,9 @@ import org.springframework.stereotype.Service;
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
 import kr.co.basedevice.corebase.domain.cm.CmUserRoleMap;
-import kr.co.basedevice.corebase.domain.code.RoleCd;
+import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.MyMenuDto;
 import kr.co.basedevice.corebase.dto.common.MenuDto;
@@ -26,6 +30,7 @@ import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
+import kr.co.basedevice.corebase.repository.cm.CmUserPwdRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRoleMapRepository;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
@@ -35,10 +40,14 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @Service
 public class UserService {
+	
+    @Value("${login.set.acunt_exp_dt:365}")
+	private Long addAccuntExpDt;
 
 	final private CmUserRepository cmUserRepository;
 	final private CmRoleRepository cmRoleRepository;
 	final private CmUserRoleMapRepository cmUserRoleMapRepository;  
+	final private CmUserPwdRepository cmUserPwdRepository;
 	final private CmMenuRepository cmMenuRepository;
 
 	
@@ -138,10 +147,10 @@ public class UserService {
 	 * 사용자 정보 편집
 	 * - 이미 있는 사용자를 대상으로 한다.
 	 * 
-	 * @param saveUserInfo
+	 * @param chgUserInfo
 	 * @param userSeq
 	 */
-	public boolean editUserInfo(SaveUserInfo saveUserInfo, Long updatorSeq) {
+	public boolean chgUserInfo(SaveUserInfo saveUserInfo, Long updatorSeq) {
 		
 		CmUser cmUser = cmUserRepository.getById(saveUserInfo.getUserSeq());		
 		if(cmUser != null) {
@@ -168,31 +177,139 @@ public class UserService {
 			}
 			
 			// 역할을 찾아 저장한다.
-			if(saveUserInfo.getRoleCd() != null && !saveUserInfo.getRoleCd().isEmpty()) {
+			if(saveUserInfo.getRoleSeqList() != null && !saveUserInfo.getRoleSeqList().isEmpty()) {
 				int prntOrd = 1;
-				for(String roleCd : saveUserInfo.getRoleCd()) {
-					List<CmRole> cmRoleList = cmRoleRepository.findByRoleCdAndDelYn(RoleCd.valueOf(roleCd), Yn.N);
-					if(cmRoleList != null && !cmRoleList.isEmpty()) {
-						for(CmRole cmRole : cmRoleList) {
-							CmUserRoleMap cmUserRoleMap = new CmUserRoleMap();
-							cmUserRoleMap.setUserSeq(saveUserInfo.getUserSeq());
-							cmUserRoleMap.setRoleSeq(cmRole.getRoleSeq());
-							cmUserRoleMap.setPrntOrd(prntOrd++);
-							
-							cmUserRoleMap.setDelYn(Yn.N);
-							cmUserRoleMap.setCreatorSeq(updatorSeq);
-							cmUserRoleMap.setCreDt(LocalDateTime.now());
-							cmUserRoleMap.setUpdatorSeq(updatorSeq);
-							cmUserRoleMap.setUpdDt(LocalDateTime.now());
-							
-							cmUserRoleMapRepository.save(cmUserRoleMap);
-						}
-					}
+				for(Long roleSeq : saveUserInfo.getRoleSeqList()) {
+					CmUserRoleMap cmUserRoleMap = new CmUserRoleMap();
+					cmUserRoleMap.setUserSeq(saveUserInfo.getUserSeq());
+					cmUserRoleMap.setRoleSeq(roleSeq);
+					cmUserRoleMap.setPrntOrd(prntOrd++);
+					
+					cmUserRoleMap.setDelYn(Yn.N);
+					cmUserRoleMap.setCreatorSeq(updatorSeq);
+					cmUserRoleMap.setCreDt(LocalDateTime.now());
+					cmUserRoleMap.setUpdatorSeq(updatorSeq);
+					cmUserRoleMap.setUpdDt(LocalDateTime.now());
+					
+					cmUserRoleMapRepository.save(cmUserRoleMap);
 				}
 			}
 			return true;
 		}
 		
 		return false;
+	}
+
+	/**
+	 * 일괄 사용자 패스워드 변경
+	 * 
+	 * @param userSeqList
+	 * @param chgPwd
+	 * @param userSeq
+	 * @return
+	 */
+	public boolean chgBulkUserPwd(List<Long> userSeqList, String chgPwd, Long updatorSeq) {
+
+		for(Long userSeq : userSeqList){
+			List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYnOrderByUserPwdSeqDesc(userSeq, Yn.N);
+			if(cmUserPwdList != null && !cmUserPwdList.isEmpty()) {
+				for(CmUserPwd cmUserPwd : cmUserPwdList) {
+					cmUserPwd.setDelYn(Yn.Y);
+					cmUserPwd.setUpdatorSeq(updatorSeq);
+					cmUserPwd.setUpdDt(LocalDateTime.now());
+				}
+				cmUserPwdRepository.saveAll(cmUserPwdList);
+			}
+			
+			CmUserPwd cmUserPwd = new CmUserPwd();
+			cmUserPwd.setUserSeq(userSeq);
+			cmUserPwd.setUserPwd(chgPwd);
+			cmUserPwd.setPwdExpDt(LocalDate.now().plusDays(addAccuntExpDt.longValue()));
+			cmUserPwd.setDelYn(Yn.N);
+			cmUserPwd.setCreatorSeq(updatorSeq);
+			cmUserPwd.setCreDt(LocalDateTime.now());
+			cmUserPwd.setUpdatorSeq(updatorSeq);
+			cmUserPwd.setUpdDt(LocalDateTime.now());
+			cmUserPwdRepository.save(cmUserPwd);
+		}
+		
+		return true;
+	}
+
+	/**
+	 * 일괄 사용자 역할 변경
+	 * 
+	 * @param userSeqList
+	 * @param roleCdList
+	 * @param userSeq
+	 * @return
+	 */
+	public boolean chgBulkUserRole(List<Long> userSeqList, List<Long> roleSeqList, Long updatorSeq) {
+
+		List<CmUserRoleMap> addCmUserRoleMapList = new ArrayList<>();
+		for(Long userSeq : userSeqList){
+			// 1. 사용자의 역할을 제거한다.
+			List<CmUserRoleMap> cmUserRoleMapList = cmUserRoleMapRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
+			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
+				for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
+					cmUserRoleMap.setDelYn(Yn.Y);
+					cmUserRoleMap.setUpdatorSeq(updatorSeq);
+					cmUserRoleMap.setUpdDt(LocalDateTime.now());
+				}
+				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
+			}
+			
+			int prntOrd = 1;
+			for(Long roleSeq : roleSeqList) {
+				CmUserRoleMap cmUserRoleMap = new CmUserRoleMap();
+				cmUserRoleMap.setUserSeq(userSeq);
+				cmUserRoleMap.setRoleSeq(roleSeq);
+				cmUserRoleMap.setPrntOrd(prntOrd++);
+				
+				cmUserRoleMap.setDelYn(Yn.N);
+				cmUserRoleMap.setCreatorSeq(updatorSeq);
+				cmUserRoleMap.setCreDt(LocalDateTime.now());
+				cmUserRoleMap.setUpdatorSeq(updatorSeq);
+				cmUserRoleMap.setUpdDt(LocalDateTime.now());
+				addCmUserRoleMapList.add(cmUserRoleMap);
+			}
+		}
+		
+		if(addCmUserRoleMapList.isEmpty()) {
+			cmUserRoleMapRepository.saveAll(addCmUserRoleMapList);
+		}
+		
+		return true;
+	}
+
+	/**
+	 * 일괄 사용자 삭제
+	 * 
+	 * @param userSeqList
+	 * @param userSeq
+	 * @return
+	 */
+	public boolean removeBulkUser(List<Long> userSeqList, Long updatorSeq) {
+		
+		for(Long userSeq : userSeqList){
+			// 1. 사용자의 역할을 제거한다.
+			List<CmUserRoleMap> cmUserRoleMapList = cmUserRoleMapRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
+			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
+				for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
+					cmUserRoleMap.setDelYn(Yn.Y);
+					cmUserRoleMap.setUpdatorSeq(updatorSeq);
+					cmUserRoleMap.setUpdDt(LocalDateTime.now());
+				}
+				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
+			}
+			// 9. 마지막으로 사용자 정보를 비활성화 시키고 삭제 처리한다.	
+			CmUser cmUser = cmUserRepository.getById(userSeq);			
+			cmUser.setUserStatCd(UserStatCd.DISABLED); // 삭제 처리
+			cmUser.setDelYn(Yn.Y);
+			cmUser.setUpdatorSeq(updatorSeq);
+			cmUser.setUpdDt(LocalDateTime.now());
+			cmUserRepository.save(cmUser);
+		}
+		return true;
 	}
 }

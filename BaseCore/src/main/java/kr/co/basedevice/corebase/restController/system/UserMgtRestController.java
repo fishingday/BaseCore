@@ -1,18 +1,23 @@
 package kr.co.basedevice.corebase.restController.system;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
 import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
+import kr.co.basedevice.corebase.exception.OperationException;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.UserService;
@@ -33,7 +38,7 @@ public class UserMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/user_info_list.json")
-	public ResponseEntity<Page<UserInfoDto>> findUserInfoList(SearchUserInfo searchUserInfo, Pageable page){
+	public ResponseEntity<Page<UserInfoDto>> findbyUserInfoList(SearchUserInfo searchUserInfo, Pageable page){
 
 		if(page == null) {
 			page = PageRequest.of(0, 10);
@@ -48,15 +53,106 @@ public class UserMgtRestController {
 		return ResponseEntity.ok(pageUserInfo);
 	}
 	
-	@PostMapping("/save_user_info.json")
-	public ResponseEntity<Boolean> saveUserInfo(SaveUserInfo userInfo) {
+	/**
+	 * 사용자 정보 변경
+	 * 
+	 * @param userInfo
+	 * @return
+	 */
+	@PutMapping("/chg_user_info.json")
+	public ResponseEntity<Boolean> chgUserInfo(SaveUserInfo userInfo) {
 		
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
-		boolean isSave = userService.editUserInfo(userInfo, cmUser.getUserSeq());
+		boolean isSave = userService.chgUserInfo(userInfo, cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isSave);
 	}
 	
+	/**
+	 * 사용자 팩스워드 변경
+	 * - 관리자 변경
+	 * 
+	 * @param userSeq
+	 * @param chgPwd
+	 * @return
+	 */
+	@PutMapping("/chg_user_pwd.json")
+	public ResponseEntity<Boolean> chgUserPwd(Long userSeq, String chgPwd) {
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		List<Long> userSeqList = new ArrayList<>(1);
+		userSeqList.add(userSeq);
+		
+		boolean isChg = userService.chgBulkUserPwd(userSeqList, chgPwd, cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(isChg);
+	}
+	
+	/**
+	 * 사용자 패스워드 일괄 변경
+	 * 
+	 * @param userSeqList
+	 * @param chgPwd
+	 * @return
+	 */
+	@PutMapping("/bulk_chg_user_pwd.json")
+	public ResponseEntity<Boolean> bulkChgUserPwd(List<Long> userSeqList, String chgPwd) {
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
+		chkChgSelf(userSeqList); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
+		
+		boolean isChg = userService.chgBulkUserPwd(userSeqList, chgPwd, cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(isChg);
+	}
+	
+	/**
+	 * 사용자 역할 일괄 변경
+	 * 
+	 * @param userSeqList
+	 * @param roleCdList
+	 * @return
+	 */
+	@PutMapping("/chg_bulk_user_role.json")
+	public ResponseEntity<Boolean> bulkChgkUserRole(List<Long> userSeqList, List<Long> roleSeqList) {
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
+		chkChgSelf(userSeqList); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 
+		
+		boolean isChg = userService.chgBulkUserRole(userSeqList, roleSeqList, cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(isChg);
+	}
+	
+	/**
+	 * 사용자 일괄 삭제
+	 * 
+	 * @param userSeqList
+	 * @return
+	 */
+	@DeleteMapping("/remove_bulk_user.json")
+	public ResponseEntity<Boolean> removeBulkUser(List<Long> userSeqList) {
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
+		chkChgSelf(userSeqList); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
+
+		
+		boolean isRemove = userService.removeBulkUser(userSeqList, cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(isRemove);
+	}
+	
+	/**
+	 * 자신의 정보가 포함되어 있으면 예외를 발생
+	 * 
+	 * @param userSeqList
+	 */
+	private void chkChgSelf(List<Long> userSeqList) {
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		for(Long userSeq : userSeqList) {
+			if(cmUser.getUserSeq().longValue() == userSeq.longValue()) {
+				throw new OperationException("본인 정보는 해당 화면에서 변경할 수 없습니다."); 
+			}
+		}
+	}
 }

@@ -69,8 +69,8 @@ public class CmUserRepositoryImpl implements CmUserRepositoryQuerydsl{
 			builder.and(cmUser.userTelNo.endsWith(searchUserInfo.getUserTelNo()));			
 		}
 		
-		if(!ObjectUtils.isEmpty(searchUserInfo.getRoleCd())) {
-			builder.and(cmRole.roleCd.eq(searchUserInfo.getRoleCd()));
+		if(!ObjectUtils.isEmpty(searchUserInfo.getRoleSeq())) {
+			builder.and(cmRole.roleSeq.eq(searchUserInfo.getRoleSeq()));
 		}
 		
 		query.where(builder);

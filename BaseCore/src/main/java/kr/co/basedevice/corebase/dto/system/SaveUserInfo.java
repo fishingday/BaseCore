@@ -25,5 +25,5 @@ public class SaveUserInfo {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate acuntExpDt;
 	
-	private List<String> roleCd;
+	private List<Long> roleSeqList;
 }

@@ -36,5 +36,5 @@ public interface CmRoleRepository extends JpaRepository<CmRole, Long>{
 	 * @return
 	 */
 	List<CmRole> findByRoleCdAndDelYn(RoleCd roleCd, Yn delYn);
-
+	
 }
