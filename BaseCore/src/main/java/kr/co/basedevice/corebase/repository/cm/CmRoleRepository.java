@@ -36,5 +36,14 @@ public interface CmRoleRepository extends JpaRepository<CmRole, Long>{
 	 * @return
 	 */
 	List<CmRole> findByRoleCdAndDelYn(RoleCd roleCd, Yn delYn);
+
+	/**
+	 * 메뉴별 역할 목록
+	 * 
+	 * @param menuSeq
+	 * @return
+	 */
+	@Query("select m from CmRole m inner join CmRoleMenuMap n on (m.roleSeq = n.roleSeq) where m.delYn = 'N' and n.delYn = 'N' and n.menuSeq = ?1  ORDER BY n.roleSeq ASC")
+	List<CmRole> findByMenuSeq(Long menuSeq);
 	
 }

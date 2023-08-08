@@ -12,8 +12,11 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
@@ -43,13 +46,17 @@ public class UserService {
 	
     @Value("${login.set.acunt_exp_dt:365}")
 	private Long addAccuntExpDt;
-
+    
 	final private CmUserRepository cmUserRepository;
 	final private CmRoleRepository cmRoleRepository;
 	final private CmUserRoleMapRepository cmUserRoleMapRepository;  
 	final private CmUserPwdRepository cmUserPwdRepository;
 	final private CmMenuRepository cmMenuRepository;
 
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 	
 	public void saveCmUser(CmUser cmUser) {
 		cmUserRepository.save(cmUser);
@@ -159,6 +166,7 @@ public class UserService {
 			cmUser.setUserTelNo(saveUserInfo.getUserTelNo());
 			cmUser.setLoginFailCnt(saveUserInfo.getLoginFailCnt());
 			cmUser.setUserStatCd(saveUserInfo.getUserStatCd());
+			cmUser.setAcuntExpDt(saveUserInfo.getAcuntExpDt());
 			
 			cmUser.setDelYn(Yn.N);
 			cmUser.setUpdatorSeq(updatorSeq);
@@ -223,7 +231,7 @@ public class UserService {
 			
 			CmUserPwd cmUserPwd = new CmUserPwd();
 			cmUserPwd.setUserSeq(userSeq);
-			cmUserPwd.setUserPwd(chgPwd);
+			cmUserPwd.setUserPwd(passwordEncoder().encode(chgPwd));
 			cmUserPwd.setPwdExpDt(LocalDate.now().plusDays(addAccuntExpDt.longValue()));
 			cmUserPwd.setDelYn(Yn.N);
 			cmUserPwd.setCreatorSeq(updatorSeq);

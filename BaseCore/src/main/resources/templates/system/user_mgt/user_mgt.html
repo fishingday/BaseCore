@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default_layout}">
 	<head>
@@ -54,7 +55,7 @@
 					  <button id="remove" class="btn btn-danger chg-btn" disabled>
 					    <i class="bi bi-trash"></i> 삭제
 					  </button>
-					  <button id="chg-passwd" class="btn btn-secondary chg-btn" disabled>
+					  <button id="chg-passwd" class="btn btn-secondary chg-btn" title="사용자 패스워드 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserPwd" disabled>
 					    <i class="bi bi-file-earmark-lock"></i> 비밀번호변경
 					  </button>
 					  <button id="chg-role" class="btn btn-secondary chg-btn" disabled>
@@ -150,12 +151,39 @@
 						    </div>
 						  </div>
 				      </div>
-				      <div class="modal-footer row justify-content-between">
-					    <div class="col-2">
+				      <div class="modal-footer row">
+					    <div class="col-auto me-auto">
 				          <button type="button" class="btn btn-primary" id="btnSaveUserInfo">저장</button>
 					    </div>
-				        <div class="col-6">
-					      <button type="button" class="btn btn-light" data-bs-toggle="button" id="btnPopupPwdEdit">패스워드 초기화</button>
+				        <div class="col-auto">
+					      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					    </div>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
+				<!--/* 사용자 패스워드 변경 */-->
+				<div class="modal fade" id="popupChgUserPwd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="staticBackdropLabel">패스워드 일괄 변경</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+						  <div class="mb-3 row">
+						    <label for="userPwd" class="col-sm-4 col-form-label">새로운 패스워드</label>
+						    <div class="col-sm-8">
+						      <input type="text" class="form-control" id="userPwd">
+						    </div>
+						  </div>
+				      </div>
+				      <div class="modal-footer row">
+					    <div class="col-auto me-auto">
+				          <button type="button" class="btn btn-primary" id="btnSaveUserPwd">패스워드 변경</button>
+					    </div>
+				        <div class="col-auto">
 					      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 					    </div>
 				      </div>
@@ -196,7 +224,7 @@
 							fnObj.action.saveUserInfo();
 						});
 						
-						$("#btnPopupPwdEdit").bind("click", function(){ // 조회 
+						$("#btnSaveUserPwd").bind("click", function(){ // 조회 
 							fnObj.action.chgUserPwd();
 						});
 					},
@@ -229,38 +257,38 @@
 					setUserInfo : function(userInfo){
 						fnObj.action.initUserInfo();
 						
-						$("#userSeq").val(userInfo.userSeq);
-						$("#userNm").val(userInfo.userNm);
-						$("#loginId").val(userInfo.loginId);
-						$("#userTelNo").val(userInfo.userTelNo);
-						$("#acuntExpDt").val(userInfo.acuntExpDt);
+						$("#popupUserInfo #userSeq").val(userInfo.userSeq);
+						$("#popupUserInfo #userNm").val(userInfo.userNm);
+						$("#popupUserInfo #loginId").val(userInfo.loginId);
+						$("#popupUserInfo #userTelNo").val(userInfo.userTelNo);
+						$("#popupUserInfo #acuntExpDt").val(userInfo.acuntExpDt);
 						
 						if(userInfo.cmRoleList){
 							for (var i = 0; i < userInfo.cmRoleList.length; i++) {
-							  $("#roleSeq-" + userInfo.cmRoleList[i].roleSeq).prop("checked", true);
+							  $("#popupUserInfo #roleSeq-" + userInfo.cmRoleList[i].roleSeq).prop("checked", true);
 							}
 						}
 						
-						$("#userStatCd").val(userInfo.userStatCd);
-						$("#loginFailCnt").val(userInfo.loginFailCnt);
-						$("#loginDt").val(userInfo.loginDt);
-						$("#lastLoginIp").val(userInfo.lastLoginIp);
+						$("#popupUserInfo #userStatCd").val(userInfo.userStatCd);
+						$("#popupUserInfo #loginFailCnt").val(userInfo.loginFailCnt);
+						$("#popupUserInfo #loginDt").val(userInfo.loginDt);
+						$("#popupUserInfo #lastLoginIp").val(userInfo.lastLoginIp);
 					},
 					initUserInfo : function(){
-						$("#userSeq").val('');
-						$("#userNm").val('');
-						$("#loginId").val('');
-						$("#userTelNo").val('');
-						$("#acuntExpDt").val('');						
-						$('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);			
-						$("#userStatCd").val('');
-						$("#loginFailCnt").val('');
-						$("#loginDt").val('');
-						$("#lastLoginIp").val('');
+						$("#popupUserInfo #userSeq").val('');
+						$("#popupUserInfo #userNm").val('');
+						$("#popupUserInfo #loginId").val('');
+						$("#popupUserInfo #userTelNo").val('');
+						$("#popupUserInfo #acuntExpDt").val('');						
+						$('#popupUserInfo .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);			
+						$("#popupUserInfo #userStatCd").val('');
+						$("#popupUserInfo #loginFailCnt").val('');
+						$("#popupUserInfo #loginDt").val('');
+						$("#popupUserInfo #lastLoginIp").val('');
 					},
 					saveUserInfo : function(){
 						
-						if($("#userSeq").val() === ''){
+						if($("#popupUserInfo #userSeq").val() === ''){
 							Swal.fire({
 							  title: 'Error!',
 							  text: '사용자 정보가 없습니다.',
@@ -270,7 +298,7 @@
 							return;
 						}
 						
-						if($("#userNm").val() === ''){
+						if($("#popupUserInfo #userNm").val() === ''){
 							Swal.fire({
 							  title: '필수 항목 입력',
 							  text: '사용자 명은 필수 입력 사항입니다.',
@@ -280,7 +308,7 @@
 							return;
 						}
 						
-						if($("#loginId").val() === ''){
+						if($("#popupUserInfo #loginId").val() === ''){
 							Swal.fire({
 							  title: '필수 항목 입력',
 							  text: '이메일은은 필수 입력 사항입니다.',
@@ -290,7 +318,7 @@
 							return;
 						}
 						
-						if($("#userTelNo").val() === ''){
+						if($("#popupUserInfo #userTelNo").val() === ''){
 							Swal.fire({
 							  title: '필수 항목 입력',
 							  text: '전화번호는 필수 입력 사항입니다.',
@@ -300,7 +328,7 @@
 							return;
 						}
 						
-						if($("#userStatCd").val() === ''){
+						if($("#popupUserInfo #userStatCd").val() === ''){
 							Swal.fire({
 							  title: '필수 항목 입력',
 							  text: '계정상태를 선택해야 합니다.',
@@ -310,21 +338,21 @@
 							return;
 						}
 						
-						if($("#loginFailCnt").val() === ''){
-							$("#loginFailCnt").val(0);
+						if($("#popupUserInfo #loginFailCnt").val() === ''){
+							$("#popupUserInfo #loginFailCnt").val(0);
 						}						
 						
 						let userInfo = {};
-						userInfo.userSeq = $("#userSeq").val();
-						userInfo.userNm = $("#userNm").val();
-						userInfo.loginId = $("#loginId").val();
-						userInfo.userTelNo = $("#userTelNo").val();
-						userInfo.acuntExpDt = $("#acuntExpDt").val();						
-						userInfo.userStatCd = $("#userStatCd").val();
-						userInfo.loginFailCnt = $("#loginFailCnt").val();
+						userInfo.userSeq = $("#popupUserInfo #userSeq").val();
+						userInfo.userNm = $("#popupUserInfo #userNm").val();
+						userInfo.loginId = $("#popupUserInfo #loginId").val();
+						userInfo.userTelNo = $("#popupUserInfo #userTelNo").val();
+						userInfo.acuntExpDt = $("#popupUserInfo #acuntExpDt").val();						
+						userInfo.userStatCd = $("#popupUserInfo #userStatCd").val();
+						userInfo.loginFailCnt = $("#popupUserInfo #loginFailCnt").val();
 						
 						userInfo.roleSeqList = []; 
-						$('input:checkbox[name="roleSeqList"]').each(function() {
+						$('#popupUserInfo input:checkbox[name="roleSeqList"]').each(function() {
 							if(this.checked){
 								userInfo.roleSeqList.push(this.value);
 							}
@@ -364,7 +392,63 @@
 						});
 					},
 					chgUserPwd : function(){ // 사용자 패스워드 변경
-						alert('그냥 모달이나 띄우자.');
+						if($("#popupChgUserPwd #userPwd").val() === ''){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '신규 패스워드를 입력하세요.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						var row = $table.bootstrapTable('getSelections');
+						
+						if(row.length === 0){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '변경할 사용자를 선택해 주세요.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						var saveUserPwd = {};
+						saveUserPwd.userSeqList = [];
+						saveUserPwd.chgPwd = $("#popupChgUserPwd #userPwd").val();
+						
+						for(var i = 0; i < row.length; i++){
+							saveUserPwd.userSeqList.push(Number(row[i].userSeq));
+						}
+						
+						$.ajax({
+							url: "[[@{/system/user_mgt/bulk_chg_user_pwd.json}]]", 
+							type: "PUT",
+							async: true,
+							dataType : "json",
+							data : saveUserPwd, 
+							success: function(data, status){
+								if(status === 'success'){
+									$("#popupChgUserPwd").modal("hide");
+									Swal.fire({
+									  position: 'top-end',
+									  icon: 'success',
+									  title: '변경 되었습니다.',
+									  showConfirmButton: false,
+									  timer: 1500
+									});
+								}else{
+									Swal.fire({
+									  title: 'Error!',
+									  text: '패스워드 변경 중 문제가 발생했습니다.',
+									  icon: 'error',
+									  confirmButtonText: '닫기'
+									});
+								}
+							}
+						});
+						
 					}
 				},
             	grid : { // 그리드와 관련된 ... 
@@ -376,7 +460,12 @@
 							  return {classes: 'table-primary'};
 						  },
 					      columns: [
-					        [{field: 'state',       checkbox: true,     align: 'center', valign: 'middle', class : 'table-primary'},
+					        [{field: 'state',       checkbox: true,     align: 'center', valign: 'middle', class: 'table-primary', 
+					         formatter:function(value, row, index){
+								 if(row.userSeq === [[${#authentication.principal.cmUser.userSeq}]]){
+									 return {disabled: true}
+								 }
+							 }},
 							 {field: 'userSeq',      title: '사용자순번', 	align: 'center', valign: 'middle', visible: false, switchable: false},       
 					         {field: 'num',          title: 'No.',     	align: 'center', valign: 'middle', sortable: false},	
 					         {field: 'loginId',      title: 'Email',    align: 'center', valign: 'middle', sortable: true}, 

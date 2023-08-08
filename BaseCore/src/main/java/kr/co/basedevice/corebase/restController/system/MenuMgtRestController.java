@@ -73,37 +73,65 @@ public class MenuMgtRestController {
 		return ResponseEntity.ok(saveMenu);
 	}
 	
-	// 메뉴 순서 변경
+	/** 
+	 * 메뉴 순서 변경
+	 * 
+	 * @param chgMenuSeq
+	 * @param chgOrd
+	 * @param tgtMenuSeq
+	 * @param tgtOrd
+	 * @return
+	 */
 	@PutMapping("/chg_order_menu.json")
 	public ResponseEntity<Boolean> chgOrderMenu(Long chgMenuSeq, Integer chgOrd, Long tgtMenuSeq, Integer tgtOrd){
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
-		boolean isChg = false;
+		boolean isChg = menuService.chgOrderMenu(chgMenuSeq, chgOrd, tgtMenuSeq, tgtOrd, cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isChg);
 	}
 	
-	// 메뉴별 역할 목록
+	/**
+	 * 메뉴별 역할 목록
+	 * 
+	 * @param menuSeq
+	 * @return
+	 */
 	@GetMapping("/role_info_list.json")
 	public ResponseEntity<List<CmRole>> findByRoleList(Long menuSeq){
 		
-		List<CmRole> cmRoleList = null;
+		List<CmRole> cmRoleList = menuService.findByRoleList(menuSeq);
 		
 		return ResponseEntity.ok(cmRoleList);
 	}
 	
-	// 메뉴별 역할 추가
+	/**
+	 * 메뉴별 역할 추가
+	 * 
+	 * @param menuSeq
+	 * @param roleSeq
+	 * @return
+	 */
 	@PutMapping("/add_role.json")
 	public ResponseEntity<Boolean> addRole(Long menuSeq, Long roleSeq){
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
-		boolean isSuccess = false;
+		boolean isSuccess = menuService.addRole(menuSeq, roleSeq, cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isSuccess);
 	}
 	
-	// 메뉴별 역할 삭제
+	/**
+	 * 메뉴별 역할 삭제
+	 * 
+	 * @param menuSeq
+	 * @param roleSeq
+	 * @return
+	 */
 	public ResponseEntity<Boolean> removeRole(Long menuSeq, Long roleSeq){
-		
-		boolean isSuccess = false;
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+				
+		boolean isSuccess = menuService.removeRole(menuSeq, roleSeq, cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isSuccess);
 	}
