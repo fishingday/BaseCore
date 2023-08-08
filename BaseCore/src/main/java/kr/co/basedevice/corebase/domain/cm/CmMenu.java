@@ -17,6 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -70,12 +73,14 @@ public class CmMenu implements Serializable{
 	@Column(name = "CREATOR_SEQ", updatable = false)
 	private Long creatorSeq;
 
+	@CreatedDate
 	@Column(name = "CRE_DT", updatable = false)
 	private LocalDateTime creDt;
 
 	@Column(name = "UPDATOR_SEQ")
 	private Long updatorSeq;
 
+	@LastModifiedDate
 	@Column(name = "UPD_DT")
 	private LocalDateTime updDt;
 	

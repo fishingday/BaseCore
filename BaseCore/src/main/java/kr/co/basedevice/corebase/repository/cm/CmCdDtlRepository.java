@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
+import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 
-public interface CmCdDtlRepository extends JpaRepository<CmCdDtl, Long>{
+public interface CmCdDtlRepository extends JpaRepository<CmCdDtl, CmCdDtlId>{
 
 	/**
 	 * 코드 그룹별 코드 상세 조회

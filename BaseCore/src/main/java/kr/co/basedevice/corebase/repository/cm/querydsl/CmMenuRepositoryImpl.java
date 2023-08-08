@@ -122,5 +122,4 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		.orderBy(cmMenu.prntOrd.asc())
 		.fetch();
 	}
-
 }

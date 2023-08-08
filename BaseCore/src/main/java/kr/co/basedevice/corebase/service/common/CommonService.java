@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
+import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -108,6 +109,92 @@ public class CommonService {
 		cmCdGrp.setUpdDt(LocalDateTime.now());
 		
 		cmCdGrpRepository.save(cmCdGrp);
+		
+		return true;
+	}
+
+	/**
+	 * 코드 상세 조회
+	 * 
+	 * @param grpCd
+	 * @param cd
+	 * @return
+	 */
+	public CmCdDtl findCmCdDtlById(CmCdDtlId cmCdDtlId) {				
+		Optional<CmCdDtl> cmCdDtl = cmCdDtlRepository.findById(cmCdDtlId);
+		
+		if(cmCdDtl.isEmpty()) {
+			return null;
+		}else {
+			return cmCdDtl.get();
+		}
+	}
+
+	/**
+	 * 코드 상세 저장
+	 * 
+	 * @param cmCdDtl
+	 * @param updatorSeq
+	 * @return
+	 */
+	public CmCdDtl saveCmCdDtl(CmCdDtl cmCdDtl, Long updatorSeq) {
+		cmCdDtl.setDelYn(Yn.N);
+		cmCdDtl.setCreatorSeq(updatorSeq);
+		cmCdDtl.setCreDt(LocalDateTime.now());
+		cmCdDtl.setUpdatorSeq(updatorSeq);
+		cmCdDtl.setUpdDt(LocalDateTime.now());
+		
+		return cmCdDtlRepository.save(cmCdDtl);
+	}
+
+	/**
+	 * 코드 삭제
+	 * 
+	 * @param grpCd
+	 * @param cd
+	 * @param updatorSeq
+	 * @return
+	 */
+	public boolean removeCmCdDtl(CmCdDtlId cmCdDtlId, Long updatorSeq) {			
+		CmCdDtl cmCdDtl = cmCdDtlRepository.getById(cmCdDtlId);	
+		
+		cmCdDtl.setDelYn(Yn.Y);
+		cmCdDtl.setUpdatorSeq(updatorSeq);
+		cmCdDtl.setUpdDt(LocalDateTime.now());
+		
+		cmCdDtlRepository.save(cmCdDtl);
+		
+		return true;
+	}
+
+	/**
+	 * 코드 순서 변경
+	 * 
+	 * @param grpCd
+	 * @param chgCd
+	 * @param chgOrd
+	 * @param tgtCd
+	 * @param tgtOrd
+	 * @param userSeq
+	 * @return
+	 */
+	public boolean chgOrderCmCdDtl(String grpCd, String chgCd, Integer chgOrd, String tgtCd, Integer tgtOrd, Long updatorSeq) {
+		
+		CmCdDtlId chgCdDtlId = new CmCdDtlId(grpCd, chgCd);
+		CmCdDtl chgCdDtl = cmCdDtlRepository.getById(chgCdDtlId);
+		
+		chgCdDtl.setPrntOrd(chgOrd);
+		chgCdDtl.setDelYn(Yn.Y);
+		chgCdDtl.setUpdatorSeq(updatorSeq);
+		chgCdDtl.setUpdDt(LocalDateTime.now());
+		
+		CmCdDtlId tgtCdDtlId = new CmCdDtlId(grpCd, tgtCd);
+		CmCdDtl tgtCdDtl = cmCdDtlRepository.getById(tgtCdDtlId);
+		
+		tgtCdDtl.setPrntOrd(tgtOrd);
+		tgtCdDtl.setDelYn(Yn.Y);
+		tgtCdDtl.setUpdatorSeq(updatorSeq);
+		tgtCdDtl.setUpdDt(LocalDateTime.now());
 		
 		return true;
 	}

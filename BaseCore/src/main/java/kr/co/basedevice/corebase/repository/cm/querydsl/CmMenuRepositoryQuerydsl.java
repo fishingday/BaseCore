@@ -38,4 +38,5 @@ public interface CmMenuRepositoryQuerydsl {
 	 * @return
 	 */
 	List<CmMenu> findUserRoleMenu(Long userSeq, Long roleSeq);
+	
 }
