@@ -12,7 +12,6 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -30,6 +29,8 @@ import kr.co.basedevice.corebase.dto.MyMenuDto;
 import kr.co.basedevice.corebase.dto.common.MenuDto;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
 import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
+import kr.co.basedevice.corebase.dto.system.SaveUserPwd;
+import kr.co.basedevice.corebase.dto.system.SaveUserRole;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
@@ -47,16 +48,14 @@ public class UserService {
     @Value("${login.set.acunt_exp_dt:365}")
 	private Long addAccuntExpDt;
     
+    private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    
 	final private CmUserRepository cmUserRepository;
 	final private CmRoleRepository cmRoleRepository;
 	final private CmUserRoleMapRepository cmUserRoleMapRepository;  
 	final private CmUserPwdRepository cmUserPwdRepository;
 	final private CmMenuRepository cmMenuRepository;
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 	
 	public void saveCmUser(CmUser cmUser) {
 		cmUserRepository.save(cmUser);
@@ -216,9 +215,9 @@ public class UserService {
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean chgBulkUserPwd(List<Long> userSeqList, String chgPwd, Long updatorSeq) {
+	public boolean chgBulkUserPwd(SaveUserPwd saveUserPwd, Long updatorSeq) {
 
-		for(Long userSeq : userSeqList){
+		for(Long userSeq : saveUserPwd.getUserSeqList()){
 			List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYnOrderByUserPwdSeqDesc(userSeq, Yn.N);
 			if(cmUserPwdList != null && !cmUserPwdList.isEmpty()) {
 				for(CmUserPwd cmUserPwd : cmUserPwdList) {
@@ -231,7 +230,7 @@ public class UserService {
 			
 			CmUserPwd cmUserPwd = new CmUserPwd();
 			cmUserPwd.setUserSeq(userSeq);
-			cmUserPwd.setUserPwd(passwordEncoder().encode(chgPwd));
+			cmUserPwd.setUserPwd(passwordEncoder.encode(saveUserPwd.getChgPwd()));
 			cmUserPwd.setPwdExpDt(LocalDate.now().plusDays(addAccuntExpDt.longValue()));
 			cmUserPwd.setDelYn(Yn.N);
 			cmUserPwd.setCreatorSeq(updatorSeq);
@@ -239,6 +238,17 @@ public class UserService {
 			cmUserPwd.setUpdatorSeq(updatorSeq);
 			cmUserPwd.setUpdDt(LocalDateTime.now());
 			cmUserPwdRepository.save(cmUserPwd);
+			
+			// 패스워드를 변경한다는 의미는 사용자의 상태를 로그인할 수 있도록 하다는 의미다.
+			// 따라서 사용자의 상태와 계정만료일도 수정해 줘야...
+			CmUser cmUser = cmUserRepository.getById(userSeq);
+			
+			cmUser.setAcuntExpDt(saveUserPwd.getAcuntExpDt());
+			cmUser.setUserStatCd(UserStatCd.ENABLED);
+			cmUser.setDelYn(Yn.N);
+			cmUser.setUpdatorSeq(updatorSeq);
+			cmUser.setUpdDt(LocalDateTime.now());
+			cmUserRepository.save(cmUser);			
 		}
 		
 		return true;
@@ -252,10 +262,10 @@ public class UserService {
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean chgBulkUserRole(List<Long> userSeqList, List<Long> roleSeqList, Long updatorSeq) {
+	public boolean chgBulkUserRole(SaveUserRole saveUserRole, Long updatorSeq) {
 
 		List<CmUserRoleMap> addCmUserRoleMapList = new ArrayList<>();
-		for(Long userSeq : userSeqList){
+		for(Long userSeq : saveUserRole.getUserSeqList()){
 			// 1. 사용자의 역할을 제거한다.
 			List<CmUserRoleMap> cmUserRoleMapList = cmUserRoleMapRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
 			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
@@ -268,7 +278,7 @@ public class UserService {
 			}
 			
 			int prntOrd = 1;
-			for(Long roleSeq : roleSeqList) {
+			for(Long roleSeq : saveUserRole.getRoleSeqList()) {
 				CmUserRoleMap cmUserRoleMap = new CmUserRoleMap();
 				cmUserRoleMap.setUserSeq(userSeq);
 				cmUserRoleMap.setRoleSeq(roleSeq);
@@ -283,7 +293,7 @@ public class UserService {
 			}
 		}
 		
-		if(addCmUserRoleMapList.isEmpty()) {
+		if(!addCmUserRoleMapList.isEmpty()) {
 			cmUserRoleMapRepository.saveAll(addCmUserRoleMapList);
 		}
 		

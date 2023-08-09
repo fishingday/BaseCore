@@ -25,8 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CodeMgtRestController {
 		
-	private CommonService commonService;
-	
+	private CommonService commonService;	
 
 	/** 
 	 * 코드 그룹 목록
@@ -36,7 +35,7 @@ public class CodeMgtRestController {
 	 */
 	@GetMapping("/get_grpcd_list.json")
 	public ResponseEntity<List<CmCdGrp>> findByCdGrpList(SearchCodeGrp searchCodeGrp){		
-		List<CmCdGrp> cmCdGrpList = commonService.findBySearch(searchCodeGrp);		
+		List<CmCdGrp> cmCdGrpList = commonService.findBySearch(searchCodeGrp);
 		
 		return ResponseEntity.ok(cmCdGrpList);
 	}

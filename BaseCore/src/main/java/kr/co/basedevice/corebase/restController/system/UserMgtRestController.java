@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.restController.system;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -16,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
+import kr.co.basedevice.corebase.dto.system.DeleteUsers;
 import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.dto.system.SaveUserPwd;
+import kr.co.basedevice.corebase.dto.system.SaveUserRole;
 import kr.co.basedevice.corebase.exception.OperationException;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
@@ -82,7 +83,7 @@ public class UserMgtRestController {
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
 		chkChgSelf(saveUserPwd.getUserSeqList()); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 		
-		boolean isChg = userService.chgBulkUserPwd(saveUserPwd.getUserSeqList(), saveUserPwd.getChgPwd(), cmUser.getUserSeq());
+		boolean isChg = userService.chgBulkUserPwd(saveUserPwd, cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isChg);
 	}
@@ -95,12 +96,11 @@ public class UserMgtRestController {
 	 * @return
 	 */
 	@PutMapping("/chg_bulk_user_role.json")
-	public ResponseEntity<Boolean> bulkChgkUserRole(List<Long> userSeqList, List<Long> roleSeqList) {
+	public ResponseEntity<Boolean> bulkChgkUserRole(SaveUserRole saveUserRole) {
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
-		chkChgSelf(userSeqList); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
-
+		chkChgSelf(saveUserRole.getUserSeqList()); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 		
-		boolean isChg = userService.chgBulkUserRole(userSeqList, roleSeqList, cmUser.getUserSeq());
+		boolean isChg = userService.chgBulkUserRole(saveUserRole, cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isChg);
 	}
@@ -112,12 +112,11 @@ public class UserMgtRestController {
 	 * @return
 	 */
 	@DeleteMapping("/remove_bulk_user.json")
-	public ResponseEntity<Boolean> removeBulkUser(List<Long> userSeqList) {
+	public ResponseEntity<Boolean> removeBulkUser(DeleteUsers deleteUsers) {
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
-		chkChgSelf(userSeqList); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
-
+		chkChgSelf(deleteUsers.getUserSeqList()); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 		
-		boolean isRemove = userService.removeBulkUser(userSeqList, cmUser.getUserSeq());
+		boolean isRemove = userService.removeBulkUser(deleteUsers.getUserSeqList(), cmUser.getUserSeq());
 		
 		return ResponseEntity.ok(isRemove);
 	}

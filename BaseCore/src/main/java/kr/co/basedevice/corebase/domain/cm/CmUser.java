@@ -19,6 +19,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
@@ -52,6 +55,7 @@ public class CmUser implements Serializable{
 	@Column(name = "LOGIN_FAIL_CNT", nullable = false)
 	private Integer loginFailCnt;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
 	@Column(name = "LOGIN_DT")
 	private LocalDateTime loginDt;
 
@@ -62,6 +66,7 @@ public class CmUser implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private UserStatCd userStatCd;
 
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "ACUNT_EXP_DT", nullable = false, length = 8)
 	private LocalDate acuntExpDt;
 

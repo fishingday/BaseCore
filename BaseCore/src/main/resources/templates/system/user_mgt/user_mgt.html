@@ -8,7 +8,6 @@
 	    <title>사용자관리</title>
 	    <style>
 			/* 사용자 정의 css */
-
 		</style>
 	</head>
 
@@ -58,7 +57,7 @@
 					  <button id="chg-passwd" class="btn btn-secondary chg-btn" title="사용자 패스워드 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserPwd" disabled>
 					    <i class="bi bi-file-earmark-lock"></i> 비밀번호변경
 					  </button>
-					  <button id="chg-role" class="btn btn-secondary chg-btn" disabled>
+					  <button id="btnPopChgRole" class="btn btn-secondary chg-btn"  title="사용자 역할 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserRole" disabled>
 					    <i class="bi bi-gear"></i> 권한조정
 					  </button>
 					</div>
@@ -173,6 +172,14 @@
 				      </div>
 				      <div class="modal-body">
 						  <div class="mb-3 row">
+						    <label for="popAcuntExpDt" class="col-sm-4 col-form-label">계정만료일</label>
+						    <div class="col-sm-8">
+						      <input type="date" class="form-control" id="popAcuntExpDt">
+						    </div>
+						  </div>
+				      </div>
+				      <div class="modal-body">
+						  <div class="mb-3 row">
 						    <label for="userPwd" class="col-sm-4 col-form-label">새로운 패스워드</label>
 						    <div class="col-sm-8">
 						      <input type="text" class="form-control" id="userPwd">
@@ -190,6 +197,35 @@
 				    </div>
 				  </div>
 				</div>
+				
+				<!--/* 사용자 역할 지정 */-->
+				<div class="modal fade" id="popupChgUserRole" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="staticBackdropLabel">사용자 역할 변경</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+						  <div class="mb-3 row">
+						    <label class="col-sm-4 col-form-label">역할(권한)</label>
+						    <div class="col-sm-8">
+						      <ul class="list-group role-list"></ul>
+						    </div>
+						  </div>
+				      </div>
+				      <div class="modal-footer row">
+					    <div class="col-auto me-auto">
+				          <button type="button" class="btn btn-primary" id="btnSaveUserRole">역할 변경</button>
+					    </div>
+				        <div class="col-auto">
+					      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					    </div>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
 	    				
 			</div>
 			<!-- modal -->	
@@ -208,15 +244,12 @@
 			
 			var fnObj = {
 				pageStart: function(){ // 화면 오픈 시 document.body.readㅛ
-					fnObj.page.init();				
+					fnObj.page.init();		
             	},
             	page : { // 화면의 기본적인 설정
 					init : function(){ // 화면 초기화
-						fnObj.grid.init();
-						fnObj.page.setRoleData();
-						fnObj.page.setUserStatCdData();
-						
-						$("#btnSearch").bind("click", function(){ // 조회 
+					
+					$("#btnSearch").bind("click", function(){ // 조회 
 							$table.bootstrapTable('selectPage', 1);
 						});
 						
@@ -224,12 +257,24 @@
 							fnObj.action.saveUserInfo();
 						});
 						
-						$("#btnSaveUserPwd").bind("click", function(){ // 조회 
+						$("#btnSaveUserPwd").bind("click", function(){ // 패스워드 저장
 							fnObj.action.chgUserPwd();
 						});
+						
+						$("#btnSaveUserRole").bind("click", function(){ // 역할 저장 
+							fnObj.action.chgUserRole();
+						});
+						
+						document.getElementById('popupChgUserRole').addEventListener('shown.bs.modal', function(){
+						    $('#popupChgUserRole .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);	
+						});
+						
+						fnObj.page.setComponentData().then((res) =>{
+							fnObj.grid.init();
+						});
 					},
-					setRoleData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
-						$.get("[[@{/common/role_list.json}]]", {},
+					setComponentData : async function(){ // 조회 조건의 역할 데이터를 초기화 한다.						
+						await  $.get("[[@{/common/role_list.json}]]", {},
 						    function(data, status) {
 								if(status === 'success'){
 									for(var i = 0; i < data.length; i++ ){
@@ -240,9 +285,8 @@
 								}
 						    }
 						);
-					},
-					setUserStatCdData : function(){ // 조회 조건의 역할 데이터를 초기화 한다.	
-						$.get("[[@{/common/code_dtl_list.json}]]", {grpCd:'USER_STAT_CD'},
+						
+						await $.get("[[@{/common/code_dtl_list.json}]]", {grpCd:'USER_STAT_CD'},
 						    function(data, status) {
 								if(status === 'success'){
 									for(var i = 0; i < data.length; i++ ){
@@ -392,6 +436,17 @@
 						});
 					},
 					chgUserPwd : function(){ // 사용자 패스워드 변경
+					
+						if($("#popupChgUserPwd #popAcuntExpDt").val() === ''){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '계정만료일을 입력하세요.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+					
 						if($("#popupChgUserPwd #userPwd").val() === ''){
 							Swal.fire({
 							  title: '필수 항목 입력',
@@ -401,10 +456,11 @@
 							});
 							return;
 						}
+																		
+						let saveUserPwd = {};
 						
-						var row = $table.bootstrapTable('getSelections');
-						
-						if(row.length === 0){
+						saveUserPwd.userSeqList = fnObj.grid.getIdSelections();												
+						if(saveUserPwd.userSeqList === 0){
 							Swal.fire({
 							  title: '필수 항목 입력',
 							  text: '변경할 사용자를 선택해 주세요.',
@@ -414,13 +470,8 @@
 							return;
 						}
 						
-						var saveUserPwd = {};
-						saveUserPwd.userSeqList = [];
 						saveUserPwd.chgPwd = $("#popupChgUserPwd #userPwd").val();
-						
-						for(var i = 0; i < row.length; i++){
-							saveUserPwd.userSeqList.push(Number(row[i].userSeq));
-						}
+						saveUserPwd.acuntExpDt = $("#popupChgUserPwd #popAcuntExpDt").val();
 						
 						$.ajax({
 							url: "[[@{/system/user_mgt/bulk_chg_user_pwd.json}]]", 
@@ -448,7 +499,68 @@
 								}
 							}
 						});
+					},
+					chgUserRole: function(){
 						
+						let saveUserRole = {};						
+						saveUserRole.userSeqList = fnObj.grid.getIdSelections();												
+						if(saveUserRole.userSeqList === 0){
+							Swal.fire({
+							  title: '필수 항목 입력',
+							  text: '변경할 사용자를 선택해 주세요.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						saveUserRole.roleSeqList = []; 
+						$('#popupChgUserRole input:checkbox[name="roleSeqList"]').each(function() {
+							if(this.checked){
+								saveUserRole.roleSeqList.push(this.value);
+							}
+						});
+						
+						
+						if(saveUserRole.roleSeqList.length === 0){
+							Swal.fire({
+							  title: 'Error!',
+							  text: '최소 하나의 역할이 있어야 합니다.',
+							  icon: 'info',
+							  confirmButtonText: '닫기'
+							});
+							return;
+						}
+						
+						$.ajax({
+							url: "[[@{/system/user_mgt/chg_bulk_user_role.json}]]", 
+							type: "PUT",
+							async: true,
+							dataType : "json",
+							data : saveUserRole, 
+							success: function(data, status){
+								if(status === 'success'){
+									$("#popupChgUserRole").modal("hide");
+									var pageIdx = $("li.page-item.active > .page-link").text();
+									$table.bootstrapTable('selectPage', Number(pageIdx));
+									
+									Swal.fire({
+									  position: 'top-end',
+									  icon: 'success',
+									  title: '변경 되었습니다.',
+									  showConfirmButton: false,
+									  timer: 1500
+									});
+								}else{
+									Swal.fire({
+									  title: 'Error!',
+									  text: '역할 변경 중 문제가 발생했습니다.',
+									  icon: 'error',
+									  confirmButtonText: '닫기'
+									});
+								}
+							}
+						});
 					}
 				},
             	grid : { // 그리드와 관련된 ... 
@@ -473,7 +585,16 @@
 					         {field: 'userTelNo',    title: '전화번호',  	align: 'center', valign: 'middle', sortable: true},					         
 					         {field: 'roleNames',    title: '역할',   	align: 'center', valign: 'middle', sortable: false},	
 					         				         
-					         {field: 'userStatCd',   title: '상태',   	align: 'center', valign: 'middle', sortable: true}, 
+					         {field: 'userStatCd',   title: '상태',   	align: 'center', valign: 'middle', sortable: true,
+					          formatter:function(value, row, index){
+								  for(var i = 0; i < $("#popupUserInfo #userStatCd option").length; i++){
+									  if(row.userStatCd === $("#popupUserInfo #userStatCd option")[i].value){
+										  return $("#popupUserInfo #userStatCd option")[i].text;
+									  }
+								  }
+								  
+								 return '';
+							 }},
 					         {field: 'acuntExpDt',   title: '만료일',   	align: 'center', valign: 'middle', sortable: true},
 					         {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', sortable: true},					         
 					         {field: 'lastLoginIp',  title: '로그인IP',  	align: 'center', valign: 'middle', sortable: true},					         
@@ -542,13 +663,59 @@
 					      //console.log(name, args)
 					    })
 					    $remove.click(function () {
-					      var ids = fnObj.grid.getIdSelections();
-					      $table.bootstrapTable('remove', {
-					        field: 'userSeq',
-					        values: ids
-					      })
-					      $remove.prop('disabled', true)
-					    })
+							/*
+					      		var ids = fnObj.grid.getIdSelections();
+					      		$table.bootstrapTable('remove', {
+					        	field: 'userSeq',
+					        	values: ids
+					      		})
+					      		$remove.prop('disabled', true)
+					      	*/
+							Swal.fire({
+							  title: '삭제 하시겠습니까?',
+							  text: "되돌릴 수 없습니다.",
+							  icon: 'warning',
+							  showCancelButton: true,
+							  confirmButtonColor: '#3085d6',
+							  cancelButtonColor: '#d33',
+							  confirmButtonText: '삭제!',
+							  cancelButtonText: '취소',
+							}).then((result) => {
+							  if (result.isConfirmed) {
+								let deleteUsers = {};
+								deleteUsers.userSeqList = fnObj.grid.getIdSelections();
+								deleteUsers.reason = 'nothing';		
+								
+								$.ajax({
+									url: "[[@{/system/user_mgt/remove_bulk_user.json}]]", 
+									type: "DELETE",
+									async: true,
+									dataType : "json",
+									data : deleteUsers, 
+									success: function(data, status){
+										if(status === 'success'){
+											var pageIdx = $("li.page-item.active > .page-link").text();
+											$table.bootstrapTable('selectPage', Number(pageIdx));
+											
+											Swal.fire({
+											  title: '완료!',
+											  text: "삭제 되었습니다.",
+											  icon: 'success',								 
+											  confirmButtonText: '확인'									  
+											});
+										}else{
+											Swal.fire({
+											  title: 'Error!',
+											  text: '삭제처리 중 문제가 발생했습니다.',
+											  icon: 'error',
+											  confirmButtonText: '닫기'
+											});
+										}
+									}
+								});
+							  }
+							});
+					    });
 					},
 					getIdSelections : function() {
 					    return $.map($table.bootstrapTable('getSelections'), function (row) {
