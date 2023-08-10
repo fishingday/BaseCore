@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CodeMgtRestController {
 		
-	private CommonService commonService;	
+	final private CommonService commonService;	
 
 	/** 
 	 * 코드 그룹 목록

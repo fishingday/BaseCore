@@ -10,27 +10,25 @@
 	    <div th:replace="~{fragments/default_common_resources :: css}"></div>
 	</head>
     <body>
-		<div class=".container-fluid mx-auto">
+		<div class="container-xxl mx-auto">
 	      <header class="row">
-	        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
+	        <div th:replace="fragments/default_frag :: topFragment"></div>
 	      </header>
-	      <div class="row row-cols-2">	        
-			<aside class="col-2">
+	      <div class="row row-cols-2">
+			<aside class="col-2">    
 				<!-- lnb -->
 				<th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
 				<!-- lnb -->
 			</aside>
 			<main class="col-10">
-				<nav class="container-fluid">					
-					<div class="row float-end">
-						<th:block th:replace="fragments/default_frag :: breadcrumbFragment"></th:block>
-					</div>
-					<th:block layout:fragment="content"></th:block>
+				<nav class="row  row-cols-1">
+					<div th:replace="fragments/default_frag :: breadcrumbFragment"></div>
+					<div layout:fragment="content"></div>
 				</nav>
 			</main>
 		  </div>	      
 	      <footer class="row">
-			  <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
+			  <footer th:replace="fragments/default_frag :: footerFragment"></footer>
 	      </footer>
 	    </div>
 		<div th:replace="~{fragments/default_common_resources :: js}"></div>

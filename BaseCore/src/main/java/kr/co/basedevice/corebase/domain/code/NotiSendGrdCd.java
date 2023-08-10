@@ -7,7 +7,7 @@ package kr.co.basedevice.corebase.domain.code;
  *
  */
 public enum NotiSendGrdCd {
-	NORMAL, 	// 보등
+	INFO, 	// 보등
 	IMPORTANT, 	// 중요
 	EMERGENCY;	// 긴급
 }

@@ -86,7 +86,7 @@
     </aside>
     <!--/* lnb */--> 
     <!--/* breadcrumb */--> 
-	<section  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" 
+	<div class="col offset-md-8"  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" 
 		th:with="currMenu=${#authentication.principal.currMenu}"
 		th:fragment="breadcrumbFragment">
 	  <ol class="breadcrumb">
@@ -95,7 +95,7 @@
 	    <li class="breadcrumb-item" th:if="${!currMenu.upMenu.isTop}"><a th:href="@{${currMenu.upMenu.firstMenu.menuPath}}">[[${currMenu.upMenu.menuNm}]]</a></li>
 	    <li class="breadcrumb-item active" aria-current="page">[[${currMenu.menuNm}]]</li>
 	  </ol>
-	</section>
+	</div>
     <!--/* breadcrumb */--> 
 
 	<footer class="py-3 my-4" th:fragment="footerFragment">

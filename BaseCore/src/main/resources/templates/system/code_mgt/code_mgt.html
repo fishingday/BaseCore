@@ -6,12 +6,80 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>코드관리</title>
 	</head>
-
+	<body>
 	<!-- Content 시작 -->
-	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-	        <div class="container text-center">
-	            <h1 class="text-primary">여기는 코드관리 페이지 입니다.</h1>
-	        </div>
+	    <div layout:fragment="content" class="col">
+	    	<div class="row">
+				<div class="col-4 border border-primary">
+					<div id="toolbar-grpcd">
+						<button id="remove" class="btn btn-danger chg-btn" disabled>
+						  <i class="bi bi-trash"></i> 추가
+						</button>
+					</div>
+					<table
+					  id="table-grpcd"					  
+					  data-toolbar="#toolbar-grpcd"
+					  data-id-field="grpCd"
+					  th:data-url="@{/system/code_mgt/get_grpcd_list.json}">
+					</table>
+				</div>
+				<div class="col-8 border border border-danger">b</div>
+			</div>
 	    </div>
+	    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+			var $table_grpcd = $('#table-grpcd');
+			
+			var fnObj = {
+				pageStart: function(){ // 페이지 초기 실행 스크립트
+					fnObj.page.init(); 
+					fnObj.grid.init();
+				},
+				page: {
+					init: function(){ // 버튼 바인딩 등 
+					
+					}
+					
+				},
+				action: { // 호출이나 화면 동작
+					
+				},
+				grid: { // 그리드 관련
+					init : function() {
+					    $table_grpcd.bootstrapTable('destroy').bootstrapTable({
+					      locale: 'ko-KR',
+					      classes: 'table table-bordered table-striped table-hover',
+					      headerStyle : function(){
+							  return {classes: 'table-primary'};
+						  },
+					      columns: [
+					        [
+							 {field: 'grpCd',      title: '그룹코드',    align: 'center', valign: 'middle', sortable: true}, 
+					         {field: 'grpCdNm',    title: '그룸명',   align: 'center', valign: 'middle', sortable: true}
+					      ]],
+					      responseHandler: function (data) { // 데이터 처리
+					      	  data.rows = data.content; // 이름을 변경해 줘야 한다.
+					      	  delete data.content;
+							  $.each(data.row, function (i, row) {
+							      row.state = $.inArray(row.userSeq, selections) !== -1
+							  })
+							  
+							  console.log(data);
+							  return data;
+						  }
+					    })
+					    $table_grpcd.on('all.bs.table', function (e, name, args) {
+					      //console.log(name, args)
+					    })
+					}
+					
+				}
+			}
+			
+			// 페이지 초기 쿼리를 실행한다.
+	        $(document.body).ready(function () {
+	            fnObj.pageStart();
+	        });
+		</script>
 	<!-- Content 종료 -->
+	</body>
 </html>

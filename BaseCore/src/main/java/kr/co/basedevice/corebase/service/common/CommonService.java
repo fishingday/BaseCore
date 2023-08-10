@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class CommonService {
 
 	private final CmRoleRepository cmRoleRepository;
-	private CmCdGrpRepository cmCdGrpRepository;
+	private final CmCdGrpRepository cmCdGrpRepository;
 	private final CmCdDtlRepository cmCdDtlRepository;
 	
 	/**

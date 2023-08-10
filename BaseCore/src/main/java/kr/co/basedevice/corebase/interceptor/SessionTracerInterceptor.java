@@ -55,7 +55,7 @@ public class SessionTracerInterceptor implements HandlerInterceptor {
 			}
         }
 		
-		loggingService.writeAccessLog(request, response, AccesLogTypCd.IN, userSeq);
+		loggingService.writeAccessLog(request, response, AccesLogTypCd.REQ, userSeq);
 		return true;
 	}
 
@@ -73,7 +73,7 @@ public class SessionTracerInterceptor implements HandlerInterceptor {
 			}
         }
 		
-		loggingService.writeAccessLog(request, response, AccesLogTypCd.OUT, userSeq);
+		loggingService.writeAccessLog(request, response, AccesLogTypCd.RES, userSeq);
 	}
 
 	/* (non-Javadoc)

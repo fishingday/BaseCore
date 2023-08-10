@@ -82,3 +82,31 @@ value	(all) :	양식 컨트롤의 현재 값. 이름/값 짝(name/value pair)의
 width	(image) : 이미지의 width 속성과 같다
 
 --------- 
+
+<script language="javascript" type="text/javascript" layout:fragment="page_script">
+var fnobj = {
+	pageStart: function(){ // 페이지 초기 실행 스크립트
+		fnObj.page.init(); 
+	},
+	page: {
+		init: function(){ // 버튼 바인딩 등 
+		
+		}
+		
+	},
+	action: { // 호출이나 화면 동작
+		
+	},
+	grid: { // 그리드 관련
+		
+	}
+}
+
+// 페이지 초기 쿼리를 실행한다.
+$(document.body).ready(function () {
+    fnObj.pageStart();
+});
+
+--------------
+
+

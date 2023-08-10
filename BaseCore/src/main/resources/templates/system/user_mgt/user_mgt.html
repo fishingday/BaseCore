@@ -13,75 +13,73 @@
 
 	<!--/* Content 시작 */-->
 	<body>
-	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-			<div class="container-fluid">
-				<div class="row border border-secondary-subtle p-2">
-					  <div class="col-2">
-						  <label for="search_email" class="form-label mt-2">E-Mail</label>
-					  </div>
-					  <div class="col-4">
-						  <input type="search" class="form-control" id="search_email" placeholder="name@example.com">
-					  </div>
-					  <div class="col-2">
-						  <label for="search_username" class="form-label mt-2">사용자명</label>
-					  </div>
-					  <div class="col-4">
-						  <input type="search" class="form-control" id="search_username" placeholder="홍길동">
-					  </div>
-					  <div class="col-2">
-						  <label for="search_userTelNo" class="form-label mt-2">전화번호</label>
-					  </div>
-					  <div class="col-4">
-						  <input type="search" class="form-control" id="search_userTelNo" placeholder="010-0000-0000">
-					  </div>
-					  <div class="col-2">
-						  <label for="search_roleSeq" class="form-label mt-2">역할</label>
-					  </div>
-					  <div class="col-4">
-						  <select class="form-select" id="search_roleSeq">
-							  <option value="">전체</option>
-						  </select>
-					  </div>
-					  <div class="mt-2">
-						<a class="btn btn-primary float-end" id="btnSearch">
-							<i class="fa-solid fa-magnifying-glass"></i> 조회
-						</a>
-					  </div>
+	    <div layout:fragment="content" class="col">
+			<div class="row border border-secondary-subtle p-2">
+				  <div class="col-2">
+					  <label for="search_email" class="form-label mt-2">E-Mail</label>
+				  </div>
+				  <div class="col-4">
+					  <input type="search" class="form-control" id="search_email" placeholder="name@example.com">
+				  </div>
+				  <div class="col-2">
+					  <label for="search_username" class="form-label mt-2">사용자명</label>
+				  </div>
+				  <div class="col-4">
+					  <input type="search" class="form-control" id="search_username" placeholder="홍길동">
+				  </div>
+				  <div class="col-2">
+					  <label for="search_userTelNo" class="form-label mt-2">전화번호</label>
+				  </div>
+				  <div class="col-4">
+					  <input type="search" class="form-control" id="search_userTelNo" placeholder="010-0000-0000">
+				  </div>
+				  <div class="col-2">
+					  <label for="search_roleSeq" class="form-label mt-2">역할</label>
+				  </div>
+				  <div class="col-4">
+					  <select class="form-select" id="search_roleSeq">
+						  <option value="">전체</option>
+					  </select>
+				  </div>
+				  <div class="mt-2">
+					<a class="btn btn-primary float-end" id="btnSearch">
+						<i class="fa-solid fa-magnifying-glass"></i> 조회
+					</a>
+				  </div>
+			</div>
+			<div class="row" id="grid-body">
+				<!-- List begin. -->
+				<div id="toolbar">
+				  <button id="remove" class="btn btn-danger chg-btn" disabled>
+				    <i class="bi bi-trash"></i> 삭제
+				  </button>
+				  <button id="chg-passwd" class="btn btn-secondary chg-btn" title="사용자 패스워드 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserPwd" disabled>
+				    <i class="bi bi-file-earmark-lock"></i> 비밀번호변경
+				  </button>
+				  <button id="btnPopChgRole" class="btn btn-secondary chg-btn"  title="사용자 역할 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserRole" disabled>
+				    <i class="bi bi-gear"></i> 권한조정
+				  </button>
 				</div>
-				<div class="row" id="grid-body">
-					<!-- List begin. -->
-					<div id="toolbar">
-					  <button id="remove" class="btn btn-danger chg-btn" disabled>
-					    <i class="bi bi-trash"></i> 삭제
-					  </button>
-					  <button id="chg-passwd" class="btn btn-secondary chg-btn" title="사용자 패스워드 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserPwd" disabled>
-					    <i class="bi bi-file-earmark-lock"></i> 비밀번호변경
-					  </button>
-					  <button id="btnPopChgRole" class="btn btn-secondary chg-btn"  title="사용자 역할 변경" data-bs-toggle="modal" data-bs-target="#popupChgUserRole" disabled>
-					    <i class="bi bi-gear"></i> 권한조정
-					  </button>
-					</div>
-					<table
-					  id="table"					  
-					  data-toolbar="#toolbar"
-					  data-show-refresh="true"
-					  data-show-fullscreen="true"
-					  data-show-columns="true"
-					  data-show-columns-toggle-all="true"
-					  data-show-copy-rows="true"
-					  data-click-to-select="true"
-					  data-minimum-count-columns="2"
-					  data-pagination="true"
-					  data-pagination-loop="false"
-					  data-id-field="userSeq"
-					  data-page-list="[10, 25, 50, 100]"
-					  data-side-pagination="server"
-					  data-server-sort="true"
-					  th:data-url="@{/system/user_mgt/user_info_list.json}"
-					  data-resizable="true">
-					</table>
-					<!-- List end. -->
-				</div>
+				<table
+				  id="table"					  
+				  data-toolbar="#toolbar"
+				  data-show-refresh="true"
+				  data-show-fullscreen="true"
+				  data-show-columns="true"
+				  data-show-columns-toggle-all="true"
+				  data-show-copy-rows="true"
+				  data-click-to-select="true"
+				  data-minimum-count-columns="2"
+				  data-pagination="true"
+				  data-pagination-loop="false"
+				  data-id-field="userSeq"
+				  data-page-list="[10, 25, 50, 100]"
+				  data-side-pagination="server"
+				  data-server-sort="true"
+				  th:data-url="@{/system/user_mgt/user_info_list.json}"
+				  data-resizable="true">
+				</table>
+				<!-- List end. -->
 			</div>
 			<!-- modal -->
 			<div class="modal-staging">
