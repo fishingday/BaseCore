@@ -3,7 +3,7 @@ package kr.co.basedevice.corebase.repository.cm.querydsl;
 import java.util.List;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
-import kr.co.basedevice.corebase.search.common.SearchCodeGrp;
+import kr.co.basedevice.corebase.search.common.SearchGrpCd;
 
 public interface CmCdGrpRepositoryQuerydsl {
 	
@@ -13,5 +13,5 @@ public interface CmCdGrpRepositoryQuerydsl {
 	 * @param searchCodeGrp
 	 * @return
 	 */
-	List<CmCdGrp> findBySearch(SearchCodeGrp searchCodeGrp);
+	List<CmCdGrp> findBySearch(SearchGrpCd searchCodeGrp);
 }

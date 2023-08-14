@@ -15,7 +15,8 @@ import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.search.common.SearchCodeGrp;
+import kr.co.basedevice.corebase.search.common.SearchGrpCd;
+import kr.co.basedevice.corebase.search.system.SearchDtlCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.CommonService;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,11 @@ public class CodeMgtRestController {
 	/** 
 	 * 코드 그룹 목록
 	 * 
-	 * @param SearchCodeGrp 
+	 * @param SearchGrpCd 
 	 * @return
 	 */
 	@GetMapping("/get_grpcd_list.json")
-	public ResponseEntity<List<CmCdGrp>> findByCdGrpList(SearchCodeGrp searchCodeGrp){		
+	public ResponseEntity<List<CmCdGrp>> findByCdGrpList(SearchGrpCd searchCodeGrp){		
 		List<CmCdGrp> cmCdGrpList = commonService.findBySearch(searchCodeGrp);
 		
 		return ResponseEntity.ok(cmCdGrpList);
@@ -94,9 +95,9 @@ public class CodeMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/get_code_list.json")
-	public ResponseEntity<List<CmCdDtl>> findCmCdDtlByGrpCd(String grpCd){
+	public ResponseEntity<List<CmCdDtl>> findCmCdDtlByGrpCd(SearchDtlCd searchDtlCd){
 		
-		List<CmCdDtl> cmCdDtlList = commonService.getCmCdDtlList(grpCd);
+		List<CmCdDtl> cmCdDtlList = commonService.getCmCdDtlList(searchDtlCd);
 		
 		return ResponseEntity.ok(cmCdDtlList);
 	}

@@ -38,7 +38,7 @@ public class CmCdDtl implements Serializable {
 	private String cd;
 
 	@Column(name = "CD_NM", nullable = false, length = 30)
-	private String CdNm;
+	private String cdNm;
 
 	@Column(name = "CD_DESC", length = 2000)
 	private String cdDesc;

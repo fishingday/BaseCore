@@ -16,7 +16,8 @@ import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmCdDtlRepository;
 import kr.co.basedevice.corebase.repository.cm.CmCdGrpRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
-import kr.co.basedevice.corebase.search.common.SearchCodeGrp;
+import kr.co.basedevice.corebase.search.common.SearchGrpCd;
+import kr.co.basedevice.corebase.search.system.SearchDtlCd;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -45,8 +46,8 @@ public class CommonService {
 	 * @param grpCd
 	 * @return
 	 */
-	public List<CmCdDtl> getCmCdDtlList(String grpCd){
-		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findByGrpCd(grpCd);
+	public List<CmCdDtl> getCmCdDtlList(SearchDtlCd searchDtlCd){
+		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findBySearch(searchDtlCd);
 		
 		return cmCdDtlList;
 	}
@@ -57,7 +58,7 @@ public class CommonService {
 	 * @param searchCodeGrp
 	 * @return
 	 */
-	public List<CmCdGrp> findBySearch(SearchCodeGrp searchCodeGrp) {
+	public List<CmCdGrp> findBySearch(SearchGrpCd searchCodeGrp) {
 		List<CmCdGrp> cmCdGrpList  = cmCdGrpRepository.findBySearch(searchCodeGrp);
 		return cmCdGrpList;
 	}
@@ -98,12 +99,22 @@ public class CommonService {
 	/**
 	 * 코드 그룹 삭제
 	 * 
-	 * @param cdGrp
+	 * @param grpCd
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean removeCmCdGrp(String cdGrp, Long updatorSeq) {
-		CmCdGrp cmCdGrp = cmCdGrpRepository.getById(cdGrp);
+	public boolean removeCmCdGrp(String grpCd, Long updatorSeq) {
+		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findByGrpCd(grpCd);
+		if(cmCdDtlList != null && !cmCdDtlList.isEmpty()) {
+			for(CmCdDtl cmCdDtl : cmCdDtlList) {
+				cmCdDtl.setDelYn(Yn.Y);
+				cmCdDtl.setUpdatorSeq(updatorSeq);
+				cmCdDtl.setUpdDt(LocalDateTime.now());
+			}
+			cmCdDtlRepository.saveAll(cmCdDtlList);
+		}
+		
+		CmCdGrp cmCdGrp = cmCdGrpRepository.getById(grpCd);
 		cmCdGrp.setDelYn(Yn.Y);
 		cmCdGrp.setUpdatorSeq(updatorSeq);
 		cmCdGrp.setUpdDt(LocalDateTime.now());

@@ -17,7 +17,7 @@ import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
 import kr.co.basedevice.corebase.domain.cm.QCmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.QCmCdGrp;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.search.common.SearchCodeGrp;
+import kr.co.basedevice.corebase.search.common.SearchGrpCd;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class CmCdGrpRepositoryImpl implements CmCdGrpRepositoryQuerydsl{
 	private final JPAQueryFactory jpaQueryFactory;
 	
 	@Override
-	public List<CmCdGrp> findBySearch(SearchCodeGrp searchCodeGrp) {
+	public List<CmCdGrp> findBySearch(SearchGrpCd searchCodeGrp) {
 		QCmCdGrp cmCdGrp = QCmCdGrp.cmCdGrp;
 		QCmCdDtl cmCdDtl = QCmCdDtl.cmCdDtl;
 		
@@ -35,14 +35,14 @@ public class CmCdGrpRepositoryImpl implements CmCdGrpRepositoryQuerydsl{
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(cmCdGrp.delYn.eq(Yn.N));
 		
-		if(!ObjectUtils.isEmpty(searchCodeGrp.getCdGrpNm())) {
-			builder.and(cmCdGrp.grpCdNm.contains(searchCodeGrp.getCdGrpNm()));
+		if(!ObjectUtils.isEmpty(searchCodeGrp.getGrpCdNm())) {
+			builder.and(cmCdGrp.grpCdNm.contains(searchCodeGrp.getGrpCdNm()));
 		}
 		if(!ObjectUtils.isEmpty(searchCodeGrp.getCdNm())) {
 		    JPQLQuery <String> subQuery = 
 		    		  JPAExpressions.select(Projections.bean(String.class, cmCdDtl.grpCd))
 		    	      .from(cmCdDtl)
-		    	      .where(cmCdDtl.delYn.eq(Yn.N), cmCdDtl.CdNm.contains(searchCodeGrp.getCdNm()));
+		    	      .where(cmCdDtl.delYn.eq(Yn.N), cmCdDtl.cdNm.contains(searchCodeGrp.getCdNm()));
 		    	      
 		  builder.and(cmCdGrp.grpCd.in(subQuery));
 		}
