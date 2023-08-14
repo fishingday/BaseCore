@@ -14,9 +14,9 @@
         cursor: pointer;
       }
       .codeGenDiv {
-		    overflow:scroll; 
-		    height:555px;
-	    }
+            overflow:scroll; 
+            height:555px;
+        }
     </style>
     </head>
     <body>
@@ -105,114 +105,110 @@
         </div>
         <!-- modal -->
         <div class="modal-staging">
-	        <!--/* 그룹코드 생성 */-->
-	        <div class="modal fade" id="popupGrpCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-	            <div class="modal-content">
-	              <div class="modal-header">
-	                <h1 class="modal-title fs-5" id="staticBackdropLabel">그룹코드 생성</h1>
-	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	              </div>
-	              <div class="modal-body">
-		              <div class="mb-3 row">
-		                <label for="pop_grpCd" class="col-sm-4 col-form-label">그룹코드</label>
-		                <div class="col-sm-8">
-		                  <input type="text" class="form-control" id="pop_grpCd">
-		                </div>
-		              </div>
-	              </div>
-	              <div class="modal-body">
-		              <div class="mb-3 row">
-		                <label for="pop_grpCdNm" class="col-sm-4 col-form-label">그룹코드명</label>
-		                <div class="col-sm-8">
-		                  <input type="text" class="form-control" id="pop_grpCdNm">
-		                </div>
-		              </div>
-	              </div>
-	              <div class="modal-body">
-		              <div class="mb-3 row">
-		                <label for="pop_grpCdDesc" class="col-sm-4 col-form-label">그룹코드 설명</label>
-		                <div class="col-sm-8">
-		                  <textarea class="form-control" aria-label="With textarea" id="pop_grpCdDesc"></textarea>
-		                </div>
-		              </div>
-	              </div>
-	              <div class="modal-footer row">
-		              <div class="col-auto me-auto">
-		                  <button type="button" class="btn btn-primary" id="btnSaveUserRole">생성</button>
-		              </div>
-		                <div class="col-auto">
-		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		              </div>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	        
-	        <!--/* 상세 코드 생성 */-->
-	        <div class="modal fade" id="popupDtlCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	          <div class="modal-dialog modal-dialog-centered">
-	            <div class="modal-content">
-	              <div class="modal-header">
-	                <h1 class="modal-title fs-5" id="staticBackdropLabel">상세 코드 생성</h1>
-	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	              </div>
-	              <div class="modal-body">
-		              <div class="input-group mb-3">
-									  <span class="input-group-text" style="width: 120px;">그룹 코드</span>
-									  <input type="text" class="form-control" id="pop_grpCd">
-									</div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">코드</span>
-		                <input type="text" class="form-control" id="pop_cd">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">코드명</span>
-		                <input type="text" class="form-control" id="pop_cdNm">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">코드 설명</span>
-		                <textarea class="form-control" id="pop_grpCdDesc"></textarea>
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">출력순서</span>
-		                <input type="number" class="form-control" id="pop_prntOrd">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">옵션 1</span>
-		                <input type="text" class="form-control" id="pop_opt1">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">옵션 2</span>
-		                <input type="text" class="form-control" id="pop_opt2">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">옵션 3</span>
-		                <input type="text" class="form-control" id="pop_opt3">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">옵션 4</span>
-		                <input type="text" class="form-control" id="pop_opt4">
-		              </div>
-		              <div class="input-group mb-3">
-		                <span class="input-group-text" style="width: 120px;">옵션 5</span>
-		                <input type="text" class="form-control" id="pop_opt5">
-		              </div>
-	              </div>
-	              
-	              <div class="modal-footer row">
-		              <div class="col-auto me-auto">
-		                  <button type="button" class="btn btn-primary" id="btnSaveDtlCd">생성</button>
-		              </div>
-		                <div class="col-auto">
-		                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		              </div>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-		    </div>
-		    <!-- modal -->
+            <!--/* 그룹코드 생성 */-->
+            <div class="modal fade" id="popupGrpCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">그룹코드 생성</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="mb-3 row">
+                        <label for="pop_grpCd" class="col-sm-4 col-form-label">그룹코드</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="pop_grpCd">
+                        </div>
+                      </div>
+                      <div class="mb-3 row">
+                        <label for="pop_grpCdNm" class="col-sm-4 col-form-label">그룹코드명</label>
+                        <div class="col-sm-8">
+                          <input type="text" class="form-control" id="pop_grpCdNm">
+                        </div>
+                      </div>
+                      <div class="mb-3 row">
+                        <label for="pop_grpCdDesc" class="col-sm-4 col-form-label">그룹코드 설명</label>
+                        <div class="col-sm-8">
+                          <textarea class="form-control" aria-label="With textarea" id="pop_grpCdDesc"></textarea>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer row">
+                      <div class="col-auto me-auto">
+                        <button type="button" class="btn btn-primary" id="btnPopSaveGrpCd">생성</button>
+                      </div>
+                        <div class="col-auto">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!--/* 상세 코드 생성 */-->
+            <div class="modal fade" id="popupDtlCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">상세 코드 생성</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="input-group mb-3">
+                                      <span class="input-group-text" style="width: 120px;">그룹 코드</span>
+                                      <input type="text" class="form-control" id="pop_grpCd">
+                                    </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">코드</span>
+                        <input type="text" class="form-control" id="pop_cd">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">코드명</span>
+                        <input type="text" class="form-control" id="pop_cdNm">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">코드 설명</span>
+                        <textarea class="form-control" id="pop_grpCdDesc"></textarea>
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">출력순서</span>
+                        <input type="number" class="form-control" id="pop_prntOrd">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">옵션 1</span>
+                        <input type="text" class="form-control" id="pop_opt1">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">옵션 2</span>
+                        <input type="text" class="form-control" id="pop_opt2">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">옵션 3</span>
+                        <input type="text" class="form-control" id="pop_opt3">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">옵션 4</span>
+                        <input type="text" class="form-control" id="pop_opt4">
+                      </div>
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" style="width: 120px;">옵션 5</span>
+                        <input type="text" class="form-control" id="pop_opt5">
+                      </div>
+                  </div>
+                  
+                  <div class="modal-footer row">
+                      <div class="col-auto me-auto">
+                          <button type="button" class="btn btn-primary" id="btnSaveDtlCd">생성</button>
+                      </div>
+                        <div class="col-auto">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <!-- modal -->
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
         var $table_grpcd = $('#table-grpcd');
@@ -231,6 +227,10 @@
 
               $("#btnSaveGrpCd").bind("click", function(){
                 fnObj.action.updateGrpCd();
+              });
+
+              $("#btnPopSaveGrpCd").bind("click", function(){
+                fnObj.action.saveGrpCd();
               });
               
               $("#tabCodeList").bind("click", function(){
@@ -298,8 +298,8 @@
               })
               .then((result) => {
                 if (result.isConfirmed) {
-                            let deleteGrpCd = {};
-                            deleteGrpCd.grpCd = $("#grpCd").val();
+                  let deleteGrpCd = {};
+                  deleteGrpCd.grpCd = $("#grpCd").val();
                   $.ajax({
                     url: "[[@{/system/code_mgt/remove_grpcd.json}]]",
                     type: "DELETE",
@@ -380,27 +380,48 @@
                 }
               }).then();
             },
-            saveGrpCd: function(){
+            saveGrpCd: function(){			  
+              if($("#pop_grpCd").val() === ''){
+          		  Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '그룹코드는 필수 입력 사항입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if($("#pop_grpCdNm").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '그룹코드명은 필수 입력 사항입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+
+              // 중복 검사...
+              let grpCdList = $table_grpcd.bootstrapTable('getData');
+              for(let i = 0 ; i < grpCdList.length; i++){
+                if(grpCdList[i].grpCd === $("#pop_grpCd").val()){
+                  Swal.fire({
+                    title: 'Error!',
+                    text: '중복된 그룹코드 입니다.',
+                    icon: 'info',
+                    confirmButtonText: '닫기'
+                  });
+                  return;
+                }
+              }
+				
               Swal.fire({
                 title: '새로 만드시겠습니까?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '생성',
               }).then((result) => {
-				        // 중복 검사...
-				        let grpCdList = $table.bootstrapTable('getData');
-				        for(let i = 0 ; i < grpCdList.length; i++){
-							    if(grpCdList[i].grpCd === $("#pop_grpCd").val()){
-									  Swal.fire({
-                      title: 'Error!',
-                      text: '중복된 그룹코드 입니다.',
-                      icon: 'info',
-                      confirmButtonText: '닫기'
-                    });
-									  return;
-								  }
-						    }
-				  
+                  
                 if (result.isConfirmed) {
                   let grpCdInfo = {};
                   grpCdInfo.grpCd     = $("#pop_grpCd").val();
@@ -413,9 +434,10 @@
                     async: true,
                     dataType : "json",
                     data : grpCdInfo,
-                    success: function(data, status){                      
-                      fnObj.grid.init_grpcd();
+                    success: function(data, status){   
                       if(status === 'success'){
+						            $("#popupGrpCd").modal("hide");
+                        fnObj.grid.init_grpcd();
                         Swal.fire(
                           '생성',
                           '생성되었습니다.',
@@ -500,15 +522,15 @@
                 responseHandler: function (data) { // 데이터 처리
                   let grpCdNm =  $("#grpCd").val().toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
                   let code = '<div>'
-					           + 'package kr.co.basedevice.corebase.domain.code;<br/>'                     
+                               + 'package kr.co.basedevice.corebase.domain.code;<br/>'                     
                      + '<br/>'
                      + 'public enum ' + grpCdNm.charAt(0).toUpperCase() + grpCdNm.slice(1) + ' {<br/>'
                      + '<br/>';
                    
                    for(let i = 0; i < data.length; i++){
-								      code += '&nbsp;&nbsp;&nbsp;&nbsp;/* ' + data[i].cdNm + ' */<br/>'
-								      code += '&nbsp;&nbsp;&nbsp;&nbsp;'    + (i !== 0 ? ',' : '' ) +data[i].cd + '<br/><br/>'								      
-				           }                    
+                                      code += '&nbsp;&nbsp;&nbsp;&nbsp;/* ' + data[i].cdNm + ' */<br/>'
+                                      code += '&nbsp;&nbsp;&nbsp;&nbsp;'    + (i !== 0 ? ',' : '' ) +data[i].cd + '<br/><br/>'                                    
+                           }                    
                    code += '}<br/>'
                      + '</div>';
                 
