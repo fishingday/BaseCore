@@ -155,9 +155,8 @@
                   </div>
                   <div class="modal-body">
                       <div class="input-group mb-3">
-                                      <span class="input-group-text" style="width: 120px;">그룹 코드</span>
-                                      <input type="text" class="form-control" id="pop_grpCd">
-                                    </div>
+                        <p class="fs-5" id="pop_header_txt">그룹코드정보</p>
+                      </div>
                       <div class="input-group mb-3">
                         <span class="input-group-text" style="width: 120px;">코드</span>
                         <input type="text" class="form-control" id="pop_cd">
@@ -207,8 +206,8 @@
                 </div>
               </div>
             </div>
-            </div>
-            <!-- modal -->
+          </div>
+          <!-- modal -->
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
         var $table_grpcd = $('#table-grpcd');
@@ -231,6 +230,17 @@
 
               $("#btnPopSaveGrpCd").bind("click", function(){
                 fnObj.action.saveGrpCd();
+              });
+              
+              $("#btnAddGrpCd").bind("click", function(){
+                $("#pop_grpCd").val('');
+                $("#pop_grpCdNm").val('');
+                $("#pop_grpCdDesc").val('');
+              });              
+                    
+              $("#btnAddDtlCd").bind("click", function(){
+                let grpCdInfo = $("#grpCdNm").val() + "(" + $("#grpCd").val() + ")";                
+                $("#pop_header_txt").text(grpCdInfo);
               });
               
               $("#tabCodeList").bind("click", function(){
@@ -455,6 +465,19 @@
                   });
                 }
               }).then();
+            },
+            clearDtlCd: function(){
+              $("#pop_header_txt").text('');
+              $("#pop_cd").val('');
+              $("#pop_cdNm").val('');
+              $("#pop_grpCdDesc").val('');
+              $("#pop_prntOrd").val('');
+              
+              $("#pop_opt1").val('');
+              $("#pop_opt2").val('');
+              $("#pop_opt3").val('');
+              $("#pop_opt4").val('');
+              $("#pop_opt5").val('');
             }
           },
           grid: { // 그리드 관련
