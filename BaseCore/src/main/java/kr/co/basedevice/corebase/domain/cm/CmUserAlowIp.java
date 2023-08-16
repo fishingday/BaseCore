@@ -1,7 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +17,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_USER_ALOW_IP")
 @SequenceGenerator(name = "SEQGEN_CM_USER_ALOW_IP", sequenceName = "SEQ_CM_USER_ALOW_IP", initialValue = 1000, allocationSize = 1)
-public class CmUserAlowIp implements Serializable {	
+public class CmUserAlowIp extends BaseEntity implements Serializable {	
 
 	private static final long serialVersionUID = 2007929684016838318L;
 
@@ -48,18 +48,6 @@ public class CmUserAlowIp implements Serializable {
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
-
-	@Column(name = "CREATOR_SEQ", updatable = false)
-	private Long creatorSeq;
-
-	@Column(name = "CRE_DT", updatable = false)
-	private LocalDateTime creDt;
-
-	@Column(name = "UPDATOR_SEQ")
-	private Long updatorSeq;
-
-	@Column(name = "UPD_DT")
-	private LocalDateTime updDt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore

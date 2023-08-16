@@ -24,6 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -34,7 +35,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_USER", uniqueConstraints = {@UniqueConstraint(name = "UK_CM_USER_LOGIN_ID", columnNames = { "LOGIN_ID" }) })
 @SequenceGenerator(name = "SEQGEN_CM_USER", sequenceName = "SEQ_CM_USER", initialValue = 1000, allocationSize = 1)
-public class CmUser implements Serializable{
+public class CmUser extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 8563132967658504534L;
 		
@@ -73,18 +74,6 @@ public class CmUser implements Serializable{
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
-
-	@Column(name = "CREATOR_SEQ", nullable = false, updatable = false)
-	private Long creatorSeq;
-
-	@Column(name = "CRE_DT", nullable = false, updatable = false)
-	private LocalDateTime creDt;
-
-	@Column(name = "UPDATOR_SEQ", nullable = false)
-	private Long updatorSeq;
-
-	@Column(name = "UPD_DT", nullable = false)
-	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
 	@JsonIgnore

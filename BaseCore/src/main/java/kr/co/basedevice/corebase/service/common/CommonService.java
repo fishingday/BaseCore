@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,12 +86,7 @@ public class CommonService {
 	 * @return
 	 */
 	public CmCdGrp saveCmCdGrp(CmCdGrp cmCdGrp, Long updatorSeq) {
-		cmCdGrp.setDelYn(Yn.N);
-		cmCdGrp.setCreatorSeq(updatorSeq);
-		cmCdGrp.setCreDt(LocalDateTime.now());
-		cmCdGrp.setUpdatorSeq(updatorSeq);
-		cmCdGrp.setUpdDt(LocalDateTime.now());
-		
+		cmCdGrp.setDelYn(Yn.N);		
 		return cmCdGrpRepository.save(cmCdGrp);
 	}
 
@@ -108,16 +102,12 @@ public class CommonService {
 		if(cmCdDtlList != null && !cmCdDtlList.isEmpty()) {
 			for(CmCdDtl cmCdDtl : cmCdDtlList) {
 				cmCdDtl.setDelYn(Yn.Y);
-				cmCdDtl.setUpdatorSeq(updatorSeq);
-				cmCdDtl.setUpdDt(LocalDateTime.now());
 			}
 			cmCdDtlRepository.saveAll(cmCdDtlList);
 		}
 		
 		CmCdGrp cmCdGrp = cmCdGrpRepository.getById(grpCd);
 		cmCdGrp.setDelYn(Yn.Y);
-		cmCdGrp.setUpdatorSeq(updatorSeq);
-		cmCdGrp.setUpdDt(LocalDateTime.now());
 		
 		cmCdGrpRepository.save(cmCdGrp);
 		
@@ -150,10 +140,6 @@ public class CommonService {
 	 */
 	public CmCdDtl saveCmCdDtl(CmCdDtl cmCdDtl, Long updatorSeq) {
 		cmCdDtl.setDelYn(Yn.N);
-		cmCdDtl.setCreatorSeq(updatorSeq);
-		cmCdDtl.setCreDt(LocalDateTime.now());
-		cmCdDtl.setUpdatorSeq(updatorSeq);
-		cmCdDtl.setUpdDt(LocalDateTime.now());
 		
 		return cmCdDtlRepository.save(cmCdDtl);
 	}
@@ -170,8 +156,6 @@ public class CommonService {
 		CmCdDtl cmCdDtl = cmCdDtlRepository.getById(cmCdDtlId);	
 		
 		cmCdDtl.setDelYn(Yn.Y);
-		cmCdDtl.setUpdatorSeq(updatorSeq);
-		cmCdDtl.setUpdDt(LocalDateTime.now());
 		
 		cmCdDtlRepository.save(cmCdDtl);
 		
@@ -196,16 +180,12 @@ public class CommonService {
 		
 		chgCdDtl.setPrntOrd(chgOrd);
 		chgCdDtl.setDelYn(Yn.Y);
-		chgCdDtl.setUpdatorSeq(updatorSeq);
-		chgCdDtl.setUpdDt(LocalDateTime.now());
 		
 		CmCdDtlId tgtCdDtlId = new CmCdDtlId(grpCd, tgtCd);
 		CmCdDtl tgtCdDtl = cmCdDtlRepository.getById(tgtCdDtlId);
 		
 		tgtCdDtl.setPrntOrd(tgtOrd);
 		tgtCdDtl.setDelYn(Yn.Y);
-		tgtCdDtl.setUpdatorSeq(updatorSeq);
-		tgtCdDtl.setUpdDt(LocalDateTime.now());
 		
 		return true;
 	}

@@ -56,8 +56,6 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 		cmUser.setLoginFailCnt(0);
 		cmUser.setLoginDt(LocalDateTime.now());
         cmUser.setLastLoginIp(RequestUtil.getClientIp(request));
-        cmUser.setUpdDt(LocalDateTime.now());
-        cmUser.setUpdatorSeq(cmUser.getUserSeq());
         
         userService.saveCmUser(cmUser);
         

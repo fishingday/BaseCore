@@ -9,6 +9,11 @@ server:
 logging:
   level:
     sql: debug
+    org:
+      hibernate:
+        persister:
+          entity: ERROR
+    
 
 #jasypt:
 #  encryptor:

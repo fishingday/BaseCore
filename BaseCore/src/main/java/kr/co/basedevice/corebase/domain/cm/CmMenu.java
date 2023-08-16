@@ -1,7 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +28,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_MENU")
 @SequenceGenerator(name = "SEQGEN_CM_MENU", sequenceName = "SEQ_CM_MENU", initialValue = 1000, allocationSize = 1)
-public class CmMenu implements Serializable{
+public class CmMenu extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -4796441346567889052L;
 
@@ -69,20 +66,6 @@ public class CmMenu implements Serializable{
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
-
-	@Column(name = "CREATOR_SEQ", updatable = false)
-	private Long creatorSeq;
-
-	@CreatedDate
-	@Column(name = "CRE_DT", updatable = false)
-	private LocalDateTime creDt;
-
-	@Column(name = "UPDATOR_SEQ")
-	private Long updatorSeq;
-
-	@LastModifiedDate
-	@Column(name = "UPD_DT")
-	private LocalDateTime updDt;
 	
 	@OneToMany(mappedBy = "cmMenu", cascade = CascadeType.ALL)
 	@JsonIgnore

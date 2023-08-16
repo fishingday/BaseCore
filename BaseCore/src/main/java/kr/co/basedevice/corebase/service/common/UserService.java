@@ -168,8 +168,6 @@ public class UserService {
 			cmUser.setAcuntExpDt(saveUserInfo.getAcuntExpDt());
 			
 			cmUser.setDelYn(Yn.N);
-			cmUser.setUpdatorSeq(updatorSeq);
-			cmUser.setUpdDt(LocalDateTime.now());
 			cmUserRepository.save(cmUser);
 			
 			// 일단 모든 역할을 제거한다.
@@ -177,8 +175,6 @@ public class UserService {
 			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
 				for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
 					cmUserRoleMap.setDelYn(Yn.Y);
-					cmUserRoleMap.setUpdatorSeq(updatorSeq);
-					cmUserRoleMap.setUpdDt(LocalDateTime.now());
 				}
 				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
 			}
@@ -193,10 +189,6 @@ public class UserService {
 					cmUserRoleMap.setPrntOrd(prntOrd++);
 					
 					cmUserRoleMap.setDelYn(Yn.N);
-					cmUserRoleMap.setCreatorSeq(updatorSeq);
-					cmUserRoleMap.setCreDt(LocalDateTime.now());
-					cmUserRoleMap.setUpdatorSeq(updatorSeq);
-					cmUserRoleMap.setUpdDt(LocalDateTime.now());
 					
 					cmUserRoleMapRepository.save(cmUserRoleMap);
 				}
@@ -222,8 +214,6 @@ public class UserService {
 			if(cmUserPwdList != null && !cmUserPwdList.isEmpty()) {
 				for(CmUserPwd cmUserPwd : cmUserPwdList) {
 					cmUserPwd.setDelYn(Yn.Y);
-					cmUserPwd.setUpdatorSeq(updatorSeq);
-					cmUserPwd.setUpdDt(LocalDateTime.now());
 				}
 				cmUserPwdRepository.saveAll(cmUserPwdList);
 			}
@@ -233,10 +223,6 @@ public class UserService {
 			cmUserPwd.setUserPwd(passwordEncoder.encode(saveUserPwd.getChgPwd()));
 			cmUserPwd.setPwdExpDt(LocalDate.now().plusDays(addAccuntExpDt.longValue()));
 			cmUserPwd.setDelYn(Yn.N);
-			cmUserPwd.setCreatorSeq(updatorSeq);
-			cmUserPwd.setCreDt(LocalDateTime.now());
-			cmUserPwd.setUpdatorSeq(updatorSeq);
-			cmUserPwd.setUpdDt(LocalDateTime.now());
 			cmUserPwdRepository.save(cmUserPwd);
 			
 			// 패스워드를 변경한다는 의미는 사용자의 상태를 로그인할 수 있도록 하다는 의미다.
@@ -246,8 +232,6 @@ public class UserService {
 			cmUser.setAcuntExpDt(saveUserPwd.getAcuntExpDt());
 			cmUser.setUserStatCd(UserStatCd.ENABLED);
 			cmUser.setDelYn(Yn.N);
-			cmUser.setUpdatorSeq(updatorSeq);
-			cmUser.setUpdDt(LocalDateTime.now());
 			cmUserRepository.save(cmUser);			
 		}
 		
@@ -271,8 +255,6 @@ public class UserService {
 			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
 				for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
 					cmUserRoleMap.setDelYn(Yn.Y);
-					cmUserRoleMap.setUpdatorSeq(updatorSeq);
-					cmUserRoleMap.setUpdDt(LocalDateTime.now());
 				}
 				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
 			}
@@ -285,10 +267,6 @@ public class UserService {
 				cmUserRoleMap.setPrntOrd(prntOrd++);
 				
 				cmUserRoleMap.setDelYn(Yn.N);
-				cmUserRoleMap.setCreatorSeq(updatorSeq);
-				cmUserRoleMap.setCreDt(LocalDateTime.now());
-				cmUserRoleMap.setUpdatorSeq(updatorSeq);
-				cmUserRoleMap.setUpdDt(LocalDateTime.now());
 				addCmUserRoleMapList.add(cmUserRoleMap);
 			}
 		}
@@ -315,8 +293,6 @@ public class UserService {
 			if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
 				for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
 					cmUserRoleMap.setDelYn(Yn.Y);
-					cmUserRoleMap.setUpdatorSeq(updatorSeq);
-					cmUserRoleMap.setUpdDt(LocalDateTime.now());
 				}
 				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
 			}
@@ -324,8 +300,6 @@ public class UserService {
 			CmUser cmUser = cmUserRepository.getById(userSeq);			
 			cmUser.setUserStatCd(UserStatCd.DISABLED); // 삭제 처리
 			cmUser.setDelYn(Yn.Y);
-			cmUser.setUpdatorSeq(updatorSeq);
-			cmUser.setUpdDt(LocalDateTime.now());
 			cmUserRepository.save(cmUser);
 		}
 		return true;

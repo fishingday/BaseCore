@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.NotiSendGrdCd;
 import kr.co.basedevice.corebase.domain.code.SendMediaTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -30,7 +31,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "CM_NOTI")
 @SequenceGenerator(name = "SEQGEN_CM_NOTI", sequenceName = "SEQ_CM_NOTI", initialValue = 1000, allocationSize = 1)
-public class CmNoti implements Serializable{
+public class CmNoti  extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -4615576439921001498L;
 
@@ -69,18 +70,6 @@ public class CmNoti implements Serializable{
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
-
-	@Column(name = "CREATOR_SEQ", updatable = false, nullable = false)
-	private Long creatorSeq;
-
-	@Column(name = "CRE_DT", updatable = false, nullable = false)
-	private LocalDateTime creDt;
-
-	@Column(name = "UPDATOR_SEQ", nullable = false)
-	private Long updatorSeq;
-
-	@Column(name = "UPD_DT", nullable = false)
-	private LocalDateTime updDt;	
 
 	@OneToMany(mappedBy = "cmNoti", cascade = CascadeType.ALL)
 	@JsonIgnore

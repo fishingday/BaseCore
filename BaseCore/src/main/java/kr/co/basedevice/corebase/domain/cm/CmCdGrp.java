@@ -1,7 +1,6 @@
 package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_CD_GRP")
-public class CmCdGrp implements Serializable {
+public class CmCdGrp extends BaseEntity implements Serializable{
 	
 	private static final long serialVersionUID = -3619896827890455517L;
 
@@ -47,19 +47,7 @@ public class CmCdGrp implements Serializable {
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
-
-	@Column(name = "CREATOR_SEQ", nullable = false, updatable = false)
-	private Long creatorSeq;
-
-	@Column(name = "CRE_DT", nullable = false, updatable = false)
-	private LocalDateTime creDt;
-
-	@Column(name = "UPDATOR_SEQ", nullable = false)
-	private Long updatorSeq;
-
-	@Column(name = "UPD_DT", nullable = false)
-	private LocalDateTime updDt;
-	
+		
 	@OneToMany(mappedBy = "cmCdGrp", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<CmCdDtl> cmCdDtlList = new ArrayList<>(1);

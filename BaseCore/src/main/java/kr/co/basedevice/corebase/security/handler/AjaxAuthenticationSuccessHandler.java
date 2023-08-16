@@ -57,8 +57,6 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
 		cmUser.setLoginFailCnt(0);
 		cmUser.setLoginDt(LocalDateTime.now());
         cmUser.setLastLoginIp(RequestUtil.getClientIp(request));
-        cmUser.setUpdDt(LocalDateTime.now());
-        cmUser.setUpdatorSeq(cmUser.getUserSeq());
         
         cmUserRepository.save(cmUser);
                 

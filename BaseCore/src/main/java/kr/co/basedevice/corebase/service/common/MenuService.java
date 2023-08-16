@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -61,8 +60,6 @@ public class MenuService {
 			CmMenu cmMenu = cmMenuRepository.getById(menuSeq);
 			
 			cmMenu.setDelYn(Yn.N);
-			cmMenu.setUpdatorSeq(userSeq);
-			cmMenu.setUpdDt(LocalDateTime.now());
 			
 			cmMenuRepository.save(cmMenu);
 			
@@ -80,10 +77,6 @@ public class MenuService {
 	public CmMenu saveCmMenu(CmMenu cmMenu, Long updatorSeq) {
 
 		cmMenu.setDelYn(Yn.N);
-		cmMenu.setCreatorSeq(updatorSeq);
-		cmMenu.setCreDt(LocalDateTime.now());
-		cmMenu.setUpdatorSeq(updatorSeq);
-		cmMenu.setUpdDt(LocalDateTime.now());
 		
 		return cmMenuRepository.save(cmMenu);
 	}
@@ -102,16 +95,12 @@ public class MenuService {
 		CmMenu chgMenu = cmMenuRepository.getById(chgMenuSeq);
 		chgMenu.setDelYn(Yn.N);
 		chgMenu.setPrntOrd(chgOrd);
-		chgMenu.setUpdatorSeq(updatorSeq);
-		chgMenu.setUpdDt(LocalDateTime.now());
 		
 		cmMenuRepository.save(chgMenu);
 		
 		CmMenu tgtMenu = cmMenuRepository.getById(tgtMenuSeq);
 		tgtMenu.setDelYn(Yn.N);
 		tgtMenu.setPrntOrd(tgtOrd);
-		tgtMenu.setUpdatorSeq(updatorSeq);
-		tgtMenu.setUpdDt(LocalDateTime.now());
 		
 		cmMenuRepository.save(tgtMenu);
 		
@@ -146,10 +135,6 @@ public class MenuService {
 		cmRoleMenuMap.setMenuSeq(menuSeq);
 		
 		cmRoleMenuMap.setDelYn(Yn.N);
-		cmRoleMenuMap.setCreatorSeq(updatorSeq);
-		cmRoleMenuMap.setCreDt(LocalDateTime.now());
-		cmRoleMenuMap.setUpdatorSeq(updatorSeq);
-		cmRoleMenuMap.setUpdDt(LocalDateTime.now());
 		
 		cmRoleMenuMapRepository.save(cmRoleMenuMap);
 		
@@ -172,8 +157,6 @@ public class MenuService {
 		CmRoleMenuMap cmRoleMenuMap = cmRoleMenuMapRepository.getById(cmRoleMenuMapId);
 		
 		cmRoleMenuMap.setDelYn(Yn.Y);
-		cmRoleMenuMap.setUpdatorSeq(updatorSeq);
-		cmRoleMenuMap.setUpdDt(LocalDateTime.now());
 		
 		cmRoleMenuMapRepository.save(cmRoleMenuMap);
 		

@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -56,10 +55,6 @@ public class RoleService {
 	public CmRole saveCmRole(CmRole cmRole, Long operatorSeq){
 		
 		cmRole.setDelYn(Yn.N);
-		cmRole.setCreatorSeq(operatorSeq);
-		cmRole.setCreDt(LocalDateTime.now());
-		cmRole.setUpdatorSeq(operatorSeq);
-		cmRole.setUpdDt(LocalDateTime.now());
 		
 		return cmRoleRepository.save(cmRole);
 	}
@@ -80,8 +75,6 @@ public class RoleService {
 		if(cmRoleMenuMapList != null && !cmRoleMenuMapList.isEmpty()) {
 			for(CmRoleMenuMap cmRoleMenuMap : cmRoleMenuMapList) {
 				cmRoleMenuMap.setDelYn(Yn.Y);
-				cmRoleMenuMap.setUpdatorSeq(operatorSeq);
-				cmRoleMenuMap.setUpdDt(LocalDateTime.now());
 			}
 			cmRoleMenuMapRepository.saveAll(cmRoleMenuMapList);
 		}
@@ -91,8 +84,6 @@ public class RoleService {
 		if(cmUserRoleMapList != null && !cmUserRoleMapList.isEmpty()) {
 			for(CmUserRoleMap cmUserRoleMap : cmUserRoleMapList) {
 				cmUserRoleMap.setDelYn(Yn.Y);
-				cmUserRoleMap.setUpdatorSeq(operatorSeq);
-				cmUserRoleMap.setUpdDt(LocalDateTime.now());
 			}
 			cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
 		}
@@ -100,8 +91,6 @@ public class RoleService {
 		// 역할 삭제
 		CmRole cmRole = cmRoleRepository.getById(roleSeq);
 		cmRole.setDelYn(Yn.Y);
-		cmRole.setUpdatorSeq(operatorSeq);
-		cmRole.setUpdDt(LocalDateTime.now());
 		return cmRoleRepository.save(cmRole);
 	}
 	
@@ -153,12 +142,8 @@ public class RoleService {
 					cmUserRoleMap.setUserSeq(userSeq);
 					cmUserRoleMap.setRoleSeq(roleSeq);
 					cmUserRoleMap.setPrntOrd(9); // 정확한 순서는 사용자가 직접... 여기서는 부여만!
-					cmUserRoleMap.setCreatorSeq(operatorSeq);
-					cmUserRoleMap.setCreDt(LocalDateTime.now());
 				}
 				cmUserRoleMap.setDelYn(Yn.N);
-				cmUserRoleMap.setUpdatorSeq(operatorSeq);
-				cmUserRoleMap.setUpdDt(LocalDateTime.now());
 				
 				cmUserRoleMapRepository.save(cmUserRoleMap);				
 				inc++;
@@ -189,8 +174,6 @@ public class RoleService {
 					continue;
 				}
 				cmUserRoleMap.setDelYn(Yn.Y);
-				cmUserRoleMap.setUpdatorSeq(operatorSeq);
-				cmUserRoleMap.setUpdDt(LocalDateTime.now());
 				
 				cmUserRoleMapRepository.save(cmUserRoleMap);				
 				inc++;
@@ -222,12 +205,8 @@ public class RoleService {
 					cmRoleMenuMap = new CmRoleMenuMap();
 					cmRoleMenuMap.setRoleSeq(roleSeq);
 					cmRoleMenuMap.setMenuSeq(menuSeq);
-					cmRoleMenuMap.setCreatorSeq(operatorSeq);
-					cmRoleMenuMap.setCreDt(LocalDateTime.now());
 				}
 				cmRoleMenuMap.setDelYn(Yn.N);
-				cmRoleMenuMap.setUpdatorSeq(operatorSeq);
-				cmRoleMenuMap.setUpdDt(LocalDateTime.now());
 				
 				cmRoleMenuMapRepository.save(cmRoleMenuMap);				
 				inc++;
@@ -258,8 +237,6 @@ public class RoleService {
 					continue;
 				}
 				cmRoleMenuMap.setDelYn(Yn.Y);
-				cmRoleMenuMap.setUpdatorSeq(operatorSeq);
-				cmRoleMenuMap.setUpdDt(LocalDateTime.now());
 				
 				cmRoleMenuMapRepository.save(cmRoleMenuMap);				
 				inc++;

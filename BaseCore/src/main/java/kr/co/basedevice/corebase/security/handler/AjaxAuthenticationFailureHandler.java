@@ -1,7 +1,6 @@
 package kr.co.basedevice.corebase.security.handler;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +59,6 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
         	// 굳이 실패한 로그인 정보를 꺼내서... 조치를 하는 것은 계정을 보호하기 위한 것이다.  
         	Integer failCnt = cmUser.getLoginFailCnt() + 1;
         	cmUser.setLoginFailCnt(failCnt);
-        	cmUser.setUpdDt(LocalDateTime.now());
-        	cmUser.setUpdatorSeq(0L);
         	
         	cmUserRepository.save(cmUser);     
         }
