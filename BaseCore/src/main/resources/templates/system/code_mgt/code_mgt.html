@@ -5,19 +5,19 @@
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <title>코드관리</title>
-    <style>
-      /* 사용자 정의 css */
-      a:hover {
-        cursor: pointer;
-      }
-      tr>td:hover{
-        cursor: pointer;
-      }
-      .codeGenDiv {
-            overflow:scroll; 
-            height:555px;
-        }
-    </style>
+	    <style>
+	      /* 사용자 정의 css */
+	      a:hover {
+	        cursor: pointer;
+	      }
+	      tr>td:hover{
+	        cursor: pointer;
+	      }
+	      .codeGenDiv {
+	            overflow:scroll; 
+	            height:555px;
+	        }
+	    </style>
     </head>
     <body>
       <!-- Content 시작 -->
@@ -652,17 +652,15 @@
                   return {classes: 'table-primary'};
                 },
                 columns: [
-                  [
-                    {field: 'radio',     radio: true, class: 'table-primary', formatter:function(value, row, index){
-                      if(index === 0){
-                        $("#tabCodeList").click();
-                        fnObj.action.chooseGrpCd(row);
-                        return {checked: true}
-                      }
-                    }},
-                    {field: 'grpCd',     title: '그룹코드',    align: 'center', valign: 'middle', sortable: true},
-                    {field: 'grpCdNm',   title: '그룸명',   align: 'center', valign: 'middle', sortable: true}
-                  ]
+                  {field: 'radio',     radio: true, class: 'table-primary', formatter:function(value, row, index){
+                    if(index === 0){
+                      $("#tabCodeList").click();
+                      fnObj.action.chooseGrpCd(row);
+                      return {checked: true}
+                    }
+                  }},
+                  {field: 'grpCd',     title: '그룹코드',    align: 'center', valign: 'middle', sortable: true},
+                  {field: 'grpCdNm',   title: '그룸명',   align: 'center', valign: 'middle', sortable: true}
                 ],
                 responseHandler: function (data) { // 데이터 처리
                   return data;

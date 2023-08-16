@@ -4,6 +4,8 @@ import java.util.List;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmMenuDtl;
+import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.search.system.SearchMenu;
 
 public interface CmMenuRepositoryQuerydsl {
 	
@@ -38,5 +40,13 @@ public interface CmMenuRepositoryQuerydsl {
 	 * @return
 	 */
 	List<CmMenu> findUserRoleMenu(Long userSeq, Long roleSeq);
+	
+	/**
+	 * 메뉴 목록 조회
+	 * 
+	 * @param searchMenu
+	 * @return
+	 */
+	List<MenuInfoDto> findBySearch(SearchMenu searchMenu);
 	
 }

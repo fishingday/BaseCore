@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
@@ -16,6 +19,8 @@ import kr.co.basedevice.corebase.domain.cm.QCmRoleMenuMap;
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.cm.QCmUserRoleMap;
 import kr.co.basedevice.corebase.domain.code.Yn;
+import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.search.system.SearchMenu;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -121,5 +126,29 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		.distinct()
 		.orderBy(cmMenu.prntOrd.asc())
 		.fetch();
+	}
+
+	@Override
+	public List<MenuInfoDto> findBySearch(SearchMenu searchMenu) {
+		QCmMenu cmMenu = QCmMenu.cmMenu;
+
+		JPQLQuery<MenuInfoDto> query = jpaQueryFactory.select(
+				Projections.bean(MenuInfoDto.class,
+					 cmMenu.menuSeq
+					,cmMenu.upMenuSeq
+					,cmMenu.menuPath
+					,cmMenu.menuNm
+					,cmMenu.menuDesc
+					,cmMenu.iConUrl
+					,cmMenu.prntYn
+					,cmMenu.cmScrenYn
+					,cmMenu.prntOrd
+				)
+			)
+			.from(cmMenu);		
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(cmMenu.delYn.eq(Yn.N));
+						
+		return query.where(builder).orderBy(cmMenu.prntOrd.asc()).fetch();
 	}
 }

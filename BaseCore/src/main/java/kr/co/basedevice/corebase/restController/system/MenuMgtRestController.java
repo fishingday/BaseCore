@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.search.system.SearchMenu;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenuMgtRestController {
 	
-	private MenuService menuService;
+	final private MenuService menuService;
 
 	/**
 	 * 메뉴 목록
@@ -33,9 +35,9 @@ public class MenuMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/menu_info_list.json")
-	public ResponseEntity<List<CmMenu>> findByMenuList(){
+	public ResponseEntity<List<MenuInfoDto>> findByMenuList(SearchMenu searchMenu){
 		
-		List<CmMenu> cmMenuList = menuService.findByMenuList();
+		List<MenuInfoDto> cmMenuList = menuService.findBySearch(searchMenu);
 		
 		return ResponseEntity.ok(cmMenuList);
 	}

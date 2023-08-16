@@ -11,9 +11,11 @@ import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMap;
 import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMapId;
 import kr.co.basedevice.corebase.domain.code.Yn;
+import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleMenuMapRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
+import kr.co.basedevice.corebase.search.system.SearchMenu;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -21,9 +23,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class MenuService {
 	
-	private CmMenuRepository cmMenuRepository;
-	private CmRoleRepository cmRoleRepository;
-	private CmRoleMenuMapRepository cmRoleMenuMapRepository;
+	final private CmMenuRepository cmMenuRepository;
+	final private CmRoleRepository cmRoleRepository;
+	final private CmRoleMenuMapRepository cmRoleMenuMapRepository;
 	
 	/**
 	 * 메뉴 조회는 모든 메뉴를 대상으로 하지만, 
@@ -35,7 +37,7 @@ public class MenuService {
 	 */
 	public List<CmMenu> findByMenuList() {
 		
-		// 당연히 삭제된 것과 대시보를 비롯하여 표시되지 않는 메뉴는 제외
+		// 당연히 삭제된 것과 대시보드를 비롯하여 표시되지 않는 메뉴는 제외
 		List<CmMenu> cmMenuList = cmMenuRepository.findByPrntYnAndDelYnOrderByPrntOrdAsc(Yn.Y, Yn.N);
 		
 		return cmMenuList;
@@ -161,6 +163,25 @@ public class MenuService {
 		cmRoleMenuMapRepository.save(cmRoleMenuMap);
 		
 		return true;
+	}
+
+	/**
+	 * 메뉴 조회
+	 * 
+	 * @param searchMenu
+	 * @return
+	 */
+	public List<MenuInfoDto> findBySearch(SearchMenu searchMenu) {
+		List<MenuInfoDto> menuInfoDtoList = cmMenuRepository.findBySearch(searchMenu);
+		
+		if(menuInfoDtoList != null && !menuInfoDtoList.isEmpty()) {
+			for(MenuInfoDto menuInfoDto : menuInfoDtoList) {
+				List<CmRole> cmRoleList = cmRoleRepository.findByMenuSeq(menuInfoDto.getMenuSeq());
+				menuInfoDto.setCmRoleList(cmRoleList);
+			}			
+		}
+		
+		return menuInfoDtoList;
 	}
 
 }
