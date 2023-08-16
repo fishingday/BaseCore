@@ -229,18 +229,18 @@
       var $remove = $('#remove');
       var selections = [];
       
-      window.operateEvents = { // 그리드 내 버튼 이벤트
-        'click .userinfo-edit': function (e, value, row, index) {          
-          fnObj.action.setUserInfo(row);
-        }
-      };
-      
       var fnObj = {
         pageStart: function(){ // 화면 오픈 시 document.body.readㅛ
           fnObj.page.init();    
         },
         page: { // 화면의 기본적인 설정
           init : function(){ // 화면 초기화
+            window.operateEvents = { // 그리드 내 버튼 이벤트
+			        'click .userinfo-edit': function (e, value, row, index) {          
+			          fnObj.action.setUserInfo(row);
+			        }
+			      };
+          
             $("#btnSearch").bind("click", function(){ // 조회 
               $table.bootstrapTable('selectPage', 1);
             });
