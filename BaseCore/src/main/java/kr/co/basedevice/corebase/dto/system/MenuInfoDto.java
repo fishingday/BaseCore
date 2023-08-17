@@ -24,7 +24,7 @@ public class MenuInfoDto {
 	
 	private String menuDesc;
 
-	private String iConUrl;
+	private String iConInfo;
 	
 	private Yn prntYn;
 		
@@ -43,7 +43,7 @@ public class MenuInfoDto {
 				}
 				sb.append(cmRole.getRoleNm());
 			}
-			return sb.toString();			
+			return sb.toString();
 		}else {
 			return null;
 		}

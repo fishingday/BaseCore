@@ -49,8 +49,8 @@ public class CmMenu extends BaseEntity implements Serializable{
 	@Column(name = "MENU_DESC", length = 2000)
 	private String menuDesc;
 
-	@Column(name = "ICON_URL", length = 255)
-	private String iConUrl;
+	@Column(name = "ICON_INFO", length = 255)
+	private String iConInfo;
 	
 	@Column(name = "PRNT_YN", length = 1, nullable = false)
 	@Enumerated(EnumType.STRING)

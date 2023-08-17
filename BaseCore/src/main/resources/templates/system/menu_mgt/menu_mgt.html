@@ -13,13 +13,68 @@
           <div class="col-5">
             <table 
               id="table"
-              data-click-to-select="true"
               th:data-url="@{/system/menu_mgt/menu_info_list.json}">				
 			      </table>
           </div>
           <div class="col-7">
-			  
-          </div>
+		        <h4 class="mb-3" id="form-title">메뉴 정보</h4>
+		        <hr class="my-4">
+	          <div class="row g-3">				  
+	            <div class="col-12">
+	              <label for="upMenuSeq" class="form-label">상위메뉴</label>
+	              <select class="form-select" id="upMenuSeq" required>
+	                <option value="">최상위</option>
+	              </select>
+	            </div>
+	            
+	            <div class="col-sm-6">
+	              <label for="menuNm" class="form-label">메뉴명</label>
+	              <input type="text" class="form-control" id="menuNm">
+	              <input type="hidden" id="menuSeq">
+	            </div>	
+	            <div class="col-sm-6">
+	              <label for="prntOrd" class="form-label">출력순서</label>
+	              <input type="number" class="form-control" id="prntOrd">
+	            </div>
+	
+	            <div class="col-12">
+	              <label for="email" class="form-label">메뉴 호출 경로</label>
+	              <input type="email" class="form-control" id="email" placeholder="you@example.com">
+	            </div>
+	
+	            <div class="col-12">
+	              <label for="iConInfo" class="form-label">아이콘 정보</label>
+	              <input type="text" class="form-control" id="iConInfo" placeholder="1234 Main St">
+	            </div>
+	
+	            <div class="col-sm-6">
+	              <label for="role_list" class="form-label">접근 역할(권한)</label>
+	              <ul class="list-group role-list" id="role_list"></ul>
+	            </div>
+	            <div class="col-sm-6">
+					      <label for="menuDesc" class="form-label">메뉴 설명</label>
+	              <textarea class="form-control" id="menuDesc" rows="8"></textarea>
+					    </div>
+					    
+		          <div class="col-sm-6">
+		            <input type="checkbox" class="form-check-input" id="same-address">
+		            <label class="form-check-label" for="same-address">출력 여부</label>
+		          </div>
+		          <div class="col-sm-6">
+		            <input type="checkbox" class="form-check-input" id="save-info">
+		            <label class="form-check-label" for="save-info">공통 화면 여부</label>
+	            </div>
+	          </div>
+	          <hr class="my-4">
+            <div class="row justify-content-between">
+					    <div class="col-auto me-auto">
+					      <button class="w-10 btn btn-danger" type="submit">삭제</button>
+					    </div>
+					    <div class="col-auto">
+					      <button class="w-10 btn btn-primary" type="submit">저장</button>
+					    </div>
+					  </div>		           
+		      </div>
         </div>
         <!-- modal -->
         <div class="modal-staging">
@@ -30,11 +85,7 @@
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
 			  var $table = $('#table');
-			
-			  $(function() {
 
-			  })
-		  
         var fnObj = {
           pageStart:  function(){ // 페이지 초기 실행 스크립트
             fnObj.page.init();
@@ -42,11 +93,21 @@
           },
           page: {
             init: function(){
-				
+							fnObj.action.setComponentData();
             }
           },
           action: { // 호출이나 화면 동작
-            
+            setComponentData: async function(){ // 조회 조건의 역할 데이터를 초기화 한다.            
+              await  $.get("[[@{/common/role_list.json}]]", {},
+                function(data, status) {
+                if(status === 'success'){
+                  for(var i = 0; i < data.length; i++ ){
+                    $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">' 
+                    + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
+                  }
+                }
+              });
+            }
           },
           grid: { // 그리드 관련
             init: function() {
@@ -75,8 +136,7 @@
                   return data;
                 },
                 onPostBody: function() {
-                  var columns = $table.bootstrapTable('getOptions').columns
-          
+                  var columns = $table.bootstrapTable('getOptions').columns;          
                   if (columns && columns[0][0].visible) {
                     $table.treegrid({
                       treeColumn: 0,
@@ -86,9 +146,12 @@
                     })
                   }
                 }
-              })				
-            }
-          }
+              });              
+	            $table.on('click-row.bs.table', function (row, rdata, field) {
+	              console.log(row, field)
+	            });
+            } // init
+          } // grid
         }
         // 페이지 초기 쿼리를 실행한다.
         $(document.body).ready(function () {

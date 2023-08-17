@@ -30,7 +30,7 @@ public class MenuDto implements Comparable<MenuDto>, Serializable{
 	
 	private String menuDesc;
 
-	private String iConUrl;
+	private String iConInfo;
 	
 	private Yn prntYn;
 		
@@ -48,7 +48,7 @@ public class MenuDto implements Comparable<MenuDto>, Serializable{
 		this.menuPath = cmMenu.getMenuPath();
 		this.menuNm = cmMenu.getMenuNm();
 		this.menuDesc = cmMenu.getMenuDesc();
-		this.iConUrl = cmMenu.getIConUrl();
+		this.iConInfo = cmMenu.getIConInfo();
 		this.prntYn = cmMenu.getPrntYn();
 		this.cmScrenYn = cmMenu.getCmScrenYn();
 		this.prntOrd = cmMenu.getPrntOrd();

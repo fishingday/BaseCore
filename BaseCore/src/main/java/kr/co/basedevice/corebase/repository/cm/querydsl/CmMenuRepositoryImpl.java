@@ -139,7 +139,7 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 					,cmMenu.menuPath
 					,cmMenu.menuNm
 					,cmMenu.menuDesc
-					,cmMenu.iConUrl
+					,cmMenu.iConInfo
 					,cmMenu.prntYn
 					,cmMenu.cmScrenYn
 					,cmMenu.prntOrd
