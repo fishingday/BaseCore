@@ -1,17 +1,22 @@
 package kr.co.basedevice.corebase.service.common;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMap;
-import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMapId;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
+import kr.co.basedevice.corebase.dto.system.SaveMenuInfo;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleMenuMapRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
@@ -48,10 +53,9 @@ public class MenuService {
 	 * - 하위 메뉴가 없어야 삭제 가능
 	 * 
 	 * @param menuSeq
-	 * @param userSeq
 	 * @return
 	 */
-	public boolean removeMenu(Long menuSeq, Long userSeq) {
+	public boolean removeMenu(Long menuSeq) {
 		
 		// 하위 메뉴 건수를 조회한다.
 		Long cnt = cmMenuRepository.countByUpMenuSeqAndDelYn(menuSeq, Yn.N);
@@ -61,8 +65,7 @@ public class MenuService {
 		}else {
 			CmMenu cmMenu = cmMenuRepository.getById(menuSeq);
 			
-			cmMenu.setDelYn(Yn.N);
-			
+			cmMenu.setDelYn(Yn.Y);			
 			cmMenuRepository.save(cmMenu);
 			
 			return true;
@@ -73,94 +76,46 @@ public class MenuService {
 	 * 메뉴 저장
 	 * 
 	 * @param cmMenu
-	 * @param updatorSeq
 	 * @return
 	 */
-	public CmMenu saveCmMenu(CmMenu cmMenu, Long updatorSeq) {
-
+	public boolean saveCmMenu(SaveMenuInfo saveMenuInfo, Long updatorSeq) {
+		
+		CmMenu cmMenu = null;
+		if(ObjectUtils.isEmpty(saveMenuInfo.getMenuSeq())) {
+			cmMenu = new CmMenu();
+		}else {
+			cmMenu = cmMenuRepository.getById(saveMenuInfo.getMenuSeq());
+			List<CmRoleMenuMap> cmRoleMenuMapList = cmRoleMenuMapRepository.findByMenuSeqAndDelYn(saveMenuInfo.getMenuSeq(), Yn.N);
+			if(cmRoleMenuMapList != null && !cmRoleMenuMapList.isEmpty()) {
+				for(CmRoleMenuMap cmRoleMenuMap : cmRoleMenuMapList) {
+					cmRoleMenuMap.setDelYn(Yn.Y);
+				}
+				cmRoleMenuMapRepository.saveAll(cmRoleMenuMapList);
+			}			
+		}
+		
+		cmMenu.setUpMenuSeq(saveMenuInfo.getUpMenuSeq());
+		cmMenu.setMenuNm(saveMenuInfo.getMenuNm());
+		cmMenu.setMenuPath(saveMenuInfo.getMenuPath());
+		cmMenu.setMenuDesc(saveMenuInfo.getMenuDesc());
+		cmMenu.setPrntOrd(saveMenuInfo.getPrntOrd());
+		cmMenu.setIConInfo(saveMenuInfo.getIConInfo());
+		cmMenu.setPrntYn(saveMenuInfo.getPrntYn());
+		cmMenu.setCmScrenYn(saveMenuInfo.getCmScrenYn());
 		cmMenu.setDelYn(Yn.N);
 		
-		return cmMenuRepository.save(cmMenu);
-	}
-
-	/**
-	 * 메뉴 순서 변경
-	 * 
-	 * @param chgMenuSeq
-	 * @param chgOrd
-	 * @param tgtMenuSeq
-	 * @param tgtOrd
-	 * @param userSeq
-	 * @return
-	 */
-	public boolean chgOrderMenu(Long chgMenuSeq, Integer chgOrd, Long tgtMenuSeq, Integer tgtOrd, Long updatorSeq) {
-		CmMenu chgMenu = cmMenuRepository.getById(chgMenuSeq);
-		chgMenu.setDelYn(Yn.N);
-		chgMenu.setPrntOrd(chgOrd);
+		CmMenu saveMenu = cmMenuRepository.save(cmMenu);
 		
-		cmMenuRepository.save(chgMenu);
-		
-		CmMenu tgtMenu = cmMenuRepository.getById(tgtMenuSeq);
-		tgtMenu.setDelYn(Yn.N);
-		tgtMenu.setPrntOrd(tgtOrd);
-		
-		cmMenuRepository.save(tgtMenu);
-		
-		return true;
-	}
-
-	/**
-	 * 메뉴별 역할 목록
-	 * 
-	 * @param menuSeq
-	 * @return
-	 */
-	public List<CmRole> findByRoleList(Long menuSeq) {		
-		
-		List<CmRole> cmRoleList = cmRoleRepository.findByMenuSeq(menuSeq);		
-		
-		return cmRoleList;
-	}
-
-	/**
-	 * 메뉴별 역할 추가
-	 * 
-	 * @param menuSeq
-	 * @param roleSeq
-	 * @param userSeq
-	 * @return
-	 */
-	public boolean addRole(Long menuSeq, Long roleSeq, Long updatorSeq) {
-		CmRoleMenuMap cmRoleMenuMap = new CmRoleMenuMap();
-		
-		cmRoleMenuMap.setRoleSeq(roleSeq);
-		cmRoleMenuMap.setMenuSeq(menuSeq);
-		
-		cmRoleMenuMap.setDelYn(Yn.N);
-		
-		cmRoleMenuMapRepository.save(cmRoleMenuMap);
-		
-		return true;
-	}
-
-	/**
-	 * 메뉴별 역할 삭제
-	 * 
-	 * @param menuSeq
-	 * @param roleSeq
-	 * @param updatorSeq
-	 * @return
-	 */
-	public boolean removeRole(Long menuSeq, Long roleSeq, Long updatorSeq) {
-		CmRoleMenuMapId cmRoleMenuMapId = new CmRoleMenuMapId();
-		cmRoleMenuMapId.setRoleSeq(roleSeq);
-		cmRoleMenuMapId.setMenuSeq(menuSeq);
-		
-		CmRoleMenuMap cmRoleMenuMap = cmRoleMenuMapRepository.getById(cmRoleMenuMapId);
-		
-		cmRoleMenuMap.setDelYn(Yn.Y);
-		
-		cmRoleMenuMapRepository.save(cmRoleMenuMap);
+		if(saveMenuInfo.getRoleSeqList() != null && !saveMenuInfo.getRoleSeqList().isEmpty()) {
+		  for(Long roleSeq : saveMenuInfo.getRoleSeqList()) {
+			  CmRoleMenuMap cmRoleMenuMap = new CmRoleMenuMap();
+			  cmRoleMenuMap.setMenuSeq(saveMenu.getMenuSeq());
+			  cmRoleMenuMap.setRoleSeq(roleSeq);
+			  cmRoleMenuMap.setDelYn(Yn.N);
+			  
+			  cmRoleMenuMapRepository.save(cmRoleMenuMap);
+		  }	
+		}
 		
 		return true;
 	}
@@ -176,9 +131,47 @@ public class MenuService {
 		
 		if(menuInfoDtoList != null && !menuInfoDtoList.isEmpty()) {
 			for(MenuInfoDto menuInfoDto : menuInfoDtoList) {
+				// 역할 코드 
 				List<CmRole> cmRoleList = cmRoleRepository.findByMenuSeq(menuInfoDto.getMenuSeq());
 				menuInfoDto.setCmRoleList(cmRoleList);
+				
+				// 하위 메뉴 여부
+				Long cnt = cmMenuRepository.countByUpMenuSeqAndDelYn(menuInfoDto.getMenuSeq(), Yn.N);
+				if(cnt.longValue() > 0L) {
+					menuInfoDto.setLeaf(false);
+				}else{
+					menuInfoDto.setLeaf(true);
+				}
 			}			
+		}
+		
+		return menuInfoDtoList;
+	}
+
+	/**
+	 * 하위 메뉴가 없는 메뉴 목록
+	 * 
+	 * @return
+	 */
+	public List<ParentMenuDto> findByParentMenuList() {
+		
+		// 하위 메뉴가 있는 것만 조회해서...
+		List<ParentMenuDto> menuInfoDtoList = cmMenuRepository.findByParentMenuList();
+		
+		if(menuInfoDtoList != null && !menuInfoDtoList.isEmpty()) {
+			Map<Long, ParentMenuDto> parentMenuDtoMap = new HashMap<>(menuInfoDtoList.size());
+			for(ParentMenuDto parentMenuDto : menuInfoDtoList) {
+				parentMenuDtoMap.put(parentMenuDto.getMenuSeq(), parentMenuDto);
+			}
+			
+			for(ParentMenuDto parentMenuDto : menuInfoDtoList) {
+				if(parentMenuDto.getUpMenuSeq() == null) {
+					continue;
+				} 
+				
+				ParentMenuDto upMenu = parentMenuDtoMap.get(parentMenuDto.getUpMenuSeq());
+				parentMenuDto.setUpMenu(upMenu);
+			}
 		}
 		
 		return menuInfoDtoList;

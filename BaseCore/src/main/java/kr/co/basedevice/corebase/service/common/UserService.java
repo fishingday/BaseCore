@@ -155,7 +155,7 @@ public class UserService {
 	 * @param chgUserInfo
 	 * @param userSeq
 	 */
-	public boolean chgUserInfo(SaveUserInfo saveUserInfo, Long updatorSeq) {
+	public boolean chgUserInfo(SaveUserInfo saveUserInfo) {
 		
 		CmUser cmUser = cmUserRepository.getById(saveUserInfo.getUserSeq());		
 		if(cmUser != null) {
@@ -206,7 +206,7 @@ public class UserService {
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean chgBulkUserPwd(SaveUserPwd saveUserPwd, Long updatorSeq) {
+	public boolean chgBulkUserPwd(SaveUserPwd saveUserPwd) {
 
 		for(Long userSeq : saveUserPwd.getUserSeqList()){
 			List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYnOrderByUserPwdSeqDesc(userSeq, Yn.N);
@@ -245,7 +245,7 @@ public class UserService {
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean chgBulkUserRole(SaveUserRole saveUserRole, Long updatorSeq) {
+	public boolean chgBulkUserRole(SaveUserRole saveUserRole) {
 
 		List<CmUserRoleMap> addCmUserRoleMapList = new ArrayList<>();
 		for(Long userSeq : saveUserRole.getUserSeqList()){
@@ -284,7 +284,7 @@ public class UserService {
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean removeBulkUser(List<Long> userSeqList, Long updatorSeq) {
+	public boolean removeBulkUser(List<Long> userSeqList) {
 		
 		for(Long userSeq : userSeqList){
 			// 1. 사용자의 역할을 제거한다.

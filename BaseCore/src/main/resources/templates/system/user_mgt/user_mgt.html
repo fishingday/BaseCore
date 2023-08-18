@@ -14,6 +14,7 @@
   <!--/* Content 시작 */-->
   <body>
     <div layout:fragment="content" class="col">
+		  <input type="hidden" id="currUserSeq" th:value="${#authentication.principal.cmUser.userSeq}">
       <div class="row border border-secondary-subtle p-2">
         <div class="col-2">
           <label for="search_email" class="form-label mt-2">E-Mail</label>
@@ -279,13 +280,13 @@
             );
             
             await $.get("[[@{/common/code_dtl_list.json}]]", {grpCd:'USER_STAT_CD'},
-                function(data, status) {
+              function(data, status) {
                 if(status === 'success'){
                   for(var i = 0; i < data.length; i++ ){
                     $("#userStatCd").append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
                   }
                 }
-                }
+              }
             );
           }
         },
@@ -396,7 +397,7 @@
             
             if(userInfo.roleSeqList.length === 0){
               Swal.fire({
-                title: 'Error!',
+                title: '필수 입력 항목',
                 text: '최소 하나의 역할이 있어야 합니다.',
                 icon: 'info',
                 confirmButtonText: '닫기'
@@ -567,7 +568,7 @@
                     [
                       {field: 'state',       checkbox: true,     align: 'center', valign: 'middle', class: 'table-primary', 
                         formatter:function(value, row, index){
-                          if(row.userSeq === [[${#authentication.principal.cmUser.userSeq}]]){
+                          if(row.userSeq == $("#currUserSeq").val()){
                             return {disabled: true}
                           }
                         }

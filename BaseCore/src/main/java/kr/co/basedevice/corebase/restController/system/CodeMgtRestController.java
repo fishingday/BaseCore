@@ -3,21 +3,17 @@ package kr.co.basedevice.corebase.restController.system;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
-import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.search.common.SearchGrpCd;
 import kr.co.basedevice.corebase.search.system.SearchDtlCd;
-import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.CommonService;
 import lombok.RequiredArgsConstructor;
 
@@ -66,9 +62,7 @@ public class CodeMgtRestController {
 	 */
 	@PostMapping("/save_grpcd.json")
 	public ResponseEntity<CmCdGrp> saveCdGrp(CmCdGrp cmCdGrp){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-
-		CmCdGrp saveCdGrp = commonService.saveCmCdGrp(cmCdGrp, cmUser.getUserSeq());
+		CmCdGrp saveCdGrp = commonService.saveCmCdGrp(cmCdGrp);
 		
 		return ResponseEntity.ok(saveCdGrp);
 	}
@@ -81,9 +75,7 @@ public class CodeMgtRestController {
 	 */
 	@DeleteMapping("/remove_grpcd.json")
 	public ResponseEntity<Boolean> removeCdGrp(String grpCd){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-
-		boolean isRemove = commonService.removeCmCdGrp(grpCd, cmUser.getUserSeq());
+		boolean isRemove = commonService.removeCmCdGrp(grpCd);
 		
 		return ResponseEntity.ok(isRemove);
 	}
@@ -123,10 +115,8 @@ public class CodeMgtRestController {
 	 * @return
 	 */
 	@PostMapping("/save_code_json")
-	public ResponseEntity<CmCdDtl> saveCmCdDtl(CmCdDtl cmCdDtl){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		CmCdDtl saveCdDtl = commonService.saveCmCdDtl(cmCdDtl, cmUser.getUserSeq());
+	public ResponseEntity<CmCdDtl> saveCmCdDtl(CmCdDtl cmCdDtl){		
+		CmCdDtl saveCdDtl = commonService.saveCmCdDtl(cmCdDtl);
 		
 		return ResponseEntity.ok(saveCdDtl);
 	}
@@ -140,31 +130,9 @@ public class CodeMgtRestController {
 	 */
 	@DeleteMapping("/remove_code.json")
 	public ResponseEntity<Boolean> removeCmCdDtl(CmCdDtlId cmCdDtlId){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
-		boolean isRemove = commonService.removeCmCdDtl(cmCdDtlId, cmUser.getUserSeq());
-		
-		return ResponseEntity.ok(isRemove);
-	}
-	
-	/**
-	 * 코드 순서 변경
-	 * 
-	 * @param grpCd
-	 * @param chgCd
-	 * @param tgtCd
-	 * @param order
-	 * @param isUp
-	 * @return
-	 */
-	@PutMapping("/chg_order_code.json")
-	public ResponseEntity<Boolean> chgOrderCmCdDtl(String grpCd, String chgCd, Integer chgOrd,  String tgtCd, Integer tgtOrd){
-
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		boolean isRemove = commonService.chgOrderCmCdDtl(grpCd, chgCd, chgOrd, tgtCd, tgtOrd, cmUser.getUserSeq());
+		boolean isRemove = commonService.removeCmCdDtl(cmCdDtlId);
 		
 		return ResponseEntity.ok(isRemove);
 	}
-	
 }

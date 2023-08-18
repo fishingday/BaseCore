@@ -19,4 +19,13 @@ public interface CmRoleMenuMapRepository extends JpaRepository<CmRoleMenuMap, Cm
 	 */
 	List<CmRoleMenuMap> findByRoleSeqAndDelYn(Long roleSeq, Yn yn);
 
+	/**
+	 * 메뉴별 역할 맵핑 목록
+	 * 
+	 * @param menuSeq
+	 * @param n
+	 * @return
+	 */
+	List<CmRoleMenuMap> findByMenuSeqAndDelYn(Long menuSeq, Yn n);
+
 }

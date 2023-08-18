@@ -32,7 +32,9 @@ public class MenuInfoDto {
 	
 	private Integer prntOrd;
 	
-	private List<CmRole> cmRoleList;	
+	private boolean leaf;
+	
+	private List<CmRole> cmRoleList;
 	
 	public String getRoleNames() {
 		if(this.cmRoleList != null && !cmRoleList.isEmpty()) {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -20,6 +21,7 @@ import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.cm.QCmUserRoleMap;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
 import kr.co.basedevice.corebase.search.system.SearchMenu;
 import lombok.RequiredArgsConstructor;
 
@@ -148,6 +150,31 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 			.from(cmMenu);		
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(cmMenu.delYn.eq(Yn.N));
+						
+		return query.where(builder).orderBy(cmMenu.prntOrd.asc()).fetch();
+	}
+
+	@Override
+	public List<ParentMenuDto> findByParentMenuList() {
+		QCmMenu cmMenu = QCmMenu.cmMenu;
+		QCmMenu subMenu = QCmMenu.cmMenu;
+
+		JPQLQuery<ParentMenuDto> query = jpaQueryFactory.select(
+				Projections.bean(ParentMenuDto.class,
+					 cmMenu.menuSeq
+					,cmMenu.upMenuSeq
+					,cmMenu.menuPath
+					,cmMenu.menuNm
+					,cmMenu.prntOrd
+				)
+			)
+			.from(cmMenu);
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(cmMenu.delYn.eq(Yn.N));
+		// upMenuSeq에 사용된 메뉴만 조회
+		builder.and(cmMenu.menuSeq.in(JPAExpressions.select(Projections.bean(Long.class, subMenu.upMenuSeq))
+	    	      .from(subMenu)
+	    	      .where(subMenu.delYn.eq(Yn.N), subMenu.upMenuSeq.isNotNull())));
 						
 		return query.where(builder).orderBy(cmMenu.prntOrd.asc()).fetch();
 	}

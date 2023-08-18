@@ -2,112 +2,304 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default_layout}">
-	<head>
-	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	  <title>메뉴관리</title>
-	</head>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <title>메뉴관리</title>
+    </head>
     <body>
       <!-- Content 시작 -->
       <div layout:fragment="content" class="col">
         <div class="row">
           <div class="col-5">
-            <table 
+		        <div id="toolbar">
+		          <button id="btnNewMenu" class="btn btn-outline-success">
+		            <i class="bi bi-file-earmark-plus"></i> 신규 생성
+		          </button>
+		        </div>
+            <table
               id="table"
-              th:data-url="@{/system/menu_mgt/menu_info_list.json}">				
-			      </table>
+              data-toolbar="#toolbar"
+              th:data-url="@{/system/menu_mgt/menu_info_list.json}">
+            </table>
           </div>
           <div class="col-7">
-		        <h4 class="mb-3" id="form-title">메뉴 정보</h4>
-		        <hr class="my-4">
-	          <div class="row g-3">				  
-	            <div class="col-12">
-	              <label for="upMenuSeq" class="form-label">상위메뉴</label>
-	              <select class="form-select" id="upMenuSeq" required>
-	                <option value="">최상위</option>
-	              </select>
-	            </div>
-	            
-	            <div class="col-sm-6">
-	              <label for="menuNm" class="form-label">메뉴명</label>
-	              <input type="text" class="form-control" id="menuNm">
-	              <input type="hidden" id="menuSeq">
-	            </div>	
-	            <div class="col-sm-6">
-	              <label for="prntOrd" class="form-label">출력순서</label>
-	              <input type="number" class="form-control" id="prntOrd">
-	            </div>
-	
-	            <div class="col-12">
-	              <label for="email" class="form-label">메뉴 호출 경로</label>
-	              <input type="email" class="form-control" id="email" placeholder="you@example.com">
-	            </div>
-	
-	            <div class="col-12">
-	              <label for="iConInfo" class="form-label">아이콘 정보</label>
-	              <input type="text" class="form-control" id="iConInfo" placeholder="1234 Main St">
-	            </div>
-	
-	            <div class="col-sm-6">
-	              <label for="role_list" class="form-label">접근 역할(권한)</label>
-	              <ul class="list-group role-list" id="role_list"></ul>
-	            </div>
-	            <div class="col-sm-6">
-					      <label for="menuDesc" class="form-label">메뉴 설명</label>
-	              <textarea class="form-control" id="menuDesc" rows="8"></textarea>
-					    </div>
-					    
-		          <div class="col-sm-6">
-		            <input type="checkbox" class="form-check-input" id="same-address">
-		            <label class="form-check-label" for="same-address">출력 여부</label>
-		          </div>
-		          <div class="col-sm-6">
-		            <input type="checkbox" class="form-check-input" id="save-info">
-		            <label class="form-check-label" for="save-info">공통 화면 여부</label>
-	            </div>
-	          </div>
-	          <hr class="my-4">
+            <h4 class="mb-3" id="form-title">메뉴 정보</h4>
+            <hr class="my-4">
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="upMenuSeq" class="form-label">상위메뉴</label>
+                <select class="form-select" id="upMenuSeq" required>
+                  <option value="">최상위</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <label for="menuNm" class="form-label">메뉴명</label>
+                <input type="text" class="form-control" id="menuNm">
+                <input type="hidden" id="menuSeq">
+              </div>
+              <div class="col-sm-6">
+                <label for="prntOrd" class="form-label">출력순서</label>
+                <input type="number" class="form-control" id="prntOrd">
+              </div>
+
+              <div class="col-12">
+                <label for="menuPath" class="form-label">메뉴 호출 경로</label>
+                <input type="text" class="form-control" id="menuPath">
+              </div>
+
+              <div class="col-12">
+                <label for="iConInfo" class="form-label">아이콘 정보</label>
+                <input type="text" class="form-control" id="iConInfo" placeholder="<i class='bi bi-1-square'></i>">
+              </div>
+
+              <div class="col-sm-6">
+                <label for="role_list" class="form-label">접근 역할(권한)</label>
+                <ul class="list-group role-list" id="role_list"></ul>
+              </div>
+              <div class="col-sm-6">
+                  <label for="menuDesc" class="form-label">메뉴 설명</label>
+                <textarea class="form-control" id="menuDesc" rows="8"></textarea>
+                </div>
+
+                <div class="col-sm-6">
+                  <input type="checkbox" class="form-check-input" id="prntYn">
+                  <label class="form-check-label" for="prntYn">출력 여부</label>
+                </div>
+                <div class="col-sm-6">
+                  <input type="checkbox" class="form-check-input" id="cmScrenYn">
+                  <label class="form-check-label" for="cmScrenYn">공통 화면 여부</label>
+              </div>
+            </div>
+            <hr class="my-4">
             <div class="row justify-content-between">
-					    <div class="col-auto me-auto">
-					      <button class="w-10 btn btn-danger" type="submit">삭제</button>
-					    </div>
-					    <div class="col-auto">
-					      <button class="w-10 btn btn-primary" type="submit">저장</button>
-					    </div>
-					  </div>		           
-		      </div>
+              <div class="col-auto me-auto">
+                <button class="w-10 btn btn-danger" type="button" id="btnDeleteMenu">
+			            <i class="bi bi-trash"></i> 삭제
+			          </button>
+              </div>
+              <div class="col-auto">
+                <button class="w-10 btn btn-primary" type="button" id="btnSaveMenu">
+									<i class="bi bi-save"></i> 저장
+								</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- modal -->
-        <div class="modal-staging">
-            
-        
-        </div>
-        <!-- modal -->
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
-			  var $table = $('#table');
+        var $table = $('#table');
 
         var fnObj = {
           pageStart:  function(){ // 페이지 초기 실행 스크립트
             fnObj.page.init();
             fnObj.grid.init();
+            $("#btnNewMenu").click();
           },
           page: {
             init: function(){
-							fnObj.action.setComponentData();
+              fnObj.action.setComponentData();
+              
+              $("#cmScrenYn").bind("change", function(){
+				  			if($("#cmScrenYn").is(':checked')){
+								  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
+								  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
+							  }else{
+								  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').removeAttr("disabled");                  
+							  }
+			        });
+			        
+			        $("#upMenuSeq").bind("change", function(){
+						    Swal.fire({
+                  title: '메뉴 이동',
+                  text: '상위 메뉴를 변경하면 하위로 메뉴가 이동(or생성) 됩니다.',
+                  icon: 'warning',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+					    });
+					    
+					    $("#btnNewMenu").bind("click", function(){							  
+							  fnObj.action.initForm();
+							  $("#form-title").text("신규 메뉴 정보");
+							  $("#btnDeleteMenu").hide();
+						  });
+						  
+						  $("#btnDeleteMenu").bind("click", function(){							  
+							  fnObj.action.removeMenu();  
+						  });
+						  
+						  $("#btnSaveMenu").bind("click", function(){							  
+							  fnObj.action.saveMenu();
+						  });
             }
           },
           action: { // 호출이나 화면 동작
-            setComponentData: async function(){ // 조회 조건의 역할 데이터를 초기화 한다.            
+            setComponentData: async function(){ // 조회 조건의 역할 데이터를 초기화 한다.
               await  $.get("[[@{/common/role_list.json}]]", {},
                 function(data, status) {
                 if(status === 'success'){
                   for(var i = 0; i < data.length; i++ ){
-                    $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">' 
+                    $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">'
                     + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
                   }
                 }
               });
-            }
+
+              await $.get("[[@{/system/menu_mgt/parent_menu_list.json}]]",
+                function(data, status) {
+                  if(status === 'success'){
+                    for(var i = 0; i < data.length; i++ ){
+                      $("#upMenuSeq").append("<option value='" + data[i].menuSeq + "'>" + data[i].fullMenuNm + "</option>");
+                    }
+                  }
+                }
+              );
+            },
+            initForm: function(){
+              $("#form-title").text("");
+              $("#menuSeq").val('');
+              $("#upMenuSeq").val('');
+              $("#menuPath").val('');
+              $("#menuNm").val('');
+              $("#menuDesc").val('');
+              $("#iConInfo").val('');
+              $("#prntOrd").val('');
+              $("#prntYn").prop("checked", false);
+              $("#cmScrenYn").prop("checked", false);
+              $("#menuPath").removeAttr("readonly");
+              $("#menuPath").removeAttr("disabled");
+              
+              $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').removeAttr("disabled");
+              $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
+              
+            },
+            removeMenu: function(){
+				      let currMenuSeq = $("#menuSeq").val();
+				      let rdata = $table.bootstrapTable('getData');
+				      
+				      let isRemove = false;
+				      for(var i =0; i < rdata.length; i++){
+						    if(currMenuSeq == rdata[i].menuSeq){
+									 isRemove = rdata[i].leaf;
+									 break;
+							  }
+					    }
+					    
+					    if(isRemove){
+								Swal.fire({
+								  title: '정말 삭제 하시겠습니까?',
+								  icon: 'warning',
+								  showCancelButton: true,
+								  confirmButtonText: '삭제',
+								}).then((result) => {
+								  if (result.isConfirmed) {
+				            $.ajax({
+				              url: "[[@{/system/menu_mgt/remove_menu.json}]]", 
+				              type: "DELETE",
+				              async: true,
+				              dataType : "json",
+				              data : {menuSeq : currMenuSeq}, 
+				              success: function(data, status){
+				                if(status === 'success' && data === true){
+									        $table.bootstrapTable('refresh');
+									        $("#btnNewMenu").click();   
+				                  Swal.fire({
+					                  title: '삭제 완료',
+					                  text: '삭제 처리가 완료 되었습니다.',
+					                  icon: 'info',
+					                  showConfirmButton: false,
+					                  timer: 1500
+					                });
+				                }else{
+				                  Swal.fire({
+				                    title: 'Error!',
+				                    text: '삭제 중 문제가 발생했습니다.',
+				                    icon: 'error',
+				                    confirmButtonText: '닫기'
+				                  });
+				                }
+				              }
+				            });
+								  }
+								})
+						  }else{
+							  Swal.fire({
+	                title: '삭제 불가',
+	                text: '하위 메뉴가 있는 경우 삭제할 수 없습니다.',
+	                icon: 'warning',
+	                confirmButtonText: '닫기'
+	              });
+	              return;
+						  }
+			      },
+			      saveMenu: function(){
+					     if($("#menuNm").val() === ''){
+		              Swal.fire({
+		                title: '필수 입력 항목',
+		                text: '메뉴명은 필수 입력 항목입니다.',
+		                icon: 'info',
+		                confirmButtonText: '닫기'
+		              });
+		              return;
+						   }
+						   
+						   if($("#prntOrd").val() === ''){
+		              Swal.fire({
+		                title: '필수 입력 항목',
+		                text: '출력 순서는 필수 입력 항목입니다.',
+		                icon: 'info',
+		                confirmButtonText: '닫기'
+		              });
+		              return;
+						   }
+						   
+						   var saveMenuInfo = {}
+						   saveMenuInfo.menuSeq   = $("#menuSeq").val();
+						   saveMenuInfo.upMenuSeq = $("#upMenuSeq").val();
+						   saveMenuInfo.menuNm    = $("#menuNm").val();
+						   saveMenuInfo.menuPath  = $("#menuPath").val();
+						   saveMenuInfo.prntOrd   = Number($("#prntOrd").val());
+						   saveMenuInfo.menuDesc  = $("#menuDesc").val();
+						   saveMenuInfo.iConInfo  = $("#iConInfo").val();
+							 saveMenuInfo.cmScrenYn = $("#cmScrenYn").is(':checked') ? "Y" : "N";
+							 saveMenuInfo.prntYn = $("#prntYn").is(':checked') ? "Y" : "N";
+							 
+						   saveMenuInfo.roleSeqList = []; 
+               $('#popupUserInfo input:checkbox[name="roleSeqList"]').each(function() {
+                if(this.checked){
+                  userInfo.roleSeqList.push(this.value);
+                }
+              });
+            
+            $.ajax({
+	              url: "[[@{/system/menu_mgt/save_menu.json}]]", 
+	              type: "PUT",
+	              async: true,
+	              dataType : "json",
+	              data : saveMenuInfo, 
+	              success: function(data, status){
+	                if(status === 'success' && data === true){
+						        $table.bootstrapTable('refresh');	        
+	                  Swal.fire({
+		                  title: '저장 완료',
+		                  text: '저장 되었습니다.',
+		                  icon: 'info',
+		                  showConfirmButton: false,
+		                  timer: 1500
+		                });
+	                }else{
+	                  Swal.fire({
+	                    title: 'Error!',
+	                    text: '삭제 중 문제가 발생했습니다.',
+	                    icon: 'error',
+	                    confirmButtonText: '닫기'
+	                  });
+	                }
+	              }
+	            });
+            
+				    }
           },
           grid: { // 그리드 관련
             init: function() {
@@ -136,7 +328,7 @@
                   return data;
                 },
                 onPostBody: function() {
-                  var columns = $table.bootstrapTable('getOptions').columns;          
+                  var columns = $table.bootstrapTable('getOptions').columns;
                   if (columns && columns[0][0].visible) {
                     $table.treegrid({
                       treeColumn: 0,
@@ -146,10 +338,47 @@
                     })
                   }
                 }
-              });              
-	            $table.on('click-row.bs.table', function (row, rdata, field) {
-	              console.log(row, field)
-	            });
+              });
+              $table.on('click-row.bs.table', function (row, rdata, field) {
+                $("#table tr").removeClass("table-secondary");
+                $(field[0]).addClass("table-secondary");
+
+                fnObj.action.initForm();
+                $("#form-title").text("메뉴 상세 정보");
+                $("#menuSeq").val(rdata.menuSeq);
+                $("#upMenuSeq").val(rdata.upMenuSeq);
+                $("#menuPath").val(rdata.menuPath);
+                $("#menuNm").val(rdata.menuNm);
+                $("#menuDesc").val(rdata.menuDesc);
+                $("#iConInfo").val(rdata.iConInfo);
+                $("#prntOrd").val(rdata.prntOrd);
+                
+                if(rdata.prntYn === 'Y'){
+                  $("#prntYn").prop("checked", true);
+                }
+                
+                if(rdata.cmScrenYn === 'Y'){
+					        $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
+                  $("#cmScrenYn").prop("checked", true);
+                }
+
+                if(rdata.leaf){
+                  $("#menuPath").removeAttr("readonly");
+                  $("#menuPath").removeAttr("disabled");
+                }else{
+                  $("#menuPath").attr("readonly",true);
+                  $("#menuPath").attr("disabled",true);
+                  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
+                }
+                
+                if(rdata.cmRoleList){
+		              for (var i = 0; i < rdata.cmRoleList.length; i++) {
+		                $("#roleSeq-" + rdata.cmRoleList[i].roleSeq).prop("checked", true);
+		              }
+		            }
+		            
+		            $("#btnDeleteMenu").show();                
+              });
             } // init
           } // grid
         }

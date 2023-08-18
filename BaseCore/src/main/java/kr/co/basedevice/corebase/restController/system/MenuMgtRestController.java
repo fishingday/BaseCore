@@ -6,15 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.basedevice.corebase.domain.cm.CmMenu;
-import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
+import kr.co.basedevice.corebase.dto.system.SaveMenuInfo;
 import kr.co.basedevice.corebase.search.system.SearchMenu;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.MenuService;
@@ -43,6 +42,19 @@ public class MenuMgtRestController {
 	}
 	
 	/**
+	 * 하위 메뉴가 있는 메뉴이거나 메뉴호출 경로가 없는 목록
+	 * 
+	 * @return
+	 */
+	@GetMapping("/parent_menu_list.json")
+	public ResponseEntity<List<ParentMenuDto>> findByParentMenuList(){
+		
+		List<ParentMenuDto> cmMenuList = menuService.findByParentMenuList();
+		
+		return ResponseEntity.ok(cmMenuList);
+	}
+	
+	/**
 	 * 메뉴 삭제
 	 * - 하위 메뉴가 있으면 삭제가 되지 않는다.
 	 * 
@@ -51,11 +63,9 @@ public class MenuMgtRestController {
 	 */
 	@DeleteMapping("/remove_menu.json")
 	public ResponseEntity<Boolean> removeMenu(Long menuSeq){
-
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 				
-		boolean isRemove = menuService.removeMenu(menuSeq, cmUser.getUserSeq());
-		
+		boolean isRemove = menuService.removeMenu(menuSeq);
+				
 		return ResponseEntity.ok(isRemove);
 	}
 	
@@ -66,75 +76,13 @@ public class MenuMgtRestController {
 	 * @param menuDto
 	 * @return
 	 */
-	@PostMapping("/save_menu.json")
-	public ResponseEntity<CmMenu> saveMenu(CmMenu cmMenu){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-				
-		CmMenu saveMenu = menuService.saveCmMenu(cmMenu, cmUser.getUserSeq());
-		
-		return ResponseEntity.ok(saveMenu);
-	}
-	
-	/** 
-	 * 메뉴 순서 변경
-	 * 
-	 * @param chgMenuSeq
-	 * @param chgOrd
-	 * @param tgtMenuSeq
-	 * @param tgtOrd
-	 * @return
-	 */
-	@PutMapping("/chg_order_menu.json")
-	public ResponseEntity<Boolean> chgOrderMenu(Long chgMenuSeq, Integer chgOrd, Long tgtMenuSeq, Integer tgtOrd){
+	@PutMapping("/save_menu.json")
+	public ResponseEntity<Boolean> saveMenu(SaveMenuInfo saveMenuInfo){
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
-		boolean isChg = menuService.chgOrderMenu(chgMenuSeq, chgOrd, tgtMenuSeq, tgtOrd, cmUser.getUserSeq());
+		boolean isSave = menuService.saveCmMenu(saveMenuInfo, cmUser.getUserSeq());
 		
-		return ResponseEntity.ok(isChg);
+		return ResponseEntity.ok(isSave);
 	}
-	
-	/**
-	 * 메뉴별 역할 목록
-	 * 
-	 * @param menuSeq
-	 * @return
-	 */
-	@GetMapping("/role_info_list.json")
-	public ResponseEntity<List<CmRole>> findByRoleList(Long menuSeq){
 		
-		List<CmRole> cmRoleList = menuService.findByRoleList(menuSeq);
-		
-		return ResponseEntity.ok(cmRoleList);
-	}
-	
-	/**
-	 * 메뉴별 역할 추가
-	 * 
-	 * @param menuSeq
-	 * @param roleSeq
-	 * @return
-	 */
-	@PutMapping("/add_role.json")
-	public ResponseEntity<Boolean> addRole(Long menuSeq, Long roleSeq){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		boolean isSuccess = menuService.addRole(menuSeq, roleSeq, cmUser.getUserSeq());
-		
-		return ResponseEntity.ok(isSuccess);
-	}
-	
-	/**
-	 * 메뉴별 역할 삭제
-	 * 
-	 * @param menuSeq
-	 * @param roleSeq
-	 * @return
-	 */
-	public ResponseEntity<Boolean> removeRole(Long menuSeq, Long roleSeq){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-				
-		boolean isSuccess = menuService.removeRole(menuSeq, roleSeq, cmUser.getUserSeq());
-		
-		return ResponseEntity.ok(isSuccess);
-	}
 }

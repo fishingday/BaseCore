@@ -64,9 +64,7 @@ public class UserMgtRestController {
 	@PutMapping("/chg_user_info.json")
 	public ResponseEntity<Boolean> chgUserInfo(SaveUserInfo userInfo) {
 		
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		boolean isSave = userService.chgUserInfo(userInfo, cmUser.getUserSeq());
+		boolean isSave = userService.chgUserInfo(userInfo);
 		
 		return ResponseEntity.ok(isSave);
 	}
@@ -80,10 +78,9 @@ public class UserMgtRestController {
 	 */
 	@PutMapping("/bulk_chg_user_pwd.json")
 	public ResponseEntity<Boolean> bulkChgUserPwd(SaveUserPwd saveUserPwd) {
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
 		chkChgSelf(saveUserPwd.getUserSeqList()); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 		
-		boolean isChg = userService.chgBulkUserPwd(saveUserPwd, cmUser.getUserSeq());
+		boolean isChg = userService.chgBulkUserPwd(saveUserPwd);
 		
 		return ResponseEntity.ok(isChg);
 	}
@@ -97,10 +94,9 @@ public class UserMgtRestController {
 	 */
 	@PutMapping("/chg_bulk_user_role.json")
 	public ResponseEntity<Boolean> bulkChgkUserRole(SaveUserRole saveUserRole) {
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
 		chkChgSelf(saveUserRole.getUserSeqList()); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 		
-		boolean isChg = userService.chgBulkUserRole(saveUserRole, cmUser.getUserSeq());
+		boolean isChg = userService.chgBulkUserRole(saveUserRole);
 		
 		return ResponseEntity.ok(isChg);
 	}
@@ -113,10 +109,9 @@ public class UserMgtRestController {
 	 */
 	@DeleteMapping("/remove_bulk_user.json")
 	public ResponseEntity<Boolean> removeBulkUser(DeleteUsers deleteUsers) {
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();		
 		chkChgSelf(deleteUsers.getUserSeqList()); // 일괄 변경에 자신의 정보가 포함되지 않도록 한다.
 		
-		boolean isRemove = userService.removeBulkUser(deleteUsers.getUserSeqList(), cmUser.getUserSeq());
+		boolean isRemove = userService.removeBulkUser(deleteUsers.getUserSeqList());
 		
 		return ResponseEntity.ok(isRemove);
 	}

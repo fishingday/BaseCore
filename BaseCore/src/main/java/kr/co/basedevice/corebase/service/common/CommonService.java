@@ -85,7 +85,7 @@ public class CommonService {
 	 * @param userSeq
 	 * @return
 	 */
-	public CmCdGrp saveCmCdGrp(CmCdGrp cmCdGrp, Long updatorSeq) {
+	public CmCdGrp saveCmCdGrp(CmCdGrp cmCdGrp) {
 		cmCdGrp.setDelYn(Yn.N);		
 		return cmCdGrpRepository.save(cmCdGrp);
 	}
@@ -97,7 +97,7 @@ public class CommonService {
 	 * @param userSeq
 	 * @return
 	 */
-	public boolean removeCmCdGrp(String grpCd, Long updatorSeq) {
+	public boolean removeCmCdGrp(String grpCd) {
 		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findByGrpCd(grpCd);
 		if(cmCdDtlList != null && !cmCdDtlList.isEmpty()) {
 			for(CmCdDtl cmCdDtl : cmCdDtlList) {
@@ -138,7 +138,7 @@ public class CommonService {
 	 * @param updatorSeq
 	 * @return
 	 */
-	public CmCdDtl saveCmCdDtl(CmCdDtl cmCdDtl, Long updatorSeq) {
+	public CmCdDtl saveCmCdDtl(CmCdDtl cmCdDtl) {
 		cmCdDtl.setDelYn(Yn.N);
 		
 		return cmCdDtlRepository.save(cmCdDtl);
@@ -152,40 +152,12 @@ public class CommonService {
 	 * @param updatorSeq
 	 * @return
 	 */
-	public boolean removeCmCdDtl(CmCdDtlId cmCdDtlId, Long updatorSeq) {			
+	public boolean removeCmCdDtl(CmCdDtlId cmCdDtlId) {			
 		CmCdDtl cmCdDtl = cmCdDtlRepository.getById(cmCdDtlId);	
 		
 		cmCdDtl.setDelYn(Yn.Y);
 		
 		cmCdDtlRepository.save(cmCdDtl);
-		
-		return true;
-	}
-
-	/**
-	 * 코드 순서 변경
-	 * 
-	 * @param grpCd
-	 * @param chgCd
-	 * @param chgOrd
-	 * @param tgtCd
-	 * @param tgtOrd
-	 * @param userSeq
-	 * @return
-	 */
-	public boolean chgOrderCmCdDtl(String grpCd, String chgCd, Integer chgOrd, String tgtCd, Integer tgtOrd, Long updatorSeq) {
-		
-		CmCdDtlId chgCdDtlId = new CmCdDtlId(grpCd, chgCd);
-		CmCdDtl chgCdDtl = cmCdDtlRepository.getById(chgCdDtlId);
-		
-		chgCdDtl.setPrntOrd(chgOrd);
-		chgCdDtl.setDelYn(Yn.Y);
-		
-		CmCdDtlId tgtCdDtlId = new CmCdDtlId(grpCd, tgtCd);
-		CmCdDtl tgtCdDtl = cmCdDtlRepository.getById(tgtCdDtlId);
-		
-		tgtCdDtl.setPrntOrd(tgtOrd);
-		tgtCdDtl.setDelYn(Yn.Y);
 		
 		return true;
 	}

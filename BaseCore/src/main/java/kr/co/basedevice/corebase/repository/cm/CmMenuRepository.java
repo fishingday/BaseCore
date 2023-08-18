@@ -17,6 +17,5 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	List<CmMenu> findByPrntYnAndDelYnOrderByPrntOrdAsc(Yn prntYn, Yn delYn);
 
 	Long countByUpMenuSeqAndDelYn(Long menuSeq, Yn delyn);
-	
 
 }

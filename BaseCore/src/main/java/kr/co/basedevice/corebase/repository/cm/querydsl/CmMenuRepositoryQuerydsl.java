@@ -5,6 +5,7 @@ import java.util.List;
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmMenuDtl;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
 import kr.co.basedevice.corebase.search.system.SearchMenu;
 
 public interface CmMenuRepositoryQuerydsl {
@@ -48,5 +49,12 @@ public interface CmMenuRepositoryQuerydsl {
 	 * @return
 	 */
 	List<MenuInfoDto> findBySearch(SearchMenu searchMenu);
+	
+	/**
+	 * 하위 메뉴가 없는 메뉴 목록
+	 * 
+	 * @return
+	 */
+	List<ParentMenuDto> findByParentMenuList();
 	
 }
