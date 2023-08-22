@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -157,7 +156,6 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 	@Override
 	public List<ParentMenuDto> findByParentMenuList() {
 		QCmMenu cmMenu = QCmMenu.cmMenu;
-		QCmMenu subMenu = QCmMenu.cmMenu;
 
 		JPQLQuery<ParentMenuDto> query = jpaQueryFactory.select(
 				Projections.bean(ParentMenuDto.class,
@@ -171,10 +169,8 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 			.from(cmMenu);
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(cmMenu.delYn.eq(Yn.N));
-		// upMenuSeq에 사용된 메뉴만 조회
-		builder.and(cmMenu.menuSeq.in(JPAExpressions.select(Projections.bean(Long.class, subMenu.upMenuSeq))
-	    	      .from(subMenu)
-	    	      .where(subMenu.delYn.eq(Yn.N), subMenu.upMenuSeq.isNotNull())));
+		// 메뉴 호출 경로가 없는 메뉴가 상위 메뉴가 될 수 있음
+		builder.and(cmMenu.menuPath.isNull().or(cmMenu.menuPath.isEmpty()));
 						
 		return query.where(builder).orderBy(cmMenu.prntOrd.asc()).fetch();
 	}

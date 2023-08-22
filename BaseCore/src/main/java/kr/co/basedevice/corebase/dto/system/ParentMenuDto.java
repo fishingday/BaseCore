@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString(exclude = "upMenu")
 @NoArgsConstructor
-public class ParentMenuDto {
+public class ParentMenuDto{
 	private Long menuSeq;
 
 	private Long upMenuSeq;
@@ -19,6 +19,8 @@ public class ParentMenuDto {
 	private Integer prntOrd;
 	
 	private ParentMenuDto upMenu;
+	
+	private int level;
 	
 	public String getFullMenuNm() {
 		StringBuilder sb = new StringBuilder();
@@ -35,5 +37,16 @@ public class ParentMenuDto {
 		}
 		
 		return sb.toString();
-	}	
+	}
+		
+	public int getOrdering() {
+		
+		int ordering = this.prntOrd;
+		
+		if(this.level > 1) {
+			ordering += 100 ^(--level);
+		}
+		
+		return ordering;
+	}
 }

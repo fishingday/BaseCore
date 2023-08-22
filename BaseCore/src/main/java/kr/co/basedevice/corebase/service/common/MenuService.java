@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +15,7 @@ import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMap;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
+import kr.co.basedevice.corebase.dto.system.ParentMenuComparator;
 import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
 import kr.co.basedevice.corebase.dto.system.SaveMenuInfo;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
@@ -160,19 +161,39 @@ public class MenuService {
 		
 		if(menuInfoDtoList != null && !menuInfoDtoList.isEmpty()) {
 			Map<Long, ParentMenuDto> parentMenuDtoMap = new HashMap<>(menuInfoDtoList.size());
+			// 등록하기
 			for(ParentMenuDto parentMenuDto : menuInfoDtoList) {
 				parentMenuDtoMap.put(parentMenuDto.getMenuSeq(), parentMenuDto);
 			}
-			
+			// 부모 찾기
 			for(ParentMenuDto parentMenuDto : menuInfoDtoList) {
 				if(parentMenuDto.getUpMenuSeq() == null) {
 					continue;
-				} 
+				}
 				
 				ParentMenuDto upMenu = parentMenuDtoMap.get(parentMenuDto.getUpMenuSeq());
 				parentMenuDto.setUpMenu(upMenu);
 			}
-		}
+			// 레벨 등록
+			for(ParentMenuDto parentMenuDto : menuInfoDtoList) {
+				if(parentMenuDto.getUpMenu() == null) {
+					parentMenuDto.setLevel(1);
+					continue;
+				}
+				ParentMenuDto upMenu = parentMenuDto.getUpMenu();
+				int idx = 2;
+				while(true) {
+					if(upMenu.getUpMenuSeq() == null) {
+						parentMenuDto.setLevel(idx);
+						break;
+					}else{
+						upMenu = upMenu.getUpMenu();
+					}
+					idx++;
+				}
+			}
+			Collections.sort(menuInfoDtoList, new ParentMenuComparator());
+		}		
 		
 		return menuInfoDtoList;
 	}

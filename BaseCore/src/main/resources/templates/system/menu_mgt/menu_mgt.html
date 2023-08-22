@@ -28,9 +28,7 @@
             <div class="row g-3">
               <div class="col-12">
                 <label for="upMenuSeq" class="form-label">상위메뉴</label>
-                <select class="form-select" id="upMenuSeq" required>
-                  <option value="">최상위</option>
-                </select>
+                <select class="form-select" id="upMenuSeq" required></select>
               </div>
 
               <div class="col-sm-6">
@@ -145,17 +143,20 @@
                   }
                 }
               });
-
-              await $.get("[[@{/system/menu_mgt/parent_menu_list.json}]]",
+              await fnObj.action.setParentMenu();
+            },
+            setParentMenu: function(){
+              $.get("[[@{/system/menu_mgt/parent_menu_list.json}]]",
                 function(data, status) {
                   if(status === 'success'){
+                    $("#upMenuSeq").append("<option value=''>최상위</option>");
                     for(var i = 0; i < data.length; i++ ){
                       $("#upMenuSeq").append("<option value='" + data[i].menuSeq + "'>" + data[i].fullMenuNm + "</option>");
                     }
                   }
                 }
               );
-            },
+			      },            
             initForm: function(){
               $("#form-title").text("");
               $("#menuSeq").val('');
@@ -280,7 +281,11 @@
 	              data : saveMenuInfo, 
 	              success: function(data, status){
 	                if(status === 'success' && data === true){
-						        $table.bootstrapTable('refresh');	        
+						        $table.bootstrapTable('refresh');
+                    
+                    $("#upMenuSeq option").remove();
+                    fnObj.action.setParentMenu();
+                    
 	                  Swal.fire({
 		                  title: '저장 완료',
 		                  text: '저장 되었습니다.',
