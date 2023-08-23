@@ -106,7 +106,7 @@ public class UserService {
 		MenuDto upMenu = upMenuMap.get(leafMenu.getUpMenuSeq());
 		
 		if(upMenu == null) {
-			CmMenu cmMenu = cmMenuRepository.findByMenuSeqAndDelYn(leafMenu.getUpMenuSeq(), Yn.N);
+			CmMenu cmMenu = cmMenuRepository.findById(leafMenu.getUpMenuSeq()).get();
 			if(cmMenu != null) {
 				upMenu = new MenuDto(cmMenu);
 				upMenuMap.put(cmMenu.getMenuSeq(), upMenu);

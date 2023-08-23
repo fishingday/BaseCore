@@ -23,11 +23,20 @@ import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 메뉴 객체
+ * - 기본적인 메뉴는 menuSeq 를 정렬하는 것 만으로 정렬이 될 수 있도록 함.
+ * - prntYn은 사용자의 목록에 표시 되어야 하는 메뉴임.
+ * - cmScrenYn는 모든 사용자가 사용할 수 있는 화면을 표시하는 것임.
+ * 
+ * @author fishingday
+ *
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "CM_MENU")
-@SequenceGenerator(name = "SEQGEN_CM_MENU", sequenceName = "SEQ_CM_MENU", initialValue = 1000, allocationSize = 1)
+@SequenceGenerator(name = "SEQGEN_CM_MENU", sequenceName = "SEQ_CM_MENU", initialValue = 10000, allocationSize = 1)
 public class CmMenu extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -4796441346567889052L;

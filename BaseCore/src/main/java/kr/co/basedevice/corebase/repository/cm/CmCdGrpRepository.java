@@ -7,5 +7,4 @@ import kr.co.basedevice.corebase.repository.cm.querydsl.CmCdGrpRepositoryQueryds
 
 public interface CmCdGrpRepository extends JpaRepository<CmCdGrp, String>, CmCdGrpRepositoryQuerydsl{
 
-
 }

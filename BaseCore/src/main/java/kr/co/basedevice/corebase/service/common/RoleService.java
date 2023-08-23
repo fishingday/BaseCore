@@ -1,13 +1,10 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
@@ -18,8 +15,12 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserRoleMap;
 import kr.co.basedevice.corebase.domain.cm.CmUserRoleMapId;
 import kr.co.basedevice.corebase.domain.code.Yn;
+import kr.co.basedevice.corebase.dto.system.ChooseMenusRole;
+import kr.co.basedevice.corebase.dto.system.ChooseUsersRole;
+import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleMenuMapRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
+import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRoleMapRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class RoleService {
 
 	final private CmRoleRepository cmRoleRepository;
+	final private CmUserRepository cmUserRepository;
+	final private CmMenuRepository cmMenuRepository;
 	final private CmUserRoleMapRepository cmUserRoleMapRepository;
 	final private CmRoleMenuMapRepository cmRoleMenuMapRepository;
 	
@@ -39,7 +42,6 @@ public class RoleService {
 	 * @return
 	 */
 	public CmRole findById(Long roleSeq){
-		// proxy를 사용하지 않도록
 		Optional<CmRole> cmRole = cmRoleRepository.findById(roleSeq);
 		return cmRole.get();
 	}
@@ -52,7 +54,7 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	public CmRole saveCmRole(CmRole cmRole, Long operatorSeq){
+	public CmRole saveCmRole(CmRole cmRole){
 		
 		cmRole.setDelYn(Yn.N);
 		
@@ -68,7 +70,7 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	public CmRole removeCmRole(Long roleSeq, Long operatorSeq){
+	public CmRole removeCmRole(Long roleSeq){
 		
 		// 역할 별 메뉴 맵핑 삭제
 		List<CmRoleMenuMap> cmRoleMenuMapList = cmRoleMenuMapRepository.findByRoleSeqAndDelYn(roleSeq, Yn.N);
@@ -101,10 +103,10 @@ public class RoleService {
 	 * @param pageable
 	 * @return
 	 */
-	public Page<CmUser> findByCmUser(Long roleSeq, Pageable pageable){
-		// TODO
+	public List<CmUser> findByCmUser(Long roleSeq){
+		List<CmUser> cmUserList = cmUserRepository.findByRoleSeq(roleSeq);
 		
-		return null;
+		return cmUserList;
 	}
 	
 	/**
@@ -114,10 +116,10 @@ public class RoleService {
 	 * @param pageable
 	 * @return
 	 */
-	public Page<CmMenu> findByCmMenu(Long roleSeq, Pageable pageable){
-		// TODO
+	public List<CmMenu> findByCmMenu(Long roleSeq){
+		List<CmMenu> cmMenuList = cmMenuRepository.findByRoleSeq(roleSeq);
 		
-		return null;
+		return cmMenuList;
 	}
 	
 	/**
@@ -128,19 +130,19 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	public int addUserSeq(Long roleSeq, Collection<Long> userSeqList, Long operatorSeq){
-		if(userSeqList != null && !userSeqList.isEmpty()) {
+	public int addUsers(ChooseUsersRole chooseUsers){
+		if(chooseUsers.getUserSeqList() != null && !chooseUsers.getUserSeqList().isEmpty()) {
 			int inc = 0;
-			for(Long userSeq : userSeqList) {
+			for(Long userSeq : chooseUsers.getUserSeqList()) {
 				CmUserRoleMapId cmUserRoleMapId = new CmUserRoleMapId();
 				cmUserRoleMapId.setUserSeq(userSeq);
-				cmUserRoleMapId.setRoleSeq(roleSeq);
+				cmUserRoleMapId.setRoleSeq(chooseUsers.getRoleSeq());
 				CmUserRoleMap cmUserRoleMap = cmUserRoleMapRepository.getById(cmUserRoleMapId);
 				
 				if(cmUserRoleMap == null) {
 					cmUserRoleMap = new CmUserRoleMap();
 					cmUserRoleMap.setUserSeq(userSeq);
-					cmUserRoleMap.setRoleSeq(roleSeq);
+					cmUserRoleMap.setRoleSeq(chooseUsers.getRoleSeq());
 					cmUserRoleMap.setPrntOrd(9); // 정확한 순서는 사용자가 직접... 여기서는 부여만!
 				}
 				cmUserRoleMap.setDelYn(Yn.N);
@@ -161,13 +163,13 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	public int removeUserSeq(Long roleSeq, Collection<Long> userSeqList, Long operatorSeq){		
-		if(userSeqList != null && !userSeqList.isEmpty()) {
+	public int removeUsers(ChooseUsersRole chooseUsers){		
+		if(chooseUsers.getUserSeqList() != null && !chooseUsers.getUserSeqList().isEmpty()) {
 			int inc = 0;
-			for(Long userSeq : userSeqList) {
+			for(Long userSeq : chooseUsers.getUserSeqList()) {
 				CmUserRoleMapId cmUserRoleMapId = new CmUserRoleMapId();
 				cmUserRoleMapId.setUserSeq(userSeq);
-				cmUserRoleMapId.setRoleSeq(roleSeq);
+				cmUserRoleMapId.setRoleSeq(chooseUsers.getRoleSeq());
 				CmUserRoleMap cmUserRoleMap = cmUserRoleMapRepository.getById(cmUserRoleMapId);
 				
 				if(cmUserRoleMap == null) {
@@ -192,18 +194,18 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	public int addMenuSeq(Long roleSeq, Collection<Long> menuSeqList, Long operatorSeq){		
-		if(menuSeqList != null && !menuSeqList.isEmpty()) {
+	public int addMenus(ChooseMenusRole chooseMenus){		
+		if(chooseMenus.getMenuSeqList() != null && !chooseMenus.getMenuSeqList().isEmpty()) {
 			int inc = 0;
-			for(Long menuSeq : menuSeqList) {
+			for(Long menuSeq : chooseMenus.getMenuSeqList()) {
 				CmRoleMenuMapId cmRoleMenuMapId = new CmRoleMenuMapId();
-				cmRoleMenuMapId.setRoleSeq(roleSeq);
+				cmRoleMenuMapId.setRoleSeq(chooseMenus.getRoleSeq());
 				cmRoleMenuMapId.setMenuSeq(menuSeq);
 				CmRoleMenuMap cmRoleMenuMap = cmRoleMenuMapRepository.getById(cmRoleMenuMapId);
 				
 				if(cmRoleMenuMap == null) {
 					cmRoleMenuMap = new CmRoleMenuMap();
-					cmRoleMenuMap.setRoleSeq(roleSeq);
+					cmRoleMenuMap.setRoleSeq(chooseMenus.getRoleSeq());
 					cmRoleMenuMap.setMenuSeq(menuSeq);
 				}
 				cmRoleMenuMap.setDelYn(Yn.N);
@@ -224,12 +226,12 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	public int removeMenuSeq(Long roleSeq, Collection<Long> menuSeqList, Long operatorSeq){		
-		if(menuSeqList != null && !menuSeqList.isEmpty()) {
+	public int removeMenus(ChooseMenusRole chooseMenus){		
+		if(chooseMenus.getMenuSeqList() != null && !chooseMenus.getMenuSeqList().isEmpty()) {
 			int inc = 0;
-			for(Long menuSeq : menuSeqList) {
+			for(Long menuSeq : chooseMenus.getMenuSeqList()) {
 				CmRoleMenuMapId cmRoleMenuMapId = new CmRoleMenuMapId();
-				cmRoleMenuMapId.setRoleSeq(roleSeq);
+				cmRoleMenuMapId.setRoleSeq(chooseMenus.getRoleSeq());
 				cmRoleMenuMapId.setMenuSeq(menuSeq);
 				CmRoleMenuMap cmRoleMenuMap = cmRoleMenuMapRepository.getById(cmRoleMenuMapId);
 				
