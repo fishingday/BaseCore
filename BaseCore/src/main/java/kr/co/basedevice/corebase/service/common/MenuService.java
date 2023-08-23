@@ -15,7 +15,6 @@ import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmRoleMenuMap;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
-import kr.co.basedevice.corebase.dto.system.ParentMenuComparator;
 import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
 import kr.co.basedevice.corebase.dto.system.SaveMenuInfo;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
@@ -192,8 +191,8 @@ public class MenuService {
 					idx++;
 				}
 			}
-			Collections.sort(menuInfoDtoList, new ParentMenuComparator());
-		}		
+			Collections.sort(menuInfoDtoList);
+		}
 		
 		return menuInfoDtoList;
 	}

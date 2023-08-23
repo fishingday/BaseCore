@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString(exclude = "upMenu")
 @NoArgsConstructor
-public class ParentMenuDto{
+public class ParentMenuDto implements Comparable<ParentMenuDto>{
 	private Long menuSeq;
 
 	private Long upMenuSeq;
@@ -38,15 +38,26 @@ public class ParentMenuDto{
 		
 		return sb.toString();
 	}
+	
+	public String getSiblingOrder() {
+		StringBuilder sb = new StringBuilder();
 		
-	public int getOrdering() {
-		
-		int ordering = this.prntOrd;
-		
-		if(this.level > 1) {
-			ordering += 100 ^(--level);
+		if(upMenu == null) {
+			sb.append(this.prntOrd);
+		}else {
+			if(upMenu.upMenu != null) {
+				String siblingOrder = upMenu.getSiblingOrder();
+				sb.append(siblingOrder).append(">").append(this.prntOrd);
+			}else {
+				sb.append(upMenu.getSiblingOrder()).append(">").append(this.prntOrd);
+			}
 		}
 		
-		return ordering;
+		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(ParentMenuDto target) {
+        return this.getSiblingOrder().compareTo(target.getSiblingOrder());
 	}
 }
