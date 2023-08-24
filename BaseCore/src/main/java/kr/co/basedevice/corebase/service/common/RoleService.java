@@ -108,6 +108,18 @@ public class RoleService {
 		
 		return cmUserList;
 	}
+
+	/**
+	 * 특정 역할 제외 사용자 목록
+	 * 
+	 * @param roleSeq
+	 * @return
+	 */
+	public List<CmUser> findByExcludeCmUser(Long roleSeq) {
+		List<CmUser> cmUserList = cmUserRepository.findByExcludeRoleSeq(roleSeq);
+		
+		return cmUserList;
+	}
 	
 	/**
 	 *  역할 별 메뉴 목록
@@ -118,6 +130,18 @@ public class RoleService {
 	 */
 	public List<CmMenu> findByCmMenu(Long roleSeq){
 		List<CmMenu> cmMenuList = cmMenuRepository.findByRoleSeq(roleSeq);
+		
+		return cmMenuList;
+	}
+
+	/**
+	 * 특정 역할 제외 메뉴 목록
+	 * 
+	 * @param roleSeq
+	 * @return
+	 */
+	public List<CmMenu> findByExcludeCmMenu(Long roleSeq) {
+		List<CmMenu> cmMenuList = cmMenuRepository.findByExcludeRoleSeq(roleSeq);
 		
 		return cmMenuList;
 	}
@@ -257,6 +281,6 @@ public class RoleService {
 	 */
 	public List<CmRole> findByRoleList(){
 		return cmRoleRepository.findByDelYn(Yn.N);
-	}		
+	}
 	
 }

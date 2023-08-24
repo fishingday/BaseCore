@@ -105,110 +105,110 @@
         </div>
         <!-- modal -->
         <div class="modal-staging">
-            <!--/* 그룹코드 생성 */-->
-            <div class="modal fade" id="popupGrpCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">그룹코드 생성</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="mb-3 row">
-                      <label for="pop_grpCd" class="col-sm-4 col-form-label">그룹코드</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" id="pop_grpCd">
-                      </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="pop_grpCdNm" class="col-sm-4 col-form-label">그룹코드명</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" id="pop_grpCdNm">
-                      </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="pop_grpCdDesc" class="col-sm-4 col-form-label">그룹코드 설명</label>
-                      <div class="col-sm-8">
-                        <textarea class="form-control" aria-label="With textarea" id="pop_grpCdDesc"></textarea>
-                      </div>
+          <!--/* 그룹코드 생성 */-->
+          <div class="modal fade" id="popupGrpCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">그룹코드 생성</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3 row">
+                    <label for="pop_grpCd" class="col-sm-4 col-form-label">그룹코드</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="pop_grpCd">
                     </div>
                   </div>
-                  <div class="modal-footer row">
-                    <div class="col-auto me-auto">
-                      <button type="button" class="btn btn-primary" id="btnPopSaveGrpCd">저장</button>
+                  <div class="mb-3 row">
+                    <label for="pop_grpCdNm" class="col-sm-4 col-form-label">그룹코드명</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="pop_grpCdNm">
                     </div>
-                      <div class="col-auto">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="pop_grpCdDesc" class="col-sm-4 col-form-label">그룹코드 설명</label>
+                    <div class="col-sm-8">
+                      <textarea class="form-control" aria-label="With textarea" id="pop_grpCdDesc"></textarea>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            
-            <!--/* 상세 코드 생성 */-->
-            <div class="modal fade" id="popupDtlCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">상세 코드 생성</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-footer row">
+                  <div class="col-auto me-auto">
+                    <button type="button" class="btn btn-primary" id="btnPopSaveGrpCd">저장</button>
                   </div>
-                  <div class="modal-body">
-                    <div class="input-group mb-3">
-                      <p class="fs-5" id="pop_header_txt">그룹코드정보</p>
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">코드</span>
-                      <input type="text" class="form-control" id="pop_cd">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">코드명</span>
-                      <input type="text" class="form-control" id="pop_cdNm">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">코드 설명</span>
-                      <textarea class="form-control" id="pop_cdDesc"></textarea>
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">출력순서</span>
-                      <input type="number" class="form-control" id="pop_prntOrd">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">옵션 1</span>
-                      <input type="text" class="form-control" id="pop_opt1">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">옵션 2</span>
-                      <input type="text" class="form-control" id="pop_opt2">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">옵션 3</span>
-                      <input type="text" class="form-control" id="pop_opt3">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">옵션 4</span>
-                      <input type="text" class="form-control" id="pop_opt4">
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text" style="width: 120px;">옵션 5</span>
-                      <input type="text" class="form-control" id="pop_opt5">
-                    </div>
-                  </div>
-                  
-                  <div class="modal-footer row">
-                    <div class="col-auto me-auto">
-                      <button type="button" class="btn btn-primary" id="btnSaveDtlCd">저장</button>
-                      <button type="button" class="btn btn-danger" id="btnDeteleDtlCd">삭제</button>
-                    </div>
-                      <div class="col-auto">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    </div>
+                    <div class="col-auto">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- modal -->
+          
+          <!--/* 상세 코드 생성 */-->
+          <div class="modal fade" id="popupDtlCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">상세 코드 생성</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <p class="fs-5" id="pop_header_txt">그룹코드정보</p>
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">코드</span>
+                    <input type="text" class="form-control" id="pop_cd">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">코드명</span>
+                    <input type="text" class="form-control" id="pop_cdNm">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">코드 설명</span>
+                    <textarea class="form-control" id="pop_cdDesc"></textarea>
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">출력순서</span>
+                    <input type="number" class="form-control" id="pop_prntOrd">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">옵션 1</span>
+                    <input type="text" class="form-control" id="pop_opt1">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">옵션 2</span>
+                    <input type="text" class="form-control" id="pop_opt2">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">옵션 3</span>
+                    <input type="text" class="form-control" id="pop_opt3">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">옵션 4</span>
+                    <input type="text" class="form-control" id="pop_opt4">
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">옵션 5</span>
+                    <input type="text" class="form-control" id="pop_opt5">
+                  </div>
+                </div>
+                
+                <div class="modal-footer row">
+                  <div class="col-auto me-auto">
+                    <button type="button" class="btn btn-primary" id="btnSaveDtlCd">저장</button>
+                    <button type="button" class="btn btn-danger" id="btnDeteleDtlCd">삭제</button>
+                  </div>
+                    <div class="col-auto">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- modal -->
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
         var $table_grpcd = $('#table-grpcd');

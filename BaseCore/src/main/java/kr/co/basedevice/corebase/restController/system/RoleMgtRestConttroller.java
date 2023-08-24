@@ -30,7 +30,7 @@ public class RoleMgtRestConttroller {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/get_role_list.json")
+	@GetMapping("/role_list.json")
 	public ResponseEntity<List<CmRole>> findByRoleList(){		
 		List<CmRole> cmRoleList = roleService.findByRoleList();
 		
@@ -98,6 +98,19 @@ public class RoleMgtRestConttroller {
 		
 		return ResponseEntity.ok(cmUserList);
 	}
+		
+	/**
+	 * 특정 역할 제외 사용자 목록
+	 * 
+	 * @param roleSeq
+	 * @return
+	 */
+	@GetMapping("/exclude_user_list.json")
+	public ResponseEntity<List<CmUser>> findByExcludeUserList(Long roleSeq){
+		List<CmUser> cmUserList = roleService.findByExcludeCmUser(roleSeq);
+		
+		return ResponseEntity.ok(cmUserList);
+	}
 	
 	/** 
 	 * 역할 별 사용자 추가
@@ -124,7 +137,7 @@ public class RoleMgtRestConttroller {
 		
 		return ResponseEntity.ok(applyCnt);
 		
-	}
+	}	
 	
 	/** 
 	 * 역할 별 메뉴 목록
@@ -135,6 +148,19 @@ public class RoleMgtRestConttroller {
 	@GetMapping("/menu_list.json")
 	public ResponseEntity<List<CmMenu>> findByMenuList(Long roleSeq){
 		List<CmMenu> cmMenuList = roleService.findByCmMenu(roleSeq);
+		
+		return ResponseEntity.ok(cmMenuList);
+	}
+	
+	/** 
+	 * 역할 별 메뉴 목록
+	 * 
+	 * @param roleSeq
+	 * @return
+	 */
+	@GetMapping("/exclude_menu_list.json")
+	public ResponseEntity<List<CmMenu>> findByExcludeMenuList(Long roleSeq){
+		List<CmMenu> cmMenuList = roleService.findByExcludeCmMenu(roleSeq);
 		
 		return ResponseEntity.ok(cmMenuList);
 	}

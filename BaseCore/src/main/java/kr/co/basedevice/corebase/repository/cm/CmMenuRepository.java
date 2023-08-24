@@ -46,4 +46,13 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	@Query("select m from CmMenu m inner join CmRoleMenuMap n on (m.menuSeq = n.menuSeq) where m.delYn = 'N' and n.delYn = 'N' and n.roleSeq = ?1  order by m.menuSeq asc")
 	List<CmMenu> findByRoleSeq(Long roleSeq);
 
+	/**
+	 * 특정 역할 제외 메뉴 목록
+	 * 
+	 * @param roleSeq
+	 * @return
+	 */
+	@Query("select m from CmMenu m inner join CmRoleMenuMap n on (m.menuSeq = n.menuSeq) where m.delYn = 'N' and n.delYn = 'N' and n.roleSeq != ?1  order by m.menuSeq asc")
+	List<CmMenu> findByExcludeRoleSeq(Long roleSeq);
+
 }
