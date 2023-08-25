@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.service.common;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -195,6 +196,63 @@ public class MenuService {
 		}
 		
 		return menuInfoDtoList;
+	}
+
+	/**
+	 * 잃어버린 부모를 찾아 주고
+	 * 정렬하여 목록을 출력
+	 * 
+	 * @param cmMenuList
+	 * @return
+	 */
+	public List<ParentMenuDto> makeParentMenuList(List<CmMenu> cmMenuList) {
+		List<ParentMenuDto> parentMenuDtoList = new ArrayList<>();
+		
+		if(cmMenuList != null && !cmMenuList.isEmpty()) {
+			Map<Long, ParentMenuDto> mapUpMenu = this.getParnetMenuMap();
+			
+			// 잃어버린 부모를 찾아 줌
+			for(CmMenu cmMenu : cmMenuList) {
+				ParentMenuDto parentMenuDto = ParentMenuDto.setCmMenu(cmMenu);
+				parentMenuDtoList.add(parentMenuDto);
+				if(parentMenuDto.getUpMenuSeq() != null) {
+					parentMenuDto.setUpMenu(mapUpMenu.get(parentMenuDto.getUpMenuSeq()));
+				}
+			}
+			
+			// 레벨 등록
+			for(ParentMenuDto parentMenuDto : parentMenuDtoList) {
+				if(parentMenuDto.getUpMenu() == null) {
+					parentMenuDto.setLevel(1);
+					continue;
+				}
+				ParentMenuDto upMenu = parentMenuDto.getUpMenu();
+				int idx = 2;
+				while(true) {
+					if(upMenu.getUpMenuSeq() == null) {
+						parentMenuDto.setLevel(idx);
+						break;
+					}else{
+						upMenu = upMenu.getUpMenu();
+					}
+					idx++;
+				}
+			}
+			Collections.sort(parentMenuDtoList);
+		}
+		
+		return parentMenuDtoList;
+	}
+	
+	private Map<Long, ParentMenuDto> getParnetMenuMap(){
+		Map<Long, ParentMenuDto> parnetMenuMap = new HashMap<>();
+		List<ParentMenuDto> menuInfoDtoList = this.findByParentMenuList(); // 부코들의 계층관계가 완성된 형태
+		
+		for(ParentMenuDto parentMenuDto : menuInfoDtoList) {
+			parnetMenuMap.put(parentMenuDto.getMenuSeq(), parentMenuDto);
+		}
+		
+		return parnetMenuMap;
 	}
 
 }

@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.dto.system;
 
+import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,18 @@ public class ParentMenuDto implements Comparable<ParentMenuDto>{
 	private ParentMenuDto upMenu;
 	
 	private int level;
+	
+	static public ParentMenuDto setCmMenu(CmMenu cmMenu) {
+		ParentMenuDto parentMenuDto = new ParentMenuDto();
+		
+		parentMenuDto.setMenuSeq(cmMenu.getMenuSeq());
+		parentMenuDto.setUpMenuSeq(cmMenu.getUpMenuSeq());
+		parentMenuDto.setMenuNm(cmMenu.getMenuNm());
+		parentMenuDto.setPrntOrd(cmMenu.getPrntOrd());		
+		
+		return parentMenuDto;
+	}
+	
 	
 	public String getFullMenuNm() {
 		StringBuilder sb = new StringBuilder();

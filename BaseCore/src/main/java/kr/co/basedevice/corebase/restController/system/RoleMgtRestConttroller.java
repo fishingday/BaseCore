@@ -15,6 +15,8 @@ import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.system.ChooseMenusRole;
 import kr.co.basedevice.corebase.dto.system.ChooseUsersRole;
+import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
+import kr.co.basedevice.corebase.service.common.MenuService;
 import kr.co.basedevice.corebase.service.common.RoleService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class RoleMgtRestConttroller {
 	
 	final private RoleService roleService; 
+	final private MenuService menuService;
 	
 	/**
 	 * 역할 목록
@@ -92,10 +95,13 @@ public class RoleMgtRestConttroller {
 	 * @param roleSeq
 	 * @return
 	 */
-	@GetMapping("/user_list.json")
-	public ResponseEntity<List<CmUser>> findByUserList(Long roleSeq){
-		List<CmUser> cmUserList = roleService.findByCmUser(roleSeq);
+	@GetMapping("/role_user_list.json")
+	public ResponseEntity<List<CmUser>> findByUserList(Long roleSeq){		
+		List<CmUser> cmUserList = null;
 		
+		if(roleSeq != null) {
+			cmUserList = roleService.findByCmUser(roleSeq);
+		}
 		return ResponseEntity.ok(cmUserList);
 	}
 		
@@ -107,7 +113,11 @@ public class RoleMgtRestConttroller {
 	 */
 	@GetMapping("/exclude_user_list.json")
 	public ResponseEntity<List<CmUser>> findByExcludeUserList(Long roleSeq){
-		List<CmUser> cmUserList = roleService.findByExcludeCmUser(roleSeq);
+		List<CmUser> cmUserList = null;
+		
+		if(roleSeq != null) {
+			cmUserList = roleService.findByExcludeCmUser(roleSeq);
+		}
 		
 		return ResponseEntity.ok(cmUserList);
 	}
@@ -145,11 +155,15 @@ public class RoleMgtRestConttroller {
 	 * @param roleSeq
 	 * @return
 	 */
-	@GetMapping("/menu_list.json")
-	public ResponseEntity<List<CmMenu>> findByMenuList(Long roleSeq){
-		List<CmMenu> cmMenuList = roleService.findByCmMenu(roleSeq);
+	@GetMapping("/role_menu_list.json")
+	public ResponseEntity<List<ParentMenuDto>> findByMenuList(Long roleSeq){
+		List<ParentMenuDto> parentMenuList = null;
+		if(roleSeq != null) {
+			List<CmMenu> cmMenuList = roleService.findByCmMenu(roleSeq);			
+			parentMenuList = menuService.makeParentMenuList(cmMenuList);
+		}
 		
-		return ResponseEntity.ok(cmMenuList);
+		return ResponseEntity.ok(parentMenuList);
 	}
 	
 	/** 
@@ -159,10 +173,15 @@ public class RoleMgtRestConttroller {
 	 * @return
 	 */
 	@GetMapping("/exclude_menu_list.json")
-	public ResponseEntity<List<CmMenu>> findByExcludeMenuList(Long roleSeq){
-		List<CmMenu> cmMenuList = roleService.findByExcludeCmMenu(roleSeq);
+	public ResponseEntity<List<ParentMenuDto>> findByExcludeMenuList(Long roleSeq){
+		List<ParentMenuDto> parentMenuList = null;
 		
-		return ResponseEntity.ok(cmMenuList);
+		if(roleSeq != null) {
+			List<CmMenu> cmMenuList = roleService.findByExcludeCmMenu(roleSeq);			
+			parentMenuList = menuService.makeParentMenuList(cmMenuList);
+		}
+		
+		return ResponseEntity.ok(parentMenuList);
 	}
 		
 	/** 
