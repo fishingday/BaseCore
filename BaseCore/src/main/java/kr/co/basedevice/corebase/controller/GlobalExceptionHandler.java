@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -16,8 +15,7 @@ import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Controller
-@ControllerAdvice(annotations = Controller.class)
+@ControllerAdvice(basePackages = "kr.co.basedevice.corebase.controller")
 public class GlobalExceptionHandler {
 	
 	final private LoggingService loggingService;
