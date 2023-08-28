@@ -55,14 +55,14 @@
 
                 <div class="col-12">
                   <label for="defPage" class="form-label">대시 보드</label>
-                  <input type="text" class="form-control" id="defPage">
+                  <input type="url" class="form-control" id="defPage">
                 </div>
 
                 <div class="col-12">
                   <label for="roleDesc" class="form-label">역할 설명</label>
                   <textarea class="form-control" id="roleDesc" rows="3"></textarea>
                 </div>
-                  </div>
+              </div>
               <div class="row justify-content-between mt-5 pt-5">
                 <div class="col-auto me-auto">
                   <button class="w-10 btn btn-danger" type="button" id="btnDeleteRole">
@@ -78,63 +78,63 @@
             </div>
             <div id="tabRoleUsersDiv" class="row">
               <div class="col-5">
-				        <h4 class="text-center m-2" id="form-title">역할 사용자</h4>
-			          <table
-			            id="table_role_user"
-			            data-search="true"
-			            data-click-to-select="true"
-			            data-id-field="userSeq"
-			            th:data-url="@{/system/role_mgt/role_user_list.json}">
-			          </table>
-					    </div>
-					    <div class="col-2 align-self-center">
-						      <button id="btnAddRoleUser" class="btn btn-outline-success mb-2">
-			              <i class="bi bi-arrow-left-square-fill"></i> 추가
-			            </button>
-			            <button id="btnRemoveRoleUser" class="btn btn-outline-danger mt-2">
-			              제외 <i class="bi bi-arrow-right-square-fill"></i>
-			            </button>
-					    </div>
-					    <div class="col-5">
-					      <h4 class="text-center m-2" id="form-title">후보 사용자</h4>
-			          <table
-			            id="table_tgt_user"
-			            data-search="true"
-			            data-click-to-select="true"
-			            data-id-field="userSeq"
-			            th:data-url="@{/system/role_mgt/exclude_user_list.json}">
-			          </table>
-					    </div>              
+                <h4 class="text-center m-2" id="form-title">역할 사용자</h4>
+                <table
+                  id="table_role_user"
+                  data-search="true"
+                  data-click-to-select="true"
+                  data-id-field="userSeq"
+                  th:data-url="@{/system/role_mgt/role_user_list.json}">
+                </table>
+              </div>
+              <div class="col-2 align-self-center">
+                <button id="btnAddRoleUser" class="btn btn-outline-success mb-2">
+                  <i class="bi bi-arrow-left-square-fill"></i> 추가
+                </button>
+                <button id="btnRemoveRoleUser" class="btn btn-outline-danger mt-2">
+                  제외 <i class="bi bi-arrow-right-square-fill"></i>
+                </button>
+              </div>
+              <div class="col-5">
+                <h4 class="text-center m-2" id="form-title">후보 사용자</h4>
+                <table
+                  id="table_tgt_user"
+                  data-search="true"
+                  data-click-to-select="true"
+                  data-id-field="userSeq"
+                  th:data-url="@{/system/role_mgt/exclude_user_list.json}">
+                </table>
+              </div>
             </div>
             <div id="tabRoleMenusDiv" class="row">
               <div class="col-5">
-				        <h4 class="text-center m-2" id="form-title">역할 메뉴</h4>
-			          <table
-			            id="table_role_menu"
-			            data-search="true"
-			            data-click-to-select="true"
-			            data-id-field="menuSeq"
-			            th:data-url="@{/system/role_mgt/role_menu_list.json}">
-			          </table>
-					    </div>
-					    <div class="col-2 align-self-center">
-						      <button id="btnAddRoleUser" class="btn btn-outline-success mb-2">
-			              <i class="bi bi-arrow-left-square-fill"></i> 추가
-			            </button>
-			            <button id="btnRemoveRoleUser" class="btn btn-outline-danger mt-2">
-			              제외 <i class="bi bi-arrow-right-square-fill"></i>
-			            </button>
-					    </div>
-					    <div class="col-5">
-					      <h4 class="text-center m-2" id="form-title">후보 메뉴</h4>
-			          <table
-			            id="table_tgt_menu"
-			            data-search="true"
-			            data-click-to-select="true"
-			            data-id-field="menuSeq"
-			            th:data-url="@{/system/role_mgt/exclude_menu_list.json}">
-			          </table>
-					    </div>
+                <h4 class="text-center m-2" id="form-title">역할 메뉴</h4>
+                <table
+                  id="table_role_menu"
+                  data-search="true"
+                  data-click-to-select="true"
+                  data-id-field="menuSeq"
+                  th:data-url="@{/system/role_mgt/role_menu_list.json}">
+                </table>
+              </div>
+              <div class="col-2 align-self-center">
+                <button id="btnAddRoleMenu" class="btn btn-outline-success mb-2">
+                  <i class="bi bi-arrow-left-square-fill"></i> 추가
+                </button>
+                <button id="btnRemoveRoleMenu" class="btn btn-outline-danger mt-2">
+                  제외 <i class="bi bi-arrow-right-square-fill"></i>
+                </button>
+              </div>
+              <div class="col-5">
+                <h4 class="text-center m-2" id="form-title">후보 메뉴</h4>
+                <table
+                  id="table_tgt_menu"
+                  data-search="true"
+                  data-click-to-select="true"
+                  data-id-field="menuSeq"
+                  th:data-url="@{/system/role_mgt/exclude_menu_list.json}">
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -151,83 +151,61 @@
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
           fnObj.grid.init_role();
-          $("#tabRoleInfo").click();
+          $("#btnNewRole").click();
         },
         page: {
           init: function(){ // 버튼 바인딩 등
+            // 생성
+            $("#btnSaveRole").bind("click", function(){
+              fnObj.action.saveRole();
+            });
 
+            // 삭제
+            $("#btnDeleteRole").bind("click", function(){
+              fnObj.action.removeRole();
+            });
+
+            $("#btnDeleteRole").hide();
+
+            // 사용자 추가
+            $("#btnAddRoleUser").bind("click", function(){
+              fnObj.action.addUserRole();
+            });
+
+            // 사용자 제외
+            $("#btnRemoveRoleUser").bind("click", function(){
+              fnObj.action.removeUserRole();
+            });
+
+            // 메뉴 추가
+            $("#btnAddRoleMenu").bind("click", function(){
+              fnObj.action.addMenuRole();
+            });
+
+            // 메뉴 삭제
+            $("#btnRemoveRoleMenu").bind("click", function(){
+              fnObj.action.removeMenuRole();
+            });
+            
+            // 역할 정보 탭
             $("#tabRoleInfo").bind("click", function(){
-              $("#tabRoleInfo").addClass("active");
-              $("#tabRoleInfo").prop("aria-current", "page");
-              $("#tabRoleInfoDiv").show();
-
-              $("#tabRoleUsers").removeClass("active");
-              $("#tabRoleUsers").removeAttr("aria-current");
-              $("#tabRoleUsersDiv").hide();
-
-              $("#tabRoleMenus").removeClass("active");
-              $("#tabRoleMenus").removeAttr("aria-current");
-              $("#tabRoleMenusDiv").hide();
+              fnObj.action.clickTabRolInfo();
             });
-
+            
+            // 역할 사용자 탭
             $("#tabRoleUsers").bind("click", function(){
-				      if($("#roleSeq").val() === ''){
-						    Swal.fire({
-                  title: '역할이 선택되지 않았습니다.',
-                  text: "역할을 먼저 선택해 주세요.",
-                  icon: 'warning',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-						    return;
-					    }
-				
-				      fnObj.grid.init_reg_user();
-				      fnObj.grid.init_tgt_user();
-				
-              $("#tabRoleInfo").removeClass("active");
-              $("#tabRoleInfo").removeAttr("aria-current");
-              $("#tabRoleInfoDiv").hide();
-
-              $("#tabRoleUsers").addClass("active");
-              $("#tabRoleUsers").prop("aria-current", "page");
-              $("#tabRoleUsersDiv").show();
-
-              $("#tabRoleMenus").removeClass("active");
-              $("#tabRoleMenus").removeAttr("aria-current");
-              $("#tabRoleMenusDiv").hide();
+              fnObj.action.clickTabRoleUsers();
             });
 
+            // 역할 메뉴 탭
             $("#tabRoleMenus").bind("click", function(){
-				      if($("#roleSeq").val() === ''){
-						    Swal.fire({
-                  title: '역할이 선택되지 않았습니다.',
-                  text: "역할을 먼저 선택해 주세요.",
-                  icon: 'warning',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-						    return;
-					    }
-					    
-				      fnObj.grid.init_reg_menu();
-				      fnObj.grid.init_tgt_menu();
-				      
-              $("#tabRoleInfo").removeClass("active");
-              $("#tabRoleInfo").removeAttr("aria-current");
-              $("#tabRoleInfoDiv").hide();
-
-              $("#tabRoleUsers").removeClass("active");
-              $("#tabRoleUsers").removeAttr("aria-current");
-              $("#tabRoleUsersDiv").hide();
-
-              $("#tabRoleMenus").addClass("active");
-              $("#tabRoleMenus").prop("aria-current", "page");
-              $("#tabRoleMenusDiv").show();
+              fnObj.action.clickTabRoleMenus();
             });
 
+            // 신규 역할
             $("#btnNewRole").bind("click", function(){
               fnObj.action.initForm();
+              $("#tabRoleInfo").click();
               $("#form-title").text("신규 역할 정보");
               $("#btnDeleteRole").hide();
             });
@@ -249,6 +227,422 @@
             $("#roleNm").val(cmRole.roleNm);
             $("#roleDesc").val(cmRole.roleDesc);
             $("#defPage").val(cmRole.defPage);
+          },
+          clickTabRolInfo: function(){
+            $("#tabRoleInfo").addClass("active");
+            $("#tabRoleInfo").prop("aria-current", "page");
+            $("#tabRoleInfoDiv").show();
+
+            $("#tabRoleUsers").removeClass("active");
+            $("#tabRoleUsers").removeAttr("aria-current");
+            $("#tabRoleUsersDiv").hide();
+
+            $("#tabRoleMenus").removeClass("active");
+            $("#tabRoleMenus").removeAttr("aria-current");
+            $("#tabRoleMenusDiv").hide();
+          },
+          clickTabRoleUsers: function(){
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '역할이 선택되지 않았습니다.',
+                text: "역할을 먼저 선택해 주세요.",
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              return;
+            }
+
+            fnObj.grid.init_reg_user();
+            fnObj.grid.init_tgt_user();
+
+            $("#tabRoleInfo").removeClass("active");
+            $("#tabRoleInfo").removeAttr("aria-current");
+            $("#tabRoleInfoDiv").hide();
+
+            $("#tabRoleUsers").addClass("active");
+            $("#tabRoleUsers").prop("aria-current", "page");
+            $("#tabRoleUsersDiv").show();
+
+            $("#tabRoleMenus").removeClass("active");
+            $("#tabRoleMenus").removeAttr("aria-current");
+            $("#tabRoleMenusDiv").hide();
+          },
+          clickTabRoleMenus: function(){
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '역할이 선택되지 않았습니다.',
+                text: "역할을 먼저 선택해 주세요.",
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              return;
+            }
+
+            fnObj.grid.init_reg_menu();
+            fnObj.grid.init_tgt_menu();
+
+            $("#tabRoleInfo").removeClass("active");
+            $("#tabRoleInfo").removeAttr("aria-current");
+            $("#tabRoleInfoDiv").hide();
+
+            $("#tabRoleUsers").removeClass("active");
+            $("#tabRoleUsers").removeAttr("aria-current");
+            $("#tabRoleUsersDiv").hide();
+
+            $("#tabRoleMenus").addClass("active");
+            $("#tabRoleMenus").prop("aria-current", "page");
+            $("#tabRoleMenusDiv").show();
+          },
+          saveRole: function(){
+            if($("#roleNm").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '역할명은 필수 입력 항목입니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+
+            if($("#roleCd").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '역할 코드는 필수 입력 항목입니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+
+            if($("#defPage").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '대시보드 주소는 필수 입력 항목입니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+
+            let cmRole = {};
+            cmRole.roleSeq  = $("#roleSeq").val();
+            cmRole.roleNm   = $("#roleNm").val();
+            cmRole.roleCd   = $("#roleCd").val();
+            cmRole.defPage  = $("#defPage").val();
+            cmRole.roleDesc = $("#roleDesc").val();
+
+            $.ajax({
+              url: "[[@{/system/role_mgt/save_role.json}]]",
+              type: "POST",
+              async: true,
+              dataType : "json",
+              data : cmRole,
+              success: function(data, status){
+                if(status === 'success'){
+                  $("#btnNewRole").click();
+                  $table_role.bootstrapTable('refresh');
+                  Swal.fire({
+                      title: '저장 완료',
+                      text: '저장 되었습니다.',
+                      icon: 'info',
+                      showConfirmButton: false,
+                      timer: 1500
+                  });
+                }else{
+                  Swal.fire({
+                    title: 'Error!',
+                    text: '저장 중 문제가 발생했습니다.',
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                }
+              }
+            });
+          },
+          removeRole: function(){
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '삭제할 역할이 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            };
+
+            Swal.fire({
+              title: '정말 삭제 하시겠습니까?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: '삭제',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                  url: "[[@{/system/role_mgt/remove_role.json}]]",
+                  type: "DELETE",
+                  async: true,
+                  dataType : "json",
+                  data : {roleSeq : $("#roleSeq").val()},
+                  success: function(data, status){
+                    if(status === 'success' && data === true){
+                      $("#btnNewRole").click();
+                      $table_role.bootstrapTable('refresh');
+                      Swal.fire({
+                          title: '삭제 완료',
+                          text: '삭제 처리가 완료 되었습니다.',
+                          icon: 'info',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                    }else{
+                      Swal.fire({
+                        title: 'Error!',
+                        text: '삭제 중 문제가 발생했습니다.',
+                        icon: 'error',
+                        confirmButtonText: '닫기'
+                      });
+                    }
+                  }
+                });
+              }
+            });
+          },
+          addUserRole: function(){			      
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '역할이 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            };
+            
+            let userSeqs = 
+              $.map($table_tgt_user.bootstrapTable('getSelections'), function (row) {
+                return row.userSeq; 
+              });
+            
+            if(userSeqs.length === 0){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '사용자가 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+			      }
+			      
+			      let chooseUsersRole = {};
+			      chooseUsersRole.roleSeq = $("#roleSeq").val();
+			      chooseUsersRole.userSeqList = userSeqs;
+			      
+			      $.ajax({
+              url: "[[@{/system/role_mgt/add_users.json}]]",
+              type: "PUT",
+              async: true,
+              dataType : "json",
+              data : chooseUsersRole,
+              success: function(data, status){
+                if(status === 'success'){
+                  $table_role_user.bootstrapTable('refresh');
+                  $table_tgt_user.bootstrapTable('refresh');
+                  Swal.fire({
+                      title: '변경 완료',
+                      text: '[' + data + ']건을 변경하였습니다.',
+                      icon: 'info',
+                      showConfirmButton: false,
+                      timer: 1500
+                  });
+                }else{
+                  Swal.fire({
+                    title: 'Error!',
+                    text: '처리 중 문제가 발생했습니다.',
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                }
+              }
+            });
+            
+          },
+          removeUserRole: function(){			      
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '역할이 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            };
+            
+            let userSeqs = 
+              $.map($table_role_user.bootstrapTable('getSelections'), function (row) {
+                return row.userSeq; 
+              });
+            
+            if(userSeqs.length === 0){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '사용자가 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+			      }
+			      
+			      let chooseUsersRole = {};
+			      chooseUsersRole.roleSeq = $("#roleSeq").val();
+			      chooseUsersRole.userSeqList = userSeqs;
+			      
+			      $.ajax({
+              url: "[[@{/system/role_mgt/remove_users.json}]]",
+              type: "DELETE",
+              async: true,
+              dataType : "json",
+              data : chooseUsersRole,
+              success: function(data, status){
+                if(status === 'success'){
+                  $table_role_user.bootstrapTable('refresh');
+                  $table_tgt_user.bootstrapTable('refresh');
+                  Swal.fire({
+                      title: '변경 완료',
+                      text: '[' + data + ']건을 변경하였습니다.',
+                      icon: 'info',
+                      showConfirmButton: false,
+                      timer: 1500
+                  });
+                }else{
+                  Swal.fire({
+                    title: 'Error!',
+                    text: '처리 중 문제가 발생했습니다.',
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                }
+              }
+            });
+
+          },
+          addMenuRole: function(){			      
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '역할이 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            };
+            
+            let menuSeqs = 
+              $.map($table_tgt_menu.bootstrapTable('getSelections'), function (row) {
+                return row.menuSeq; 
+              });
+            
+            if(menuSeqs.length === 0){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '메뉴가 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+			      }
+			      
+			      let chooseMenusRole = {};
+			      chooseMenusRole.roleSeq = $("#roleSeq").val();
+			      chooseMenusRole.menuSeqList = menuSeqs;
+			      
+			      $.ajax({
+              url: "[[@{/system/role_mgt/add_menus.json}]]",
+              type: "PUT",
+              async: true,
+              dataType : "json",
+              data : chooseMenusRole,
+              success: function(data, status){
+                if(status === 'success'){
+                  $table_role_menu.bootstrapTable('refresh');
+                  $table_tgt_menu.bootstrapTable('refresh');
+                  Swal.fire({
+                      title: '변경 완료',
+                      text: '[' + data + ']건을 변경하였습니다.',
+                      icon: 'info',
+                      showConfirmButton: false,
+                      timer: 1500
+                  });
+                }else{
+                  Swal.fire({
+                    title: 'Error!',
+                    text: '처리 중 문제가 발생했습니다.',
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                }
+              }
+            });
+
+          },
+          removeMenuRole: function(){			      
+            if($("#roleSeq").val() === ''){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '역할이 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            };
+            
+            let menuSeqs = 
+              $.map($table_role_menu.bootstrapTable('getSelections'), function (row) {
+                return row.menuSeq; 
+              });
+            
+            if(menuSeqs.length === 0){
+              Swal.fire({
+                title: '필수 입력 항목',
+                text: '메뉴가 선택되지 않았습니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+			      }
+			      
+			      let chooseMenusRole = {};
+			      chooseMenusRole.roleSeq = $("#roleSeq").val();
+			      chooseMenusRole.menuSeqList = menuSeqs;
+			      
+			      $.ajax({
+              url: "[[@{/system/role_mgt/remove_menus.json}]]",
+              type: "DELETE",
+              async: true,
+              dataType : "json",
+              data : chooseMenusRole,
+              success: function(data, status){
+                if(status === 'success'){
+                  $table_role_menu.bootstrapTable('refresh');
+                  $table_tgt_menu.bootstrapTable('refresh');
+                  Swal.fire({
+                      title: '변경 완료',
+                      text: '[' + data + ']건을 변경하였습니다.',
+                      icon: 'info',
+                      showConfirmButton: false,
+                      timer: 1500
+                  });
+                }else{
+                  Swal.fire({
+                    title: 'Error!',
+                    text: '처리 중 문제가 발생했습니다.',
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                }
+              }
+            });
           }
         },
         grid: { // 그리드 관련
@@ -295,12 +689,12 @@
                 return data;
               },
               queryParams: function(params){
-				        $('#table_role_user th').addClass('table-primary')
-				        
+                        $('#table_role_user th').addClass('table-primary')
+
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
                 }
-                
+
                 return params;
               }
             });
@@ -320,12 +714,12 @@
                 return data;
               },
               queryParams: function(params){
-				        $('#table_tgt_user th').addClass('table-primary')
-				        
+                        $('#table_tgt_user th').addClass('table-primary')
+
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
                 }
-                
+
                 return params;
               }
             });
@@ -344,12 +738,12 @@
                 return data;
               },
               queryParams: function(params){
-				        $('#table_role_menu th').addClass('table-primary')
-				        
+                        $('#table_role_menu th').addClass('table-primary')
+
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
                 }
-                
+
                 return params;
               }
             });
@@ -368,12 +762,12 @@
                 return data;
               },
               queryParams: function(params){
-				        $('#table_tgt_menu th').addClass('table-primary')
-				        
+                        $('#table_tgt_menu th').addClass('table-primary')
+
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
                 }
-                
+
                 return params;
               }
             });

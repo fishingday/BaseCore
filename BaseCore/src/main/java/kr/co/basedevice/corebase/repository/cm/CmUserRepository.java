@@ -34,7 +34,7 @@ public interface CmUserRepository extends JpaRepository<CmUser, Long>, CmUserRep
 	 * @param roleSeq
 	 * @return
 	 */
-	@Query("select m from CmUser m inner join CmUserRoleMap n on (m.userSeq = n.userSeq) where m.delYn = 'N' and n.delYn = 'N' and n.roleSeq != ?1 order by m.userSeq asc")
+	@Query("select m from CmUser m where m.delYn = 'N' and m.userSeq NOT IN (select n.userSeq from CmUserRoleMap n where n.delYn = 'N' and n.roleSeq = ?1) order by m.userSeq asc")
 	List<CmUser> findByExcludeRoleSeq(Long roleSeq);
 
 }

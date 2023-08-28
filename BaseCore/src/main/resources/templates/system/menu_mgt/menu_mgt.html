@@ -223,7 +223,7 @@
 				              }
 				            });
 								  }
-								})
+								});
 						  }else{
 							  Swal.fire({
 	                title: '삭제 불가',
@@ -235,7 +235,7 @@
 						  }
 			      },
 			      saveMenu: function(){
-					     if($("#menuNm").val() === ''){
+					    if($("#menuNm").val() === ''){
 		              Swal.fire({
 		                title: '필수 입력 항목',
 		                text: '메뉴명은 필수 입력 항목입니다.',
@@ -243,9 +243,9 @@
 		                confirmButtonText: '닫기'
 		              });
 		              return;
-						   }
+						  }
 						   
-						   if($("#prntOrd").val() === ''){
+						  if($("#prntOrd").val() === ''){
 		              Swal.fire({
 		                title: '필수 입력 항목',
 		                text: '출력 순서는 필수 입력 항목입니다.',
@@ -253,27 +253,27 @@
 		                confirmButtonText: '닫기'
 		              });
 		              return;
-						   }
+						  }
 						   
-						   var saveMenuInfo = {}
-						   saveMenuInfo.menuSeq   = $("#menuSeq").val();
-						   saveMenuInfo.upMenuSeq = $("#upMenuSeq").val();
-						   saveMenuInfo.menuNm    = $("#menuNm").val();
-						   saveMenuInfo.menuPath  = $("#menuPath").val();
-						   saveMenuInfo.prntOrd   = Number($("#prntOrd").val());
-						   saveMenuInfo.menuDesc  = $("#menuDesc").val();
-						   saveMenuInfo.iConInfo  = $("#iConInfo").val();
-							 saveMenuInfo.cmScrenYn = $("#cmScrenYn").is(':checked') ? "Y" : "N";
-							 saveMenuInfo.prntYn = $("#prntYn").is(':checked') ? "Y" : "N";
+						  var saveMenuInfo = {}
+						  saveMenuInfo.menuSeq   = $("#menuSeq").val();
+						  saveMenuInfo.upMenuSeq = $("#upMenuSeq").val();
+						  saveMenuInfo.menuNm    = $("#menuNm").val();
+						  saveMenuInfo.menuPath  = $("#menuPath").val();
+						  saveMenuInfo.prntOrd   = Number($("#prntOrd").val());
+						  saveMenuInfo.menuDesc  = $("#menuDesc").val();
+						  saveMenuInfo.iConInfo  = $("#iConInfo").val();
+							saveMenuInfo.cmScrenYn = $("#cmScrenYn").is(':checked') ? "Y" : "N";
+							saveMenuInfo.prntYn = $("#prntYn").is(':checked') ? "Y" : "N";
 							 
-						   saveMenuInfo.roleSeqList = []; 
-               $('#popupUserInfo input:checkbox[name="roleSeqList"]').each(function() {
+						  saveMenuInfo.roleSeqList = []; 
+              $('#popupUserInfo input:checkbox[name="roleSeqList"]').each(function() {
                 if(this.checked){
                   userInfo.roleSeqList.push(this.value);
                 }
               });
             
-            $.ajax({
+              $.ajax({
 	              url: "[[@{/system/menu_mgt/save_menu.json}]]", 
 	              type: "PUT",
 	              async: true,
@@ -296,14 +296,13 @@
 	                }else{
 	                  Swal.fire({
 	                    title: 'Error!',
-	                    text: '삭제 중 문제가 발생했습니다.',
+	                    text: '저장 중 문제가 발생했습니다.',
 	                    icon: 'error',
 	                    confirmButtonText: '닫기'
 	                  });
 	                }
 	              }
 	            });
-            
 				    }
           },
           grid: { // 그리드 관련

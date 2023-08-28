@@ -161,13 +161,16 @@ public class RoleService {
 				CmUserRoleMapId cmUserRoleMapId = new CmUserRoleMapId();
 				cmUserRoleMapId.setUserSeq(userSeq);
 				cmUserRoleMapId.setRoleSeq(chooseUsers.getRoleSeq());
-				CmUserRoleMap cmUserRoleMap = cmUserRoleMapRepository.getById(cmUserRoleMapId);
+				Optional<CmUserRoleMap> otpCmUserRoleMap = cmUserRoleMapRepository.findById(cmUserRoleMapId);
+				CmUserRoleMap cmUserRoleMap = null;
 				
-				if(cmUserRoleMap == null) {
+				if(otpCmUserRoleMap.isEmpty()) {
 					cmUserRoleMap = new CmUserRoleMap();
 					cmUserRoleMap.setUserSeq(userSeq);
 					cmUserRoleMap.setRoleSeq(chooseUsers.getRoleSeq());
 					cmUserRoleMap.setPrntOrd(9); // 정확한 순서는 사용자가 직접... 여기서는 부여만!
+				}else {
+					cmUserRoleMap = otpCmUserRoleMap.get();
 				}
 				cmUserRoleMap.setDelYn(Yn.N);
 				
@@ -194,11 +197,12 @@ public class RoleService {
 				CmUserRoleMapId cmUserRoleMapId = new CmUserRoleMapId();
 				cmUserRoleMapId.setUserSeq(userSeq);
 				cmUserRoleMapId.setRoleSeq(chooseUsers.getRoleSeq());
-				CmUserRoleMap cmUserRoleMap = cmUserRoleMapRepository.getById(cmUserRoleMapId);
-				
-				if(cmUserRoleMap == null) {
+				Optional<CmUserRoleMap> otpCmUserRoleMap = cmUserRoleMapRepository.findById(cmUserRoleMapId);
+						
+				if(otpCmUserRoleMap.isEmpty()) {
 					continue;
 				}
+				CmUserRoleMap cmUserRoleMap = otpCmUserRoleMap.get();
 				cmUserRoleMap.setDelYn(Yn.Y);
 				
 				cmUserRoleMapRepository.save(cmUserRoleMap);				
@@ -225,12 +229,15 @@ public class RoleService {
 				CmRoleMenuMapId cmRoleMenuMapId = new CmRoleMenuMapId();
 				cmRoleMenuMapId.setRoleSeq(chooseMenus.getRoleSeq());
 				cmRoleMenuMapId.setMenuSeq(menuSeq);
-				CmRoleMenuMap cmRoleMenuMap = cmRoleMenuMapRepository.getById(cmRoleMenuMapId);
+				Optional<CmRoleMenuMap> optCmRoleMenuMap = cmRoleMenuMapRepository.findById(cmRoleMenuMapId);
 				
-				if(cmRoleMenuMap == null) {
+				CmRoleMenuMap cmRoleMenuMap = null;
+				if(optCmRoleMenuMap.isEmpty()) {
 					cmRoleMenuMap = new CmRoleMenuMap();
 					cmRoleMenuMap.setRoleSeq(chooseMenus.getRoleSeq());
 					cmRoleMenuMap.setMenuSeq(menuSeq);
+				}else {
+					cmRoleMenuMap = optCmRoleMenuMap.get();
 				}
 				cmRoleMenuMap.setDelYn(Yn.N);
 				
@@ -257,11 +264,12 @@ public class RoleService {
 				CmRoleMenuMapId cmRoleMenuMapId = new CmRoleMenuMapId();
 				cmRoleMenuMapId.setRoleSeq(chooseMenus.getRoleSeq());
 				cmRoleMenuMapId.setMenuSeq(menuSeq);
-				CmRoleMenuMap cmRoleMenuMap = cmRoleMenuMapRepository.getById(cmRoleMenuMapId);
-				
-				if(cmRoleMenuMap == null) {
+				Optional<CmRoleMenuMap> optCmRoleMenuMap = cmRoleMenuMapRepository.findById(cmRoleMenuMapId);
+								
+				if(optCmRoleMenuMap.isEmpty()) {
 					continue;
 				}
+				CmRoleMenuMap cmRoleMenuMap = optCmRoleMenuMap.get();
 				cmRoleMenuMap.setDelYn(Yn.Y);
 				
 				cmRoleMenuMapRepository.save(cmRoleMenuMap);				

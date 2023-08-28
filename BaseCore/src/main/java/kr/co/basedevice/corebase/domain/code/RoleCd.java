@@ -5,5 +5,6 @@ public enum RoleCd {
 	ROLE_MANAGER,
 	ROLE_USER,
 	ROLE_BENEFIT,
-	ROLE_PAYER;
+	ROLE_PAYER,
+	ROLE_TEST;
 }

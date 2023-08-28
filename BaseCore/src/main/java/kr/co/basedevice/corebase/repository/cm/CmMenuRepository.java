@@ -43,7 +43,7 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	 * @param roleSeq
 	 * @return
 	 */
-	@Query("select m from CmMenu m inner join CmRoleMenuMap n on (m.menuSeq = n.menuSeq) where m.delYn = 'N' and n.delYn = 'N' and length(m.menuPath) > 0 and n.roleSeq = ?1  order by m.menuSeq asc")
+	@Query("select m from CmMenu m inner join CmRoleMenuMap n on (m.menuSeq = n.menuSeq) where m.delYn = 'N' and m.cmScrenYn = 'N' and n.delYn = 'N' and length(m.menuPath) > 0 and n.roleSeq = ?1  order by m.menuSeq asc")
 	List<CmMenu> findByRoleSeq(Long roleSeq);
 
 	/**
@@ -52,7 +52,7 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	 * @param roleSeq
 	 * @return
 	 */
-	@Query("select m from CmMenu m inner join CmRoleMenuMap n on (m.menuSeq = n.menuSeq) where m.delYn = 'N' and n.delYn = 'N' and length(m.menuPath) > 0 and n.roleSeq != ?1  order by m.menuSeq asc")
+	@Query("select m from CmMenu m where m.delYn = 'N' and length(m.menuPath) > 0 and m.cmScrenYn = 'N' and m.menuSeq not in (select n.menuSeq from CmRoleMenuMap n where n.delYn = 'N' and n.roleSeq = ?1 ) order by m.menuSeq asc")
 	List<CmMenu> findByExcludeRoleSeq(Long roleSeq);
 
 }
