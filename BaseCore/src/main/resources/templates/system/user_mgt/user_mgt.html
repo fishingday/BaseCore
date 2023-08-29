@@ -262,35 +262,54 @@
                 $('#popupChgUserRole .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);  
             });
             
-            fnObj.page.setComponentData().then((res) =>{
+            fnObj.action.initRoleData();
+            fnObj.action.initCodeData().then((res) =>{
               fnObj.grid.init();
             });
-          },
-          setComponentData: async function(){ // 조회 조건의 역할 데이터를 초기화 한다.            
-            await  $.get("[[@{/common/role_list.json}]]", {},
-                function(data, status) {
-                if(status === 'success'){
-                  for(var i = 0; i < data.length; i++ ){
-                    $("#search_roleSeq").append("<option value='" + data[i].roleSeq + "'>" + data[i].roleNm + "</option>");
-                    $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">' 
-                    + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
-                  }
-                }
-                }
-            );
-            
-            await $.get("[[@{/common/code_dtl_list.json}]]", {grpCd:'USER_STAT_CD'},
-              function(data, status) {
-                if(status === 'success'){
-                  for(var i = 0; i < data.length; i++ ){
-                    $("#userStatCd").append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
-                  }
-                }
-              }
-            );
           }
         },
         action: { // 동작에 관련된 행위를 한다.
+          initRoleData: function(){
+            return $.ajax({
+              url: "[[@{/common/role_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json"
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $("#search_roleSeq").append("<option value='" + data[i].roleSeq + "'>" + data[i].roleNm + "</option>");
+                $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">' 
+                + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.mgessage,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+		      },
+		      initCodeData: function(){
+            return $.ajax({
+              url: "[[@{/common/code_dtl_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json",
+              data : {grpCd:'USER_STAT_CD'}
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $("#userStatCd").append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.mgessage,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+			    },
           setUserInfo: function(userInfo){
             fnObj.action.initUserInfo();
             
@@ -405,27 +424,23 @@
               return;
             }
             
-            
             $.ajax({
               url: "[[@{/system/user_mgt/chg_user_info.json}]]", 
               type: "PUT",
               async: true,
               dataType : "json",
-              data : userInfo, 
-              success: function(data, status){
-                if(status === 'success'){
-                  $("#popupUserInfo").modal("hide");
-                  var pageIdx = $("li.page-item.active > .page-link").text();
-                  $table.bootstrapTable('selectPage', Number(pageIdx));
-                }else{
-                  Swal.fire({
-                    title: 'Error!',
-                    text: '저장 중 문제가 발생했습니다.',
-                    icon: 'error',
-                    confirmButtonText: '닫기'
-                  });
-                }
-              }
+              data : userInfo
+            }).done(function(data, textStatus, xhr){
+				      $("#popupUserInfo").modal("hide");
+              var pageIdx = $("li.page-item.active > .page-link").text();
+              $table.bootstrapTable('selectPage', Number(pageIdx));
+			      }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.mgessage,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
             });
           },
           chgUserPwd : function(){ // 사용자 패스워드 변경
@@ -469,30 +484,26 @@
               type: "PUT",
               async: true,
               dataType : "json",
-              data : saveUserPwd, 
-              success: function(data, status){
-                if(status === 'success'){
-                  $("#popupChgUserPwd").modal("hide");
-                  Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: '변경 되었습니다.',
-                    showConfirmButton: false,
-                    timer: 1500
-                  });
-                }else{
-                  Swal.fire({
-                    title: 'Error!',
-                    text: '패스워드 변경 중 문제가 발생했습니다.',
-                    icon: 'error',
-                    confirmButtonText: '닫기'
-                  });
-                }
-              }
+              data : saveUserPwd
+            }).done(function(data, textStatus, xhr){
+              $("#popupChgUserPwd").modal("hide");
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: '변경 되었습니다.',
+                showConfirmButton: false,
+                timer: 1500
+              });
+			      }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.mgessage,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
             });
           },
-          chgUserRole: function(){
-            
+          chgUserRole: function(){            
             let saveUserRole = {};            
             saveUserRole.userSeqList = fnObj.grid.getIdSelections();                        
             if(saveUserRole.userSeqList === 0){
@@ -511,8 +522,7 @@
                 saveUserRole.roleSeqList.push(this.value);
               }
             });
-            
-            
+                        
             if(saveUserRole.roleSeqList.length === 0){
               Swal.fire({
                 title: 'Error!',
@@ -528,29 +538,26 @@
               type: "PUT",
               async: true,
               dataType : "json",
-              data : saveUserRole, 
-              success: function(data, status){
-                if(status === 'success'){
-                  $("#popupChgUserRole").modal("hide");
-                  var pageIdx = $("li.page-item.active > .page-link").text();
-                  $table.bootstrapTable('selectPage', Number(pageIdx));
-                  
-                  Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: '변경 되었습니다.',
-                    showConfirmButton: false,
-                    timer: 1500
-                  });
-                }else{
-                  Swal.fire({
-                    title: 'Error!',
-                    text: '역할 변경 중 문제가 발생했습니다.',
-                    icon: 'error',
-                    confirmButtonText: '닫기'
-                  });
-                }
-              }
+              data : saveUserRole
+            }).done(function(data, textStatus, xhr){
+              $("#popupChgUserRole").modal("hide");
+              var pageIdx = $("li.page-item.active > .page-link").text();
+              $table.bootstrapTable('selectPage', Number(pageIdx));
+              
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: '변경 되었습니다.',
+                showConfirmButton: false,
+                timer: 1500
+              });
+			      }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.mgessage,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
             });
           }
         },
@@ -676,29 +683,26 @@
                     type: "DELETE",
                     async: true,
                     dataType : "json",
-                    data : deleteUsers, 
-                    success: function(data, status){
-                      if(status === 'success'){
-                        var pageIdx = $("li.page-item.active > .page-link").text();
-                        $table.bootstrapTable('selectPage', Number(pageIdx));
-                        
-                        Swal.fire({
-                          title: '완료!',
-                          text: "삭제 되었습니다.",
-                          icon: 'success',                 
-                          confirmButtonText: '확인'                    
-                        });
-                      }else{
-                        Swal.fire({
-                          title: 'Error!',
-                          text: '삭제처리 중 문제가 발생했습니다.',
-                          icon: 'error',
-                          confirmButtonText: '닫기'
-                        });
-                      }
-                    }
-                  });
-                  };
+                    data : deleteUsers
+                  }).done(function(data, textStatus, xhr){
+					          var pageIdx = $("li.page-item.active > .page-link").text();
+                    $table.bootstrapTable('selectPage', Number(pageIdx));
+                    
+                    Swal.fire({
+                      title: '완료!',
+                      text: "삭제 되었습니다.",
+                      icon: 'success',                 
+                      confirmButtonText: '확인'                    
+                    });
+				          }).fail(function(xhr, textStatus, errorThrown) {
+			              Swal.fire({
+			                title: xhr.responseJSON.httpStatus,
+			                text: xhr.responseJSON.mgessage,
+			                icon: 'error',
+			                confirmButtonText: '닫기'
+			              });
+			            });
+                };
               });
             });
           },

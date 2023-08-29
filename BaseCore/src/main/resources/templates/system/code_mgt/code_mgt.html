@@ -25,7 +25,7 @@
         <div class="row">
           <div class="col-5">
             <div id="toolbar-grpcd">
-              <button id="btnAddGrpCd" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#popupGrpCd" >
+              <button id="btnAddGrpCd" class="btn btn-outline-info">
                 <i class="bi bi-file-earmark-plus"></i> 신규
               </button>
             </div>
@@ -42,10 +42,10 @@
             <div class="row" id="child-box">
               <ul class="nav nav-tabs">
                 <li class="nav-item">
-                  <a class="nav-link" id="tabCodeList">코드목록</a>
+                  <a class="nav-link" id="tabGrpCdInfo" >그룹코드정보</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" id="tabGrpCdInfo" >그룹코드정보</a>
+                  <a class="nav-link" id="tabCodeList">코드목록</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" id="tabCodeGen">Gen Code</a>
@@ -53,23 +53,8 @@
               </ul>
             </div>
             <div class="row border border-top-0 border-secondary-subtle" style="height: 558px;">
-              <div id="tabCodeListDiv">
-                <div id="toolbar-dtlcd">
-                  <button id="btnAddDtlCd" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#popupDtlCd" >
-                    <i class="bi bi-file-earmark-plus"></i> 신규
-                  </button>
-                </div>
-                <table
-                  id="table-dtlcd"
-                  data-toolbar="#toolbar-dtlcd"
-                  data-search="true"
-                  data-click-to-select="true"
-                  data-id-field="grpCd"
-                  th:data-url="@{/system/code_mgt/get_code_list.json}">
-                </table>
-              </div>
-              <div id="tabGrpCdInfoDiv">
-                <h4 class="mb-3 mt-5">그룹 코드 정보</h4>
+				      <div id="tabGrpCdInfoDiv">
+                <h4 id="grpCdTitle" class="mb-3 mt-5">그룹 코드 정보</h4>
                 <div class="mb-3 row">
                   <label for="grpCd" class="col-sm-4 col-form-label text-bg-light">그룹 코드</label>
                   <div class="col-sm-8">
@@ -97,6 +82,21 @@
                   </div>
                 </div>
               </div>
+              <div id="tabCodeListDiv">
+                <div id="toolbar-dtlcd">
+                  <button id="btnAddDtlCd" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#popupDtlCd" >
+                    <i class="bi bi-file-earmark-plus"></i> 신규
+                  </button>
+                </div>
+                <table
+                  id="table-dtlcd"
+                  data-toolbar="#toolbar-dtlcd"
+                  data-search="true"
+                  data-click-to-select="true"
+                  data-id-field="grpCd"
+                  th:data-url="@{/system/code_mgt/get_code_list.json}">
+                </table>
+              </div>              
               <div id="tabCodeGenDiv" class="codeGenDiv">
 
               </div>
@@ -104,47 +104,7 @@
           </div>
         </div>
         <!-- modal -->
-        <div class="modal-staging">
-          <!--/* 그룹코드 생성 */-->
-          <div class="modal fade" id="popupGrpCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel">그룹코드 생성</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3 row">
-                    <label for="pop_grpCd" class="col-sm-4 col-form-label">그룹코드</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="pop_grpCd">
-                    </div>
-                  </div>
-                  <div class="mb-3 row">
-                    <label for="pop_grpCdNm" class="col-sm-4 col-form-label">그룹코드명</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="pop_grpCdNm">
-                    </div>
-                  </div>
-                  <div class="mb-3 row">
-                    <label for="pop_grpCdDesc" class="col-sm-4 col-form-label">그룹코드 설명</label>
-                    <div class="col-sm-8">
-                      <textarea class="form-control" aria-label="With textarea" id="pop_grpCdDesc"></textarea>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer row">
-                  <div class="col-auto me-auto">
-                    <button type="button" class="btn btn-primary" id="btnPopSaveGrpCd">저장</button>
-                  </div>
-                    <div class="col-auto">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
+        <div class="modal-staging">          
           <!--/* 상세 코드 생성 */-->
           <div class="modal fade" id="popupDtlCd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -218,6 +178,7 @@
           pageStart:  function(){ // 페이지 초기 실행 스크립트
             fnObj.page.init();
             fnObj.grid.init_grpcd();
+            $("#btnAddGrpCd").click();
           },
           page: {
             init: function(){ // 버튼 바인딩 등
@@ -233,7 +194,7 @@
               });
 
               $("#btnSaveGrpCd").bind("click", function(){
-                fnObj.action.updateGrpCd();
+                fnObj.action.saveGrpCd();
               });
 
               $("#btnPopSaveGrpCd").bind("click", function(){
@@ -241,16 +202,11 @@
               });
               
               $("#btnAddGrpCd").bind("click", function(){
-                $("#pop_grpCd").val('');
-                $("#pop_grpCdNm").val('');
-                $("#pop_grpCdDesc").val('');
+				        fnObj.action.newGrpCd();
               });          
                     
               $("#btnAddDtlCd").bind("click", function(){
-				        $("#btnDeteleDtlCd").hide();
-                fnObj.action.clearDtlCd();
-                let grpCdInfo = $("#grpCdNm").val() + "(" + $("#grpCd").val() + ")";                
-                $("#pop_header_txt").text(grpCdInfo);
+				        fnObj.action.newDtlCd();
               });
               
               $("#btnSaveDtlCd").bind("click", function(){
@@ -260,51 +216,100 @@
 			        $("#btnDeteleDtlCd").bind("click", function(){
 				        fnObj.action.deleteDtlCd();
 			        });
-              
-              $("#tabCodeList").bind("click", function(){
-                $("#tabCodeList").addClass("active");
-                $("#tabCodeList").prop("aria-current", "page");
-                $("#tabCodeListDiv").show();
-
-                $("#tabGrpCdInfo").removeClass("active");
-                $("#tabGrpCdInfo").removeAttr("aria-current");
-                $("#tabGrpCdInfoDiv").hide();
-
-                $("#tabCodeGen").removeClass("active");
-                $("#tabCodeGen").removeAttr("aria-current");
-                $("#tabCodeGenDiv").hide();
-              });
 
               $("#tabGrpCdInfo").bind("click", function(){
-                $("#tabCodeList").removeClass("active");
-                $("#tabCodeList").removeAttr("aria-current");
-                $("#tabCodeListDiv").hide();
-
-                $("#tabGrpCdInfo").addClass("active");
-                $("#tabGrpCdInfo").prop("aria-current", "page");
-                $("#tabGrpCdInfoDiv").show();
-
-                $("#tabCodeGen").removeClass("active");
-                $("#tabCodeGen").removeAttr("aria-current");
-                $("#tabCodeGenDiv").hide();
+                fnObj.action.clickTabGrpCdInfo();
+              });
+              
+              $("#tabCodeList").bind("click", function(){
+                fnObj.action.clickTabCodeList();
               });
 
               $("#tabCodeGen").bind("click", function(){
-                $("#tabCodeList").removeClass("active");
-                $("#tabCodeList").removeAttr("aria-current");
-                $("#tabCodeListDiv").hide();
-
-                $("#tabGrpCdInfo").removeClass("active");
-                $("#tabGrpCdInfo").removeAttr("aria-current");
-                $("#tabGrpCdInfoDiv").hide();
-
-                $("#tabCodeGen").addClass("active");
-                $("#tabCodeGen").prop("aria-current", "page");
-                $("#tabCodeGenDiv").show();
+				        fnObj.action.cliskTabCodeGen();
               });
             }
           },
           action: { // 호출이나 화면 동작
+            newGrpCd: function(){
+			        $("#tabGrpCdInfo").click();
+			        $("#grpCdTitle").text('신규 그룹 코드');
+              $("#btnDeleteGrpCd").hide();
+              
+              $("#grpCd").val('');
+              $("#grpCdNm").val('');
+              $("#grpCdDesc").val('');		
+              
+              $("#grpCd").removeClass();
+              $("#grpCd").addClass("form-control");
+              $("#grpCd").attr("readonly", false);
+			      },
+			      newDtlCd: function(){
+				      $("#btnDeteleDtlCd").hide();
+              fnObj.action.clearDtlCd();
+              let grpCdInfo = $("#grpCdNm").val() + "(" + $("#grpCd").val() + ")";                
+              $("#pop_header_txt").text(grpCdInfo);
+			      },
+            clickTabGrpCdInfo: function(){
+				      $("#tabCodeList").removeClass("active");
+              $("#tabCodeList").removeAttr("aria-current");
+              $("#tabCodeListDiv").hide();
+
+              $("#tabGrpCdInfo").addClass("active");
+              $("#tabGrpCdInfo").prop("aria-current", "page");
+              $("#tabGrpCdInfoDiv").show();
+
+              $("#tabCodeGen").removeClass("active");
+              $("#tabCodeGen").removeAttr("aria-current");
+              $("#tabCodeGenDiv").hide();
+			      },
+            clickTabCodeList: function(){
+	            if($("#grpCd").val() === ''){
+	              Swal.fire({
+	                title: '그룹코드가 선택되지 않았습니다.',
+	                text: "그룹코드를 먼저 선택해 주세요.",
+	                icon: 'warning',
+	                showConfirmButton: false,
+	                timer: 1500
+	              });
+	              return;
+	            }
+              $("#tabCodeList").addClass("active");
+              $("#tabCodeList").prop("aria-current", "page");
+              $("#tabCodeListDiv").show();
+
+              $("#tabGrpCdInfo").removeClass("active");
+              $("#tabGrpCdInfo").removeAttr("aria-current");
+              $("#tabGrpCdInfoDiv").hide();
+
+              $("#tabCodeGen").removeClass("active");
+              $("#tabCodeGen").removeAttr("aria-current");
+              $("#tabCodeGenDiv").hide();
+			      },
+            cliskTabCodeGen: function(){
+	            if($("#grpCd").val() === ''){
+	              Swal.fire({
+	                title: '그룹코드가 선택되지 않았습니다.',
+	                text: "그룹코드를 먼저 선택해 주세요.",
+	                icon: 'warning',
+	                showConfirmButton: false,
+	                timer: 1500
+	              });
+	              return;
+	            }
+				
+              $("#tabCodeList").removeClass("active");
+              $("#tabCodeList").removeAttr("aria-current");
+              $("#tabCodeListDiv").hide();
+
+              $("#tabGrpCdInfo").removeClass("active");
+              $("#tabGrpCdInfo").removeAttr("aria-current");
+              $("#tabGrpCdInfoDiv").hide();
+
+              $("#tabCodeGen").addClass("active");
+              $("#tabCodeGen").prop("aria-current", "page");
+              $("#tabCodeGenDiv").show();
+			      },
             chooseGrpCd: function(grpInfo){
               $("#grpCd").val(grpInfo.grpCd);
               $("#grpCdNm").val(grpInfo.grpCdNm);
@@ -333,80 +338,27 @@
                     type: "DELETE",
                     async: true,
                     dataType : "json",
-                    data : deleteGrpCd,
-                    success: function(data, status){
-                      if(status === 'success'){
-                        fnObj.grid.init_grpcd();
-                        Swal.fire({
-                          title: '완료!',
-                          text: "삭제 되었습니다.",
-                          icon: 'success',
-                          confirmButtonText: '확인'
-                        });
-                      }else{
-                        Swal.fire({
-                          title: 'Error!',
-                          text: '삭제처리 중 문제가 발생했습니다.',
-                          icon: 'error',
-                          confirmButtonText: '닫기'
-                        });
-                      }
-                    }
-                  });
+                    data : deleteGrpCd
+                  }).done(function(data, textStatus, xhr){
+                    fnObj.grid.init_grpcd();
+                    Swal.fire({
+                      title: '완료!',
+                      text: "삭제 되었습니다.",
+                      icon: 'success',
+                      confirmButtonText: '확인'
+                    });
+                    $table_dtlcd.bootstrapTable('removeAll')
+                    fnObj.pageStart();
+				          }).fail(function(xhr, textStatus, errorThrown) {
+			              Swal.fire({
+			                title: xhr.responseJSON.httpStatus,
+			                text: xhr.responseJSON.mgessage,
+			                icon: 'error',
+			                confirmButtonText: '닫기'
+			              });
+			            });
                 };
               });
-            },
-            updateGrpCd: function(){
-              Swal.fire({
-                title: '저장 하시겠습니까?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: '저장',
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  let grpCdInfo = {};
-                  grpCdInfo.grpCd     = $("#grpCd").val();
-                  grpCdInfo.grpCdNm   = $("#grpCdNm").val();
-                  grpCdInfo.grpCdDesc = $("#grpCdDesc").val();
-
-                  $.ajax({
-                    url: "[[@{/system/code_mgt/save_grpcd.json}]]",
-                    type: "POST",
-                    async: true,
-                    dataType : "json",
-                    data : grpCdInfo,
-                    success: function(data, status){
-                      for(var i = 0; i < $("#table-grpcd input[type='radio']").length; i++){
-                        if($("#table-grpcd input[type='radio']")[i].checked){
-                          $table_grpcd.bootstrapTable('updateRow', {
-                            index: i,
-                            row: {
-                              grpCd: $("#grpCd").val(),
-                              grpCdNm: $("#grpCdNm").val(),
-                              grpCdDesc: $("#grpCdDesc").val()
-                            }
-                          })
-                          break;
-                        }
-                      };
-                      if(status === 'success'){
-                        Swal.fire(
-                          '저장',
-                          '저장되었습니다.',
-                          'success'
-                        );
-                      }else{
-                        Swal.fire({
-                          title: 'Error!',
-                          text: '저장 중 문제가 발생했습니다.',
-                          icon: 'error',
-                          confirmButtonText: '닫기'
-                        });
-                      };
-                    }
-                  });
-                }
-              }).then();
             },
             saveGrpCd: function(){
               if($("#pop_grpCd").val() === ''){
@@ -444,47 +396,42 @@
               }
 				
               Swal.fire({
-                title: '새로 만드시겠습니까?',
+                title: '저장 하시겠습니까?',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: '생성',
+                confirmButtonText: '저장',
               }).then((result) => {
-                  
                 if (result.isConfirmed) {
                   let grpCdInfo = {};
-                  grpCdInfo.grpCd     = $("#pop_grpCd").val();
-                  grpCdInfo.grpCdNm   = $("#pop_grpCdNm").val();
-                  grpCdInfo.grpCdDesc = $("#pop_grpCdDesc").val();
+                  grpCdInfo.grpCd     = $("#grpCd").val();
+                  grpCdInfo.grpCdNm   = $("#grpCdNm").val();
+                  grpCdInfo.grpCdDesc = $("#grpCdDesc").val();
 
                   $.ajax({
                     url: "[[@{/system/code_mgt/save_grpcd.json}]]",
                     type: "POST",
                     async: true,
                     dataType : "json",
-                    data : grpCdInfo,
-                    success: function(data, status){   
-                      if(status === 'success'){
-						            $("#popupGrpCd").modal("hide");
-                        fnObj.grid.init_grpcd();
-                        Swal.fire({
-                          title: '생성',
-                          text: '생성되었습니다.',
-                          icon: 'success',
-                          showConfirmButton: false,
-                          timer: 1500
-                        });
-                      }else{
-                        Swal.fire({
-                          title: 'Error!',
-                          text: '생성 중 문제가 발생했습니다.',
-                          icon: 'error',
-                          confirmButtonText: '닫기'
-                        });
-                      };
-                    }
-                  });
+                    data : grpCdInfo
+                  }).done(function(data, textStatus, xhr){
+                    Swal.fire({
+                      title: '저장',
+                      text:'저장되었습니다.',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });                    
+                    fnObj.pageStart();
+				          }).fail(function(xhr, textStatus, errorThrown) {
+			              Swal.fire({
+			                title: xhr.responseJSON.httpStatus,
+			                text: xhr.responseJSON.mgessage,
+			                icon: 'error',
+			                confirmButtonText: '닫기'
+			              });
+			            });
                 }
-              }).then();
+              });
             },
             clearDtlCd: function(){
               $("#pop_header_txt").text('');
@@ -555,28 +502,26 @@
                     type: "POST",
                     async: true,
                     dataType : "json",
-                    data : cmCdDtl,
-                    success: function(data, status){
-                      if(status === 'success'){
-                        Swal.fire({
-                          title: '저장',
-                          text: '저장되었습니다.',
-                          icon: 'success',
-                          showConfirmButton: false,
-                          timer: 1500
-                        });
-                        fnObj.grid.init_dtlcd();
-                      }else{
-                        Swal.fire({
-                          title: 'Error!',
-                          text: '저장 중 문제가 발생했습니다.',
-                          icon: 'error',
-                          confirmButtonText: '닫기'
-                        });
-                      };                      
-						          $("#popupDtlCd").modal("hide");
-                    }
-                  });
+                    data : cmCdDtl
+                  }).done(function(data, textStatus, xhr){
+					          Swal.fire({
+                      title: '저장',
+                      text: '저장되었습니다.',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+				          }).fail(function(xhr, textStatus, errorThrown) {
+			              Swal.fire({
+			                title: xhr.responseJSON.httpStatus,
+			                text: xhr.responseJSON.mgessage,
+			                icon: 'error',
+			                confirmButtonText: '닫기'
+			              });
+			            }).then(function(){
+							      fnObj.grid.init_dtlcd();
+							      $("#popupDtlCd").modal("hide");
+						      });
                 }
               }).then();				
 			      },
@@ -616,28 +561,25 @@
                     type: "DELETE",
                     async: true,
                     dataType : "json",
-                    data : deleteCd,
-                    success: function(data, status){
-                      if(status === 'success'){
-                        fnObj.grid.init_dtlcd();
-                        Swal.fire({
-                          title: '완료!',
-                          text: "삭제 되었습니다.",
-                          icon: 'success',
-                          showConfirmButton: false,
-                          timer: 1500
-                        });
-                      }else{
-                        Swal.fire({
-                          title: 'Error!',
-                          text: '삭제처리 중 문제가 발생했습니다.',
-                          icon: 'error',
-                          confirmButtonText: '닫기'
-                        });
-                      }
-                      $("#popupDtlCd").modal("hide");
-                    }
-                  });
+                    data : deleteCd
+                  }).done(function(data, textStatus, xhr){
+                    fnObj.grid.init_dtlcd();
+                    Swal.fire({
+                      title: '완료!',
+                      text: "삭제 되었습니다.",
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+                    $("#popupDtlCd").modal("hide");
+				          }).fail(function(xhr, textStatus, errorThrown) {
+			              Swal.fire({
+			                title: xhr.responseJSON.httpStatus,
+			                text: xhr.responseJSON.mgessage,
+			                icon: 'error',
+			                confirmButtonText: '닫기'
+			              });
+			            });
                 };
               });
 					  }
@@ -652,13 +594,6 @@
                   return {classes: 'table-primary'};
                 },
                 columns: [
-                  {field: 'radio',     radio: true, class: 'table-primary', formatter:function(value, row, index){
-                    if(index === 0){
-                      $("#tabCodeList").click();
-                      fnObj.action.chooseGrpCd(row);
-                      return {checked: true}
-                    }
-                  }},
                   {field: 'grpCd',     title: '그룹코드',    align: 'center', valign: 'middle', sortable: true},
                   {field: 'grpCdNm',   title: '그룸명',   align: 'center', valign: 'middle', sortable: true}
                 ],
@@ -667,8 +602,15 @@
                 }
               });
 
-              $table_grpcd.on('check.bs.table', function (e, row) {
-                fnObj.action.chooseGrpCd(row);
+              $table_grpcd.on('click-row.bs.table', function (row, rdata, field) {
+				        $("#table-grpcd tr").removeClass("table-secondary");
+                $(field[0]).addClass("table-secondary");                                
+                fnObj.action.chooseGrpCd(rdata);                
+                $("#grpCdTitle").text('그룹 코드 정보');
+                $("#grpCd").removeClass();
+                $("#grpCd").addClass("form-control-plaintext");
+                $("#grpCd").attr("readonly", true);
+                $("#btnDeleteGrpCd").show();
               });
             },
             init_dtlcd: function(){

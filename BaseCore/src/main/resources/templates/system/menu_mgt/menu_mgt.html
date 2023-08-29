@@ -133,29 +133,47 @@
             }
           },
           action: { // 호출이나 화면 동작
-            setComponentData: async function(){ // 조회 조건의 역할 데이터를 초기화 한다.
-              await  $.get("[[@{/common/role_list.json}]]", {},
-                function(data, status) {
-                if(status === 'success'){
-                  for(var i = 0; i < data.length; i++ ){
-                    $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">'
-                    + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
-                  }
+            setComponentData: function(){ // 조회 조건의 역할 데이터를 초기화 한다.
+              $.ajax({
+				        url: "[[@{/common/role_list.json}]]",
+                type: "GET",
+                async: true,
+                dataType : "json",
+			        }).done(function(data, textStatus, xhr){
+				        for(var i = 0; i < data.length; i++ ){
+                  $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">'
+                  + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
                 }
-              });
-              await fnObj.action.setParentMenu();
+			        }).fail(function(xhr, textStatus, errorThrown) {
+	              Swal.fire({
+	                title: xhr.responseJSON.httpStatus,
+	                text: xhr.responseJSON.mgessage,
+	                icon: 'error',
+	                confirmButtonText: '닫기'
+	              });						    
+					    }).then(function(data, textStatus, errorThrown) { 
+							   fnObj.action.setParentMenu();
+						  });
             },
             setParentMenu: function(){
-              $.get("[[@{/system/menu_mgt/parent_menu_list.json}]]",
-                function(data, status) {
-                  if(status === 'success'){
-                    $("#upMenuSeq").append("<option value=''>최상위</option>");
-                    for(var i = 0; i < data.length; i++ ){
-                      $("#upMenuSeq").append("<option value='" + data[i].menuSeq + "'>" + data[i].fullMenuNm + "</option>");
-                    }
-                  }
+              $.ajax({
+				        url: "[[@{/system/menu_mgt/parent_menu_list.json}]]",
+                type: "GET",
+                async: true,
+                dataType : "json",
+			        }).done(function(data, textStatus, xhr){
+				        $("#upMenuSeq").append("<option value=''>최상위</option>");
+                for(var i = 0; i < data.length; i++ ){
+                  $("#upMenuSeq").append("<option value='" + data[i].menuSeq + "'>" + data[i].fullMenuNm + "</option>");
                 }
-              );
+			        }).fail(function(xhr, textStatus, errorThrown) {
+	              Swal.fire({
+	                title: xhr.responseJSON.httpStatus,
+	                text: xhr.responseJSON.mgessage,
+	                icon: 'error',
+	                confirmButtonText: '닫기'
+	              });						    
+					    });
 			      },            
             initForm: function(){
               $("#form-title").text("");
@@ -200,28 +218,25 @@
 				              type: "DELETE",
 				              async: true,
 				              dataType : "json",
-				              data : {menuSeq : currMenuSeq}, 
-				              success: function(data, status){
-				                if(status === 'success' && data === true){
-									        $table.bootstrapTable('refresh');
-									        $("#btnNewMenu").click();   
-				                  Swal.fire({
-					                  title: '삭제 완료',
-					                  text: '삭제 처리가 완료 되었습니다.',
-					                  icon: 'info',
-					                  showConfirmButton: false,
-					                  timer: 1500
-					                });
-				                }else{
-				                  Swal.fire({
-				                    title: 'Error!',
-				                    text: '삭제 중 문제가 발생했습니다.',
-				                    icon: 'error',
-				                    confirmButtonText: '닫기'
-				                  });
-				                }
-				              }
-				            });
+				              data : {menuSeq : currMenuSeq}
+				            }).done(function(data, textStatus, xhr){
+								      $table.bootstrapTable('refresh');
+							        $("#btnNewMenu").click();   
+		                  Swal.fire({
+			                  title: '삭제 완료',
+			                  text: '삭제 처리가 완료 되었습니다.',
+			                  icon: 'info',
+			                  showConfirmButton: false,
+			                  timer: 1500
+			                });
+							      }).fail(function(xhr, textStatus, errorThrown) {
+				              Swal.fire({
+				                title: xhr.responseJSON.httpStatus,
+				                text: xhr.responseJSON.mgessage,
+				                icon: 'error',
+				                confirmButtonText: '닫기'
+				              });								
+							      });
 								  }
 								});
 						  }else{
@@ -267,9 +282,9 @@
 							saveMenuInfo.prntYn = $("#prntYn").is(':checked') ? "Y" : "N";
 							 
 						  saveMenuInfo.roleSeqList = []; 
-              $('#popupUserInfo input:checkbox[name="roleSeqList"]').each(function() {
+              $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').each(function() {
                 if(this.checked){
-                  userInfo.roleSeqList.push(this.value);
+                  saveMenuInfo.roleSeqList.push(this.value);
                 }
               });
             
@@ -278,31 +293,27 @@
 	              type: "PUT",
 	              async: true,
 	              dataType : "json",
-	              data : saveMenuInfo, 
-	              success: function(data, status){
-	                if(status === 'success' && data === true){
-						        $table.bootstrapTable('refresh');
-                    
-                    $("#upMenuSeq option").remove();
-                    fnObj.action.setParentMenu();
-                    
-	                  Swal.fire({
-		                  title: '저장 완료',
-		                  text: '저장 되었습니다.',
-		                  icon: 'info',
-		                  showConfirmButton: false,
-		                  timer: 1500
-		                });
-	                }else{
-	                  Swal.fire({
-	                    title: 'Error!',
-	                    text: '저장 중 문제가 발생했습니다.',
-	                    icon: 'error',
-	                    confirmButtonText: '닫기'
-	                  });
-	                }
-	              }
-	            });
+	              data : saveMenuInfo
+	            }).done(function(data, textStatus, xhr){
+				        $table.bootstrapTable('refresh');
+                $("#upMenuSeq option").remove();
+                fnObj.action.setParentMenu();
+                
+                Swal.fire({
+                  title: '저장 완료',
+                  text: '저장 되었습니다.',
+                  icon: 'info',
+                  showConfirmButton: false,
+                  timer: 1500
+                });					
+				      }).fail(function(xhr, textStatus, errorThrown) {
+	              Swal.fire({
+	                title: xhr.responseJSON.httpStatus,
+	                text: xhr.responseJSON.mgessage,
+	                icon: 'error',
+	                confirmButtonText: '닫기'
+	              });						  
+					    });
 				    }
           },
           grid: { // 그리드 관련
