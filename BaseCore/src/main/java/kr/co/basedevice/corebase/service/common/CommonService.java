@@ -5,16 +5,17 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
-import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmCdDtlRepository;
 import kr.co.basedevice.corebase.repository.cm.CmCdGrpRepository;
-import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.search.common.SearchGrpCd;
 import kr.co.basedevice.corebase.search.system.SearchDtlCd;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +25,27 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CommonService {
 
-	private final CmRoleRepository cmRoleRepository;
 	private final CmCdGrpRepository cmCdGrpRepository;
 	private final CmCdDtlRepository cmCdDtlRepository;
 	
 	/**
-	 * 역할 목록 조회
+	 * 코드 상세 목록 조회
+	 * - 그룹코드 조회
 	 * 
+	 * @param grpCd
 	 * @return
 	 */
-	public List<CmRole> getCmRoleList(){
-		List<CmRole> cmRoleLsit =  cmRoleRepository.findByDelYn(Yn.N);
+	@Cacheable(value = "CODELIST", key="#grpCd")
+	public List<CmCdDtl> findCmCdDtlByGrpCd(String grpCd){
+		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findByGrpCd(grpCd);
 		
-		return cmRoleLsit;
+		return cmCdDtlList;
 	}
-
+	
 	/**
 	 * 코드 상세 목록 조회
 	 * 
-	 * @param grpCd
+	 * @param searchDtlCd
 	 * @return
 	 */
 	public List<CmCdDtl> getCmCdDtlList(SearchDtlCd searchDtlCd){
@@ -50,7 +53,7 @@ public class CommonService {
 		
 		return cmCdDtlList;
 	}
-
+	
 	/**
 	 * 코드 그룹 목록
 	 * 
@@ -121,6 +124,7 @@ public class CommonService {
 	 * @param cd
 	 * @return
 	 */
+	@Cacheable(value = "CODELIST", key="#cmCdDtlId.grpCd + '-' + #cmCdDtlId.cd")
 	public CmCdDtl findCmCdDtlById(CmCdDtlId cmCdDtlId) {				
 		Optional<CmCdDtl> cmCdDtl = cmCdDtlRepository.findById(cmCdDtlId);
 		
@@ -138,6 +142,7 @@ public class CommonService {
 	 * @param updatorSeq
 	 * @return
 	 */
+	@CachePut(value="CODELIST", key="#cmCdDtl.grpCd  + '-' +  #cmCdDtl.cd")
 	public CmCdDtl saveCmCdDtl(CmCdDtl cmCdDtl) {
 		cmCdDtl.setDelYn(Yn.N);
 		
@@ -152,6 +157,7 @@ public class CommonService {
 	 * @param updatorSeq
 	 * @return
 	 */
+	@CacheEvict(value = "CODELIST", key = "#cmCdDtlId.grpCd  + '-' +  #cmCdDtlId.cd")
 	public boolean removeCmCdDtl(CmCdDtlId cmCdDtlId) {			
 		CmCdDtl cmCdDtl = cmCdDtlRepository.getById(cmCdDtlId);	
 		

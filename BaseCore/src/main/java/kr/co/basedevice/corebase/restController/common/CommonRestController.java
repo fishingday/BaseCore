@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
-import kr.co.basedevice.corebase.search.system.SearchDtlCd;
 import kr.co.basedevice.corebase.service.common.CommonService;
+import kr.co.basedevice.corebase.service.common.RoleService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class CommonRestController {
 	
 	final private CommonService commonService;
+	final private RoleService roleService;
 	
 	/**
 	 * 역할 목록 조회
@@ -27,15 +28,15 @@ public class CommonRestController {
 	 */
 	@GetMapping("/role_list.json")
 	public ResponseEntity<List<CmRole>> getRoleList(){
-		List<CmRole> cmRoleList = commonService.getCmRoleList();
+		List<CmRole> cmRoleList = roleService.findByRoleList();
 		
 		return ResponseEntity.ok(cmRoleList);
 	}
 	
 	
 	@GetMapping("/code_dtl_list.json")
-	public ResponseEntity<List<CmCdDtl>> getCodeDtlList(SearchDtlCd searchDtlCd){
-		List<CmCdDtl> cmCdDtlList = commonService.getCmCdDtlList(searchDtlCd);
+	public ResponseEntity<List<CmCdDtl>> getCodeDtlList(String grpCd){
+		List<CmCdDtl> cmCdDtlList = commonService.findCmCdDtlByGrpCd(grpCd);
 		
 		return ResponseEntity.ok(cmCdDtlList);
 	}

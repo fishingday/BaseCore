@@ -87,9 +87,9 @@ public class CodeMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/get_code_list.json")
-	public ResponseEntity<List<CmCdDtl>> findCmCdDtlByGrpCd(SearchDtlCd searchDtlCd){
+	public ResponseEntity<List<CmCdDtl>> findCmCdDtlByGrpCd(String grpCd){
 		
-		List<CmCdDtl> cmCdDtlList = commonService.getCmCdDtlList(searchDtlCd);
+		List<CmCdDtl> cmCdDtlList = commonService.findCmCdDtlByGrpCd(grpCd);
 		
 		return ResponseEntity.ok(cmCdDtlList);
 	}

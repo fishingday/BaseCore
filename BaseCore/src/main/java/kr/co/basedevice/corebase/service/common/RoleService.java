@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
@@ -41,6 +44,7 @@ public class RoleService {
 	 * @param roleSeq
 	 * @return
 	 */
+	@Cacheable(value = "ROLE", key = "#roleSeq")
 	public CmRole findById(Long roleSeq){
 		Optional<CmRole> cmRole = cmRoleRepository.findById(roleSeq);
 		return cmRole.get();
@@ -54,6 +58,7 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
+	@CachePut(value = "ROLE", key = "#cmRole.roleSeq")
 	public CmRole saveCmRole(CmRole cmRole){
 		
 		cmRole.setDelYn(Yn.N);
@@ -70,6 +75,7 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
+	@CacheEvict(value = "ROLE", key = "#roleSeq")
 	public CmRole removeCmRole(Long roleSeq){
 		
 		// 역할 별 메뉴 맵핑 삭제
@@ -287,6 +293,7 @@ public class RoleService {
 	 * @param searchRoleDto
 	 * @return
 	 */
+	@Cacheable("ROLE")
 	public List<CmRole> findByRoleList(){
 		return cmRoleRepository.findByDelYn(Yn.N);
 	}
