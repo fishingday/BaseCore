@@ -226,8 +226,6 @@
     <!-- modal -->  
     </div>
     <script language="javascript" type="text/javascript" layout:fragment="page_script">
-      var $table = $('#table');
-      var $remove = $('#remove');
       var selections = [];
       
       var fnObj = {
@@ -243,7 +241,7 @@
 			      };
           
             $("#btnSearch").bind("click", function(){ // 조회 
-              $table.bootstrapTable('selectPage', 1);
+              $('#table').bootstrapTable('selectPage', 1);
             });
             
             $("#btnSaveUserInfo").bind("click", function(){ // 조회 
@@ -433,7 +431,7 @@
             }).done(function(data, textStatus, xhr){
 				      $("#popupUserInfo").modal("hide");
               var pageIdx = $("li.page-item.active > .page-link").text();
-              $table.bootstrapTable('selectPage', Number(pageIdx));
+              $('#table').bootstrapTable('selectPage', Number(pageIdx));
 			      }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
                 title: xhr.responseJSON.httpStatus,
@@ -542,7 +540,7 @@
             }).done(function(data, textStatus, xhr){
               $("#popupChgUserRole").modal("hide");
               var pageIdx = $("li.page-item.active > .page-link").text();
-              $table.bootstrapTable('selectPage', Number(pageIdx));
+              $('#table').bootstrapTable('selectPage', Number(pageIdx));
               
               Swal.fire({
                 position: 'top-end',
@@ -563,7 +561,7 @@
         },
         grid: { // 그리드와 관련된 ... 
           init: function(){
-            $table.bootstrapTable('destroy').bootstrapTable(
+            $('#table').bootstrapTable('destroy').bootstrapTable(
               {
                 locale: 'ko-KR',
                 classes: 'table table-bordered table-striped table-hover',
@@ -650,18 +648,18 @@
                   return params;
                 }
             });
-            $table.on('check.bs.table uncheck.bs.table ' + 'check-all.bs.table uncheck-all.bs.table',
+            $('#table').on('check.bs.table uncheck.bs.table ' + 'check-all.bs.table uncheck-all.bs.table',
               function () {
-                $(".chg-btn").prop('disabled', !$table.bootstrapTable('getSelections').length);
+                $(".chg-btn").prop('disabled', !$('#table').bootstrapTable('getSelections').length);
                 // save your data, here just save the current page
                 selections = fnObj.grid.getIdSelections();
                 // push or splice the selections if you want to save all data selections
               }
             )
-            $table.on('all.bs.table', function (e, name, args) {
+            $('#table').on('all.bs.table', function (e, name, args) {
               //console.log(name, args)
             })
-            $remove.click(function () {
+            $('#remove').click(function () {
               Swal.fire({
                 title: '삭제 하시겠습니까?',
                 text: "되돌릴 수 없습니다.",
@@ -686,7 +684,7 @@
                     data : deleteUsers
                   }).done(function(data, textStatus, xhr){
 					          var pageIdx = $("li.page-item.active > .page-link").text();
-                    $table.bootstrapTable('selectPage', Number(pageIdx));
+                    $('#table').bootstrapTable('selectPage', Number(pageIdx));
                     
                     Swal.fire({
                       title: '완료!',
@@ -707,7 +705,7 @@
             });
           },
           getIdSelections : function() {
-            return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return $.map($('#table').bootstrapTable('getSelections'), function (row) {
               return row.userSeq
             });
           }

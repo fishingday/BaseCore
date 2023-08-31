@@ -86,8 +86,6 @@
         </div>
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
-        var $table = $('#table');
-
         var fnObj = {
           pageStart:  function(){ // 페이지 초기 실행 스크립트
             fnObj.page.init();
@@ -195,7 +193,7 @@
             },
             removeMenu: function(){
 				      let currMenuSeq = $("#menuSeq").val();
-				      let rdata = $table.bootstrapTable('getData');
+				      let rdata = $('#table').bootstrapTable('getData');
 				      
 				      let isRemove = false;
 				      for(var i =0; i < rdata.length; i++){
@@ -220,7 +218,7 @@
 				              dataType : "json",
 				              data : {menuSeq : currMenuSeq}
 				            }).done(function(data, textStatus, xhr){
-								      $table.bootstrapTable('refresh');
+								      $('#table').bootstrapTable('refresh');
 							        $("#btnNewMenu").click();   
 		                  Swal.fire({
 			                  title: '삭제 완료',
@@ -295,7 +293,7 @@
 	              dataType : "json",
 	              data : saveMenuInfo
 	            }).done(function(data, textStatus, xhr){
-				        $table.bootstrapTable('refresh');
+				        $('#table').bootstrapTable('refresh');
                 $("#upMenuSeq option").remove();
                 fnObj.action.setParentMenu();
                 
@@ -318,7 +316,7 @@
           },
           grid: { // 그리드 관련
             init: function() {
-              $table.bootstrapTable({
+              $('#table').bootstrapTable({
                 height: 600,
                 locale: 'ko-KR',
                 idField: 'menuSeq',
@@ -343,18 +341,18 @@
                   return data;
                 },
                 onPostBody: function() {
-                  var columns = $table.bootstrapTable('getOptions').columns;
+                  var columns = $('#table').bootstrapTable('getOptions').columns;
                   if (columns && columns[0][0].visible) {
-                    $table.treegrid({
+                    $('#table').treegrid({
                       treeColumn: 0,
                       onChange: function() {
-                        $table.bootstrapTable('resetView')
+                        $('#table').bootstrapTable('resetView')
                       }
                     })
                   }
                 }
               });
-              $table.on('click-row.bs.table', function (row, rdata, field) {
+              $('#table').on('click-row.bs.table', function (row, rdata, field) {
                 $("#table tr").removeClass("table-secondary");
                 $(field[0]).addClass("table-secondary");
 

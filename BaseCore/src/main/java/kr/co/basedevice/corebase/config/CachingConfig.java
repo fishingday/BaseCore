@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Configuration;
 public class CachingConfig {
 	
 	@Bean
-    public CacheManager cacheManager() {
+    CacheManager cacheManager() {
 		SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(
         	Arrays.asList(
-                new ConcurrentMapCache("CODELIST", false),
+                new ConcurrentMapCache("CODE", false),
                 new ConcurrentMapCache("MENU", false),
                 new ConcurrentMapCache("AUTH_MENU", false),
                 new ConcurrentMapCache("ROLE", false)

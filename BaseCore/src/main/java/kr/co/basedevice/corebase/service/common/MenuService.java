@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -56,6 +59,10 @@ public class MenuService {
 	 * @param menuSeq
 	 * @return
 	 */
+	@Caching(evict = {
+		@CacheEvict(value = "MENU"),
+		@CacheEvict(value = "AUTH_MENU")
+	})
 	public boolean removeMenu(Long menuSeq) {
 		
 		// 하위 메뉴 건수를 조회한다.
@@ -79,6 +86,10 @@ public class MenuService {
 	 * @param cmMenu
 	 * @return
 	 */
+	@Caching(evict = {
+		@CacheEvict(value = "MENU"),
+		@CacheEvict(value = "AUTH_MENU")
+	})
 	public boolean saveCmMenu(SaveMenuInfo saveMenuInfo, Long updatorSeq) {
 		
 		CmMenu cmMenu = null;
@@ -127,7 +138,10 @@ public class MenuService {
 	 * @param searchMenu
 	 * @return
 	 */
-	public List<MenuInfoDto> findBySearch(SearchMenu searchMenu) {
+	@Cacheable(value = "AUTH_MENU", key="#roleSeq")
+	public List<MenuInfoDto> findByRoleSeq(Long roleSeq) {
+		SearchMenu searchMenu = new SearchMenu();
+		searchMenu.setRoleSeq(roleSeq);
 		List<MenuInfoDto> menuInfoDtoList = cmMenuRepository.findBySearch(searchMenu);
 		
 		if(menuInfoDtoList != null && !menuInfoDtoList.isEmpty()) {
@@ -154,6 +168,7 @@ public class MenuService {
 	 * 
 	 * @return
 	 */
+	@Cacheable(value = "AUTH_MENU")
 	public List<ParentMenuDto> findByParentMenuList() {
 		
 		// 하위 메뉴가 있는 것만 조회해서...

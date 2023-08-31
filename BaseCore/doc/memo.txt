@@ -12,6 +12,11 @@ https://getbootstrap.com
 # sweetalert2
 https://sweetalert2.github.io/
 
+# spring cache
+https://bcp0109.tistory.com/385
+https://velog.io/@songs4805/Spring-Cache%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90
+
+
 --------------
 ## https://developer.mozilla.org/ko/docs/Web/HTML/Element/input
 # html5 input type 종류
@@ -108,5 +113,7 @@ $(document.body).ready(function () {
 });
 
 --------------
+
+
 
 

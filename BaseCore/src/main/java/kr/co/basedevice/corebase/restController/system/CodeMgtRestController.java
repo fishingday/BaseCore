@@ -13,7 +13,6 @@ import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
 import kr.co.basedevice.corebase.search.common.SearchGrpCd;
-import kr.co.basedevice.corebase.search.system.SearchDtlCd;
 import kr.co.basedevice.corebase.service.common.CommonService;
 import lombok.RequiredArgsConstructor;
 

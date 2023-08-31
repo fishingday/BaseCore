@@ -14,7 +14,6 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
 import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
 import kr.co.basedevice.corebase.dto.system.SaveMenuInfo;
-import kr.co.basedevice.corebase.search.system.SearchMenu;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +33,9 @@ public class MenuMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/menu_info_list.json")
-	public ResponseEntity<List<MenuInfoDto>> findByMenuList(SearchMenu searchMenu){
+	public ResponseEntity<List<MenuInfoDto>> findByMenuList(Long roleSeq){
 		
-		List<MenuInfoDto> cmMenuList = menuService.findBySearch(searchMenu);
+		List<MenuInfoDto> cmMenuList = menuService.findByRoleSeq(roleSeq);
 		
 		return ResponseEntity.ok(cmMenuList);
 	}

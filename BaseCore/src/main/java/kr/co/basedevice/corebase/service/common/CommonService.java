@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
@@ -35,7 +36,7 @@ public class CommonService {
 	 * @param grpCd
 	 * @return
 	 */
-	@Cacheable(value = "CODELIST", key="#grpCd")
+	@Cacheable(value = "CODE", key="#grpCd")
 	public List<CmCdDtl> findCmCdDtlByGrpCd(String grpCd){
 		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findByGrpCd(grpCd);
 		
@@ -100,6 +101,7 @@ public class CommonService {
 	 * @param userSeq
 	 * @return
 	 */
+	@CacheEvict(value = "CODE", key = "#grpCd")
 	public boolean removeCmCdGrp(String grpCd) {
 		List<CmCdDtl> cmCdDtlList = cmCdDtlRepository.findByGrpCd(grpCd);
 		if(cmCdDtlList != null && !cmCdDtlList.isEmpty()) {
@@ -124,7 +126,7 @@ public class CommonService {
 	 * @param cd
 	 * @return
 	 */
-	@Cacheable(value = "CODELIST", key="#cmCdDtlId.grpCd + '-' + #cmCdDtlId.cd")
+	@Cacheable(value = "CODE", key="#cmCdDtlId.grpCd + '-' + #cmCdDtlId.cd")
 	public CmCdDtl findCmCdDtlById(CmCdDtlId cmCdDtlId) {				
 		Optional<CmCdDtl> cmCdDtl = cmCdDtlRepository.findById(cmCdDtlId);
 		
@@ -142,7 +144,8 @@ public class CommonService {
 	 * @param updatorSeq
 	 * @return
 	 */
-	@CachePut(value="CODELIST", key="#cmCdDtl.grpCd  + '-' +  #cmCdDtl.cd")
+	@CacheEvict(value = "CODE", key = "#cmCdDtl.grpCd")
+	@CachePut(value="CODE", key="#cmCdDtl.grpCd  + '-' +  #cmCdDtl.cd")
 	public CmCdDtl saveCmCdDtl(CmCdDtl cmCdDtl) {
 		cmCdDtl.setDelYn(Yn.N);
 		
@@ -157,12 +160,14 @@ public class CommonService {
 	 * @param updatorSeq
 	 * @return
 	 */
-	@CacheEvict(value = "CODELIST", key = "#cmCdDtlId.grpCd  + '-' +  #cmCdDtlId.cd")
+	@Caching(evict = {
+		@CacheEvict(value = "CODE", key = "#cmCdDtlId.grpCd"),
+		@CacheEvict(value = "CODE", key = "#cmCdDtlId.grpCd  + '-' +  #cmCdDtlId.cd")
+	})
 	public boolean removeCmCdDtl(CmCdDtlId cmCdDtlId) {			
 		CmCdDtl cmCdDtl = cmCdDtlRepository.getById(cmCdDtlId);	
 		
-		cmCdDtl.setDelYn(Yn.Y);
-		
+		cmCdDtl.setDelYn(Yn.Y);		
 		cmCdDtlRepository.save(cmCdDtl);
 		
 		return true;

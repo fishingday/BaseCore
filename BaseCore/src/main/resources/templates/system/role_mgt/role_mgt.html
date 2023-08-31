@@ -141,12 +141,6 @@
       </div>
     </div>
     <script language="javascript" type="text/javascript" layout:fragment="page_script">
-      var $table_role      = $('#table_role');
-      var $table_role_user = $('#table_role_user');
-      var $table_tgt_user  = $('#table_tgt_user');
-      var $table_role_menu = $('#table_role_menu');
-      var $table_tgt_menu  = $('#table_tgt_menu');
-
       var fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
@@ -341,7 +335,7 @@
               data : cmRole
             }).done(function(data, textStatus, xhr){
               $("#btnNewRole").click();
-              $table_role.bootstrapTable('refresh');
+              $('#table_role').bootstrapTable('refresh');
               Swal.fire({
                 title: '저장 완료',
                 text: '저장 되었습니다.',
@@ -384,7 +378,7 @@
                   data : {roleSeq : $("#roleSeq").val()}
                 }).done(function(data, textStatus, xhr){
                   $("#btnNewRole").click();
-                  $table_role.bootstrapTable('refresh');
+                  $('#table_role').bootstrapTable('refresh');
                   Swal.fire({
                     title: '삭제 완료',
                     text: '삭제 처리가 완료 되었습니다.',
@@ -415,7 +409,7 @@
             };
 
             let userSeqs =
-              $.map($table_tgt_user.bootstrapTable('getSelections'), function (row) {
+              $.map($('#table_tgt_user').bootstrapTable('getSelections'), function (row) {
                 return row.userSeq;
               });
 
@@ -440,8 +434,8 @@
               dataType : "json",
               data : chooseUsersRole
             }).done(function(data, textStatus, xhr){
-              $table_role_user.bootstrapTable('refresh');
-              $table_tgt_user.bootstrapTable('refresh');
+              $('#table_role_user').bootstrapTable('refresh');
+              $('#table_tgt_user').bootstrapTable('refresh');
               Swal.fire({
                 title: '변경 완료',
                 text: '[' + data + ']건을 변경하였습니다.',
@@ -470,7 +464,7 @@
             };
 
             let userSeqs =
-              $.map($table_role_user.bootstrapTable('getSelections'), function (row) {
+              $.map($('#table_role_user').bootstrapTable('getSelections'), function (row) {
                 return row.userSeq;
               });
 
@@ -495,8 +489,8 @@
               dataType : "json",
               data : chooseUsersRole
             }).done(function(data, textStatus, xhr){
-              $table_role_user.bootstrapTable('refresh');
-              $table_tgt_user.bootstrapTable('refresh');
+              $('#table_role_user').bootstrapTable('refresh');
+              $('#table_tgt_user').bootstrapTable('refresh');
               Swal.fire({
                   title: '변경 완료',
                   text: '[' + data + ']건을 변경하였습니다.',
@@ -525,7 +519,7 @@
             };
 
             let menuSeqs =
-              $.map($table_tgt_menu.bootstrapTable('getSelections'), function (row) {
+              $.map($('#table_tgt_menu').bootstrapTable('getSelections'), function (row) {
                 return row.menuSeq;
               });
 
@@ -550,8 +544,8 @@
               dataType : "json",
               data : chooseMenusRole
             }).done(function(data, textStatus, xhr){
-              $table_role_menu.bootstrapTable('refresh');
-              $table_tgt_menu.bootstrapTable('refresh');
+              $('#table_role_menu').bootstrapTable('refresh');
+              $('#table_tgt_menu').bootstrapTable('refresh');
               Swal.fire({
                 title: '변경 완료',
                 text: '[' + data + ']건을 변경하였습니다.',
@@ -580,7 +574,7 @@
             };
 
             let menuSeqs =
-              $.map($table_role_menu.bootstrapTable('getSelections'), function (row) {
+              $.map($('#table_role_menu').bootstrapTable('getSelections'), function (row) {
                 return row.menuSeq;
               });
 
@@ -605,8 +599,8 @@
               dataType : "json",
               data : chooseMenusRole
             }).done(function(data, textStatus, xhr){
-              $table_role_menu.bootstrapTable('refresh');
-              $table_tgt_menu.bootstrapTable('refresh');
+              $('#table_role_menu').bootstrapTable('refresh');
+              $('#table_tgt_menu').bootstrapTable('refresh');
               Swal.fire({
                   title: '변경 완료',
                   text: '[' + data + ']건을 변경하였습니다.',
@@ -626,7 +620,7 @@
         },
         grid: { // 그리드 관련
           init_role: function() {
-            $table_role.bootstrapTable('destroy').bootstrapTable({
+            $('#table_role').bootstrapTable('destroy').bootstrapTable({
               height: 600,
               locale: 'ko-KR',
               classes: 'table table-bordered table-hover',
@@ -644,7 +638,7 @@
               }
             });
 
-            $table_role.on('click-row.bs.table', function (row, rdata, field) {
+            $('#table_role').on('click-row.bs.table', function (row, rdata, field) {
               $("#table_role tr").removeClass("table-secondary");
               $(field[0]).addClass("table-secondary");
               fnObj.action.initForm();
@@ -654,7 +648,7 @@
             });
           }, // end init_role
           init_reg_user: function(){
-            $table_role_user.bootstrapTable('destroy').bootstrapTable({
+            $('#table_role_user').bootstrapTable('destroy').bootstrapTable({
               height: 500,
               locale: 'ko-KR',
               classes: 'table table-bordered table-hover',
@@ -677,7 +671,7 @@
             });
           }, // end init_reg_user
           init_tgt_user: function(){
-            $table_tgt_user.bootstrapTable('destroy').bootstrapTable({
+            $('#table_tgt_user').bootstrapTable('destroy').bootstrapTable({
               height: 500,
               locale: 'ko-KR',
               classes: 'table table-bordered table-hover',
@@ -702,7 +696,7 @@
             });
           }, // end init_tgt_user
           init_reg_menu: function(){
-            $table_role_menu.bootstrapTable('destroy').bootstrapTable({
+            $('#table_role_menu').bootstrapTable('destroy').bootstrapTable({
               height: 500,
               locale: 'ko-KR',
               classes: 'table table-bordered table-hover',
@@ -726,7 +720,7 @@
             });
           }, // end init_reg_menu
           init_tgt_menu: function(){
-            $table_tgt_menu.bootstrapTable('destroy').bootstrapTable({
+            $('#table_tgt_menu').bootstrapTable('destroy').bootstrapTable({
               height: 500,
               locale: 'ko-KR',
               classes: 'table table-bordered table-hover',

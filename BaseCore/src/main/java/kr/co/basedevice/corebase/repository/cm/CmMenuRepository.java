@@ -2,6 +2,7 @@ package kr.co.basedevice.corebase.repository.cm;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,6 +18,7 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	 * @param delyn
 	 * @return
 	 */
+	@Cacheable(value = "MENU", key="#delyn")
 	List<CmMenu> findByDelYn(Yn delyn);
 
 	/**
@@ -26,6 +28,7 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	 * @param delYn
 	 * @return
 	 */
+	@Cacheable(value = "MENU", key="#prntYn + '-' + #delYn")
 	List<CmMenu> findByPrntYnAndDelYnOrderByPrntOrdAsc(Yn prntYn, Yn delYn);
 
 	/**

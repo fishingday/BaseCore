@@ -171,9 +171,6 @@
         <!-- modal -->
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
-        var $table_grpcd = $('#table-grpcd');
-        var $table_dtlcd = $('#table-dtlcd');
-
         var fnObj = {
           pageStart:  function(){ // 페이지 초기 실행 스크립트
             fnObj.page.init();
@@ -347,7 +344,7 @@
                       icon: 'success',
                       confirmButtonText: '확인'
                     });
-                    $table_dtlcd.bootstrapTable('removeAll')
+                    $('#table-dtlcd').bootstrapTable('removeAll')
                     fnObj.pageStart();
 				          }).fail(function(xhr, textStatus, errorThrown) {
 			              Swal.fire({
@@ -382,7 +379,7 @@
               }
 
               // 중복 검사...
-              let grpCdList = $table_grpcd.bootstrapTable('getData');
+              let grpCdList = $('#table-grpcd').bootstrapTable('getData');
               for(let i = 0 ; i < grpCdList.length; i++){
                 if(grpCdList[i].grpCd === $("#pop_grpCd").val()){
                   Swal.fire({
@@ -586,7 +583,7 @@
           },
           grid: { // 그리드 관련
             init_grpcd: function() {
-              $table_grpcd.bootstrapTable('destroy').bootstrapTable({
+              $('#table-grpcd').bootstrapTable('destroy').bootstrapTable({
                 height: 600,
                 locale: 'ko-KR',
                 classes: 'table table-bordered table-hover',
@@ -602,7 +599,7 @@
                 }
               });
 
-              $table_grpcd.on('click-row.bs.table', function (row, rdata, field) {
+              $('#table-grpcd').on('click-row.bs.table', function (row, rdata, field) {
 				        $("#table-grpcd tr").removeClass("table-secondary");
                 $(field[0]).addClass("table-secondary");                                
                 fnObj.action.chooseGrpCd(rdata);                
@@ -614,7 +611,7 @@
               });
             },
             init_dtlcd: function(){
-              $table_dtlcd.bootstrapTable('destroy').bootstrapTable({
+              $('#table-dtlcd').bootstrapTable('destroy').bootstrapTable({
                 locale: 'ko-KR',
                 classes: 'table table-bordered table-striped table-hover',
                 height: 550,
