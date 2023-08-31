@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.security.configs;
+package kr.co.basedevice.corebase.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import kr.co.basedevice.corebase.security.common.FormWebAuthenticationDetailsSource;
+import kr.co.basedevice.corebase.security.configs.AjaxLoginConfigurer;
 import kr.co.basedevice.corebase.security.handler.AjaxAuthenticationFailureHandler;
 import kr.co.basedevice.corebase.security.handler.AjaxAuthenticationSuccessHandler;
 import kr.co.basedevice.corebase.security.handler.FormAccessDeniedHandler;
