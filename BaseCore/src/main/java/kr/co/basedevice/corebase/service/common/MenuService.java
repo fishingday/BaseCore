@@ -43,7 +43,7 @@ public class MenuService {
 	 * @param searchMenuInfo
 	 * @return
 	 */
-	@Cacheable(value = "MENU", key="'Y-N'")
+	@Cacheable(value = "MENU", key="'PRNT'")
 	public List<CmMenu> findByMenuList() {
 		
 		// 당연히 삭제된 것과 대시보드를 비롯하여 표시되지 않는 메뉴는 제외
@@ -60,8 +60,10 @@ public class MenuService {
 	 * @return
 	 */
 	@Caching(evict = {
-		@CacheEvict(value = "MENU"),
-		@CacheEvict(value = "AUTH_MENU")
+        @CacheEvict(value = "MENU", key="'PRNT'"),
+		@CacheEvict(value = "MENU", key="'ALL'"),
+		@CacheEvict(value = "AUTH_MENU", key="'MenuInfo'"),
+		@CacheEvict(value = "AUTH_MENU", key="'Parent'")
 	})
 	public boolean removeMenu(Long menuSeq) {
 		
@@ -87,8 +89,10 @@ public class MenuService {
 	 * @return
 	 */
 	@Caching(evict = {
-		@CacheEvict(value = "MENU"),
-		@CacheEvict(value = "AUTH_MENU")
+        @CacheEvict(value = "MENU", key="'PRNT'"),
+		@CacheEvict(value = "MENU", key="'ALL'"),
+		@CacheEvict(value = "AUTH_MENU", key="'MenuInfo'"),
+		@CacheEvict(value = "AUTH_MENU", key="'Parent'")
 	})
 	public boolean saveCmMenu(SaveMenuInfo saveMenuInfo, Long updatorSeq) {
 		

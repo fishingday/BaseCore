@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lagn="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-	<head>
-	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
-	    <meta name="description" content="Core device">
-		<title>Core Device</title>
-	    <div th:replace="~{fragments/default_common_resources :: css}"></div>	    
-    	<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-	</head>
-  	<body class="p-3 m-0 border-0 bd-example bd-example-row">
-	    <div class=".container-fluid mx-auto p-2">
-	      <div class="row">
-	        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-	      </div>
-	      <div class="row">
-	        <th:block layout:fragment="content"></th:block>
-	      </div>
-	      <div class="row">
-			  <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
-	      </div>
-	    </div>
-		<div th:replace="~{fragments/default_common_resources :: js}"></div>
-	</body>
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="description" content="Core device">
+    <title>Core Device</title>
+    <div th:replace="~{fragments/default_common_resources :: css}"></div>       
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+  </head>
+  <body class="p-3 m-0 border-0 bd-example bd-example-row">
+    <div class=".container-fluid mx-auto p-2">
+      <div class="row">
+        <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
+      </div>
+      <div class="row">
+        <th:block layout:fragment="content"></th:block>
+      </div>
+      <div class="row">
+        <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
+      </div>
+    </div>
+    <div th:replace="~{fragments/default_common_resources :: js}"></div>
+  </body>
 </html>

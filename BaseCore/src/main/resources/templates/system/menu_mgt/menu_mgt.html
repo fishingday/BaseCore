@@ -11,11 +11,11 @@
       <div layout:fragment="content" class="col">
         <div class="row">
           <div class="col-5">
-		        <div id="toolbar">
-		          <button id="btnNewMenu" class="btn btn-outline-success">
-		            <i class="bi bi-file-earmark-plus"></i> 신규 생성
-		          </button>
-		        </div>
+            <div id="toolbar">
+              <button id="btnNewMenu" class="btn btn-outline-success">
+                <i class="bi bi-file-earmark-plus"></i> 신규 생성
+              </button>
+            </div>
             <table
               id="table"
               data-toolbar="#toolbar"
@@ -73,19 +73,25 @@
             <div class="row justify-content-between">
               <div class="col-auto me-auto">
                 <button class="w-10 btn btn-danger" type="button" id="btnDeleteMenu">
-			            <i class="bi bi-trash"></i> 삭제
-			          </button>
+                  <i class="bi bi-trash"></i> 삭제
+                </button>
               </div>
               <div class="col-auto">
                 <button class="w-10 btn btn-primary" type="button" id="btnSaveMenu">
-									<i class="bi bi-save"></i> 저장
-								</button>
+                  <i class="bi bi-save"></i> 저장
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
+        let token = $("meta[name='_csrf']").attr("content"); 
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+          xhr.setRequestHeader(header, token); 
+        });
+
         var fnObj = {
           pageStart:  function(){ // 페이지 초기 실행 스크립트
             fnObj.page.init();
@@ -95,84 +101,84 @@
           page: {
             init: function(){
               fnObj.action.setComponentData();
-              
+
               $("#cmScrenYn").bind("change", function(){
-				  			if($("#cmScrenYn").is(':checked')){
-								  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
-								  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
-							  }else{
-								  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').removeAttr("disabled");                  
-							  }
-			        });
-			        
-			        $("#upMenuSeq").bind("change", function(){
-						    Swal.fire({
+                if($("#cmScrenYn").is(':checked')){
+                  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
+                  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
+                }else{
+                  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').removeAttr("disabled");
+                }
+              });
+
+              $("#upMenuSeq").bind("change", function(){
+                Swal.fire({
                   title: '메뉴 이동',
                   text: '상위 메뉴를 변경하면 하위로 메뉴가 이동(or생성) 됩니다.',
                   icon: 'warning',
                   showConfirmButton: false,
                   timer: 1500
                 });
-					    });
-					    
-					    $("#btnNewMenu").bind("click", function(){							  
-							  fnObj.action.initForm();
-							  $("#form-title").text("신규 메뉴 정보");
-							  $("#btnDeleteMenu").hide();
-						  });
-						  
-						  $("#btnDeleteMenu").bind("click", function(){							  
-							  fnObj.action.removeMenu();  
-						  });
-						  
-						  $("#btnSaveMenu").bind("click", function(){							  
-							  fnObj.action.saveMenu();
-						  });
+              });
+
+              $("#btnNewMenu").bind("click", function(){
+                fnObj.action.initForm();
+                $("#form-title").text("신규 메뉴 정보");
+                $("#btnDeleteMenu").hide();
+              });
+
+              $("#btnDeleteMenu").bind("click", function(){
+                fnObj.action.removeMenu();
+              });
+
+              $("#btnSaveMenu").bind("click", function(){
+                fnObj.action.saveMenu();
+              });
             }
           },
           action: { // 호출이나 화면 동작
             setComponentData: function(){ // 조회 조건의 역할 데이터를 초기화 한다.
               $.ajax({
-				        url: "[[@{/common/role_list.json}]]",
+                url: "[[@{/common/role_list.json}]]",
                 type: "GET",
                 async: true,
-                dataType : "json",
-			        }).done(function(data, textStatus, xhr){
-				        for(var i = 0; i < data.length; i++ ){
+                dataType : "json"
+              }).done(function(data, textStatus, xhr){
+                for(var i = 0; i < data.length; i++ ){
                   $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">'
                   + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
                 }
-			        }).fail(function(xhr, textStatus, errorThrown) {
-	              Swal.fire({
-	                title: xhr.responseJSON.httpStatus,
-	                text: xhr.responseJSON.mgessage,
-	                icon: 'error',
-	                confirmButtonText: '닫기'
-	              });						    
-					    }).then(function(data, textStatus, errorThrown) { 
-							   fnObj.action.setParentMenu();
-						  });
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              }).then(function(data, textStatus, errorThrown) {
+                fnObj.action.setParentMenu();
+              });
             },
             setParentMenu: function(){
               $.ajax({
-				        url: "[[@{/system/menu_mgt/parent_menu_list.json}]]",
+                url: "[[@{/system/menu_mgt/parent_menu_list.json}]]",
                 type: "GET",
                 async: true,
-                dataType : "json",
-			        }).done(function(data, textStatus, xhr){
-				        $("#upMenuSeq").append("<option value=''>최상위</option>");
+                dataType : "json"
+              }).done(function(data, textStatus, xhr){
+                $("#upMenuSeq").append("<option value=''>최상위</option>");
                 for(var i = 0; i < data.length; i++ ){
                   $("#upMenuSeq").append("<option value='" + data[i].menuSeq + "'>" + data[i].fullMenuNm + "</option>");
                 }
-			        }).fail(function(xhr, textStatus, errorThrown) {
-	              Swal.fire({
-	                title: xhr.responseJSON.httpStatus,
-	                text: xhr.responseJSON.mgessage,
-	                icon: 'error',
-	                confirmButtonText: '닫기'
-	              });						    
-					    });
-			      },            
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
+            },
             initForm: function(){
               $("#form-title").text("");
               $("#menuSeq").val('');
@@ -186,133 +192,133 @@
               $("#cmScrenYn").prop("checked", false);
               $("#menuPath").removeAttr("readonly");
               $("#menuPath").removeAttr("disabled");
-              
+
               $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').removeAttr("disabled");
               $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
-              
+
             },
             removeMenu: function(){
-				      let currMenuSeq = $("#menuSeq").val();
-				      let rdata = $('#table').bootstrapTable('getData');
-				      
-				      let isRemove = false;
-				      for(var i =0; i < rdata.length; i++){
-						    if(currMenuSeq == rdata[i].menuSeq){
-									 isRemove = rdata[i].leaf;
-									 break;
-							  }
-					    }
-					    
-					    if(isRemove){
-								Swal.fire({
-								  title: '정말 삭제 하시겠습니까?',
-								  icon: 'warning',
-								  showCancelButton: true,
-								  confirmButtonText: '삭제',
-								}).then((result) => {
-								  if (result.isConfirmed) {
-				            $.ajax({
-				              url: "[[@{/system/menu_mgt/remove_menu.json}]]", 
-				              type: "DELETE",
-				              async: true,
-				              dataType : "json",
-				              data : {menuSeq : currMenuSeq}
-				            }).done(function(data, textStatus, xhr){
-								      $('#table').bootstrapTable('refresh');
-							        $("#btnNewMenu").click();   
-		                  Swal.fire({
-			                  title: '삭제 완료',
-			                  text: '삭제 처리가 완료 되었습니다.',
-			                  icon: 'info',
-			                  showConfirmButton: false,
-			                  timer: 1500
-			                });
-							      }).fail(function(xhr, textStatus, errorThrown) {
-				              Swal.fire({
-				                title: xhr.responseJSON.httpStatus,
-				                text: xhr.responseJSON.mgessage,
-				                icon: 'error',
-				                confirmButtonText: '닫기'
-				              });								
-							      });
-								  }
-								});
-						  }else{
-							  Swal.fire({
-	                title: '삭제 불가',
-	                text: '하위 메뉴가 있는 경우 삭제할 수 없습니다.',
-	                icon: 'warning',
-	                confirmButtonText: '닫기'
-	              });
-	              return;
-						  }
-			      },
-			      saveMenu: function(){
-					    if($("#menuNm").val() === ''){
-		              Swal.fire({
-		                title: '필수 입력 항목',
-		                text: '메뉴명은 필수 입력 항목입니다.',
-		                icon: 'info',
-		                confirmButtonText: '닫기'
-		              });
-		              return;
-						  }
-						   
-						  if($("#prntOrd").val() === ''){
-		              Swal.fire({
-		                title: '필수 입력 항목',
-		                text: '출력 순서는 필수 입력 항목입니다.',
-		                icon: 'info',
-		                confirmButtonText: '닫기'
-		              });
-		              return;
-						  }
-						   
-						  var saveMenuInfo = {}
-						  saveMenuInfo.menuSeq   = $("#menuSeq").val();
-						  saveMenuInfo.upMenuSeq = $("#upMenuSeq").val();
-						  saveMenuInfo.menuNm    = $("#menuNm").val();
-						  saveMenuInfo.menuPath  = $("#menuPath").val();
-						  saveMenuInfo.prntOrd   = Number($("#prntOrd").val());
-						  saveMenuInfo.menuDesc  = $("#menuDesc").val();
-						  saveMenuInfo.iConInfo  = $("#iConInfo").val();
-							saveMenuInfo.cmScrenYn = $("#cmScrenYn").is(':checked') ? "Y" : "N";
-							saveMenuInfo.prntYn = $("#prntYn").is(':checked') ? "Y" : "N";
-							 
-						  saveMenuInfo.roleSeqList = []; 
+              let currMenuSeq = $("#menuSeq").val();
+              let rdata = $('#table').bootstrapTable('getData');
+
+              let isRemove = false;
+              for(var i =0; i < rdata.length; i++){
+                if(currMenuSeq == rdata[i].menuSeq){
+                  isRemove = rdata[i].leaf;
+                  break;
+                }
+              }
+
+              if(isRemove){
+                Swal.fire({
+                  title: '정말 삭제 하시겠습니까?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: '삭제',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    $.ajax({
+                      url: "[[@{/system/menu_mgt/remove_menu.json}]]",
+                      type: "DELETE",
+                      async: true,
+                      dataType : "json",
+                      data : {menuSeq : currMenuSeq}
+                    }).done(function(data, textStatus, xhr){
+                      $('#table').bootstrapTable('refresh');
+                      $("#btnNewMenu").click();
+                      Swal.fire({
+                        title: '삭제 완료',
+                        text: '삭제 처리가 완료 되었습니다.',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    }).fail(function(xhr, textStatus, errorThrown) {
+                      Swal.fire({
+                        title: xhr.responseJSON.httpStatus,
+                        text: xhr.responseJSON.mgessage,
+                        icon: 'error',
+                        confirmButtonText: '닫기'
+                      });
+                    });
+                  }
+                });
+              }else{
+                Swal.fire({
+                  title: '삭제 불가',
+                  text: '하위 메뉴가 있는 경우 삭제할 수 없습니다.',
+                  icon: 'warning',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+            },
+            saveMenu: function(){
+              if($("#menuNm").val() === ''){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '메뉴명은 필수 입력 항목입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+
+              if($("#prntOrd").val() === ''){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '출력 순서는 필수 입력 항목입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+
+              var saveMenuInfo = {}
+              saveMenuInfo.menuSeq   = $("#menuSeq").val();
+              saveMenuInfo.upMenuSeq = $("#upMenuSeq").val();
+              saveMenuInfo.menuNm    = $("#menuNm").val();
+              saveMenuInfo.menuPath  = $("#menuPath").val();
+              saveMenuInfo.prntOrd   = Number($("#prntOrd").val());
+              saveMenuInfo.menuDesc  = $("#menuDesc").val();
+              saveMenuInfo.iConInfo  = $("#iConInfo").val();
+              saveMenuInfo.cmScrenYn = $("#cmScrenYn").is(':checked') ? "Y" : "N";
+              saveMenuInfo.prntYn = $("#prntYn").is(':checked') ? "Y" : "N";
+
+              saveMenuInfo.roleSeqList = [];
               $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').each(function() {
                 if(this.checked){
                   saveMenuInfo.roleSeqList.push(this.value);
                 }
               });
-            
+
               $.ajax({
-	              url: "[[@{/system/menu_mgt/save_menu.json}]]", 
-	              type: "PUT",
-	              async: true,
-	              dataType : "json",
-	              data : saveMenuInfo
-	            }).done(function(data, textStatus, xhr){
-				        $('#table').bootstrapTable('refresh');
+                url: "[[@{/system/menu_mgt/save_menu.json}]]",
+                type: "PUT",
+                async: true,
+                dataType : "json",
+                data : saveMenuInfo
+              }).done(function(data, textStatus, xhr){
+                $('#table').bootstrapTable('refresh');
                 $("#upMenuSeq option").remove();
                 fnObj.action.setParentMenu();
-                
+
                 Swal.fire({
                   title: '저장 완료',
                   text: '저장 되었습니다.',
                   icon: 'info',
                   showConfirmButton: false,
                   timer: 1500
-                });					
-				      }).fail(function(xhr, textStatus, errorThrown) {
-	              Swal.fire({
-	                title: xhr.responseJSON.httpStatus,
-	                text: xhr.responseJSON.mgessage,
-	                icon: 'error',
-	                confirmButtonText: '닫기'
-	              });						  
-					    });
-				    }
+                });
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
+            }
           },
           grid: { // 그리드 관련
             init: function() {
@@ -365,13 +371,13 @@
                 $("#menuDesc").val(rdata.menuDesc);
                 $("#iConInfo").val(rdata.iConInfo);
                 $("#prntOrd").val(rdata.prntOrd);
-                
+
                 if(rdata.prntYn === 'Y'){
                   $("#prntYn").prop("checked", true);
                 }
-                
+
                 if(rdata.cmScrenYn === 'Y'){
-					        $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
+                            $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
                   $("#cmScrenYn").prop("checked", true);
                 }
 
@@ -383,14 +389,14 @@
                   $("#menuPath").attr("disabled",true);
                   $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
                 }
-                
+
                 if(rdata.cmRoleList){
-		              for (var i = 0; i < rdata.cmRoleList.length; i++) {
-		                $("#roleSeq-" + rdata.cmRoleList[i].roleSeq).prop("checked", true);
-		              }
-		            }
-		            
-		            $("#btnDeleteMenu").show();                
+                  for (var i = 0; i < rdata.cmRoleList.length; i++) {
+                    $("#roleSeq-" + rdata.cmRoleList[i].roleSeq).prop("checked", true);
+                  }
+                }
+
+                $("#btnDeleteMenu").show();
               });
             } // init
           } // grid

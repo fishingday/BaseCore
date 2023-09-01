@@ -2,18 +2,20 @@
 <html lagn="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-	<head>
-	    <meta charset="UTF-8" />
-	    <title>Core Device</title>
-	    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
-	    <div th:replace="fragments/default_frag::headerFragment"></div>
-	</head>
-	<body>
-	    <!-- header fragment 사용 -->
-	    <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
-	    <!-- content fragment 사용 -->
-	    <th:block layout:fragment="content"></th:block>
-	    <!-- footer fragment 사용 -->
-	    <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
-	</body>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Core Device</title>
+      <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
+      <meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+      <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+      <div th:replace="fragments/default_frag::headerFragment"></div>
+    </head>
+    <body>
+      <!-- header fragment 사용 -->
+      <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
+      <!-- content fragment 사용 -->
+      <th:block layout:fragment="content"></th:block>
+      <!-- footer fragment 사용 -->
+      <th:block th:replace="fragments/default_frag :: footerFragment"></th:block>
+    </body>
 </html>

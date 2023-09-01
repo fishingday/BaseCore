@@ -141,6 +141,12 @@
       </div>
     </div>
     <script language="javascript" type="text/javascript" layout:fragment="page_script">
+        let token = $("meta[name='_csrf']").attr("content"); 
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+          xhr.setRequestHeader(header, token); 
+        });
+		    
       var fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
@@ -492,11 +498,11 @@
               $('#table_role_user').bootstrapTable('refresh');
               $('#table_tgt_user').bootstrapTable('refresh');
               Swal.fire({
-                  title: '변경 완료',
-                  text: '[' + data + ']건을 변경하였습니다.',
-                  icon: 'info',
-                  showConfirmButton: false,
-                  timer: 1500
+                title: '변경 완료',
+                text: '[' + data + ']건을 변경하였습니다.',
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 1500
               });
             }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
@@ -602,11 +608,11 @@
               $('#table_role_menu').bootstrapTable('refresh');
               $('#table_tgt_menu').bootstrapTable('refresh');
               Swal.fire({
-                  title: '변경 완료',
-                  text: '[' + data + ']건을 변경하였습니다.',
-                  icon: 'info',
-                  showConfirmButton: false,
-                  timer: 1500
+                title: '변경 완료',
+                text: '[' + data + ']건을 변경하였습니다.',
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 1500
               });
             }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
@@ -685,7 +691,7 @@
                 return data;
               },
               queryParams: function(params){
-                        $('#table_tgt_user th').addClass('table-primary')
+                $('#table_tgt_user th').addClass('table-primary')
 
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
@@ -709,7 +715,7 @@
                 return data;
               },
               queryParams: function(params){
-                        $('#table_role_menu th').addClass('table-primary')
+                $('#table_role_menu th').addClass('table-primary')
 
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
@@ -733,12 +739,11 @@
                 return data;
               },
               queryParams: function(params){
-                        $('#table_tgt_menu th').addClass('table-primary')
+                $('#table_tgt_menu th').addClass('table-primary')
 
                 if($("#roleSeq").val() !== ''){
                   params.roleSeq = $("#roleSeq").val();
                 }
-
                 return params;
               }
             });

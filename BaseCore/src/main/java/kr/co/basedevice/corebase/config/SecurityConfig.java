@@ -19,6 +19,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import kr.co.basedevice.corebase.security.common.FormWebAuthenticationDetailsSource;
 import kr.co.basedevice.corebase.security.configs.AjaxLoginConfigurer;
@@ -121,7 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    	 		.expiredUrl("/expired ");  	        // 세션이 만료된 경우 이동 할 페이지
 */
 
-        http.csrf().disable();
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
         customConfigurer(http);
     }

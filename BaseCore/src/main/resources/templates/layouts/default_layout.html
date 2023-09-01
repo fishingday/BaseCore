@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html lagn="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-	<head>
-	    <meta charset="utf-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
-	    <meta name="description" content="Core device">
-		<title>Core Device</title>
-	    <div th:replace="~{fragments/default_common_resources :: css}"></div>
-	</head>
-    <body>
-		<div class="container-xxl mx-auto">
-	      <header class="row">
-	        <div th:replace="fragments/default_frag :: topFragment"></div>
-	      </header>
-	      <div class="row row-cols-2">
-			<aside class="col-2">    
-				<!-- lnb -->
-				<th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
-				<!-- lnb -->
-			</aside>
-			<main class="col-10">
-				<nav class="row  row-cols-1">
-					<div th:replace="fragments/default_frag :: breadcrumbFragment"></div>
-					<div layout:fragment="content"></div>
-				</nav>
-			</main>
-		  </div>	      
-	      <footer class="row">
-			  <footer th:replace="fragments/default_frag :: footerFragment"></footer>
-	      </footer>
-	    </div>
-		<div th:replace="~{fragments/default_common_resources :: js}"></div>
-		<th:block layout:fragment="page_script"></th:block>
-    </body>
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="description" content="Core device">
+    <title>Core Device</title>
+    <div th:replace="~{fragments/default_common_resources :: css}"></div>
+  </head>
+  <body>
+    <div class="container-xxl mx-auto">
+      <header class="row">
+        <div th:replace="fragments/default_frag :: topFragment"></div>
+      </header>
+      <div class="row row-cols-2">
+        <aside class="col-2">
+            <!-- lnb -->
+            <th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
+            <!-- lnb -->
+        </aside>
+        <main class="col-10">
+            <nav class="row  row-cols-1">
+                <div th:replace="fragments/default_frag :: breadcrumbFragment"></div>
+                <div layout:fragment="content"></div>
+            </nav>
+        </main>
+      </div>
+      <footer class="row">
+          <footer th:replace="fragments/default_frag :: footerFragment"></footer>
+      </footer>
+    </div>
+    <div th:replace="~{fragments/default_common_resources :: js}"></div>
+    <th:block layout:fragment="page_script"></th:block>
+  </body>
 </html>

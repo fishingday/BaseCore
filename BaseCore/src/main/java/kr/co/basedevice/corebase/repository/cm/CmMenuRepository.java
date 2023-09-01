@@ -18,7 +18,7 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	 * @param delyn
 	 * @return
 	 */
-	@Cacheable(value = "MENU", key="#delyn")
+	@Cacheable(value = "MENU", key="'ALL'")
 	List<CmMenu> findByDelYn(Yn delyn);
 
 	/**

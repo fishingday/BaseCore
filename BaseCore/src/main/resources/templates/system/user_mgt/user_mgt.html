@@ -14,7 +14,7 @@
   <!--/* Content 시작 */-->
   <body>
     <div layout:fragment="content" class="col">
-		  <input type="hidden" id="currUserSeq" th:value="${#authentication.principal.cmUser.userSeq}">
+      <input type="hidden" id="currUserSeq" th:value="${#authentication.principal.cmUser.userSeq}">
       <div class="row border border-secondary-subtle p-2">
         <div class="col-2">
           <label for="search_email" class="form-label mt-2">E-Mail</label>
@@ -62,7 +62,7 @@
           </button>
         </div>
         <table
-          id="table"            
+          id="table"
           data-toolbar="#toolbar"
           data-show-refresh="true"
           data-show-fullscreen="true"
@@ -84,7 +84,7 @@
       </div>
       <!-- modal -->
       <div class="modal-staging">
-          <!--/* 사용자 정보 편집 */-->
+        <!--/* 사용자 정보 편집 */-->
         <div class="modal fade" id="popupUserInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
@@ -151,16 +151,16 @@
               </div>
               <div class="modal-footer row">
               <div class="col-auto me-auto">
-                  <button type="button" class="btn btn-primary" id="btnSaveUserInfo">저장</button>
+                <button type="button" class="btn btn-primary" id="btnSaveUserInfo">저장</button>
               </div>
-                <div class="col-auto">
+              <div class="col-auto">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
               </div>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!--/* 사용자 패스워드 변경 */-->
         <div class="modal fade" id="popupChgUserPwd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -194,7 +194,7 @@
             </div>
           </div>
         </div>
-        
+
         <!--/* 사용자 역할 지정 */-->
         <div class="modal fade" id="popupChgUserRole" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -223,43 +223,48 @@
           </div>
         </div>
       </div>
-    <!-- modal -->  
+    <!-- modal -->
     </div>
     <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
       var selections = [];
-      
+
       var fnObj = {
         pageStart: function(){ // 화면 오픈 시 document.body.readㅛ
-          fnObj.page.init();    
+          fnObj.page.init();
         },
         page: { // 화면의 기본적인 설정
           init : function(){ // 화면 초기화
             window.operateEvents = { // 그리드 내 버튼 이벤트
-			        'click .userinfo-edit': function (e, value, row, index) {          
-			          fnObj.action.setUserInfo(row);
-			        }
-			      };
-          
-            $("#btnSearch").bind("click", function(){ // 조회 
+              'click .userinfo-edit': function (e, value, row, index) {
+                fnObj.action.setUserInfo(row);
+              }
+            };
+
+            $("#btnSearch").bind("click", function(){ // 조회
               $('#table').bootstrapTable('selectPage', 1);
             });
-            
-            $("#btnSaveUserInfo").bind("click", function(){ // 조회 
+
+            $("#btnSaveUserInfo").bind("click", function(){ // 조회
               fnObj.action.saveUserInfo();
             });
-            
+
             $("#btnSaveUserPwd").bind("click", function(){ // 패스워드 저장
               fnObj.action.chgUserPwd();
             });
-            
-            $("#btnSaveUserRole").bind("click", function(){ // 역할 저장 
+
+            $("#btnSaveUserRole").bind("click", function(){ // 역할 저장
               fnObj.action.chgUserRole();
             });
-            
+
             document.getElementById('popupChgUserRole').addEventListener('shown.bs.modal', function(){
-                $('#popupChgUserRole .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);  
+              $('#popupChgUserRole .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
             });
-            
+
             fnObj.action.initRoleData();
             fnObj.action.initCodeData().then((res) =>{
               fnObj.grid.init();
@@ -276,7 +281,7 @@
             }).done(function(data, textStatus, xhr){
               for(var i = 0; i < data.length; i++ ){
                 $("#search_roleSeq").append("<option value='" + data[i].roleSeq + "'>" + data[i].roleNm + "</option>");
-                $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">' 
+                $(".role-list").append('<li class="list-group-item"><input class="form-check-input me-1" type="checkbox" name="roleSeqList" value="'+ data[i].roleSeq +'" id="roleSeq-'+ data[i].roleSeq +'">'
                 + '<label class="form-check-label" for="roleSeq-'+ data[i].roleSeq +'">' + data[i].roleNm + '</label></li>');
               }
             }).fail(function(xhr, textStatus, errorThrown) {
@@ -287,8 +292,8 @@
                 confirmButtonText: '닫기'
               });
             });
-		      },
-		      initCodeData: function(){
+          },
+          initCodeData: function(){
             return $.ajax({
               url: "[[@{/common/code_dtl_list.json}]]",
               type: "GET",
@@ -307,22 +312,22 @@
                 confirmButtonText: '닫기'
               });
             });
-			    },
+          },
           setUserInfo: function(userInfo){
             fnObj.action.initUserInfo();
-            
+
             $("#popupUserInfo #userSeq").val(userInfo.userSeq);
             $("#popupUserInfo #userNm").val(userInfo.userNm);
             $("#popupUserInfo #loginId").val(userInfo.loginId);
             $("#popupUserInfo #userTelNo").val(userInfo.userTelNo);
             $("#popupUserInfo #acuntExpDt").val(userInfo.acuntExpDt);
-            
+
             if(userInfo.cmRoleList){
               for (var i = 0; i < userInfo.cmRoleList.length; i++) {
                 $("#popupUserInfo #roleSeq-" + userInfo.cmRoleList[i].roleSeq).prop("checked", true);
               }
             }
-            
+
             $("#popupUserInfo #userStatCd").val(userInfo.userStatCd);
             $("#popupUserInfo #loginFailCnt").val(userInfo.loginFailCnt);
             $("#popupUserInfo #loginDt").val(userInfo.loginDt);
@@ -333,15 +338,14 @@
             $("#popupUserInfo #userNm").val('');
             $("#popupUserInfo #loginId").val('');
             $("#popupUserInfo #userTelNo").val('');
-            $("#popupUserInfo #acuntExpDt").val('');            
-            $('#popupUserInfo .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);      
+            $("#popupUserInfo #acuntExpDt").val('');
+            $('#popupUserInfo .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
             $("#popupUserInfo #userStatCd").val('');
             $("#popupUserInfo #loginFailCnt").val('');
             $("#popupUserInfo #loginDt").val('');
             $("#popupUserInfo #lastLoginIp").val('');
           },
           saveUserInfo: function(){
-            
             if($("#popupUserInfo #userSeq").val() === ''){
               Swal.fire({
                 title: 'Error!',
@@ -351,7 +355,7 @@
               });
               return;
             }
-            
+
             if($("#popupUserInfo #userNm").val() === ''){
               Swal.fire({
                 title: '필수 항목 입력',
@@ -361,7 +365,7 @@
               });
               return;
             }
-            
+
             if($("#popupUserInfo #loginId").val() === ''){
               Swal.fire({
                 title: '필수 항목 입력',
@@ -371,7 +375,7 @@
               });
               return;
             }
-            
+
             if($("#popupUserInfo #userTelNo").val() === ''){
               Swal.fire({
                 title: '필수 항목 입력',
@@ -381,7 +385,7 @@
               });
               return;
             }
-            
+
             if($("#popupUserInfo #userStatCd").val() === ''){
               Swal.fire({
                 title: '필수 항목 입력',
@@ -391,27 +395,27 @@
               });
               return;
             }
-            
+
             if($("#popupUserInfo #loginFailCnt").val() === ''){
               $("#popupUserInfo #loginFailCnt").val(0);
-            }            
-            
+            }
+
             let userInfo = {};
             userInfo.userSeq = $("#popupUserInfo #userSeq").val();
             userInfo.userNm = $("#popupUserInfo #userNm").val();
             userInfo.loginId = $("#popupUserInfo #loginId").val();
             userInfo.userTelNo = $("#popupUserInfo #userTelNo").val();
-            userInfo.acuntExpDt = $("#popupUserInfo #acuntExpDt").val();            
+            userInfo.acuntExpDt = $("#popupUserInfo #acuntExpDt").val();
             userInfo.userStatCd = $("#popupUserInfo #userStatCd").val();
             userInfo.loginFailCnt = $("#popupUserInfo #loginFailCnt").val();
-            
-            userInfo.roleSeqList = []; 
+
+            userInfo.roleSeqList = [];
             $('#popupUserInfo input:checkbox[name="roleSeqList"]').each(function() {
               if(this.checked){
                 userInfo.roleSeqList.push(this.value);
               }
             });
-            
+
             if(userInfo.roleSeqList.length === 0){
               Swal.fire({
                 title: '필수 입력 항목',
@@ -421,18 +425,18 @@
               });
               return;
             }
-            
+
             $.ajax({
-              url: "[[@{/system/user_mgt/chg_user_info.json}]]", 
+              url: "[[@{/system/user_mgt/chg_user_info.json}]]",
               type: "PUT",
               async: true,
               dataType : "json",
               data : userInfo
             }).done(function(data, textStatus, xhr){
-				      $("#popupUserInfo").modal("hide");
+              $("#popupUserInfo").modal("hide");
               var pageIdx = $("li.page-item.active > .page-link").text();
               $('#table').bootstrapTable('selectPage', Number(pageIdx));
-			      }).fail(function(xhr, textStatus, errorThrown) {
+                  }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
                 title: xhr.responseJSON.httpStatus,
                 text: xhr.responseJSON.mgessage,
@@ -460,10 +464,10 @@
               });
               return;
             };
-            
+
             let saveUserPwd = {};
-            
-            saveUserPwd.userSeqList = fnObj.grid.getIdSelections();                        
+
+            saveUserPwd.userSeqList = fnObj.grid.getIdSelections();
             if(saveUserPwd.userSeqList === 0){
               Swal.fire({
                 title: '필수 항목 입력',
@@ -473,12 +477,12 @@
               });
               return;
             }
-            
+
             saveUserPwd.chgPwd = $("#popupChgUserPwd #userPwd").val();
             saveUserPwd.acuntExpDt = $("#popupChgUserPwd #popAcuntExpDt").val();
-            
+
             $.ajax({
-              url: "[[@{/system/user_mgt/bulk_chg_user_pwd.json}]]", 
+              url: "[[@{/system/user_mgt/bulk_chg_user_pwd.json}]]",
               type: "PUT",
               async: true,
               dataType : "json",
@@ -492,7 +496,7 @@
                 showConfirmButton: false,
                 timer: 1500
               });
-			      }).fail(function(xhr, textStatus, errorThrown) {
+            }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
                 title: xhr.responseJSON.httpStatus,
                 text: xhr.responseJSON.mgessage,
@@ -501,9 +505,9 @@
               });
             });
           },
-          chgUserRole: function(){            
-            let saveUserRole = {};            
-            saveUserRole.userSeqList = fnObj.grid.getIdSelections();                        
+          chgUserRole: function(){
+            let saveUserRole = {};
+            saveUserRole.userSeqList = fnObj.grid.getIdSelections();
             if(saveUserRole.userSeqList === 0){
               Swal.fire({
                 title: '필수 항목 입력',
@@ -513,14 +517,14 @@
               });
               return;
             }
-            
-            saveUserRole.roleSeqList = []; 
+
+            saveUserRole.roleSeqList = [];
             $('#popupChgUserRole input:checkbox[name="roleSeqList"]').each(function() {
               if(this.checked){
                 saveUserRole.roleSeqList.push(this.value);
               }
             });
-                        
+
             if(saveUserRole.roleSeqList.length === 0){
               Swal.fire({
                 title: 'Error!',
@@ -530,9 +534,9 @@
               });
               return;
             }
-            
+
             $.ajax({
-              url: "[[@{/system/user_mgt/chg_bulk_user_role.json}]]", 
+              url: "[[@{/system/user_mgt/chg_bulk_user_role.json}]]",
               type: "PUT",
               async: true,
               dataType : "json",
@@ -541,7 +545,7 @@
               $("#popupChgUserRole").modal("hide");
               var pageIdx = $("li.page-item.active > .page-link").text();
               $('#table').bootstrapTable('selectPage', Number(pageIdx));
-              
+
               Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -549,7 +553,7 @@
                 showConfirmButton: false,
                 timer: 1500
               });
-			      }).fail(function(xhr, textStatus, errorThrown) {
+            }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
                 title: xhr.responseJSON.httpStatus,
                 text: xhr.responseJSON.mgessage,
@@ -559,7 +563,7 @@
             });
           }
         },
-        grid: { // 그리드와 관련된 ... 
+        grid: { // 그리드와 관련된 ...
           init: function(){
             $('#table').bootstrapTable('destroy').bootstrapTable(
               {
@@ -568,22 +572,22 @@
                 headerStyle : function(){
                   return {classes: 'table-primary'};
                 },
-                columns: 
+                columns:
                   [
                     [
-                      {field: 'state',       checkbox: true,     align: 'center', valign: 'middle', class: 'table-primary', 
+                      {field: 'state',       checkbox: true,     align: 'center', valign: 'middle', class: 'table-primary',
                         formatter:function(value, row, index){
                           if(row.userSeq == $("#currUserSeq").val()){
                             return {disabled: true}
                           }
                         }
                       },
-                      {field: 'userSeq',      title: '사용자순번',   align: 'center', valign: 'middle', visible: false, switchable: false},       
-                      {field: 'num',          title: 'No.',       align: 'center', valign: 'middle', sortable: false},  
-                      {field: 'loginId',      title: 'Email',    align: 'center', valign: 'middle', sortable: true}, 
-                      {field: 'userNm',       title: '사용자명',   align: 'center', valign: 'middle', sortable: true}, 
-                      {field: 'userTelNo',    title: '전화번호',    align: 'center', valign: 'middle', sortable: true},                   
-                      {field: 'roleNames',    title: '역할',     align: 'center', valign: 'middle', sortable: false},  
+                      {field: 'userSeq',      title: '사용자순번',   align: 'center', valign: 'middle', visible: false, switchable: false},
+                      {field: 'num',          title: 'No.',       align: 'center', valign: 'middle', sortable: false},
+                      {field: 'loginId',      title: 'Email',    align: 'center', valign: 'middle', sortable: true},
+                      {field: 'userNm',       title: '사용자명',   align: 'center', valign: 'middle', sortable: true},
+                      {field: 'userTelNo',    title: '전화번호',    align: 'center', valign: 'middle', sortable: true},
+                      {field: 'roleNames',    title: '역할',     align: 'center', valign: 'middle', sortable: false},
                       {field: 'userStatCd',   title: '상태',     align: 'center', valign: 'middle', sortable: true,
                         formatter:function(value, row, index){
                           for(var i = 0; i < $("#popupUserInfo #userStatCd option").length; i++){
@@ -595,9 +599,9 @@
                         }
                       },
                       {field: 'acuntExpDt',   title: '만료일',     align: 'center', valign: 'middle', sortable: true},
-                      {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', sortable: true},                   
-                      {field: 'lastLoginIp',  title: '로그인IP',    align: 'center', valign: 'middle', sortable: true},                   
-                      {field: 'loginFailCnt', title: '실패수',     align: 'center', valign: 'middle', sortable: true}, 
+                      {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', sortable: true},
+                      {field: 'lastLoginIp',  title: '로그인IP',    align: 'center', valign: 'middle', sortable: true},
+                      {field: 'loginFailCnt', title: '실패수',     align: 'center', valign: 'middle', sortable: true},
                       {field: 'operate',      title: '상세보기',   align: 'center', valign: 'middle', clickToSelect: false, events: window.operateEvents,
                         formatter: function(value, row, index) {
                           return [
@@ -617,34 +621,34 @@
                   })
                   data.total = data.totalElements;
                   data.totalNotFiltered = data.totalElements;
-                  
+
                   return data;
                 },
                 queryParams: function(params){
                   if(params.offset !== undefined){
-                  params.size = params.limit; 
-                    params.page = params.offset/params.limit;  
+                  params.size = params.limit;
+                    params.page = params.offset/params.limit;
                   }else{
-                  params.size = 10000; 
-                    params.page = 0;   
+                  params.size = 10000;
+                    params.page = 0;
                   }
-                  
+
                   if($("#search_email").val() !== ''){
                     params.loginId = $("#search_email").val();
                   }
-                  
+
                   if($("#search_username").val() !== ''){
                     params.userNm = $("#search_username").val();
                   }
-                  
+
                   if($("#search_userTelNo").val() !== ''){
                     params.userTelNo = $("#search_userTelNo").val();
                   }
-                  
+
                   if($("#search_roleSeq").val() !== ''){
                     params.roleSeq = $("#search_roleSeq").val();
                   }
-                  
+
                   return params;
                 }
             });
@@ -671,52 +675,52 @@
                 cancelButtonText: '취소',
               })
               .then((result) => {
-                  if (result.isConfirmed) {
+                if (result.isConfirmed) {
                   let deleteUsers = {};
                   deleteUsers.userSeqList = fnObj.grid.getIdSelections();
-                  deleteUsers.reason = 'nothing';    
+                  deleteUsers.reason = 'nothing';
                   
                   $.ajax({
-                    url: "[[@{/system/user_mgt/remove_bulk_user.json}]]", 
+                    url: "[[@{/system/user_mgt/remove_bulk_user.json}]]",
                     type: "DELETE",
                     async: true,
                     dataType : "json",
                     data : deleteUsers
                   }).done(function(data, textStatus, xhr){
-					          var pageIdx = $("li.page-item.active > .page-link").text();
+                    var pageIdx = $("li.page-item.active > .page-link").text();
                     $('#table').bootstrapTable('selectPage', Number(pageIdx));
-                    
+                  
                     Swal.fire({
                       title: '완료!',
                       text: "삭제 되었습니다.",
-                      icon: 'success',                 
-                      confirmButtonText: '확인'                    
+                      icon: 'success',
+                      confirmButtonText: '확인'
                     });
-				          }).fail(function(xhr, textStatus, errorThrown) {
-			              Swal.fire({
-			                title: xhr.responseJSON.httpStatus,
-			                text: xhr.responseJSON.mgessage,
-			                icon: 'error',
-			                confirmButtonText: '닫기'
-			              });
-			            });
+                  }).fail(function(xhr, textStatus, errorThrown) {
+                    Swal.fire({
+                      title: xhr.responseJSON.httpStatus,
+                      text: xhr.responseJSON.mgessage,
+                      icon: 'error',
+                      confirmButtonText: '닫기'
+                    });
+                  });
                 };
               });
             });
           },
           getIdSelections : function() {
             return $.map($('#table').bootstrapTable('getSelections'), function (row) {
-              return row.userSeq
+              return row.userSeq;
             });
           }
         }
       };
-      
+
       // 페이지 초기 쿼리를 실행한다.
       $(document.body).ready(function () {
           fnObj.pageStart();
       });
-    </script>  
+    </script>
   </body>
   <!--/* Content 종료 */-->
 </html>

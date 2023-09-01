@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
@@ -58,6 +59,7 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
+	@CacheEvict(value = "ROLE", key = "'ALL'")
 	@CachePut(value = "ROLE", key = "#cmRole.roleSeq")
 	public CmRole saveCmRole(CmRole cmRole){
 		
@@ -75,7 +77,10 @@ public class RoleService {
 	 * @param operatorSeq
 	 * @return
 	 */
-	@CacheEvict(value = "ROLE", key = "#roleSeq")
+	@Caching(evict = {
+	  @CacheEvict(value = "ROLE", key = "#roleSeq"),
+	  @CacheEvict(value = "ROLE", key = "'ALL'")
+	})
 	public CmRole removeCmRole(Long roleSeq){
 		
 		// 역할 별 메뉴 맵핑 삭제
@@ -293,7 +298,7 @@ public class RoleService {
 	 * @param searchRoleDto
 	 * @return
 	 */
-	@Cacheable("ROLE")
+	@Cacheable(value = "ROLE", key = "'ALL'")
 	public List<CmRole> findByRoleList(){
 		return cmRoleRepository.findByDelYn(Yn.N);
 	}
