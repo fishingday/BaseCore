@@ -13,14 +13,12 @@
   </head>
   <body>
     <div class="container-xxl mx-auto">
-      <header class="row">
-        <div th:replace="fragments/default_frag :: topFragment"></div>
-      </header>
+      <th:block th:replace="fragments/default_frag :: topFragment"></th:block>
       <div class="row row-cols-2">
         <aside class="col-2">
-            <!-- lnb -->
-            <th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
-            <!-- lnb -->
+          <!-- lnb -->
+          <th:block th:replace="fragments/default_frag :: lnbFragment"></th:block>
+          <!-- lnb -->
         </aside>
         <main class="col-10">
             <nav class="row  row-cols-1">
@@ -30,7 +28,7 @@
         </main>
       </div>
       <footer class="row">
-          <footer th:replace="fragments/default_frag :: footerFragment"></footer>
+        <div th:replace="fragments/default_frag :: footerFragment"></div>
       </footer>
     </div>
     <div th:replace="~{fragments/default_common_resources :: js}"></div>

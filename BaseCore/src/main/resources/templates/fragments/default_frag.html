@@ -1,111 +1,114 @@
 <html lagn="ko"
-    xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
-    <div th:fragment="topFragment">
-	  <!-- header -->
-	  <!-- header #1 -->
-	  <nav class="py-2 bg-body-tertiary">
-	    <div class="container d-flex flex-wrap">
-	      <ul class="nav me-auto">
-	      <th:block sec:authorize="isAuthenticated()" th:each="topMenu : ${#authentication.principal.myMenu.topMenuList}">
-			<li class="nav-item" th:if="${topMenuStat.index eq 0}"><a th:href="@{/}" class="nav-link link-body-emphasis px-2" aria-current="page">Home</a></li>
-            <li class="nav-item"><a class="nav-link link-body-emphasis px-2" th:href="@{${topMenu.firstMenu.menuPath}}"><span th:text="${topMenu.menuNm}"></span></a></li>
-          </th:block>
-	      </ul>
-	      <ul class="nav">
-	        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link-body-emphasis px-2" th:href="@{/common/login.html}">로그인</a></li>
-            <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link-body-emphasis px-2" th:href="@{/users}">회원가입</a></li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-				<span sec:authorize="isAuthenticated()" th:text="|로그인시간 : ${#temporals.format(#authentication.principal.cmUser.loginDt, 'yyyy.MM.dd HH:mm:ss')}|"></span>
-			</li>
-	      </ul>
-	    </div>
-	  </nav>			  
-	  <!-- header #1 -->			  
-	  <!-- header #2 -->
-	  <header class="pb-2 mb-3 border-bottom">
-	    <div class="container" sec:authorize="isAuthenticated()" th:with="auth=${#authentication.principal}">
-		  <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end">
-	        <div class="dropdown text-start" style="width: 100px;">
-	          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-			    [[${auth.currRole.roleNm}]]
-			  </button>
-	          <ul class="dropdown-menu text-small">
-                <li th:each="roleItem: ${auth.authRoleList}"><a class="dropdown-item" href="#">[[${roleItem.roleNm}]]</a></li>
-              </ul>
-	        </div>
-	        <div class="dropdown text-end">			          
-	          <ul class="dropdown-menu text-small">
-	            <li><a class="dropdown-item" th:href="@{/user/bookmark}">북마크</a></li>
-	            <li><a class="dropdown-item" th:href="@{/user/user_info}">사용자정보</a></li>
-	            <li><a class="dropdown-item" th:href="@{/user/chg_pwd}">패스워드변경</a></li>
-	            <li><hr class="dropdown-divider"></li>
-	            <li><a class="dropdown-item" th:href="@{/common/logout.html}">로그아웃</a></li>
-	          </ul>
-	          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle fs-5" data-bs-toggle="dropdown" aria-expanded="false">
-	            <i class="bi bi-person-bounding-box"></i>
-	            <span>[[${auth.cmUser.userNm}]]</span>
-	          </a>
-	        </div>
-	      </div>
-	    </div>
-	  </header>
-	  <!-- header #2 -->
-	  <!-- header -->
-    </div>
-    
-    <!--/* lnb */--> 
-    <aside class="flex-shrink-0 p-3" th:fragment="lnbFragment"  th:with="currMenu=${#authentication.principal.currMenu}">
-      <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-        <i class="fa-brands fa-hashnode  fa-xl"></i>
-        <span class="fs-5 fw-semibold"> [[${currMenu.topMenu.menuNm}]]</span><!--/* 최상위 메뉴 제목 */--> 
-      </a>
-      <ul class="list-unstyled ps-0" th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를..  */-->
-        <li class="mb-1" th:each="subMenu : ${topMenu.subMenuList}">
-		  <!--/* 중간 메뉴는 하위를 가질 수도, 아닐 수도 있음. 하위 메뉴가 없으면 본인이 메뉴임.  */-->
-          <a class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-target="#home-collapse" 
-              th:data-bs-toggle="${(#lists.size(subMenu.subMenuList) > 0)? 'collapse' : ''}" 
-        	  th:aria-expanded="${(#lists.size(subMenu.subMenuList) > 0) and (subMenu.menuSeq == currMenu.menuSeq or subMenu.menuSeq == currMenu.upMenu.menuSeq)}"
-        	  th:classappend="${#lists.size(subMenu.subMenuList) eq 0 and subMenu.menuSeq == currMenu.menuSeq} ? 'text-primary':''"
-        	  th:href="@{${(#lists.size(subMenu.subMenuList) eq 0) ? subMenu.menuPath : ''}}"
-        	>
-            [[${subMenu.menuNm}]]
-          </a>
-          <div class="collapse show" id="home-collapse" th:if="${#lists.size(subMenu.subMenuList) > 0}">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
-		  		<a th:href="@{${leafMenu.menuPath}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" th:classappend="${leafMenu.menuSeq == currMenu.menuSeq} ? 'fw-bold':''"
-					>[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <body>
+    <header class="row">
+      <header class="row" th:fragment="topFragment">
+        <!-- header -->
+        <!-- header #1 -->
+        <nav class="py-2 bg-body-tertiary">
+          <div class="container d-flex flex-wrap">
+            <ul class="nav me-auto">
+            <th:block sec:authorize="isAuthenticated()" th:each="topMenu : ${#authentication.principal.myMenu.topMenuList}">
+              <li class="nav-item" th:if="${topMenuStat.index eq 0}"><a th:href="@{/}" class="nav-link link-body-emphasis px-2" aria-current="page">Home</a></li>
+              <li class="nav-item"><a class="nav-link link-body-emphasis px-2" th:href="@{${topMenu.firstMenu.menuPath}}"><span th:text="${topMenu.menuNm}"></span></a></li>
+            </th:block>
+            </ul>
+            <ul class="nav">
+              <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link-body-emphasis px-2" th:href="@{/common/login.html}">로그인</a></li>
+              <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link-body-emphasis px-2" th:href="@{/users}">회원가입</a></li>
+              <li class="nav-item" sec:authorize="isAuthenticated()">
+                <span sec:authorize="isAuthenticated()" th:text="|로그인시간 : ${#temporals.format(#authentication.principal.cmUser.loginDt, 'yyyy.MM.dd HH:mm:ss')}|"></span>
               </li>
             </ul>
           </div>
-        </li>
-        <li class="border-top my-3"></li>
-      </ul>
-    </aside>
-    <!--/* lnb */--> 
-    <!--/* breadcrumb */--> 
-	<div class="col offset-md-8"  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" 
-		th:with="currMenu=${#authentication.principal.currMenu}"
-		th:fragment="breadcrumbFragment">
-	  <ol class="breadcrumb">
-	    <li class="breadcrumb-item"><a th:href="@{/}"><i class="bi bi-house-heart"></i></a></li>
-	    <li class="breadcrumb-item"><a th:href="@{${currMenu.topMenu.firstMenu.menuPath}}">[[${currMenu.topMenu.menuNm}]]</a></li>
-	    <li class="breadcrumb-item" th:if="${!currMenu.upMenu.isTop}"><a th:href="@{${currMenu.upMenu.firstMenu.menuPath}}">[[${currMenu.upMenu.menuNm}]]</a></li>
-	    <li class="breadcrumb-item active" aria-current="page">[[${currMenu.menuNm}]]</li>
-	  </ol>
-	</div>
-    <!--/* breadcrumb */--> 
+        </nav>
+        <!-- header #1 -->
+        <!-- header #2 -->
+        <section class="pb-2 mb-3 border-bottom">
+          <div class="container" sec:authorize="isAuthenticated()" th:with="auth=${#authentication.principal}">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-end">
+              <div class="dropdown text-start" style="width: 100px;">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  [[${auth.currRole.roleNm}]]
+                </button>
+                <ul class="dropdown-menu text-small">
+                  <li th:each="roleItem: ${auth.authRoleList}"><a class="dropdown-item" href="#">[[${roleItem.roleNm}]]</a></li>
+                </ul>
+              </div>
+              <div class="dropdown text-end">
+                <ul class="dropdown-menu text-small">
+                  <li><a class="dropdown-item" th:href="@{/user/bookmark}">북마크</a></li>
+                  <li><a class="dropdown-item" th:href="@{/user/user_info}">사용자정보</a></li>
+                  <li><a class="dropdown-item" th:href="@{/user/chg_pwd}">패스워드변경</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" th:href="@{/common/logout.html}">로그아웃</a></li>
+                </ul>
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle fs-5" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-bounding-box"></i>
+                  <span>[[${auth.cmUser.userNm}]]</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- header #2 -->
+        <!-- header -->
+      </header>
 
-	<footer class="py-3 my-4" th:fragment="footerFragment">
-		<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-			<li class="nav-item"><a th:href="@{/}" class="nav-link px-2 text-body-secondary">Home</a></li>
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-		</ul>
-		<p class="text-center text-body-secondary">&copy; 2023 Company, Inc</p>
-	</footer>
+        <!--/* lnb */-->
+        <aside class="flex-shrink-0 p-3" th:fragment="lnbFragment"  th:with="currMenu=${#authentication.principal.currMenu}">
+          <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+            <i class="fa-brands fa-hashnode  fa-xl"></i>
+            <span class="fs-5 fw-semibold"> [[${currMenu.topMenu.menuNm}]]</span><!--/* 최상위 메뉴 제목 */-->
+          </a>
+          <ul class="list-unstyled ps-0" th:with="topMenu=${#authentication.principal.currMenu.topMenu}"><!--/* 현재 메뉴의 상위 메뉴를..  */-->
+            <li class="mb-1" th:each="subMenu : ${topMenu.subMenuList}">
+              <!--/* 중간 메뉴는 하위를 가질 수도, 아닐 수도 있음. 하위 메뉴가 없으면 본인이 메뉴임.  */-->
+              <a class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-target="#home-collapse"
+                  th:data-bs-toggle="${(#lists.size(subMenu.subMenuList) > 0)? 'collapse' : ''}"
+                  th:aria-expanded="${(#lists.size(subMenu.subMenuList) > 0) and (subMenu.menuSeq == currMenu.menuSeq or subMenu.menuSeq == currMenu.upMenu.menuSeq)}"
+                  th:classappend="${#lists.size(subMenu.subMenuList) eq 0 and subMenu.menuSeq == currMenu.menuSeq} ? 'text-primary':''"
+                  th:href="@{${(#lists.size(subMenu.subMenuList) eq 0) ? subMenu.menuPath : ''}}"
+                >
+                [[${subMenu.menuNm}]]
+              </a>
+              <div class="collapse show" id="home-collapse" th:if="${#lists.size(subMenu.subMenuList) > 0}">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li th:if="${#lists.size(subMenu.subMenuList) > 0}" th:each="leafMenu : ${subMenu.subMenuList}">
+                    <a th:href="@{${leafMenu.menuPath}}" class="link-body-emphasis d-inline-flex text-decoration-none rounded" th:classappend="${leafMenu.menuSeq == currMenu.menuSeq} ? 'fw-bold':''"
+                        >[[${subMenu.menuNm}]]/[[${leafMenu.menuNm}]]</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="border-top my-3"></li>
+          </ul>
+        </aside>
+        <!--/* lnb */-->
+    <!--/* breadcrumb */-->
+    <div class="col offset-md-8"  style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb"
+        th:with="currMenu=${#authentication.principal.currMenu}"
+        th:fragment="breadcrumbFragment">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/}"><i class="bi bi-house-heart"></i></a></li>
+        <li class="breadcrumb-item"><a th:href="@{${currMenu.topMenu.firstMenu.menuPath}}">[[${currMenu.topMenu.menuNm}]]</a></li>
+        <li class="breadcrumb-item" th:if="${!currMenu.upMenu.isTop}"><a th:href="@{${currMenu.upMenu.firstMenu.menuPath}}">[[${currMenu.upMenu.menuNm}]]</a></li>
+        <li class="breadcrumb-item active" aria-current="page">[[${currMenu.menuNm}]]</li>
+      </ol>
+    </div>
+    <!--/* breadcrumb */-->
+    <footer class="row">
+        <div class="py-3 my-4" th:fragment="footerFragment">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a th:href="@{/}" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+          </ul>
+          <p class="text-center text-body-secondary">&copy; 2023 Company, Inc</p>
+        </div>
+    </footer>
+  </body>
 </html>
