@@ -39,7 +39,7 @@ public class CommonController {
 			new SecurityContextLogoutHandler().logout(request, response, authentication);
 		}
 
-		return "redirect:/common/login";
+		return "redirect:/common/login.html";
 	}
 
 	@GetMapping(value="/denied.html")
@@ -57,12 +57,12 @@ public class CommonController {
 		model.addAttribute("username", cmUser.getUserNm());
 		model.addAttribute("exception", exception);
 
-		return "user/login/denied";
+		return "user/login/denied.html";
 	}
 	
 	@GetMapping("/join_us.html")
 	public String joinUs() {
 		
-		return "/common/register";
+		return "/common/register.html";
 	}
 }
