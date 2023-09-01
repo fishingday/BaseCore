@@ -33,9 +33,9 @@ public class MenuMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/menu_info_list.json")
-	public ResponseEntity<List<MenuInfoDto>> findByMenuList(Long roleSeq){
+	public ResponseEntity<List<MenuInfoDto>> findByMenuList(){
 		
-		List<MenuInfoDto> cmMenuList = menuService.findByRoleSeq(roleSeq);
+		List<MenuInfoDto> cmMenuList = menuService.findByRoleSeq();
 		
 		return ResponseEntity.ok(cmMenuList);
 	}

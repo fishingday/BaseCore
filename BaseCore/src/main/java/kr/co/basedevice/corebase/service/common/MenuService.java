@@ -24,7 +24,6 @@ import kr.co.basedevice.corebase.dto.system.SaveMenuInfo;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleMenuMapRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
-import kr.co.basedevice.corebase.search.system.SearchMenu;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,6 +43,7 @@ public class MenuService {
 	 * @param searchMenuInfo
 	 * @return
 	 */
+	@Cacheable(value = "MENU", key="'Y-N'")
 	public List<CmMenu> findByMenuList() {
 		
 		// 당연히 삭제된 것과 대시보드를 비롯하여 표시되지 않는 메뉴는 제외
@@ -138,11 +138,10 @@ public class MenuService {
 	 * @param searchMenu
 	 * @return
 	 */
-	@Cacheable(value = "AUTH_MENU", key="#roleSeq")
-	public List<MenuInfoDto> findByRoleSeq(Long roleSeq) {
-		SearchMenu searchMenu = new SearchMenu();
-		searchMenu.setRoleSeq(roleSeq);
-		List<MenuInfoDto> menuInfoDtoList = cmMenuRepository.findBySearch(searchMenu);
+	@Cacheable(value="AUTH_MENU", key="'MenuInfo'")
+	public List<MenuInfoDto> findByRoleSeq() {
+		
+		List<MenuInfoDto> menuInfoDtoList = cmMenuRepository.findBySearch();
 		
 		if(menuInfoDtoList != null && !menuInfoDtoList.isEmpty()) {
 			for(MenuInfoDto menuInfoDto : menuInfoDtoList) {
@@ -168,7 +167,7 @@ public class MenuService {
 	 * 
 	 * @return
 	 */
-	@Cacheable(value = "AUTH_MENU")
+	@Cacheable(value = "AUTH_MENU", key="'Parent'")
 	public List<ParentMenuDto> findByParentMenuList() {
 		
 		// 하위 메뉴가 있는 것만 조회해서...

@@ -28,7 +28,6 @@ public interface CmMenuRepository  extends JpaRepository<CmMenu, Long>, CmMenuRe
 	 * @param delYn
 	 * @return
 	 */
-	@Cacheable(value = "MENU", key="#prntYn + '-' + #delYn")
 	List<CmMenu> findByPrntYnAndDelYnOrderByPrntOrdAsc(Yn prntYn, Yn delYn);
 
 	/**

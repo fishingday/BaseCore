@@ -21,7 +21,6 @@ import kr.co.basedevice.corebase.domain.cm.QCmUserRoleMap;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.dto.system.MenuInfoDto;
 import kr.co.basedevice.corebase.dto.system.ParentMenuDto;
-import kr.co.basedevice.corebase.search.system.SearchMenu;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -130,7 +129,7 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 	}
 
 	@Override
-	public List<MenuInfoDto> findBySearch(SearchMenu searchMenu) {
+	public List<MenuInfoDto> findBySearch() {
 		QCmMenu cmMenu = QCmMenu.cmMenu;
 
 		JPQLQuery<MenuInfoDto> query = jpaQueryFactory.select(
