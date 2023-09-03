@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -71,6 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
     
+    @Autowired
+    private UserDetailsService userDetailsService;
+    
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -122,6 +126,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    	 		.expiredUrl("/expired ");  	        // 세션이 만료된 경우 이동 할 페이지
 */
 
+        http.rememberMe() // rememberMe 기능 작동함
+        	.rememberMeParameter("remember") // default: remember-me, checkbox 등의 이름과 맞춰야함
+        	.tokenValiditySeconds(86400 * 30) // 쿠키의 만료시간 설정(초), default: 14일
+        	.alwaysRemember(false) // 사용자가 체크박스를 활성화하지 않아도 항상 실행, default: false
+        	.userDetailsService(userDetailsService); // 기능을 사용할 때 사용자 정보가 필요함. 반드시 이 설
+        
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
         customConfigurer(http);
