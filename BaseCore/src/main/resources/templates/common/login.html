@@ -49,8 +49,8 @@
         </div>
     
         <div class="form-check text-start my-3">
-          <input class="form-check-input" type="checkbox" name="remember" id="remember">
-          <label class="form-check-label" for="remember">
+          <input class="form-check-input" type="checkbox" name="remember-me" id="remember-me">
+          <label class="form-check-label" for="remember-me">
             Remember me
           </label>
         </div>
@@ -62,16 +62,11 @@
     <div th:replace="~{fragments/default_common_resources :: js}"></div>
     <script>
       function formLogin(e) {
-    
-          //let username = $("input[name='username']").val().trim();
-          //let password = $("input[name='password']").val().trim();
-          //let data = {"username" : username, "password" : password};
-          
-          let loginData = {};
-          loginData.username = $("input[name='username']").val().trim();
-          loginData.password = $("input[name='password']").val().trim();
-          loginData.remember = $("#remember-me").prop("checked");
-          
+          let loginData = {
+            'username' : $("input[name='username']").val().trim(),
+            'password' : $("input[name='password']").val().trim(),
+            'remember-me' : $("#remember-me").prop("checked")
+          };          
     
           let csrfHeader = $('meta[name="_csrf_header"]').attr('content')
           let csrfToken = $('meta[name="_csrf"]').attr('content')
@@ -87,7 +82,7 @@
                   xhr.setRequestHeader("Content-type","application/json");
               },
               success: function (data) {
-                  window.location = '/';    
+                  window.location = '/';
               },
               error : function(xhr, status, error) {
                   window.location = '/common/login.html?error=true&exception=' + xhr.responseText;

@@ -19,11 +19,9 @@ public class DashBoardController {
 		String rolePage = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
-		if(authentication != null && authentication.isAuthenticated()) {
-			CmRole cmRole = ((AccountContext) authentication.getPrincipal()).getCurrRole();
-			
-			rolePage =  cmRole.getDefPage();
-			
+		if(authentication != null && !"anonymousUser".equals(authentication.getPrincipal())) {			
+			CmRole cmRole = ((AccountContext) authentication.getPrincipal()).getCurrRole();			
+			rolePage =  cmRole.getDefPage();			
 		}else{
 			rolePage = "/dashboard/default";
 		}
