@@ -1,4 +1,3 @@
-drop table if exists account CASCADE ;
 drop table if exists cm_cd_dtl CASCADE ;
 drop table if exists cm_critical_log CASCADE; 
 drop table if exists cm_cd_grp CASCADE ;
@@ -15,11 +14,9 @@ drop table if exists cm_user_acces_log CASCADE;
 drop table if exists cm_user_alow_ip CASCADE ;
 drop table if exists cm_user_bookmark CASCADE; 
 drop table if exists cm_user_pwd CASCADE ;
-drop table if exists cm_user_role_map CASCADE; 
-drop table if exists resources CASCADE; 
-drop table if exists role CASCADE ;
-drop table if exists role_resources CASCADE; 
-drop table if exists user_roles CASCADE ;
+drop table if exists cm_user_role_map CASCADE;
+drop table if exists cm_org_user_map CASCADE ;
+drop table if exists cm_org CASCADE ;
 drop sequence if exists hibernate_sequence;
 drop sequence if exists seq_cm_critical_log;
 drop sequence if exists seq_cm_menu;
@@ -30,6 +27,7 @@ drop sequence if exists seq_cm_role_chg_log;
 drop sequence if exists seq_cm_user;
 drop sequence if exists seq_cm_user_acces_log;
 drop sequence if exists seq_cm_user_alow_ip;
+drop sequence if exists seq_cm_org;
 
 DROP TABLE QRTZ_FIRED_TRIGGERS;
 DROP TABLE QRTZ_CRON_TRIGGERS;

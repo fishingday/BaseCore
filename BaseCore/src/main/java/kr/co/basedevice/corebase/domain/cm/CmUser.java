@@ -87,4 +87,8 @@ public class CmUser extends BaseEntity implements Serializable{
 	@JsonIgnore
 	private List<CmUserAlowIp> cmUserAlowIpList = new ArrayList<>(1);
 	
+	@OneToMany(mappedBy = "cmUser", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<CmOrgUserMap> cmOrgUserMapList = new ArrayList<>(1);
+	
 }
