@@ -57,7 +57,7 @@ public class CommonController {
 		model.addAttribute("username", cmUser.getUserNm());
 		model.addAttribute("exception", exception);
 
-		return "user/login/denied.html";
+		return "/common/denied.html";
 	}
 	
 	@GetMapping("/join_us.html")

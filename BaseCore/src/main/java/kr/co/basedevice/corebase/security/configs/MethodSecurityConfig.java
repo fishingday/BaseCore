@@ -11,17 +11,15 @@ import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleVoter;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import kr.co.basedevice.corebase.security.factory.UrlResourcesMapFactoryBean;
 import kr.co.basedevice.corebase.security.metadatasource.UrlSecurityMetadataSource;
 import kr.co.basedevice.corebase.security.service.SecurityResourceService;
+import kr.co.basedevice.corebase.security.voter.IpAddressVoter;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration{
+public class MethodSecurityConfig{
 
     @Autowired
     private SecurityResourceService securityResourceService;
@@ -53,7 +51,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration{
     }
 
     private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
-        return Arrays.asList(new RoleVoter());
+        return Arrays.asList(new IpAddressVoter(), new RoleVoter());
     }
 
     
