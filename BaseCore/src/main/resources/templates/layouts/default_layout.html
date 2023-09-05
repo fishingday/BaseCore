@@ -8,8 +8,9 @@
     <meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}">
     <meta name="description" content="Core device">
-    <title>Core Device</title>
     <div th:replace="~{fragments/default_common_resources :: css}"></div>
+    <div th:replace="~{fragments/default_common_resources :: js}"></div>
+    <title>Core Device</title>
   </head>
   <body>
     <div class="container-xxl mx-auto">
@@ -31,7 +32,6 @@
         <div th:replace="fragments/default_frag :: footerFragment"></div>
       </footer>
     </div>
-    <div th:replace="~{fragments/default_common_resources :: js}"></div>
     <th:block layout:fragment="page_script"></th:block>
   </body>
 </html>
