@@ -19,7 +19,7 @@ import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 import kr.co.basedevice.corebase.security.voter.IpAddressVoter;
 
 @Configuration
-public class MethodSecurityConfig{
+public class CustomSecurityConfig{
 
     @Autowired
     private SecurityResourceService securityResourceService;
