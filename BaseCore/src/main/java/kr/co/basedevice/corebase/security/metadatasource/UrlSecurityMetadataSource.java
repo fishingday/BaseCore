@@ -2,10 +2,12 @@ package kr.co.basedevice.corebase.security.metadatasource;
 
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,19 +46,27 @@ public class UrlSecurityMetadataSource implements FilterInvocationSecurityMetada
         return result;
     }
 
+    @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
-        return null;
+        Set<ConfigAttribute> allAttributes = new HashSet<>();
+
+        for (Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap
+                .entrySet()) {
+            allAttributes.addAll(entry.getValue());
+        }
+
+        return allAttributes;
     }
 
-    public void reload() throws Exception {
+    public void reload(){
 
         LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = securityResourceService.getResourceList();
         Iterator<Map.Entry<RequestMatcher, List<ConfigAttribute>>> iterator = reloadedMap.entrySet().iterator();
+
         requestMap.clear();
 
-        while (iterator.hasNext()) {
+        while(iterator.hasNext()){
             Map.Entry<RequestMatcher, List<ConfigAttribute>> entry = iterator.next();
-
             requestMap.put(entry.getKey(), entry.getValue());
         }
     }

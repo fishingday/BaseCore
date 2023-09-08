@@ -2,7 +2,6 @@ package kr.co.basedevice.corebase.security.handler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,6 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
-import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
@@ -59,13 +57,8 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         
         userService.saveCmUser(cmUser);
         
-        // 현재 권한을 .. 설정
-        List<CmRole> cmRoleList = userService.findByUserSeq4CmRole(cmUser.getUserSeq());
-        account.setAuthRoleList(cmRoleList);
-        account.setCurrRole(cmRoleList.get(0));
-                
-        // 현재 권한의 메뉴 목록을 설정한다.
-        account.setMyMenu(userService.findRolesMenuWithSetting(cmUser.getUserSeq(), account.getCurrRole().getRoleSeq()));
+        // 나머지 정보를 설정한다.
+        userService.setOtherInfo(account);
         
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());

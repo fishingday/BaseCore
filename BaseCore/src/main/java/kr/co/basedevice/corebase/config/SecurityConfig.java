@@ -76,11 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
-
-    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
         auth.authenticationProvider(ajaxAuthenticationProvider());
@@ -134,9 +129,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         	.authenticationSuccessHandler(formAuthenticationSuccessHandler);
         
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        
+        
 
         customConfigurer(http);
     }
+    
+    /*
+     * 참고 : https://github.com/spring-projects/spring-security/issues/10938
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
 
     private void customConfigurer(HttpSecurity http) throws Exception {
         http

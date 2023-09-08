@@ -60,7 +60,7 @@ public class CustomSecurityConfig{
     FilterRegistrationBean filterRegistrationBean() throws Exception {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(customFilterSecurityInterceptor());
-        filterRegistrationBean.setEnabled(false);
+        filterRegistrationBean.setEnabled(true);
         return filterRegistrationBean;
     }
 }

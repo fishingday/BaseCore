@@ -1,6 +1,7 @@
 package kr.co.basedevice.corebase.security.voter;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.AccessDeniedException;
@@ -8,7 +9,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 
 public class IpAddressVoter implements AccessDecisionVoter<Object> {
@@ -27,24 +28,20 @@ public class IpAddressVoter implements AccessDecisionVoter<Object> {
 	public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
 		
 		WebAuthenticationDetails details  = (WebAuthenticationDetails) authentication.getDetails();
-		String remoteAddress = details.getRemoteAddress();
-
-		// TODO : 사용자 정보의 조회 여부를 보고... 결정하자.
-		CmUser cmUser = ((AccountContext) authentication.getPrincipal()).getCmUser();
 		
-		int result = ACCESS_DENIED;
+		List<CmUserAlowIp> cmUserAlowIpList = ((AccountContext) authentication.getPrincipal()).getAllowIpList();
 		
-		if(cmUser != null) {
-			return ACCESS_ABSTAIN;
-		}
-		
-		if(ACCESS_DENIED == result) {
+		if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
+			String remoteAddress = details.getRemoteAddress();			
+			for(CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
+				if(remoteAddress.equals(cmUserAlowIp.getAlowIp())) {
+					return ACCESS_ABSTAIN;					
+				}
+			}
+			// 중간에 못나오면 아웃
 			throw new AccessDeniedException("Invailid IpAddress");
-		}
-		
-		
-		
-		return 0;
+		}	
+		return ACCESS_ABSTAIN;
 	}
 
 }

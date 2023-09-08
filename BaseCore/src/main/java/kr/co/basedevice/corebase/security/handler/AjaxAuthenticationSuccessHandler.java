@@ -2,7 +2,6 @@ package kr.co.basedevice.corebase.security.handler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +16,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
-import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
-import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
+import kr.co.basedevice.corebase.service.common.UserService;
 import kr.co.basedevice.corebase.util.RequestUtil;
 
 public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -33,11 +30,10 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
     @Value("${login.defaulturl:/dashboard/init.html}")
 	private String defaultUrl;
 	
-	@Autowired
-	private CmUserRepository cmUserRepository;
 
 	@Autowired
-	private CmRoleRepository cmRoleRepository;
+	private UserService userService;
+	
 	
 	@Autowired
 	private LoggingService loggingService;
@@ -58,10 +54,10 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
 		cmUser.setLoginDt(LocalDateTime.now());
         cmUser.setLastLoginIp(RequestUtil.getClientIp(request));
         
-        cmUserRepository.save(cmUser);
-                
-        List<CmRole> cmRoleList = cmRoleRepository.findByUserSeq(cmUser.getUserSeq());
-        account.setCurrRole(cmRoleList.get(0));
+        userService.saveCmUser(cmUser);
+        
+        // 나머지 정보를 설정한다.
+        userService.setOtherInfo(account);
         
         // 로깅..
         loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());

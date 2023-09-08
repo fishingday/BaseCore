@@ -30,13 +30,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_ROLE", uniqueConstraints = {@UniqueConstraint(name = "UK_CM_ROLE_ROLE_CD", columnNames = { "ROLE_CD" }) })
-@SequenceGenerator(name = "SEQGEN_CM_USER", sequenceName = "SEQ_CM_ROLE", initialValue = 1000, allocationSize = 1)
+@SequenceGenerator(name = "SEQGEN_CM_ROLE", sequenceName = "SEQ_CM_ROLE", initialValue = 1000, allocationSize = 1)
 public class CmRole extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 1414919147407264427L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_USER")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_ROLE")
 	@Column(name = "ROLE_SEQ", nullable = false)
 	private Long roleSeq;
 

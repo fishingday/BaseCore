@@ -18,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
+import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
 import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
 import kr.co.basedevice.corebase.domain.cm.CmUserRoleMap;
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
@@ -32,11 +34,14 @@ import kr.co.basedevice.corebase.dto.system.SaveUserPwd;
 import kr.co.basedevice.corebase.dto.system.SaveUserRole;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
+import kr.co.basedevice.corebase.repository.cm.CmOrgRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
+import kr.co.basedevice.corebase.repository.cm.CmUserAlowIpRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserPwdRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserRoleMapRepository;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
+import kr.co.basedevice.corebase.security.service.AccountContext;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -54,6 +59,8 @@ public class UserService {
 	final private CmUserRoleMapRepository cmUserRoleMapRepository;  
 	final private CmUserPwdRepository cmUserPwdRepository;
 	final private CmMenuRepository cmMenuRepository;
+	final private CmOrgRepository cmOrgRepository;
+	final private CmUserAlowIpRepository cmUserAlowIpRepository;
 
 	
 	public void saveCmUser(CmUser cmUser) {
@@ -302,5 +309,39 @@ public class UserService {
 			cmUserRepository.save(cmUser);
 		}
 		return true;
+	}
+
+	/**
+	 * 로그인 성공 시 필요한 나머지 정보를 설정한다. 
+	 * 
+	 * @param account
+	 */
+	public void setOtherInfo(AccountContext account) {		
+		if(account == null || account.getCmUser() == null) {
+			return;
+		}
+		
+		CmUser cmUser = account.getCmUser();
+        List<CmRole> cmRoleList = cmRoleRepository.findByUserSeq(cmUser.getUserSeq());
+        if(cmRoleList != null && !cmRoleList.isEmpty()) {
+        	account.setAuthRoleList(cmRoleList);
+            account.setCurrRole(cmRoleList.get(0));
+                    
+            // 현재 권한의 메뉴 목록을 설정한다.
+            account.setMyMenu(this.findRolesMenuWithSetting(cmUser.getUserSeq(), account.getCurrRole().getRoleSeq()));
+        }        
+
+        // 사용자의 조직 정보 조회
+        List<CmOrg> cmOrgList = cmOrgRepository.findByUserSeq(cmUser.getUserSeq());
+        if(cmOrgList != null && !cmOrgList.isEmpty()) {
+        	account.setOrgList(cmOrgList);
+        	account.setCurrOrg(cmOrgList.get(0));
+        }        
+        
+        // 사용자의 허용 IP가 설정되어 있다면..
+        List<CmUserAlowIp> cmUserAlowIpList = cmUserAlowIpRepository.findByUserSeqAndDelYn(cmUser.getUserSeq(), Yn.N);
+        if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
+        	account.setAllowIpList(cmUserAlowIpList);
+        }
 	}
 }

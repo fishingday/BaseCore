@@ -47,6 +47,7 @@ public final class AjaxLoginConfigurer<H extends HttpSecurityBuilder<H>> extends
             getAuthenticationFilter().setRememberMeServices(rememberMeServices);
         }
         http.setSharedObject(AjaxLoginProcessingFilter.class,getAuthenticationFilter());
+        
         http.addFilterBefore(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
