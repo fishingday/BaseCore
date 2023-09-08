@@ -25,6 +25,11 @@ public class SecurityResourceService {
 
 	private CmMenuRepository cmMenuRepository;
 
+	/**
+	 * Spring Security 초기화에 사용할 리소스 정보 제굥용
+	 * 
+	 * @return
+	 */
     public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> getResourceList() {
 
     	LinkedHashMap<RequestMatcher, List<ConfigAttribute>> result = new LinkedHashMap<>();
@@ -64,6 +69,7 @@ public class SecurityResourceService {
 
     /**
      * 모든 메뉴 정보조회
+     * - 세션 추적용 Interceptor에서 사용할 메뉴 정보
      * 
      * @return
      */

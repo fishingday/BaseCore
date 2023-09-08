@@ -1,6 +1,5 @@
 package kr.co.basedevice.corebase.security.metadatasource;
 
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,26 +17,31 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 
-public class UrlSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
+public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource{
 
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap;
     private SecurityResourceService securityResourceService;
 
-    public UrlSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap, SecurityResourceService securityResourceService) {
+    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap, SecurityResourceService securityResourceService) {
         this.requestMap = requestMap;
         this.securityResourceService = securityResourceService;
+    }
+    
+    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap) {
+        this.requestMap = requestMap;
+     
     }
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         Collection<ConfigAttribute> result = null;
         FilterInvocation fi = (FilterInvocation) object;
-        HttpServletRequest httpServletRequest = fi.getHttpRequest();
+        HttpServletRequest request = fi.getHttpRequest();
 
         if (requestMap != null) {
             for (Map.Entry<RequestMatcher, List<ConfigAttribute>> entry : requestMap.entrySet()) {
                 RequestMatcher matcher = entry.getKey();
-                if (matcher.matches(httpServletRequest)) {
+                if (matcher.matches(request)) {
                     result = entry.getValue();
                     break;
                 }
@@ -75,4 +79,5 @@ public class UrlSecurityMetadataSource implements FilterInvocationSecurityMetada
     public boolean supports(Class<?> clazz) {
         return FilterInvocation.class.isAssignableFrom(clazz);
     }
+
 }
