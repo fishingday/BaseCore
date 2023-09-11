@@ -42,4 +42,9 @@ public class SystemController {
 	public String viewEnvMgt() {
 		return "/system/env_mgt/env_mgt.html";
 	}
+	
+	@GetMapping(value={"/org_mgt", "/org_mgt/init.html"})
+	public String viewOrgMgt() {
+		return "/system/org_mgt/org_mgt.html";
+	}
 }

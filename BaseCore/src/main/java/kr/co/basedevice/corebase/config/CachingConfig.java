@@ -21,7 +21,8 @@ public class CachingConfig {
                 new ConcurrentMapCache("CODE", false),
                 new ConcurrentMapCache("MENU", false),
                 new ConcurrentMapCache("AUTH_MENU", false),
-                new ConcurrentMapCache("ROLE", false)
+                new ConcurrentMapCache("ROLE", false),
+                new ConcurrentMapCache("ORG", false)
             )
         );
         return cacheManager;
