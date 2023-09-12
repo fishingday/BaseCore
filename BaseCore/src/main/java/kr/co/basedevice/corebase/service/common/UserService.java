@@ -222,6 +222,7 @@ public class UserService {
 				cmOrgUserMap.setOrgSeq(saveUserInfo.getOrgSeq());
 				cmOrgUserMap.setUserSeq(saveUserInfo.getUserSeq());
 				cmOrgUserMap.setDelYn(Yn.N);
+				cmOrgUserMapRepository.save(cmOrgUserMap);
 			}
 			
 			return true;
