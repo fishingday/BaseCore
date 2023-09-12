@@ -26,20 +26,21 @@ public class IpAddressVoter implements AccessDecisionVoter<Object> {
 	}
 
 	@Override
-	public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
-		
+	public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {		
 		WebAuthenticationDetails details  = (WebAuthenticationDetails) authentication.getDetails();		
-		List<CmUserAlowIp> cmUserAlowIpList = ((AccountContext) authentication.getPrincipal()).getAllowIpList();
-		if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
-			String remoteAddress = details.getRemoteAddress();
-			for(CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
-				IpAddressMatcher matcher = new IpAddressMatcher(cmUserAlowIp.getAlowIp());
-				if(matcher.matches(remoteAddress)) {
-					return ACCESS_ABSTAIN;					
+		if(!"anonymousUser".equals(authentication.getPrincipal())) { // 익명 사용자라면 무시하자.
+			List<CmUserAlowIp> cmUserAlowIpList = ((AccountContext) authentication.getPrincipal()).getAllowIpList();
+			if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
+				String remoteAddress = details.getRemoteAddress();
+				for(CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
+					IpAddressMatcher matcher = new IpAddressMatcher(cmUserAlowIp.getAlowIp());
+					if(matcher.matches(remoteAddress)) {
+						return ACCESS_ABSTAIN;					
+					}
 				}
+				// 중간에 못나오면 아웃
+				throw new AccessDeniedException("Invailid IpAddress");
 			}
-			// 중간에 못나오면 아웃
-			throw new AccessDeniedException("Invailid IpAddress");
 		}
 		
 		return ACCESS_ABSTAIN;

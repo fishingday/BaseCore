@@ -1,13 +1,22 @@
 package kr.co.basedevice.corebase.dto.system;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.exception.OperationException;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString(exclude = "parentOrgInfo")
 @Data
-public class OrgInfoDto {
+public class OrgInfoDto implements Comparable<OrgInfoDto>{
 	private Long orgSeq;
 	
 	private Long upOrgSeq;
@@ -20,7 +29,8 @@ public class OrgInfoDto {
 	
 	private OrgInfoDto parentOrgInfo;
 	
-	private List<OrgInfoDto> subOrgInfoList;
+	@JsonIgnore
+	private List<OrgInfoDto> subOrgInfoList = new ArrayList<>(1);
 	
 	public OrgInfoDto(CmOrg cmOrg) {
 		if(cmOrg == null) {
@@ -49,5 +59,27 @@ public class OrgInfoDto {
 		}
 		
 		return sb.toString();
+	}	
+	
+	public String getSiblingOrder() {
+		StringBuilder sb = new StringBuilder();
+		
+		if(parentOrgInfo == null) {
+			sb.append(this.prntOrd);
+		}else {
+			if(parentOrgInfo.parentOrgInfo != null) {
+				String siblingOrder = parentOrgInfo.getSiblingOrder();
+				sb.append(siblingOrder).append(">").append(this.prntOrd);
+			}else {
+				sb.append(parentOrgInfo.getSiblingOrder()).append(">").append(this.prntOrd);
+			}
+		}
+		
+		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(OrgInfoDto target) {
+        return this.getSiblingOrder().compareTo(target.getSiblingOrder());
 	}
 }

@@ -41,6 +41,14 @@
             <option value="">전체</option>
           </select>
         </div>
+        <div class="col-2">
+          <label for="search_orgSeq" class="form-label mt-2">소속</label>
+        </div>
+        <div class="col-4">
+          <select class="form-select" id="search_orgSeq">
+            <option value="">전체</option>
+          </select>
+        </div>
         <div class="mt-2">
         <a class="btn btn-primary float-end" id="btnSearch">
           <i class="fa-solid fa-magnifying-glass"></i> 조회
@@ -109,6 +117,12 @@
                   <label for="userTelNo" class="col-sm-4 col-form-label">전화번호</label>
                   <div class="col-sm-8">
                     <input type="tel" class="form-control" id="userTelNo">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="orgSeq" class="col-sm-4 col-form-label">소속</label>
+                  <div class="col-sm-8">
+                    <select class="form-select" id="orgSeq"></select>
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -265,6 +279,7 @@
             });
 
             fnObj.action.initRoleData();
+            fnObj.action.initOrgData();
             fnObj.action.initCodeData().then((res) =>{
               fnObj.grid.init();
             });
@@ -312,6 +327,26 @@
               });
             });
           },
+          initOrgData: function(){
+            return $.ajax({
+              url: "[[@{/common/org_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json"
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $("#search_orgSeq").append("<option value='" + data[i].orgSeq + "'>" + data[i].fullOrgNm + "</option>");
+                $("#orgSeq").append("<option value='" + data[i].orgSeq + "'>" + data[i].fullOrgNm + "</option>");
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.mgessage,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          },
           setUserInfo: function(userInfo){
             fnObj.action.initUserInfo();
 
@@ -319,6 +354,7 @@
             $("#popupUserInfo #userNm").val(userInfo.userNm);
             $("#popupUserInfo #loginId").val(userInfo.loginId);
             $("#popupUserInfo #userTelNo").val(userInfo.userTelNo);
+            $("#popupUserInfo #orgSeq").val(userInfo.orgSeq);
             $("#popupUserInfo #acuntExpDt").val(userInfo.acuntExpDt);
 
             if(userInfo.cmRoleList){
@@ -337,6 +373,7 @@
             $("#popupUserInfo #userNm").val('');
             $("#popupUserInfo #loginId").val('');
             $("#popupUserInfo #userTelNo").val('');
+            $("#popupUserInfo #orgSeq").val('');
             $("#popupUserInfo #acuntExpDt").val('');
             $('#popupUserInfo .role-list .list-group-item > input:checkbox[name="roleSeqList"]').prop("checked", false);
             $("#popupUserInfo #userStatCd").val('');
@@ -394,6 +431,16 @@
               });
               return;
             }
+            
+            if($("#popupUserInfo #orgSeq").val() === ''){
+              Swal.fire({
+                title: '필수 항목 입력',
+                text: '소속을 선택해야 합니다.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
 
             if($("#popupUserInfo #loginFailCnt").val() === ''){
               $("#popupUserInfo #loginFailCnt").val(0);
@@ -404,6 +451,7 @@
             userInfo.userNm = $("#popupUserInfo #userNm").val();
             userInfo.loginId = $("#popupUserInfo #loginId").val();
             userInfo.userTelNo = $("#popupUserInfo #userTelNo").val();
+            userInfo.orgSeq = $("#popupUserInfo #orgSeq").val();
             userInfo.acuntExpDt = $("#popupUserInfo #acuntExpDt").val();
             userInfo.userStatCd = $("#popupUserInfo #userStatCd").val();
             userInfo.loginFailCnt = $("#popupUserInfo #loginFailCnt").val();
@@ -597,10 +645,11 @@
                           return '';
                         }
                       },
+                      {field: 'orgNames',     title: '소속',     align: 'center', valign: 'middle', sortable: true},
                       {field: 'acuntExpDt',   title: '만료일',     align: 'center', valign: 'middle', sortable: true},
-                      {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', sortable: true},
-                      {field: 'lastLoginIp',  title: '로그인IP',    align: 'center', valign: 'middle', sortable: true},
-                      {field: 'loginFailCnt', title: '실패수',     align: 'center', valign: 'middle', sortable: true},
+                      {field: 'loginDt',      title: '로그인일시',  align: 'center', valign: 'middle', visible: false},
+                      {field: 'lastLoginIp',  title: '로그인IP',    align: 'center', valign: 'middle', visible: false},
+                      {field: 'loginFailCnt', title: '실패수',     align: 'center', valign: 'middle', visible: false},
                       {field: 'operate',      title: '상세보기',   align: 'center', valign: 'middle', clickToSelect: false, events: window.operateEvents,
                         formatter: function(value, row, index) {
                           return [
@@ -646,6 +695,10 @@
 
                   if($("#search_roleSeq").val() !== ''){
                     params.roleSeq = $("#search_roleSeq").val();
+                  }
+                  
+                  if($("#search_orgSeq").val() !== ''){
+                    params.orgSeq = $("#search_orgSeq").val();
                   }
 
                   return params;

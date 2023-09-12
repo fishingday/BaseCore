@@ -19,6 +19,7 @@ public class SaveUserInfo {
 	private String loginId;
 	private String userNm;
 	private String userTelNo;
+	private Long orgSeq;
 	private Integer loginFailCnt;
 	private UserStatCd userStatCd;
 	

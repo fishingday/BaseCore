@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -42,7 +43,11 @@ public class UserInfoDto {
 
 	private Yn delYn;
 	
+	private Long orgSeq;
+	
 	private List<CmRole> cmRoleList;
+	
+	private List<CmOrg> cmOrgList;
 	
 	
 	public String getRoleNames() {
@@ -53,6 +58,21 @@ public class UserInfoDto {
 					sb.append(",");
 				}
 				sb.append(cmRole.getRoleNm());
+			}
+			return sb.toString();			
+		}else {
+			return null;
+		}
+	}
+	
+	public String getOrgNames() {
+		if(this.cmOrgList != null && !cmOrgList.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for(CmOrg cmOrg : this.cmOrgList) {
+				if(!sb.isEmpty()) {
+					sb.append(",");
+				}
+				sb.append(cmOrg.getOrgNm());
 			}
 			return sb.toString();			
 		}else {

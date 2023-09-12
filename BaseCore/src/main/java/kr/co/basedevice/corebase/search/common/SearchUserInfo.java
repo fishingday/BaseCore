@@ -15,6 +15,7 @@ public class SearchUserInfo {
 	private String userNm;
 	private String userTelNo;
 	private Long roleSeq;
+	private Long orgSeq;
 	
 	private String order;
 	private String sort;

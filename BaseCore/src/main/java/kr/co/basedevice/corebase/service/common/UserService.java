@@ -16,9 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmOrg;
+import kr.co.basedevice.corebase.domain.cm.CmOrgUserMap;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
@@ -35,6 +37,7 @@ import kr.co.basedevice.corebase.dto.system.SaveUserRole;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmOrgRepository;
+import kr.co.basedevice.corebase.repository.cm.CmOrgUserMapRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserAlowIpRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserPwdRepository;
@@ -61,6 +64,7 @@ public class UserService {
 	final private CmMenuRepository cmMenuRepository;
 	final private CmOrgRepository cmOrgRepository;
 	final private CmUserAlowIpRepository cmUserAlowIpRepository;
+	final private CmOrgUserMapRepository cmOrgUserMapRepository;
 
 	
 	public void saveCmUser(CmUser cmUser) {
@@ -149,6 +153,10 @@ public class UserService {
 			for(UserInfoDto userInfoDto : pageUserInfo.getContent()) {
 				userInfoDto.setNum(num++);
 				userInfoDto.setCmRoleList(cmRoleRepository.findByUserSeq(userInfoDto.getUserSeq()));
+				userInfoDto.setCmOrgList(cmOrgRepository.findByUserSeq(userInfoDto.getUserSeq()));
+				if(userInfoDto.getCmOrgList() != null && !userInfoDto.getCmOrgList().isEmpty()) {
+					userInfoDto.setOrgSeq(userInfoDto.getCmOrgList().get(0).getOrgSeq());
+				}
 			}
 		}
 		
@@ -199,6 +207,23 @@ public class UserService {
 					cmUserRoleMapRepository.save(cmUserRoleMap);
 				}
 			}
+			
+			// 일단 모든 조직을 제거한다.
+			List<CmOrgUserMap> cmOrgUserMapList =cmOrgUserMapRepository.findByUserSeqAndDelYn(saveUserInfo.getUserSeq(), Yn.N);
+			if(cmOrgUserMapList != null && !cmOrgUserMapList.isEmpty()){
+				for(CmOrgUserMap cmOrgUserMap: cmOrgUserMapList) {
+					cmOrgUserMap.setDelYn(Yn.Y);
+				}
+				cmOrgUserMapRepository.saveAll(cmOrgUserMapList);
+			}
+			
+			if(!ObjectUtils.isEmpty(saveUserInfo.getOrgSeq())) {
+				CmOrgUserMap cmOrgUserMap = new CmOrgUserMap();
+				cmOrgUserMap.setOrgSeq(saveUserInfo.getOrgSeq());
+				cmOrgUserMap.setUserSeq(saveUserInfo.getUserSeq());
+				cmOrgUserMap.setDelYn(Yn.N);
+			}
+			
 			return true;
 		}
 		
@@ -329,7 +354,7 @@ public class UserService {
                     
             // 현재 권한의 메뉴 목록을 설정한다.
             account.setMyMenu(this.findRolesMenuWithSetting(cmUser.getUserSeq(), account.getCurrRole().getRoleSeq()));
-        }        
+        }
 
         // 사용자의 조직 정보 조회
         List<CmOrg> cmOrgList = cmOrgRepository.findByUserSeq(cmUser.getUserSeq());
