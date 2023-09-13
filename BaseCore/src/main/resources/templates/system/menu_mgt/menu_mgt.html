@@ -28,7 +28,7 @@
             <div class="row g-3">
               <div class="col-12">
                 <label for="upMenuSeq" class="form-label">상위메뉴</label>
-                <select class="form-select" id="upMenuSeq" required></select>
+                <select class="form-select" id="upMenuSeq"></select>
               </div>
 
               <div class="col-sm-6">
@@ -56,17 +56,16 @@
                 <ul class="list-group role-list" id="role_list"></ul>
               </div>
               <div class="col-sm-6">
-                  <label for="menuDesc" class="form-label">메뉴 설명</label>
+                <label for="menuDesc" class="form-label">메뉴 설명</label>
                 <textarea class="form-control" id="menuDesc" rows="8"></textarea>
-                </div>
-
-                <div class="col-sm-6">
-                  <input type="checkbox" class="form-check-input" id="prntYn">
-                  <label class="form-check-label" for="prntYn">출력 여부</label>
-                </div>
-                <div class="col-sm-6">
-                  <input type="checkbox" class="form-check-input" id="cmScrenYn">
-                  <label class="form-check-label" for="cmScrenYn">공통 화면 여부</label>
+              </div>
+              <div class="col-sm-6">
+                <input type="checkbox" class="form-check-input" id="prntYn">
+                <label class="form-check-label" for="prntYn">출력 여부</label>
+              </div>
+              <div class="col-sm-6">
+                <input type="checkbox" class="form-check-input" id="cmScrenYn">
+                <label class="form-check-label" for="cmScrenYn">공통 화면 여부</label>
               </div>
             </div>
             <hr class="my-4">
@@ -377,7 +376,7 @@
                 }
 
                 if(rdata.cmScrenYn === 'Y'){
-                            $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
+                  $('.role-list .list-group-item > input:checkbox[name="roleSeqList"]').attr("disabled", true);
                   $("#cmScrenYn").prop("checked", true);
                 }
 

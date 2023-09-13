@@ -189,7 +189,7 @@
 
             // 역할 정보 탭
             $("#tabRoleInfo").bind("click", function(){
-              fnObj.action.clickTabRolInfo();
+              fnObj.action.clickTabRoleInfo();
             });
 
             // 역할 사용자 탭
@@ -228,7 +228,7 @@
             $("#roleDesc").val(cmRole.roleDesc);
             $("#defPage").val(cmRole.defPage);
           },
-          clickTabRolInfo: function(){
+          clickTabRoleInfo: function(){
             $("#tabRoleInfo").addClass("active");
             $("#tabRoleInfo").prop("aria-current", "page");
             $("#tabRoleInfoDiv").show();

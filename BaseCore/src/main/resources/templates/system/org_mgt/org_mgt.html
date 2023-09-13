@@ -4,14 +4,543 @@
       layout:decorate="~{layouts/default_layout}">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <title>공지관리</title>
+	    <title>조직관리</title>
 	</head>
+<!-- Content 시작 -->
+      <div layout:fragment="content" class="col">
+        <div class="row">
+          <div class="col-4">
+            <div id="toolbar">
+              <button id="btnNewOrg" class="btn btn-outline-success">
+                <i class="bi bi-file-earmark-plus"></i> 신규 생성
+              </button>
+            </div>
+            <table
+              id="table"
+              data-toolbar="#toolbar"
+              th:data-url="@{/system/org_mgt/get_org_list.json}">
+            </table>
+          </div>
+          <div class="col-8">
+            <div class="row" id="child-box">
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link" id="tabOrgInfo">조직 상세</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="tabOrgUsers" >소속 사용자</a>
+                </li>
+              </ul>
+            </div>
+            <div class="row border border-top-0 border-secondary-subtle" style="height: 558px;">
+              <div id="tabOrgInfoDiv">
+                <h4 class="mt-4 mb-3" id="form-title">조직 정보</h4>
+                
+                <div class="col-12 p-2">
+                  <label for="upOrgSeq" class="form-label">상위조직</label>
+                  <select class="form-select" id="upOrgSeq"></select>
+                </div>
+  
+                <div class="col-12 p-2">
+                  <label for="orgNm" class="form-label">조직명</label>
+                  <input type="text" class="form-control" id="orgNm">
+                  <input type="hidden" id="orgSeq">
+                </div>
+                
+                <div class="col-12 p-2">
+                  <label for="prntOrd" class="form-label">출력순서</label>
+                  <input type="number" class="form-control" id="prntOrd">
+                </div>
+                
+                <div class="col-12 p-2">
+                  <label for="orgDesc" class="form-label">조직 설명</label>
+                  <textarea class="form-control" id="orgDesc" rows="2"></textarea>
+                </div>
+                <hr class="my-4">
+                <div class="row justify-content-between">
+                  <div class="col-auto me-auto">
+                    <button class="w-10 btn btn-danger" type="button" id="btnDeleteOrg">
+                      <i class="bi bi-trash"></i> 삭제
+                    </button>
+                  </div>
+                  <div class="col-auto">
+                    <button class="w-10 btn btn-primary" type="button" id="btnSaveOrg">
+                      <i class="bi bi-save"></i> 저장
+                    </button>
+                  </div>
+                </div>                               
+              </div>
+              <div id="tabOrgUsersDiv" class="row">
+                <div class="col-5">
+                  <h4 class="text-center m-2" id="form-title">소속 사용자</h4>
+                  <table
+                    id="table_org_user"
+                    data-search="true"
+                    data-click-to-select="true"
+                    data-id-field="userSeq"
+                    th:data-url="@{/system/org_mgt/org_user_list.json}">
+                  </table>
+                </div>
+                <div class="col-2 align-self-center">
+                  <button id="btnAddOrgUser" class="btn btn-outline-success mb-2">
+                    <i class="bi bi-arrow-left-square-fill"></i> 추가
+                  </button>
+                  <button id="btnRemoveOrgUser" class="btn btn-outline-danger mt-2">
+                    제외 <i class="bi bi-arrow-right-square-fill"></i>
+                  </button>
+                </div>
+                <div class="col-5">
+                  <h4 class="text-center m-2" id="form-title">후보 사용자</h4>
+                  <table
+                    id="table_tgt_user"
+                    data-search="true"
+                    data-click-to-select="true"
+                    data-id-field="userSeq"
+                    th:data-url="@{/system/org_mgt/exclude_user_list.json}">
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script language="javascript" type="text/javascript" layout:fragment="page_script">
+        let token = $("meta[name='_csrf']").attr("content"); 
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+          xhr.setRequestHeader(header, token); 
+        });
 
-	<!-- Content 시작 -->
-	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-	        <div class="container text-center">
-	            <h1 class="text-primary">여기는 조직관리 페이지 입니다.</h1>
-	        </div>
-	    </div>
-	<!-- Content 종료 -->
+        var fnObj = {
+          pageStart:  function(){ // 페이지 초기 실행 스크립트
+            fnObj.page.init();
+            fnObj.grid.init();
+            $("#btnNewOrg").click();
+          },
+          page: {
+            init: function(){
+              fnObj.action.setParentOrg();
+
+              $("#btnNewOrg").bind("click", function(){
+                fnObj.action.initForm();
+                $("#tabOrgInfo").click();
+                $("#btnDeleteOrg").hide();
+              });
+
+              $("#btnDeleteOrg").bind("click", function(){
+                fnObj.action.removeOrg();
+              });
+
+              $("#btnSaveOrg").bind("click", function(){
+                fnObj.action.saveOrg();
+              });
+              
+              // 역할 정보 탭
+              $("#tabOrgInfo").bind("click", function(){
+                fnObj.action.clickTabOrgInfo();
+              });
+  
+              // 역할 사용자 탭
+              $("#tabOrgUsers").bind("click", function(){
+                fnObj.action.clickTabOrgUsers();
+              });
+              
+              // 사용자 추가
+              $("#btnAddOrgUser").bind("click", function(){
+                fnObj.action.addUserOrg();
+              });
+  
+              // 사용자 제외
+              $("#btnRemoveOrgUser").bind("click", function(){
+                fnObj.action.removeUserOrg();
+              });
+            }
+          },
+          action: { // 호출이나 화면 동작
+            setParentOrg: function(){
+              $.ajax({
+                url: "[[@{/system/org_mgt/get_parent_org_list.json}]]",
+                type: "GET",
+                async: true,
+                dataType : "json"
+              }).done(function(data, textStatus, xhr){
+                $("#upOrgSeq").append("<option value=''>최상위</option>");
+                for(var i = 0; i < data.length; i++ ){
+                  $("#upOrgSeq").append("<option value='" + data[i].orgSeq + "'>" + data[i].fullOrgNm + "</option>");
+                }
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
+            },
+            clickTabOrgInfo: function(){
+              $("#tabOrgInfo").addClass("active");
+              $("#tabOrgInfo").prop("aria-current", "page");
+              $("#tabOrgInfoDiv").show();
+  
+              $("#tabOrgUsers").removeClass("active");
+              $("#tabOrgUsers").removeAttr("aria-current");
+              $("#tabOrgUsersDiv").hide();
+            },
+            clickTabOrgUsers: function(){
+              if($("#orgSeq").val() === ''){
+                Swal.fire({
+                  title: '조직이 선택되지 않았습니다.',
+                  text: "조직을 먼저 선택해 주세요.",
+                  icon: 'warning',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+                return;
+              }
+  
+              fnObj.grid.init_reg_user();
+              fnObj.grid.init_tgt_user();
+              
+              $("#tabOrgUsers").addClass("active");
+              $("#tabOrgUsers").prop("aria-current", "page");
+              $("#tabOrgUsersDiv").show();
+  
+              $("#tabOrgInfo").removeClass("active");
+              $("#tabOrgInfo").removeAttr("aria-current");
+              $("#tabOrgInfoDiv").hide();
+            },
+            initForm: function(){
+              $("#orgSeq").val('');
+              $("#upOrgSeq").val('');
+              $("#orgNm").val('');
+              $("#orgDesc").val('');
+              $("#prntOrd").val('');
+            },
+            setForm: function(rdata){              
+              $("#orgSeq").val(rdata.orgSeq);
+              $("#upOrgSeq").val(rdata.upOrgSeq);
+              $("#orgNm").val(rdata.orgNm);
+              $("#orgDesc").val(rdata.orgDesc);
+              $("#prntOrd").val(rdata.prntOrd);
+            },
+            removeOrg: function(){
+              let currOrgSeq = $("#orgSeq").val();
+              let rdata = $('#table').bootstrapTable('getData');
+
+              let isRemove = false;
+              for(var i =0; i < rdata.length; i++){
+                if(currOrgSeq == rdata[i].orgSeq){
+                  isRemove = rdata[i].leaf;
+                  break;
+                }
+              }
+
+              if(isRemove){
+                Swal.fire({
+                  title: '정말 삭제 하시겠습니까?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: '삭제',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    $.ajax({
+                      url: "[[@{/system/org_mgt/remove_org.json}]]",
+                      type: "DELETE",
+                      async: true,
+                      dataType : "json",
+                      data : {menuSeq : currOrgSeq}
+                    }).done(function(data, textStatus, xhr){
+                      $('#table').bootstrapTable('refresh');
+                      $("#btnNewOrg").click();
+                      Swal.fire({
+                        title: '삭제 완료',
+                        text: '삭제 처리가 완료 되었습니다.',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    }).fail(function(xhr, textStatus, errorThrown) {
+                      Swal.fire({
+                        title: xhr.responseJSON.httpStatus,
+                        text: xhr.responseJSON.mgessage,
+                        icon: 'error',
+                        confirmButtonText: '닫기'
+                      });
+                    });
+                  }
+                });
+              }else{
+                Swal.fire({
+                  title: '삭제 불가',
+                  text: '하위 조직이 있는 경우 삭제할 수 없습니다.',
+                  icon: 'warning',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+            },
+            saveMenu: function(){
+              if($("#orgNm").val() === ''){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '조직명은 필수 입력 항목입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+
+              if($("#prntOrd").val() === ''){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '출력 순서는 필수 입력 항목입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+
+              var saveOrgInfo = {}
+              saveOrgInfo.orgSeq   = $("#orgSeq").val();
+              saveOrgInfo.upOrgSeq = $("#upOrgSeq").val();
+              saveOrgInfo.orgNm    = $("#menuNm").val();
+              saveOrgInfo.prntOrd   = Number($("#prntOrd").val());
+              saveOrgInfo.orgDesc  = $("#menuDesc").val();
+
+              $.ajax({
+                url: "[[@{/system/org_mgt/save_org.json}]]",
+                type: "PUT",
+                async: true,
+                dataType : "json",
+                data : saveMenuInfo
+              }).done(function(data, textStatus, xhr){
+                $('#table').bootstrapTable('refresh');
+                $("#upOrgSeq option").remove();
+                
+                Swal.fire({
+                  title: '저장 완료',
+                  text: '저장 되었습니다.',
+                  icon: 'info',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
+            },
+            addUserOrg: function(){
+              if($("#orgSeq").val() === ''){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '조직이 선택되지 않았습니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              };
+              
+              let userSeqs =
+                $.map($('#table_tgt_user').bootstrapTable('getSelections'), function (row) {
+                  return row.userSeq;
+                });
+              
+              if(userSeqs.length === 0){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '사용자가 선택되지 않았습니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              let chooseUsersOrg = {};
+              chooseUsersOrg.orgSeq = $("#orgSeq").val();
+              chooseUsersOrg.userSeqList = userSeqs;
+              
+              $.ajax({
+                url: "[[@{/system/org_mgt/add_users.json}]]",
+                type: "PUT",
+                async: true,
+                dataType : "json",
+                data : chooseUsersOrg
+              }).done(function(data, textStatus, xhr){
+                $('#table_org_user').bootstrapTable('refresh');
+                $('#table_tgt_user').bootstrapTable('refresh');
+                Swal.fire({
+                  title: '변경 완료',
+                  text: '[' + data + ']건을 변경하였습니다.',
+                  icon: 'info',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
+            },
+            removeUserOrg: function(){
+              if($("#orgSeq").val() === ''){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '역할이 선택되지 않았습니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              };
+            
+              let userSeqs =
+                $.map($('#table_org_user').bootstrapTable('getSelections'), function (row) {
+                  return row.userSeq;
+                });
+            
+              if(userSeqs.length === 0){
+                Swal.fire({
+                  title: '필수 입력 항목',
+                  text: '사용자가 선택되지 않았습니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+            
+              let chooseUsersOrg = {};
+              chooseUsersOrg.orgSeq = $("#orgSeq").val();
+              chooseUsersOrg.userSeqList = userSeqs;
+            
+              $.ajax({
+                url: "[[@{/system/org_mgt/remove_users.json}]]",
+                type: "DELETE",
+                async: true,
+                dataType : "json",
+                data : chooseUsersOrg
+              }).done(function(data, textStatus, xhr){
+                $('#table_org_user').bootstrapTable('refresh');
+                $('#table_tgt_user').bootstrapTable('refresh');
+                Swal.fire({
+                  title: '변경 완료',
+                  text: '[' + data + ']건을 변경하였습니다.',
+                  icon: 'info',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
+            }
+          },
+          grid: { // 그리드 관련
+            init: function() {
+              $('#table').bootstrapTable({
+                height: 600,
+                locale: 'ko-KR',
+                idField: 'orgSeq',
+                parentIdField: 'upOrgSeq',
+                treeShowField: 'orgNm',
+                classes: 'table table-bordered table-hover',
+                headerStyle : function(){
+                  return {classes: 'table-primary'};
+                },
+                columns: [
+                  {
+                    field: 'orgNm',
+                    title: '조직명'
+                  }
+                ],
+                responseHandler: function (data) { // 데이터 처리
+                  return data;
+                },
+                onPostBody: function() {
+                  var columns = $('#table').bootstrapTable('getOptions').columns;
+                  if (columns && columns[0][0].visible) {
+                    $('#table').treegrid({
+                      treeColumn: 0,
+                      onChange: function() {
+                        $('#table').bootstrapTable('resetView')
+                      }
+                    })
+                  }
+                }
+              });
+              $('#table').on('click-row.bs.table', function (row, rdata, field) {
+                $("#table tr").removeClass("table-secondary");
+                $(field[0]).addClass("table-secondary");
+
+                fnObj.action.initForm();
+                fnObj.action.setForm(rdata);
+                $("#btnDeleteOrg").show();
+                $("#tabOrgInfo").click();
+              });
+            }, // init
+            init_reg_user: function(){
+              $('#table_org_user').bootstrapTable('destroy').bootstrapTable({
+                height: 500,
+                locale: 'ko-KR',
+                classes: 'table table-bordered table-hover',
+                columns: [
+                  {field: 'state', checkbox: true, align: 'center', valign: 'middle'},
+                  {field: 'userSeq',  title: '사용자순번',  visible: false, switchable: false},
+                  {field: 'loginId',  title: 'Login ID', align: 'center', valign: 'middle'},
+                  {field: 'userNm',   title: '사용자명',   align: 'center', valign: 'middle'},
+                ],
+                responseHandler: function (data) { // 데이터 처리
+                  return data;
+                },
+                queryParams: function(params){
+                  $('#table_org_user th').addClass('table-primary')
+                  if($("#orgSeq").val() !== ''){
+                    params.orgSeq = $("#orgSeq").val();
+                  }
+                  return params;
+                }
+              });
+            }, // end init_reg_user
+            init_tgt_user: function(){
+              $('#table_tgt_user').bootstrapTable('destroy').bootstrapTable({
+                height: 500,
+                locale: 'ko-KR',
+                classes: 'table table-bordered table-hover',
+                columns: [
+                  {field: 'state', checkbox: true, align: 'center', valign: 'middle'},
+                  {field: 'userSeq',  title: '사용자순번',  visible: false, switchable: false},
+                  {field: 'loginId',  title: 'Login ID', align: 'center', valign: 'middle'},
+                  {field: 'userNm',   title: '사용자명',   align: 'center', valign: 'middle'},
+                ],
+                responseHandler: function (data) { // 데이터 처리
+                  return data;
+                },
+                queryParams: function(params){
+                  $('#table_tgt_user th').addClass('table-primary')
+  
+                  if($("#orgSeq").val() !== ''){
+                    params.orgSeq = $("#orgSeq").val();
+                  }
+  
+                  return params;
+                }
+              });
+            }, // end init_tgt_user            
+          } // grid
+        }
+        // 페이지 초기 쿼리를 실행한다.
+        $(document.body).ready(function () {
+          fnObj.pageStart();
+        });
+      </script>
+    <!-- Content 종료 -->
 </html>

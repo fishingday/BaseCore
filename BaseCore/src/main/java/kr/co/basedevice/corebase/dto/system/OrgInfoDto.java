@@ -29,6 +29,8 @@ public class OrgInfoDto implements Comparable<OrgInfoDto>{
 	
 	private OrgInfoDto parentOrgInfo;
 	
+	private boolean leaf;
+	
 	@JsonIgnore
 	private List<OrgInfoDto> subOrgInfoList = new ArrayList<>(1);
 	

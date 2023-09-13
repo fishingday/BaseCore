@@ -160,10 +160,8 @@ public class RoleService {
 	/**
 	 *  역할별 사용자 추가
 	 * 
-	 * @param roleSeq
-	 * @param userSeqList
-	 * @param operatorSeq
-	 * @return
+	 * @param chooseUsers 대상자
+	 * @return 추가 수
 	 */
 	public int addUsers(ChooseUsersRole chooseUsers){
 		if(chooseUsers.getUserSeqList() != null && !chooseUsers.getUserSeqList().isEmpty()) {
@@ -194,12 +192,10 @@ public class RoleService {
 	}
 	
 	/**
-	 *  역할 별 사용자 제거
+	 * 역할 별 사용자 제거
 	 * 
-	 * @param roleSeq
-	 * @param userSeqList
-	 * @param operatorSeq
-	 * @return
+	 * @param chooseUsers 대상자
+	 * @return 적용 수
 	 */
 	public int removeUsers(ChooseUsersRole chooseUsers){		
 		if(chooseUsers.getUserSeqList() != null && !chooseUsers.getUserSeqList().isEmpty()) {
@@ -221,8 +217,7 @@ public class RoleService {
 			}
 			return inc;
 		}
-		return 0;
-		
+		return 0;		
 	}
 	
 	/**

@@ -1,10 +1,6 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -14,19 +10,13 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmCdDtlId;
 import kr.co.basedevice.corebase.domain.cm.CmCdGrp;
-import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.code.Yn;
-import kr.co.basedevice.corebase.dto.system.OrgInfoDto;
-import kr.co.basedevice.corebase.exception.OperationException;
 import kr.co.basedevice.corebase.repository.cm.CmCdDtlRepository;
 import kr.co.basedevice.corebase.repository.cm.CmCdGrpRepository;
-import kr.co.basedevice.corebase.repository.cm.CmOrgRepository;
-import kr.co.basedevice.corebase.repository.cm.CmOrgUserMapRepository;
 import kr.co.basedevice.corebase.search.common.SearchGrpCd;
 import kr.co.basedevice.corebase.search.system.SearchDtlCd;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +28,6 @@ public class CommonService {
 
 	private final CmCdGrpRepository cmCdGrpRepository;
 	private final CmCdDtlRepository cmCdDtlRepository;
-	private final CmOrgRepository cmOrgRepository;
-	private final CmOrgUserMapRepository cmOrgUserMapRepository;
 	
 	/**
 	 * 코드 상세 목록 조회
@@ -181,134 +169,6 @@ public class CommonService {
 		
 		cmCdDtl.setDelYn(Yn.Y);		
 		cmCdDtlRepository.save(cmCdDtl);
-		
-		return true;
-	}
-	
-	/**
-	 * 조직 목록 (전체)
-	 * 
-	 * @return
-	 */
-	@Cacheable(value = "ORG", key="'ALL'")
-	public List<OrgInfoDto> findAllOrg() {
-		List<CmOrg> cmOrgList = cmOrgRepository.findByDelYn(Yn.N);
-		
-		Map <Long, OrgInfoDto> orgMap = new HashMap<>(cmOrgList.size());
-		for(CmOrg cmOrg: cmOrgList) {
-			orgMap.put(cmOrg.getOrgSeq(), new OrgInfoDto(cmOrg));
-		}
-		
-		// 부모와 자식의 인연을 이어주고..
-		for(OrgInfoDto orgInfoDto: orgMap.values()) {
-			if(!ObjectUtils.isEmpty(orgInfoDto.getUpOrgSeq())) {
-				OrgInfoDto parentOrg = orgMap.get(orgInfoDto.getUpOrgSeq());
-				orgInfoDto.setParentOrgInfo(parentOrg);
-				parentOrg.getSubOrgInfoList().add(orgInfoDto);
-			}
-		}
-						
-		List<OrgInfoDto> orgInfoDtoList = new ArrayList<>(orgMap.values());
-		Collections.sort(orgInfoDtoList);
-		
-		return orgInfoDtoList;
-	}
-	
-	/**
-	 * 부모 조직만 조회
-	 * 
-	 * @return
-	 */
-	@Cacheable(value = "ORG", key="'Parent'")
-	public List<OrgInfoDto> findByParentOrg(){
-		List<CmOrg> cmOrgList = cmOrgRepository.findByParentOrg();
-		List<CmOrg> parentOrgList = cmOrgRepository.findByUpOrgSeqIsNullAndDelYn(Yn.N);
-		
-		Map <Long, OrgInfoDto> orgMap = new HashMap<>(cmOrgList.size() + parentOrgList.size());
-		for(CmOrg cmOrg: cmOrgList) {
-			orgMap.put(cmOrg.getOrgSeq(), new OrgInfoDto(cmOrg));
-		}
-		for(CmOrg cmOrg: parentOrgList) {
-			orgMap.put(cmOrg.getOrgSeq(), new OrgInfoDto(cmOrg));
-		}
-		
-		// 부모와 자식의 인연을 이어주고..
-		for(OrgInfoDto orgInfoDto: orgMap.values()) {
-			if(!ObjectUtils.isEmpty(orgInfoDto.getUpOrgSeq())) {
-				OrgInfoDto parentOrg = orgMap.get(orgInfoDto.getUpOrgSeq());
-				orgInfoDto.setParentOrgInfo(parentOrg);
-			}
-		}
-		
-		List<OrgInfoDto> orgInfoDtoList = new ArrayList<>(orgMap.values());
-		Collections.sort(orgInfoDtoList);
-		
-		return orgInfoDtoList;
-	}
-	
-	/**
-	 * 조직 정보 조회 [하위포함]
-	 * 
-	 * @param orgSeq
-	 * @return
-	 */
-	@Cacheable(value = "ORG", key="#orgSeq")
-	public OrgInfoDto findOrg(Long orgSeq) {
-		// 먼저 대상 조직을 조회하고...
-		OrgInfoDto orgInfoDto = new OrgInfoDto(cmOrgRepository.getById(orgSeq));
-		
-		if(orgInfoDto != null) {
-			// 대상 조직에 상위 조직이 있는지 확인하고..
-			if(!ObjectUtils.isEmpty(orgInfoDto.getUpOrgSeq())) {
-				OrgInfoDto parentOrg = new OrgInfoDto(cmOrgRepository.getById(orgInfoDto.getUpOrgSeq()));
-				orgInfoDto.setParentOrgInfo(parentOrg);
-			}
-			
-			// 하위 조직이 있는지 확인하여...
-			List<CmOrg> subOrgList = cmOrgRepository.findByUpOrgSeqAndDelYn(orgSeq, Yn.N);
-			if(subOrgList != null && !subOrgList.isEmpty()) {
-				for(CmOrg cmOrg : subOrgList) {
-					orgInfoDto.getSubOrgInfoList().add(new OrgInfoDto(cmOrg));
-				}				
-			}
-		}
-		
-		return orgInfoDto;
-	}
-	
-	/** 
-	 * 조직 등록
-	 * 
-	 * @param cmOrg
-	 * @return
-	 */
-	@CacheEvict(value = "ORG", allEntries=true)
-	public CmOrg saveCmOrg(CmOrg cmOrg) {
-		
-		cmOrg.setDelYn(Yn.N);
-		
-		return cmOrgRepository.save(cmOrg);
-	}
-	
-	/**
-	 * 조직 삭제
-	 * 
-	 * @param orgSeq
-	 * @return
-	 */
-	@CacheEvict(value = "ORG", allEntries=true)
-	public boolean removeCmOrg(Long orgSeq) {
-		
-		// 사용자 없어야 조직을 삭제할 수 있음.
-		long cnt = cmOrgUserMapRepository.countByOrgSeqAndDelYn(orgSeq, Yn.N);
-		if(cnt > 0L) {
-			throw new OperationException("소속된 사용자가 있는 조직은 삭제할 수 없습니다.");
-		}
-		
-		CmOrg cmOrg = cmOrgRepository.getById(orgSeq);
-		cmOrg.setDelYn(Yn.Y);
-		
-		cmOrgRepository.save(cmOrg);
 		
 		return true;
 	}
