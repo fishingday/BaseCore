@@ -74,7 +74,7 @@
           $.ajax({
               type: "post",
               url: "/api/login",
-              data: loginData,
+              data: JSON.stringify(loginData),
               dataType: "json",
               beforeSend : function(xhr){
                   xhr.setRequestHeader(csrfHeader, csrfToken);

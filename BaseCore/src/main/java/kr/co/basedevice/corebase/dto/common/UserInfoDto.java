@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
+import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -49,6 +51,18 @@ public class UserInfoDto {
 	
 	private List<CmOrg> cmOrgList;
 	
+	private List<CmUserAlowIp> cmUserAlowIpList;
+	
+	public void setCmUser(CmUser cmUser) {
+		this.userSeq = cmUser.getUserSeq();
+		this.loginId = cmUser.getLoginId();
+		this.userNm = cmUser.getUserNm();
+		this.userTelNo = cmUser.getUserTelNo();
+		
+		this.loginDt = cmUser.getLoginDt();
+		this.lastLoginIp = cmUser.getLastLoginIp();
+		this.acuntExpDt = cmUser.getAcuntExpDt();
+	}
 	
 	public String getRoleNames() {
 		if(this.cmRoleList != null && !cmRoleList.isEmpty()) {

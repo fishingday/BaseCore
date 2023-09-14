@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -67,8 +68,8 @@ public class UserService {
 	final private CmOrgUserMapRepository cmOrgUserMapRepository;
 
 	
-	public void saveCmUser(CmUser cmUser) {
-		cmUserRepository.save(cmUser);
+	public CmUser saveCmUser(CmUser cmUser) {
+		return cmUserRepository.save(cmUser);
 	}
 
 	public List<CmRole> findByUserSeq4CmRole(Long userSeq) {
@@ -369,5 +370,43 @@ public class UserService {
         if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
         	account.setAllowIpList(cmUserAlowIpList);
         }
+	}
+
+	/**
+	 * 사용자 정보 조회
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public CmUser findByCmUser(Long userSeq) {
+		Optional<CmUser> cmUser = cmUserRepository.findById(userSeq);
+		return cmUser.get();
+	}
+
+	/**
+	 * 사용자 허용 IP
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public List<CmUserAlowIp> findByUserSeq4CmUserAlowIp(Long userSeq) {
+		List<CmUserAlowIp> cmUserAlowIpList = cmUserAlowIpRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
+		
+		return cmUserAlowIpList;
+	}
+
+	public boolean saveUserInfo(UserInfoDto userInfoDto) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean saveUserAllowIpList(Long userSeq, List<String> allowIpList) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean existsLoginId(String loginId) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
