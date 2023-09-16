@@ -34,7 +34,7 @@ public class CmUserAlowIp extends BaseEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_USER_ALOW_IP")
 	@Column(name = "USER_ALOW_IP_SEQ", nullable = false)
-	private Long userPwdSeq;
+	private Long userAlowIpSeq;
 	
 	@Column(name = "USER_SEQ", nullable = false)
 	private Long userSeq;

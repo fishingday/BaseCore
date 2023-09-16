@@ -70,6 +70,9 @@ public class UserInfoRestController {
 		cmUser.setUserSeq(userSeq);
 		
 		// TODO :  입력한 패스워드가 맞는 것인지... 확인
+		if(userService.verifyUserPwd(userSeq, userPwd)) {
+			
+		}
 		
 		
 		userService.saveCmUser(cmUser);

@@ -35,6 +35,7 @@ import kr.co.basedevice.corebase.dto.common.UserInfoDto;
 import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.dto.system.SaveUserPwd;
 import kr.co.basedevice.corebase.dto.system.SaveUserRole;
+import kr.co.basedevice.corebase.dto.user.ChgUserPwdDto;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmOrgRepository;
@@ -407,6 +408,64 @@ public class UserService {
 
 	public boolean existsLoginId(String loginId) {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * 사용자 허용 IP 저장
+	 * 
+	 * @param cmUserAlowIp
+	 * @return
+	 */
+	public CmUserAlowIp saveCmUserAlowIp(CmUserAlowIp cmUserAlowIp) {
+		
+		cmUserAlowIp = cmUserAlowIpRepository.save(cmUserAlowIp);
+		
+		return cmUserAlowIp;
+	}
+
+	/**
+	 * 허용 IP 제외
+	 * 
+	 * @param userAlowIpSeq
+	 * @return
+	 */
+	public boolean removeUserAllowIp(Long userAlowIpSeq) {
+		
+		CmUserAlowIp cmUserAlowIp = cmUserAlowIpRepository.getById(userAlowIpSeq);
+		cmUserAlowIp.setDelYn(Yn.Y);
+		
+		cmUserAlowIpRepository.save(cmUserAlowIp);
+		
+		return true;
+	}
+
+	/**
+	 * 사용자 패스워드 검증
+	 * 
+	 * @param userSeq
+	 * @param userPwd
+	 * @return
+	 */
+	public boolean verifyUserPwd(Long userSeq, String userPwd) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * 사용자 패스워드 변경
+	 * 
+	 * @param userSeq
+	 * @param chgUserPwd
+	 * @return
+	 */
+	public boolean chgUserPwd(Long userSeq, ChgUserPwdDto chgUserPwd) {
+		
+		if(!this.verifyUserPwd(userSeq, chgUserPwd.getCurrPwd())) {
+			throw new SecurityException("패스워드가 일치 하지 않습니다.");
+		}
+		
+		
 		return false;
 	}
 }
