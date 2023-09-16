@@ -20,8 +20,7 @@ public class ChgPwdRestController {
 	final private UserService userService;
 
 	@PutMapping("/chg_user_info.json")
-	public ResponseEntity<Boolean> chgUserInfo(ChgUserPwdDto chgUserPwd) {
-		
+	public ResponseEntity<Boolean> chgUserInfo(ChgUserPwdDto chgUserPwd) {		
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
