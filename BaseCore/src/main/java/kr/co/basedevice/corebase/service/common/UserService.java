@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,10 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	
     @Value("${login.set.acunt_exp_dt:365}")
-	private Long addAccuntExpDt;
+	private Long longAccuntExpDt;
+    
+    @Value("${login.set.pwd_exp_dt:90}")
+	private Long longPwdExpDt;
     
     private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     
@@ -255,7 +259,7 @@ public class UserService {
 			CmUserPwd cmUserPwd = new CmUserPwd();
 			cmUserPwd.setUserSeq(userSeq);
 			cmUserPwd.setUserPwd(passwordEncoder.encode(saveUserPwd.getChgPwd()));
-			cmUserPwd.setPwdExpDt(LocalDate.now().plusDays(addAccuntExpDt.longValue()));
+			cmUserPwd.setPwdExpDt(LocalDate.now().plusDays(longAccuntExpDt.longValue()));
 			cmUserPwd.setDelYn(Yn.N);
 			cmUserPwdRepository.save(cmUserPwd);
 			
@@ -397,7 +401,7 @@ public class UserService {
 	}
 
 	public boolean saveUserInfo(UserInfoDto userInfoDto) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -448,8 +452,14 @@ public class UserService {
 	 * @return
 	 */
 	public boolean verifyUserPwd(Long userSeq, String userPwd) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		CmUserPwd cmUserPwd = cmUserPwdRepository.findOneUserSeqAndDelYn(userSeq, Yn.N);
+        
+		if (!passwordEncoder.matches(userPwd, cmUserPwd.getUserPwd())) {
+        	throw new BadCredentialsException("Invalid password");
+        }
+        
+		return true;
 	}
 
 	/**
@@ -461,10 +471,17 @@ public class UserService {
 	 */
 	public boolean chgUserPwd(Long userSeq, ChgUserPwdDto chgUserPwd) {
 		
-		if(!this.verifyUserPwd(userSeq, chgUserPwd.getCurrPwd())) {
-			throw new SecurityException("패스워드가 일치 하지 않습니다.");
-		}
+		// 기존 패스워드 삭제 처리
+		CmUserPwd cmUserPwd = cmUserPwdRepository.findOneUserSeqAndDelYn(userSeq, Yn.N);
+		cmUserPwd.setDelYn(Yn.Y);
+		cmUserPwdRepository.save(cmUserPwd);
 		
+		// 신규 패스워드 입력
+		CmUserPwd newUserPwd = new CmUserPwd();
+		newUserPwd.setUserSeq(userSeq);
+		newUserPwd.setUserPwd(passwordEncoder.encode(chgUserPwd.getNewPwd()));
+		newUserPwd.setPwdExpDt(LocalDate.now().plusDays(longPwdExpDt));
+		newUserPwd.setDelYn(Yn.N);		
 		
 		return false;
 	}

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.dto.user.ChgUserPwdDto;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.UserService;
@@ -27,7 +26,11 @@ public class ChgPwdRestController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
 		
-		boolean isSave = userService.chgUserPwd(userSeq, chgUserPwd);
+		boolean isSave = userService.verifyUserPwd(userSeq, chgUserPwd.getCurrPwd());
+		
+		if(isSave) {
+			userService.chgUserPwd(userSeq, chgUserPwd);
+		}
 		
 		return ResponseEntity.ok(isSave);
 	}
