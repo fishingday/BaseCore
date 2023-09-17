@@ -69,28 +69,23 @@ public class UserInfoRestController {
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();		
 		cmUser.setUserSeq(userSeq);
 		
-		// TODO :  입력한 패스워드가 맞는 것인지... 확인
 		if(userService.verifyUserPwd(userSeq, userPwd)) {
-			
-		}
-		
-		
-		userService.saveCmUser(cmUser);
+			userService.saveCmUser(cmUser);
+		}		
 		
 		return ResponseEntity.ok(true);
 	}
 	
 	@PutMapping("/save_allow_ip_list.json")
-	public ResponseEntity<Boolean> saveAllowIpList(UserAllowIpDto userAllowIpDto){
+	public ResponseEntity<Boolean> saveAllowIpList(UserAllowIpDto userAllowIpDto, String userPwd){
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
 			
-		// TODO :  입력한 패스워드가 맞는 것인지... 확인
-		
-		// TODO : 유효 IP 확인 로직
-		
-		boolean isSave = userService.saveUserAllowIpList(userSeq, userAllowIpDto.getAllowIpList());
+		boolean isSave = false;
+		if(userService.verifyUserPwd(userSeq, userPwd)) {
+			isSave = userService.saveUserAllowIpList(userSeq, userAllowIpDto.getAllowIpList());
+		}
 		
 		return ResponseEntity.ok(isSave);
 	}

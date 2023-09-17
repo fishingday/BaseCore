@@ -48,13 +48,15 @@ public class AllowIpRestController {
 	 * @return
 	 */
 	@PostMapping("/save_allow_ip.json")
-	public ResponseEntity<CmUserAlowIp> saveCmUserAlowIp(CmUserAlowIp cmUserAlowIp) {
+	public ResponseEntity<CmUserAlowIp> saveCmUserAlowIp(CmUserAlowIp cmUserAlowIp, String userPwd) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
 		
-		cmUserAlowIp.setUserSeq(userSeq);
-		
-		cmUserAlowIp = userService.saveCmUserAlowIp(cmUserAlowIp);
+		boolean isSave = false;
+		if(userService.verifyUserPwd(userSeq, userPwd)) {
+			cmUserAlowIp.setUserSeq(userSeq);
+			cmUserAlowIp = userService.saveCmUserAlowIp(cmUserAlowIp);
+		}
 		
 		return ResponseEntity.ok(cmUserAlowIp);
 	}
@@ -67,10 +69,17 @@ public class AllowIpRestController {
 	 * @return
 	 */
 	@DeleteMapping("/remove_allow_ip.json")
-	public ResponseEntity<Boolean> removeUserAllowIp(Long userAlowIpSeq) {
+	public ResponseEntity<Boolean> removeUserAllowIp(Long userAlowIpSeq, String userPwd) {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
 		
-		boolean isSave = userService.removeUserAllowIp(userAlowIpSeq);		
+		boolean isSave = false;
 		
+		if(userService.verifyUserPwd(userSeq, userPwd)) {
+			isSave = userService.removeUserAllowIp(userAlowIpSeq);
+		}
+				
 		return ResponseEntity.ok(isSave);
 	}
 	
