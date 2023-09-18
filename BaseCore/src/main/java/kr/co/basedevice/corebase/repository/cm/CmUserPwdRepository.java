@@ -18,14 +18,24 @@ public interface CmUserPwdRepository extends JpaRepository<CmUserPwd, Long>{
 	 */
 	List<CmUserPwd> findByUserSeqAndDelYnOrderByUserPwdSeqDesc(Long userSeq, Yn yn);
 
+
 	/**
-	 * 살아있는 패스워드가 여러개면... 오류
+	 * 최신 순사용자 패스워드
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	List<CmUserPwd> findByUserSeqOrderByCreDtDesc(Long userSeq);
+
+
+	/**
+	 * 유효 패스워드 목록
 	 * 
 	 * @param userSeq
 	 * @param n
 	 * @return
 	 */
-	CmUserPwd findOneUserSeqAndDelYn(Long userSeq, Yn n);
+	List<CmUserPwd> findByUserSeqAndDelYn(Long userSeq, Yn n);
 
 
 }

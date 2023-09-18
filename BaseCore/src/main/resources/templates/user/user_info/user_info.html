@@ -9,9 +9,95 @@
 	<!-- Content 시작 -->
 	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
 	        <div class="container text-center">
-	            <div class="security"></div>
-	            <h1 class="text-primary">사용자 정보 페이지</h1>
+	            <h4 class="text-primary">사용자 정보 페이지</h4>
+              <div class="mb-3 row">
+                <label for="loginId" class="col-sm-4 col-form-label">Login ID</label>
+                <div class="col-sm-6">
+                  <input type="email" readonly class="form-control" id="loginId" value="email@example.com">
+                </div>
+                <div class="col-sm-2">
+                  <button id="btnAddGrpCd" class="btn btn-outline-info btn-sm">
+                    <i class="bi bi-copy"></i> 중복확인
+                  </button>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="userNm" class="col-sm-4 col-form-label">사용자명</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="userNm">
+                </div>
+                <div class="col-sm-2"></div>
+              </div>
+              <div class="mb-3 row">
+                <label for="userTelNo" class="col-sm-4 col-form-label">전화번호</label>
+                <div class="col-sm-6">
+                  <input type="tel" class="form-control" id="userTelNo">
+                </div>
+                <div class="col-sm-2"></div>
+              </div>
+              <div class="mb-3 row">
+                <label for="loginDt" class="col-sm-4 col-form-label">최종접속시간</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control-plaintext" id="loginDt">
+                </div>
+                <div class="col-sm-2"></div>
+              </div>
+              <div class="mb-3 row">
+                <label for="roleNms" class="col-sm-4 col-form-label">권한</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control-plaintext" id="roleNms">
+                </div>
+                <div class="col-sm-2"></div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">접속허용IP</label>
+                <div class="col-sm-6">
+                  <table id="table_allowIp">
+                    <thead>
+                      <tr>
+                        <th data-field="id">ID</th>
+                        <th data-field="name">Item Name</th>
+                        <th data-field="price">Item Price</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
 	        </div>
 	    </div>
+      <script language="javascript" type="text/javascript" layout:fragment="page_script">
+        let token = $("meta[name='_csrf']").attr("content"); 
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+          xhr.setRequestHeader(header, token); 
+        });
+
+        var fnObj = {
+          pageStart:  function(){ // 페이지 초기 실행 스크립트
+            fnObj.page.init();
+          },
+          page: {
+            init: function(){ // 버튼 바인딩 등
+              window.operateEvents = { // 그리드 내 버튼 이벤트
+                'click .dtlcd-edit': function (e, value, row, index) {
+                  $("#btnDeteleDtlCd").show();
+                  fnObj.action.setPopDtlCd(row);
+                }
+              };
+            }
+          },
+          action: {
+            
+          },
+          grid : {
+            
+          }
+        };
+        
+        // 페이지 초기 쿼리를 실행한다.
+        $(document.body).ready(function () {
+          fnObj.pageStart();
+        });
+      </script>
 	<!-- Content 종료 -->
 </html>

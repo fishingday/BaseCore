@@ -55,4 +55,13 @@ public interface CmUserRepository extends JpaRepository<CmUser, Long>, CmUserRep
 	@Query("select m from CmUser m where m.delYn = 'N' and m.userSeq NOT IN (select n.userSeq from CmOrgUserMap n where n.delYn = 'N' and n.orgSeq = ?1) order by m.userSeq asc")
 	List<CmUser> findByExcludeOrgSeq(Long orgSeq);
 
+	/**
+	 * 로그인 ID 중복 확인
+	 * 
+	 * @param loginId
+	 * @param n
+	 * @return
+	 */
+	Long countByLoginIdAndDelYn(String loginId, Yn n);
+
 }

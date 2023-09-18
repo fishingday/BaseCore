@@ -61,6 +61,9 @@ public class UserService {
     @Value("${login.set.pwd_exp_dt:90}")
 	private Long longPwdExpDt;
     
+    @Value("${login.set.ban_same_pwd:3}")
+    private Long banSamePwd;
+    
     private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     
 	final private CmUserRepository cmUserRepository;
@@ -388,60 +391,31 @@ public class UserService {
 		return cmUser.get();
 	}
 
-	/**
-	 * 사용자 허용 IP
-	 * 
-	 * @param userSeq
-	 * @return
-	 */
-	public List<CmUserAlowIp> findByUserSeq4CmUserAlowIp(Long userSeq) {
-		List<CmUserAlowIp> cmUserAlowIpList = cmUserAlowIpRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
-		
-		return cmUserAlowIpList;
-	}
-
 	public boolean saveUserInfo(UserInfoDto userInfoDto) {
+		CmUser cmUser = cmUserRepository.getById(userInfoDto.getUserSeq());
 		
-		return false;
-	}
-
-	public boolean saveUserAllowIpList(Long userSeq, List<String> allowIpList) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean existsLoginId(String loginId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/**
-	 * 사용자 허용 IP 저장
-	 * 
-	 * @param cmUserAlowIp
-	 * @return
-	 */
-	public CmUserAlowIp saveCmUserAlowIp(CmUserAlowIp cmUserAlowIp) {
+		cmUser.setUserNm(userInfoDto.getUserNm());
+		cmUser.setUserTelNo(userInfoDto.getUserTelNo());
 		
-		cmUserAlowIp = cmUserAlowIpRepository.save(cmUserAlowIp);
-		
-		return cmUserAlowIp;
-	}
-
-	/**
-	 * 허용 IP 제외
-	 * 
-	 * @param userAlowIpSeq
-	 * @return
-	 */
-	public boolean removeUserAllowIp(Long userAlowIpSeq) {
-		
-		CmUserAlowIp cmUserAlowIp = cmUserAlowIpRepository.getById(userAlowIpSeq);
-		cmUserAlowIp.setDelYn(Yn.Y);
-		
-		cmUserAlowIpRepository.save(cmUserAlowIp);
+		cmUserRepository.save(cmUser);
 		
 		return true;
+	}
+
+	/**
+	 * LoginId 존재 여부 
+	 * 
+	 * @param loginId
+	 * @return
+	 */
+	public boolean existsLoginId(String loginId) {
+		Long cnt = cmUserRepository.countByLoginIdAndDelYn(loginId, Yn.N);
+		
+		if(cnt > 0L) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	/**
@@ -453,12 +427,14 @@ public class UserService {
 	 */
 	public boolean verifyUserPwd(Long userSeq, String userPwd) {
 		
-		CmUserPwd cmUserPwd = cmUserPwdRepository.findOneUserSeqAndDelYn(userSeq, Yn.N);
+		List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
         
-		if (!passwordEncoder.matches(userPwd, cmUserPwd.getUserPwd())) {
-        	throw new BadCredentialsException("Invalid password");
-        }
-        
+		for(CmUserPwd cmUserPwd : cmUserPwdList) {
+			if (!passwordEncoder.matches(userPwd, cmUserPwd.getUserPwd())) {
+	        	throw new BadCredentialsException("Invalid password");
+	        }
+		}
+		
 		return true;
 	}
 
@@ -471,10 +447,28 @@ public class UserService {
 	 */
 	public boolean chgUserPwd(Long userSeq, ChgUserPwdDto chgUserPwd) {
 		
+		// 동일 패스워드 제한
+		List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqOrderByCreDtDesc(userSeq);
+		if(cmUserPwdList != null && !cmUserPwdList.isEmpty()) {
+			for(int i = 0; i < cmUserPwdList.size(); i++){
+				if(banSamePwd <= i){
+					break;
+				}
+				
+				CmUserPwd cmUserPwd = cmUserPwdList.get(i);
+				
+				if(passwordEncoder.matches(chgUserPwd.getNewPwd(), cmUserPwd.getUserPwd())) {
+					throw new BadCredentialsException("사용했던 패스워드를 다시 사용할 수 없습니다.");
+				}
+			}	
+		}		
+		
 		// 기존 패스워드 삭제 처리
-		CmUserPwd cmUserPwd = cmUserPwdRepository.findOneUserSeqAndDelYn(userSeq, Yn.N);
-		cmUserPwd.setDelYn(Yn.Y);
-		cmUserPwdRepository.save(cmUserPwd);
+		List<CmUserPwd> cmUserPwds = cmUserPwdRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
+		for(CmUserPwd cmUserPwd : cmUserPwds) {
+			cmUserPwd.setDelYn(Yn.Y);
+			cmUserPwdRepository.save(cmUserPwd);
+		}		
 		
 		// 신규 패스워드 입력
 		CmUserPwd newUserPwd = new CmUserPwd();
@@ -483,6 +477,53 @@ public class UserService {
 		newUserPwd.setPwdExpDt(LocalDate.now().plusDays(longPwdExpDt));
 		newUserPwd.setDelYn(Yn.N);		
 		
+		return true;
+	}
+	
+
+	/**
+	 * 사용자 허용 IP
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public List<CmUserAlowIp> findByUserSeq4CmUserAlowIp(Long userSeq) {
+		List<CmUserAlowIp> cmUserAlowIpList = cmUserAlowIpRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
+		
+		return cmUserAlowIpList;
+	}
+
+	/**
+	 * 허용 IP 저장
+	 * 
+	 * @param cmUserAlowIp
+	 * @return
+	 */
+	public boolean saveUserAllowIp(CmUserAlowIp cmUserAlowIp) {
+		// 1. 동일한 IP가 없는지... 확인 
+		Long cnt = cmUserAlowIpRepository.countByUserSeqAndAlowIpAndDelYn(cmUserAlowIp.getUserSeq(), cmUserAlowIp.getAlowIp(), Yn.N);
+		if(cnt > 0L) {
+			cmUserAlowIp.setDelYn(Yn.N);
+			cmUserAlowIpRepository.save(cmUserAlowIp);
+			
+			return true;
+		} 
+		
 		return false;
+	}	
+
+	/**
+	 * 허용 IP 제외
+	 * 
+	 * @param userAlowIpSeq
+	 * @return
+	 */
+	public boolean removeUserAllowIp(Long userAlowIpSeq) {
+		
+		CmUserAlowIp cmUserAlowIp = cmUserAlowIpRepository.getById(userAlowIpSeq);
+		cmUserAlowIp.setDelYn(Yn.Y);		
+		cmUserAlowIpRepository.save(cmUserAlowIp);
+		
+		return true;
 	}
 }

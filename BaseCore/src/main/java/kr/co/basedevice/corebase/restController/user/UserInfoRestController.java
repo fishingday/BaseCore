@@ -14,9 +14,7 @@ import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
-import kr.co.basedevice.corebase.domain.cm.CmUserPwd;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
-import kr.co.basedevice.corebase.dto.user.UserAllowIpDto;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.UserService;
 import lombok.RequiredArgsConstructor;
@@ -76,15 +74,17 @@ public class UserInfoRestController {
 		return ResponseEntity.ok(true);
 	}
 	
-	@PutMapping("/save_allow_ip_list.json")
-	public ResponseEntity<Boolean> saveAllowIpList(UserAllowIpDto userAllowIpDto, String userPwd){
+	@PutMapping("/save_allow_ip.json")
+	public ResponseEntity<Boolean> saveAllowIpList(CmUserAlowIp cmUserAlowIp, String userPwd){
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
-			
+		
+		cmUserAlowIp.setUserSeq(userSeq);
+		
 		boolean isSave = false;
 		if(userService.verifyUserPwd(userSeq, userPwd)) {
-			isSave = userService.saveUserAllowIpList(userSeq, userAllowIpDto.getAllowIpList());
+			isSave = userService.saveUserAllowIp(cmUserAlowIp);
 		}
 		
 		return ResponseEntity.ok(isSave);

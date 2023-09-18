@@ -11,4 +11,6 @@ public interface CmUserAlowIpRepository extends JpaRepository<CmUserAlowIp, Long
 
 	List<CmUserAlowIp> findByUserSeqAndDelYn(Long userSeq, Yn delYn);
 
+	Long countByUserSeqAndAlowIpAndDelYn(Long userSeq, String allowIp, Yn n);
+
 }
