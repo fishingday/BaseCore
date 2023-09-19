@@ -5,65 +5,123 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>사용자 정보 페이지</title>
+	    <style>
+        .swal2-container {
+          z-index: 20000 !important;
+        }
+      </style>
 	</head>
 	<!-- Content 시작 -->
 	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-	        <div class="container text-center">
-	            <h4 class="text-primary">사용자 정보 페이지</h4>
-              <div class="mb-3 row">
-                <label for="loginId" class="col-sm-4 col-form-label">Login ID</label>
-                <div class="col-sm-6">
-                  <input type="email" readonly class="form-control" id="loginId" value="email@example.com">
-                </div>
-                <div class="col-sm-2">
-                  <button id="btnAddGrpCd" class="btn btn-outline-info btn-sm">
-                    <i class="bi bi-copy"></i> 중복확인
+        <div class="container text-center">
+          <div class="row border border-secondary-subtle" style="width: 70%;">
+            <h4 class="text-primary">사용자 정보 페이지</h4>
+            <div class="mb-3 row">
+              <label for="loginId" class="col-sm-4 col-form-label">Login ID</label>
+              <div class="col-sm-6">
+                <input type="email" readonly class="form-control" id="loginId" value="email@example.com">
+              </div>
+              <div class="col-sm-2">
+                <button id="btnCheckDuple" class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-clipboard-check"></i> 중복확인
+                </button>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="userNm" class="col-sm-4 col-form-label">사용자명</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="userNm">
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="mb-3 row">
+              <label for="userTelNo" class="col-sm-4 col-form-label">전화번호</label>
+              <div class="col-sm-6">
+                <input type="tel" class="form-control" id="userTelNo">
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="mb-3 row">
+              <label for="loginDt" class="col-sm-4 col-form-label">최종접속시간</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control-plaintext" id="loginDt">
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="mb-3 row">
+              <div class="col-sm-12">
+                <button id="btnSaveUserInfo" class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-save"></i> 변경 저장
+                </button>
+              </div>
+            </div>
+          </div>  
+          <div class="row border border-secondary-subtle mt-2" style="width: 70%;">    
+            <div class="mb-3 row">
+              <label for="roleNms" class="col-sm-4 col-form-label">권한</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control-plaintext" id="roleNms" readonly>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="orgNms" class="col-sm-4 col-form-label">조직</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control-plaintext" id="orgNms" readonly>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label class="col-sm-4 col-form-label">접속허용IP</label>
+              <div class="col-sm-8">
+                <div id="toolbar-allowip">
+                  <button id="btnAddIp" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#popupAddIp">
+                    <i class="bi bi-ethernet"></i> 추가
                   </button>
                 </div>
+                <table
+                  id="table-allowip"
+                  data-toolbar="#toolbar-allowip"
+                  data-search="true"
+                  data-click-to-select="true"
+                  data-id-field="userAlowIpSeq"
+                  th:data-url="@{/user/user_info/get_allowip_list.json}">
+                </table>
               </div>
-              <div class="mb-3 row">
-                <label for="userNm" class="col-sm-4 col-form-label">사용자명</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" id="userNm">
-                </div>
-                <div class="col-sm-2"></div>
-              </div>
-              <div class="mb-3 row">
-                <label for="userTelNo" class="col-sm-4 col-form-label">전화번호</label>
-                <div class="col-sm-6">
-                  <input type="tel" class="form-control" id="userTelNo">
-                </div>
-                <div class="col-sm-2"></div>
-              </div>
-              <div class="mb-3 row">
-                <label for="loginDt" class="col-sm-4 col-form-label">최종접속시간</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control-plaintext" id="loginDt">
-                </div>
-                <div class="col-sm-2"></div>
-              </div>
-              <div class="mb-3 row">
-                <label for="roleNms" class="col-sm-4 col-form-label">권한</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control-plaintext" id="roleNms">
-                </div>
-                <div class="col-sm-2"></div>
-              </div>
-              <div class="mb-3 row">
-                <label class="col-sm-4 col-form-label">접속허용IP</label>
-                <div class="col-sm-6">
-                  <table id="table_allowIp">
-                    <thead>
-                      <tr>
-                        <th data-field="id">ID</th>
-                        <th data-field="name">Item Name</th>
-                        <th data-field="price">Item Price</th>
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
-              </div>
+            </div>
 	        </div>
+	      </div>
+        <!-- modal -->
+        <div class="modal-staging">
+          <!--/* 상세 코드 생성 */-->
+          <div class="modal fade" id="popupAddIp" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false"  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">허용 IP 입력</h1>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">허용IP</span>
+                    <input type="text" class="form-control" id="alowIp" placeholder="192.168.100.25 or 192.168.100.0/24" >
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" style="width: 120px;">설명</span>
+                    <textarea class="form-control" id="alowIpDesc"></textarea>
+                  </div>
+                </div>
+
+                <div class="modal-footer row">
+                  <div class="col-auto me-auto">
+                    <button type="button" class="btn btn-primary" id="btnSaveAllowIp">저장</button>
+                  </div>
+                  <div class="col-auto">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- modal -->
 	    </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
         let token = $("meta[name='_csrf']").attr("content"); 
@@ -78,19 +136,228 @@
           },
           page: {
             init: function(){ // 버튼 바인딩 등
+              fnObj.action.setUserInfo();
+              
+              $("#btnSaveUserInfo").bind("click", function(){
+                fnObj.action.saveUserInfo();
+              });
+              
+              $("#btnSaveAllowIp").bind("click", function(){
+                fnObj.action.addAllowIP();
+              });
+            
               window.operateEvents = { // 그리드 내 버튼 이벤트
-                'click .dtlcd-edit': function (e, value, row, index) {
-                  $("#btnDeteleDtlCd").show();
-                  fnObj.action.setPopDtlCd(row);
+                'click .deleteIp': function (e, value, row, index) {
+                  fnObj.action.removeAllowIP(row);
                 }
               };
+              
             }
           },
           action: {
+            setUserInfo: function(){
+              $.ajax({
+                url: "[[@{/user/user_info/user_info.json}]]",
+                type: "GET",
+                async: true,
+                dataType : "json"
+              }).done(function(data, textStatus, xhr){
+                if(textStatus === "success"){
+                  $("#loginId").val(data.loginId);
+                  $("#userNm").val(data.userNm);
+                  $("#userTelNo").val(data.userTelNo);
+                  $("#loginDt").val(data.loginDt.replace('T',' '));
+                  
+                  if(data.cmRoleList){
+                    let roleNms = '';
+                    for(const cmRole of data.cmRoleList){
+                      if(roleNms !== ''){
+                        roleNms += ', '
+                      }
+                      roleNms += cmRole.roleNm;
+                    }
+                    $("#roleNms").val(roleNms);
+                  }
+                  
+                  if(data.cmOrgList){
+                    let orgNms = '';
+                    for(const cmOrg of data.cmOrgList){
+                      if(orgNms !== ''){
+                        orgNms += ', '
+                      }
+                      orgNms += cmOrg.orgNm;
+                    }
+                    $("#orgNms").val(orgNms);
+                  } 
+                }
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              }).then(function(){
+                fnObj.grid.init_allowip();
+              });
+            },
+            checkDuplicateLoginId: function(){
+              
+            },
+            changeLoginId: function(){
+              console.log('^____^');
+            },
+            saveUserInfo: function(){
             
+            },
+            addAllowIP: function(){
+              if($("#alowIp").val()  === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: 'IP는 필수 입력 항목입니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              Swal.fire({
+                title: '비밀번호를 입력하세요.',
+                input: 'password',
+                allowOutsideClick: false,
+                inputAttributes: {
+                    autocapitalize: "on",
+                },
+                showCancelButton: false,
+                confirmButtonText: '확인',
+                showLoaderOnConfirm: true,
+                preConfirm: (pwd) => {
+                  if(pwd == ''){
+                    return;
+                  }
+                  let cmUseralowIp = {};
+                  cmUseralowIp.userPwd = pwd;
+                  cmUseralowIp.alowIp = $("#alowIp").val();
+                  cmUseralowIp.alowIpDesc = $("#alowIpDesc").val();
+                                
+                  $.ajax({
+                    url: "[[@{/user/user_info/add_allow_ip.json}]]",
+                    type: "PUT",
+                    async: true,
+                    dataType : "json",
+                    data : cmUseralowIp
+                  }).done(function(data, textStatus, xhr){                    
+                    if(data === true){
+                      Swal.fire({
+                        title: '저장',
+                        text: '저장되었습니다.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });                      
+                    }else{
+                      Swal.fire({
+                        title: '실패',
+                        text: '동일 IP가 있으면 저장되지 않습니다.',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    }                    
+                  }).fail(function(xhr, textStatus, errorThrown) {
+                    Swal.fire({
+                      title: xhr.responseJSON.httpStatus,
+                      text: xhr.responseJSON.mgessage,
+                      icon: 'error',
+                      confirmButtonText: '닫기'
+                    });
+                  }).then(function(){
+                    $("#popupAddIp").modal("hide");
+                    fnObj.action.initAllowForm();
+                    fnObj.grid.init_allowip();
+                  }).then(()=>{});
+                }
+              });
+            },
+            removeAllowIP: function(row){
+              Swal.fire({
+                title: '비밀번호를 입력하세요.',
+                input: 'password',
+                allowOutsideClick: false,
+                inputAttributes: {
+                    autocapitalize: "on",
+                },
+                showCancelButton: false,
+                confirmButtonText: '확인',
+                showLoaderOnConfirm: true,
+                preConfirm: (pwd) => {
+                  if(pwd == ''){
+                    return;
+                  }
+                  let removeAllowIp = {};
+                  removeAllowIp.userPwd = pwd;
+                  removeAllowIp.userAlowIpSeq = row.userAlowIpSeq;
+                                
+                  $.ajax({
+                    url: "[[@{/user/user_info/remove_allow_ip.json}]]",
+                    type: "PUT",
+                    async: true,
+                    dataType : "json",
+                    data : removeAllowIp
+                  }).done(function(data, textStatus, xhr){
+                    Swal.fire({
+                      title: '삭제완료',
+                      text: '삭제되었습니다.',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });                
+                  }).fail(function(xhr, textStatus, errorThrown) {
+                    Swal.fire({
+                      title: xhr.responseJSON.httpStatus,
+                      text: xhr.responseJSON.mgessage,
+                      icon: 'error',
+                      confirmButtonText: '닫기'
+                    });
+                  }).then(function(){
+                    fnObj.action.initAllowForm();
+                    fnObj.grid.init_allowip();
+                  }).then(()=>{});
+                }
+              });
+            },
+            initAllowForm : function(){
+              $("#alowIp").val('');
+               $("#alowIpDesc").val('');
+            }
           },
           grid : {
-            
+            init_allowip: function(){
+              $('#table-allowip').bootstrapTable('destroy').bootstrapTable(
+                {
+                  locale: 'ko-KR',
+                  classes: 'table table-bordered table-striped table-hover',
+                  headerStyle : function(){
+                    return {classes: 'table-primary'};
+                  },
+                  columns:[ 
+                    {field: 'userAlowIpSeq',title: '허용IP순번', visible: false, switchable: false},
+                    {field: 'alowIp',       title: '허용IP',  align: 'center', valign: 'middle', sortable: true},
+                    {field: 'alowIpDesc',   title: '설명',    align: 'center', valign: 'middle', sortable: false},
+                    {field: 'operate',      title: '삭제',   align: 'center', valign: 'middle', clickToSelect: false, events: window.operateEvents,
+                      formatter: function(value, row, index) {
+                        return [
+                            '<a class="deleteIp" href="javascript:void(0)" title="삭제">',
+                            '<i class="bi bi-eraser"></i>',
+                            '</a>'
+                          ].join('')
+                      }
+                    }
+                  ]
+              });
+              
+              // 
+            }
           }
         };
         

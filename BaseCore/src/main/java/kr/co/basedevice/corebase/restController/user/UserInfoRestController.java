@@ -43,14 +43,12 @@ public class UserInfoRestController {
 		
 		// 자신이 변경할 수 있는 정보
 		CmUser cmUser = userService.findByCmUser(userSeq);
-		List<CmUserAlowIp> cmUserAlowIpList = userService.findByUserSeq4CmUserAlowIp(userSeq);
 		
 		UserInfoDto userInfoDto = new UserInfoDto();
 		userInfoDto.setCmUser(cmUser);
 		userInfoDto.setCmRoleList(cmRoleList);
 		userInfoDto.setCmOrgList(cmOrgList);
 		userInfoDto.setCmRoleList(cmRoleList);
-		userInfoDto.setCmUserAlowIpList(cmUserAlowIpList);
 				
 		return ResponseEntity.ok(userInfoDto);
 	}
@@ -73,9 +71,25 @@ public class UserInfoRestController {
 		
 		return ResponseEntity.ok(true);
 	}
+
 	
-	@PutMapping("/save_allow_ip.json")
-	public ResponseEntity<Boolean> saveAllowIpList(CmUserAlowIp cmUserAlowIp, String userPwd){
+	/**
+	 * 사용자 ID 존재 여부
+	 * 
+	 * @param loginId
+	 * @return
+	 */
+	@GetMapping("/exists_login_id.json")
+	public ResponseEntity<Boolean> existsLoginId(String loginId){
+		
+		boolean exists = userService.existsLoginId(loginId);
+		
+		return ResponseEntity.ok(exists);
+	}
+	
+	
+	@PutMapping("/add_allow_ip.json")
+	public ResponseEntity<Boolean> addAllowIpList(CmUserAlowIp cmUserAlowIp, String userPwd){
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
@@ -90,18 +104,28 @@ public class UserInfoRestController {
 		return ResponseEntity.ok(isSave);
 	}
 	
-	/**
-	 * 사용자 ID 존재 여부
-	 * 
-	 * @param loginId
-	 * @return
-	 */
-	@GetMapping("/exists_login_id.json")
-	public ResponseEntity<Boolean> existsLoginId(String loginId){
+	@PutMapping("/remove_allow_ip.json")
+	public ResponseEntity<Boolean> removeAllowIpList(Long userAlowIpSeq, String userPwd){
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
+				
+		boolean isSave = false;
+		if(userService.verifyUserPwd(userSeq, userPwd)) {
+			isSave = userService.removeUserAllowIp(userAlowIpSeq);
+		}
 		
-		boolean exists = userService.existsLoginId(loginId);
+		return ResponseEntity.ok(isSave);
+	}
+	
+	@GetMapping("/get_allowip_list.json")
+	public ResponseEntity<List<CmUserAlowIp>> getAllowIpList(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
+				
+		List<CmUserAlowIp>  cmUserAlowIpList = userService.findByUserSeq4CmUserAlowIp(userSeq);
 		
-		return ResponseEntity.ok(exists);
+		return ResponseEntity.ok(cmUserAlowIpList);
 	}
 
 }

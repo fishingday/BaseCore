@@ -502,7 +502,7 @@ public class UserService {
 	public boolean saveUserAllowIp(CmUserAlowIp cmUserAlowIp) {
 		// 1. 동일한 IP가 없는지... 확인 
 		Long cnt = cmUserAlowIpRepository.countByUserSeqAndAlowIpAndDelYn(cmUserAlowIp.getUserSeq(), cmUserAlowIp.getAlowIp(), Yn.N);
-		if(cnt > 0L) {
+		if(cnt == 0L) {
 			cmUserAlowIp.setDelYn(Yn.N);
 			cmUserAlowIpRepository.save(cmUserAlowIp);
 			
