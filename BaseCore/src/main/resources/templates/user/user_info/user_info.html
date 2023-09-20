@@ -17,13 +17,17 @@
           <div class="row border border-secondary-subtle" style="width: 70%;">
             <h4 class="text-primary">사용자 정보 페이지</h4>
             <div class="mb-3 row">
-              <label for="loginId" class="col-sm-4 col-form-label">Login ID</label>
+              <label for="loginId" class="col-sm-4 col-form-label">메일 주소</label>
               <div class="col-sm-6">
-                <input type="email" readonly class="form-control" id="loginId" value="email@example.com">
+                <input type="hidden" id="orgiLoginId">
+                <input type="email" class="form-control-plaintext" id="loginId" value="email@example.com" readonly>
               </div>
               <div class="col-sm-2">
                 <button id="btnCheckDuple" class="btn btn-outline-info btn-sm">
                   <i class="bi bi-clipboard-check"></i> 중복확인
+                </button>
+                <button id="btnChangeId" class="btn btn-outline-warning btn-sm">
+                  <i class="bi bi-bootstrap-reboot"></i> 변경
                 </button>
               </div>
             </div>
@@ -124,6 +128,9 @@
         <!-- modal -->
 	    </div>
       <script language="javascript" type="text/javascript" layout:fragment="page_script">
+        let regexEmail = new RegExp(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i);
+        let regexTel = new RegExp(/^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/);
+        
         let token = $("meta[name='_csrf']").attr("content"); 
         let header = $("meta[name='_csrf_header']").attr("content");
         $(document).ajaxSend(function (e, xhr, options) {
@@ -136,6 +143,7 @@
           },
           page: {
             init: function(){ // 버튼 바인딩 등
+              $("#btnCheckDuple").hide();
               fnObj.action.setUserInfo();
               
               $("#btnSaveUserInfo").bind("click", function(){
@@ -144,6 +152,19 @@
               
               $("#btnSaveAllowIp").bind("click", function(){
                 fnObj.action.addAllowIP();
+              });
+              
+              // 아이디를 변경할 수 있도록 ...
+              $("#btnChangeId").bind("click", function(){
+                $("#loginId").removeAttr("readonly");
+                $("#loginId").removeClass("form-control-plaintext");
+                $("#loginId").addClass("form-control");
+                $("#btnChangeId").hide();
+                $("#btnCheckDuple").show();
+              });
+              
+              $("#btnCheckDuple").bind("click", function(){
+                fnObj.action.checkDuplicateLoginId();
               });
             
               window.operateEvents = { // 그리드 내 버튼 이벤트
@@ -164,6 +185,7 @@
               }).done(function(data, textStatus, xhr){
                 if(textStatus === "success"){
                   $("#loginId").val(data.loginId);
+                  $("#orgiLoginId").val(data.loginId);
                   $("#userNm").val(data.userNm);
                   $("#userTelNo").val(data.userTelNo);
                   $("#loginDt").val(data.loginDt.replace('T',' '));
@@ -202,13 +224,182 @@
               });
             },
             checkDuplicateLoginId: function(){
+              if($("#loginId").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '사용할 메일주소를 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
               
-            },
-            changeLoginId: function(){
-              console.log('^____^');
+              if(regexEmail.test($("#loginId").val()) === false){
+                Swal.fire({
+                  title: '이메일 형식 오류',
+                  text: '올바른 이메일 형식이 아닙니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              let chkMailData = {};
+              chkMailData.loginId = $("#loginId").val();
+              
+              $.ajax({
+                url: "[[@{/user/user_info/exists_login_id.json}]]",
+                type: "GET",
+                async: true,
+                dataType : "json",
+                data : chkMailData  
+              }).done(function(data, textStatus, xhr){                
+                if(!data){
+                  Swal.fire({
+                    title: '사용 가능',
+                    text: "사용할 수 있는 이메일 주소 입니다.",
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                  });
+                  $("#loginId").attr("readonly", true);
+                  $("#loginId").removeClass("form-control");
+                  $("#loginId").addClass("form-control-plaintext");
+                  $("#btnChangeId").show();
+                  $("#btnCheckDuple").hide();                  
+                }else{
+                  Swal.fire({
+                    title: '중복 확인',
+                    text: "이미 사용중인 이메일 주소 입니다.",
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                  });
+                  $("#loginId").val($("#orgiLoginId").val());
+                }
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.mgessage,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
             },
             saveUserInfo: function(){
-            
+              if($("#loginId").hasClass("form-control") === true) {
+                Swal.fire({
+                  title: '중복 체크',
+                  text: '메일주소 중복확인을 해주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if($("#loginId").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '사용할 메일주소를 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if(regexEmail.test($("#loginId").val()) === false){
+                Swal.fire({
+                  title: '이메일 형식 오류',
+                  text: '올바른 이메일 형식이 아닙니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if($("#userNm").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '사용자명을 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if($("#userTelNo").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '사용중인 휴대폰 번호를 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if(regexTel.test($("#userTelNo").val()) === false){
+                Swal.fire({
+                  title: '휴대폰 번호 형식 오류',
+                  text: '올바른 휴대폰 번호 형식이 아닙니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+                            
+              Swal.fire({
+                title: '비밀번호를 입력하세요.',
+                input: 'password',
+                allowOutsideClick: false,
+                inputAttributes: {
+                    autocapitalize: "on",
+                },
+                showCancelButton: false,
+                confirmButtonText: '확인',
+                showLoaderOnConfirm: true,
+                preConfirm: (pwd) => {
+                  if(pwd == ''){
+                    return;
+                  }
+                  
+                  let cmUser = {};
+                  cmUser.userPwd = pwd;
+                  cmUser.loginId   = $("#loginId").val();
+                  cmUser.userNm    = $("#userNm").val();
+                  cmUser.userTelNo = $("#userTelNo").val();
+                                
+                  $.ajax({
+                    url: "[[@{/user/user_info/save_user.json}]]",
+                    type: "PUT",
+                    async: true,
+                    dataType : "json",
+                    data : cmUser
+                  }).done(function(data, textStatus, xhr){                    
+                    if(data === true){
+                      Swal.fire({
+                        title: '저장',
+                        text: '저장되었습니다.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });                      
+                    }else{
+                      Swal.fire({
+                        title: '실패',
+                        text: '사용자 정보 저장에 실패 했습니다.',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    }                    
+                  }).fail(function(xhr, textStatus, errorThrown) {
+                    Swal.fire({
+                      title: xhr.responseJSON.httpStatus,
+                      text: xhr.responseJSON.mgessage,
+                      icon: 'error',
+                      confirmButtonText: '닫기'
+                    });
+                  }).then(()=>{});
+                }
+              });
             },
             addAllowIP: function(){
               if($("#alowIp").val()  === ''){

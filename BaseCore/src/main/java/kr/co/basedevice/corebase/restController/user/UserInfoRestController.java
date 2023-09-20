@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +83,12 @@ public class UserInfoRestController {
 	@GetMapping("/exists_login_id.json")
 	public ResponseEntity<Boolean> existsLoginId(String loginId){
 		
-		boolean exists = userService.existsLoginId(loginId);
+		boolean exists = true;
+		if(ObjectUtils.isEmpty(loginId)) {
+			throw new IllegalArgumentException("입력 값이 없습니다.");
+		}else {
+			exists = userService.existsLoginId(loginId);
+		}
 		
 		return ResponseEntity.ok(exists);
 	}

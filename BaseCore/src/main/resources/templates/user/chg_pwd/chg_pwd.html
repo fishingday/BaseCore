@@ -6,12 +6,79 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <title>패스워드 변경</title>
 	</head>
-	<!-- Content 시작 -->
-	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-	        <div class="container text-center">
-	            <div class="security"></div>
-	            <h1 class="text-primary">여기는 패스워드 변경 페이지 입니다.</h1>
-	        </div>
-	    </div>
+  <!-- Content 시작 -->
+      <div layout:fragment="content"style="padding-top:50px;"  class="col">
+        <div class="container text-center">
+          <div class="row border border-secondary-subtle" style="width: 70%;">
+            <h4 class="text-primary">패스워드 변경</h4>
+            <div class="mb-3 row">
+              <div class="m-3 pt-2 bg-info bg-opacity-10 border border-info rounded">
+                <ul>
+                  <li class="text-start text-break">비밀번호가 최소 8 자리 이상</li>
+                  <li class="text-start text-break">비밀번호에 한개 이상의 대문자 포함 </li>
+                  <li class="text-start text-break">비밀번호에 한개 이상의 소문자 포함</li>
+                  <li class="text-start text-break">비밀번호에 최소 하나의 숫자 포함</li>
+                  <li class="text-start text-break">특수문자 하나 이상 포함</li>
+                </ul>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="userPwd" class="col-sm-4 col-form-label">현재 비밀번호</label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" id="userPwd">
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="mb-3 row">
+              <label for="newPwd" class="col-sm-4 col-form-label">New 비밀번호</label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" id="newPwd">
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="mb-3 row">
+              <label for="confirmPwd" class="col-sm-4 col-form-label">비밀번호확인</label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" id="confirmPwd">
+              </div>
+              <div class="col-sm-2"></div>
+            </div>
+            <div class="mb-3 row">
+              <div class="col-sm-12">
+                <button id="btnChgPwd" class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-save"></i> 변경
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 	<!-- Content 종료 -->
+      <script language="javascript" type="text/javascript" layout:fragment="page_script">
+        let regexPwd = new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/);
+        
+        let token = $("meta[name='_csrf']").attr("content"); 
+        let header = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+          xhr.setRequestHeader(header, token); 
+        });
+
+        var fnObj = {
+          pageStart: function(){
+              $("#btnChgPwd").bind("click", function(){
+                fnObj.action.chgSavePasswd();
+              });
+          },
+          action: {
+            chgSavePasswd: function(){
+              console.log('^^');
+            }
+          }
+        }
+        
+        // 페이지 초기 쿼리를 실행한다.
+        window.addEventListener("load", function(){
+          fnObj.pageStart();
+        });
+      </script>
 </html>

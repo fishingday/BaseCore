@@ -77,7 +77,14 @@ public class UserService {
 
 	
 	public CmUser saveCmUser(CmUser cmUser) {
-		return cmUserRepository.save(cmUser);
+		CmUser saveUser = cmUserRepository.getById(cmUser.getUserSeq());
+		if(saveUser != null) {
+			saveUser.setLoginId(cmUser.getLoginId());
+			saveUser.setUserNm(cmUser.getUserNm());
+			saveUser.setUserTelNo(cmUser.getUserTelNo());
+		}
+		
+		return cmUserRepository.save(saveUser);
 	}
 
 	public List<CmRole> findByUserSeq4CmRole(Long userSeq) {
