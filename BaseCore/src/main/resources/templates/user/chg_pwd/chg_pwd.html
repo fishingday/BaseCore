@@ -10,7 +10,7 @@
       <div layout:fragment="content"style="padding-top:50px;"  class="col">
         <div class="container text-center">
           <div class="row border border-secondary-subtle" style="width: 70%;">
-            <h4 class="text-primary">패스워드 변경</h4>
+            <h4 class="text-primary">비밀번호 변경</h4>
             <div class="mb-3 row">
               <div class="m-3 pt-2 bg-info bg-opacity-10 border border-info rounded">
                 <ul>
@@ -30,7 +30,7 @@
               <div class="col-sm-2"></div>
             </div>
             <div class="mb-3 row">
-              <label for="newPwd" class="col-sm-4 col-form-label">New 비밀번호</label>
+              <label for="newPwd" class="col-sm-4 col-form-label">신규 비밀번호</label>
               <div class="col-sm-6">
                 <input type="password" class="form-control" id="newPwd">
               </div>
@@ -71,7 +71,77 @@
           },
           action: {
             chgSavePasswd: function(){
-              console.log('^^');
+              // 현재 패스워드 입력 확인
+              if($("#userPwd").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '사용중인 비밀번호를 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              // 신규 패스워드 규칙 확인
+              if($("#newPwd").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '변경할 비밀번호를 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if(regexPwd.test($("#newPwd").val()) === false){
+                Swal.fire({
+                  title: '비밀번호 규칙 준수',
+                  text: '비밀번호 생성 규칙에 맞게 생성해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+                            
+              // 패스워드 확인과 비교
+              if($("#newPwd").val() !== $("#confirmPwd").val()){ 
+                Swal.fire({
+                  title: '패스워드 불일치',
+                  text: '신규 비밀번호와 비밀번호확인이 일치하지 않습니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              let chgPwdData = {};
+              chgPwdData.userPwd = $("#userPwd").val();
+              chgPwdData.newPwd = $("#newPwd").val();
+              
+              $.ajax({
+                url: "[[@{/user/chg_pwd/chg_user_info.json}]]",
+                type: "PUT",
+                async: true,
+                dataType : "json",
+                data : chgPwdData  
+              }).done(function(data, textStatus, xhr){
+                  Swal.fire({
+                    title: '변경 완료',
+                    text: "패스워드 변경이 완료 되었습니다.",
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                  });
+                  $("#userPwd").val('');
+                  $("#newPwd").val('');
+                  $("#confirmPwd").val(''); 
+              }).fail(function(xhr, textStatus, errorThrown) {
+                Swal.fire({
+                  title: xhr.responseJSON.httpStatus,
+                  text: xhr.responseJSON.message,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              });
             }
           }
         }

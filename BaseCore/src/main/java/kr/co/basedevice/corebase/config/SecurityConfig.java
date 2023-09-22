@@ -87,11 +87,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityResourceService securityResourceService;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-        auth.authenticationProvider(ajaxAuthenticationProvider());
+        auth.authenticationProvider(authenticationProvider(passwordEncoder));
+        auth.authenticationProvider(ajaxAuthenticationProvider(passwordEncoder));
     }
 
     @Override
@@ -168,18 +171,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder){
+        return new FormAuthenticationProvider(passwordEncoder);
     }
-
+    
     @Bean
-    AuthenticationProvider authenticationProvider(){
-        return new FormAuthenticationProvider(passwordEncoder());
-    }
-
-    @Bean
-    AuthenticationProvider ajaxAuthenticationProvider(){
-        return new AjaxAuthenticationProvider(passwordEncoder());
+    AuthenticationProvider ajaxAuthenticationProvider(PasswordEncoder passwordEncoder){
+        return new AjaxAuthenticationProvider(passwordEncoder);
     }
 
     @Bean

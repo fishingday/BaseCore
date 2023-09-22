@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.basedevice.corebase.dto.user.ChgUserPwdDto;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +19,15 @@ public class ChgPwdRestController {
 	final private UserService userService;
 
 	@PutMapping("/chg_user_info.json")
-	public ResponseEntity<Boolean> chgUserInfo(ChgUserPwdDto chgUserPwd) {		
+	public ResponseEntity<Boolean> chgUserInfo(String userPwd, String newPwd) {		
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
 		
-		boolean isSave = userService.verifyUserPwd(userSeq, chgUserPwd.getCurrPwd());
+		boolean isSave = userService.verifyUserPwd(userSeq, userPwd);
 		
 		if(isSave) {
-			userService.chgUserPwd(userSeq, chgUserPwd);
+			userService.chgUserPwd(userSeq, newPwd);
 		}
 		
 		return ResponseEntity.ok(isSave);

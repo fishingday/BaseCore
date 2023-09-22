@@ -11,11 +11,11 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -36,7 +36,6 @@ import kr.co.basedevice.corebase.dto.common.UserInfoDto;
 import kr.co.basedevice.corebase.dto.system.SaveUserInfo;
 import kr.co.basedevice.corebase.dto.system.SaveUserPwd;
 import kr.co.basedevice.corebase.dto.system.SaveUserRole;
-import kr.co.basedevice.corebase.dto.user.ChgUserPwdDto;
 import kr.co.basedevice.corebase.exception.MenuSettingException;
 import kr.co.basedevice.corebase.repository.cm.CmMenuRepository;
 import kr.co.basedevice.corebase.repository.cm.CmOrgRepository;
@@ -63,9 +62,7 @@ public class UserService {
     
     @Value("${login.set.ban_same_pwd:3}")
     private Long banSamePwd;
-    
-    private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    
+        
 	final private CmUserRepository cmUserRepository;
 	final private CmRoleRepository cmRoleRepository;
 	final private CmUserRoleMapRepository cmUserRoleMapRepository;  
@@ -74,6 +71,8 @@ public class UserService {
 	final private CmOrgRepository cmOrgRepository;
 	final private CmUserAlowIpRepository cmUserAlowIpRepository;
 	final private CmOrgUserMapRepository cmOrgUserMapRepository;
+	
+    final private  PasswordEncoder passwordEncoder;
 
 	
 	public CmUser saveCmUser(CmUser cmUser) {
@@ -452,23 +451,22 @@ public class UserService {
 	 * @param chgUserPwd
 	 * @return
 	 */
-	public boolean chgUserPwd(Long userSeq, ChgUserPwdDto chgUserPwd) {
+	public boolean chgUserPwd(Long userSeq, String newPwd) {
 		
 		// 동일 패스워드 제한
 		List<CmUserPwd> cmUserPwdList = cmUserPwdRepository.findByUserSeqOrderByCreDtDesc(userSeq);
 		if(cmUserPwdList != null && !cmUserPwdList.isEmpty()) {
 			for(int i = 0; i < cmUserPwdList.size(); i++){
-				if(banSamePwd <= i){
+				if(banSamePwd <= i){ // 최근 3번 변경 이하...
 					break;
 				}
 				
 				CmUserPwd cmUserPwd = cmUserPwdList.get(i);
-				
-				if(passwordEncoder.matches(chgUserPwd.getNewPwd(), cmUserPwd.getUserPwd())) {
+				if(passwordEncoder.matches(newPwd, cmUserPwd.getUserPwd())) {
 					throw new BadCredentialsException("사용했던 패스워드를 다시 사용할 수 없습니다.");
 				}
-			}	
-		}		
+			}
+		}
 		
 		// 기존 패스워드 삭제 처리
 		List<CmUserPwd> cmUserPwds = cmUserPwdRepository.findByUserSeqAndDelYn(userSeq, Yn.N);
@@ -480,9 +478,11 @@ public class UserService {
 		// 신규 패스워드 입력
 		CmUserPwd newUserPwd = new CmUserPwd();
 		newUserPwd.setUserSeq(userSeq);
-		newUserPwd.setUserPwd(passwordEncoder.encode(chgUserPwd.getNewPwd()));
+		newUserPwd.setUserPwd(passwordEncoder.encode(newPwd));
 		newUserPwd.setPwdExpDt(LocalDate.now().plusDays(longPwdExpDt));
-		newUserPwd.setDelYn(Yn.N);		
+		newUserPwd.setDelYn(Yn.N);
+		
+		cmUserPwdRepository.save(newUserPwd);
 		
 		return true;
 	}
@@ -511,11 +511,9 @@ public class UserService {
 		Long cnt = cmUserAlowIpRepository.countByUserSeqAndAlowIpAndDelYn(cmUserAlowIp.getUserSeq(), cmUserAlowIp.getAlowIp(), Yn.N);
 		if(cnt == 0L) {
 			cmUserAlowIp.setDelYn(Yn.N);
-			cmUserAlowIpRepository.save(cmUserAlowIp);
-			
+			cmUserAlowIpRepository.save(cmUserAlowIp);			
 			return true;
-		} 
-		
+		}		
 		return false;
 	}	
 
