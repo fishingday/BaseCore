@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -110,7 +111,7 @@ public class UserInfoRestController {
 		return ResponseEntity.ok(isSave);
 	}
 	
-	@PutMapping("/remove_allow_ip.json")
+	@DeleteMapping("/remove_allow_ip.json")
 	public ResponseEntity<Boolean> removeAllowIpList(Long userAlowIpSeq, String userPwd){
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

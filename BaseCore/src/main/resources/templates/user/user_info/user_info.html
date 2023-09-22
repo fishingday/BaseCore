@@ -171,8 +171,7 @@
                 'click .deleteIp': function (e, value, row, index) {
                   fnObj.action.removeAllowIP(row);
                 }
-              };
-              
+              };              
             }
           },
           action: {
@@ -428,7 +427,7 @@
                   }
                   let cmUseralowIp = {};
                   cmUseralowIp.userPwd = pwd;
-                  cmUseralowIp.alowIp = $("#alowIp").val();
+                  cmUseralowIp.alowIp = $("#alowIp").val().trim();
                   cmUseralowIp.alowIpDesc = $("#alowIpDesc").val();
                                 
                   $.ajax({
@@ -491,7 +490,7 @@
                                 
                   $.ajax({
                     url: "[[@{/user/user_info/remove_allow_ip.json}]]",
-                    type: "PUT",
+                    type: "DELETE",
                     async: true,
                     dataType : "json",
                     data : removeAllowIp
@@ -522,7 +521,7 @@
                $("#alowIpDesc").val('');
             }
           },
-          grid : {
+          grid: {
             init_allowip: function(){
               $('#table-allowip').bootstrapTable('destroy').bootstrapTable(
                 {
@@ -546,8 +545,6 @@
                     }
                   ]
               });
-              
-              // 
             }
           }
         };

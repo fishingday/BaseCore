@@ -28,12 +28,12 @@ public class AllowIpRestController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/allow_ip_list.json")
+	@GetMapping("/get_allow_ip_list.json")
 	public ResponseEntity<List<CmUserAlowIp>> getAllowIpList(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
-		
-		List<CmUserAlowIp> cmUserAlowIpList = userService.findByUserSeq4CmUserAlowIp(userSeq);
+				
+		List<CmUserAlowIp>  cmUserAlowIpList = userService.findByUserSeq4CmUserAlowIp(userSeq);
 		
 		return ResponseEntity.ok(cmUserAlowIpList);
 	}
@@ -44,10 +44,13 @@ public class AllowIpRestController {
 	 * @param cmUserAlowIp
 	 * @return
 	 */
-	@PutMapping("/save_allow_ip.json")
-	public ResponseEntity<Boolean> saveCmUserAlowIp(CmUserAlowIp cmUserAlowIp, String userPwd) {
+	@PutMapping("/add_allow_ip.json")
+	public ResponseEntity<Boolean> addAllowIpList(CmUserAlowIp cmUserAlowIp, String userPwd){
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
+		
+		cmUserAlowIp.setUserSeq(userSeq);
 		
 		boolean isSave = false;
 		if(userService.verifyUserPwd(userSeq, userPwd)) {
@@ -65,17 +68,16 @@ public class AllowIpRestController {
 	 * @return
 	 */
 	@DeleteMapping("/remove_allow_ip.json")
-	public ResponseEntity<Boolean> removeUserAllowIp(Long userAlowIpSeq, String userPwd) {
+	public ResponseEntity<Boolean> removeAllowIpList(Long userAlowIpSeq, String userPwd){
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Long userSeq = ((AccountContext) authentication.getPrincipal()).getCmUser().getUserSeq();
-		
+				
 		boolean isSave = false;
-		
 		if(userService.verifyUserPwd(userSeq, userPwd)) {
 			isSave = userService.removeUserAllowIp(userAlowIpSeq);
 		}
-				
+		
 		return ResponseEntity.ok(isSave);
 	}
 	

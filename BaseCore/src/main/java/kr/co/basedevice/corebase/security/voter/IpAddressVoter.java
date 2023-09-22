@@ -31,9 +31,9 @@ public class IpAddressVoter implements AccessDecisionVoter<Object> {
 		if(!"anonymousUser".equals(authentication.getPrincipal())) { // 익명 사용자라면 무시하자.
 			List<CmUserAlowIp> cmUserAlowIpList = ((AccountContext) authentication.getPrincipal()).getAllowIpList();
 			if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
-				String remoteAddress = details.getRemoteAddress();
+				String remoteAddress = details.getRemoteAddress();				
 				for(CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
-					IpAddressMatcher matcher = new IpAddressMatcher(cmUserAlowIp.getAlowIp());
+					IpAddressMatcher matcher = new IpAddressMatcher(cmUserAlowIp.getAlowIp().trim());
 					if(matcher.matches(remoteAddress)) {
 						return ACCESS_ABSTAIN;					
 					}
