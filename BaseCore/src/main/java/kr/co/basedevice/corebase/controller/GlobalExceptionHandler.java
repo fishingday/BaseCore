@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 			}	
 		}
     	
-    	loggingService.writeCriticalLog(request, WriteMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);
+    	loggingService.writeCriticalLog(request, LogMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);
     	
         return "common/error";
     }

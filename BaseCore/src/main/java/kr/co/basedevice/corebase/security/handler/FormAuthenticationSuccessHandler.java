@@ -18,7 +18,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.service.common.UserService;
@@ -61,7 +61,7 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         userService.setOtherInfo(account);
         
         // 로깅..
-        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
+        loggingService.writeCriticalLog(request, LogMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
 
         if(savedRequest!=null) {
             String targetUrl = savedRequest.getRedirectUrl();

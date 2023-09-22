@@ -15,7 +15,7 @@ import kr.co.basedevice.corebase.domain.cm.CmCriticalLog;
 import kr.co.basedevice.corebase.domain.cm.CmRoleChgLog;
 import kr.co.basedevice.corebase.domain.cm.CmUserAccesLog;
 import kr.co.basedevice.corebase.domain.code.AccesLogTypCd;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.repository.cm.CmCriticalLogRepository;
 import kr.co.basedevice.corebase.repository.cm.CmRoleChgLogRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserAccesLogRepository;
@@ -31,7 +31,7 @@ public class LoggingService {
 	final private CmUserAccesLogRepository accesLogRepository;
 	final private CmRoleChgLogRepository chgLogRepository;
 	
-	public void writeCriticalLog(HttpServletRequest request, WriteMakrCd writeMakrCd, Long userSeq) {
+	public void writeCriticalLog(HttpServletRequest request, LogMakrCd writeMakrCd, Long userSeq) {
 //		CmCriticalLog log = new CmCriticalLog();
 //        
 //        log.setWriteMakrCd(writeMakrCd);

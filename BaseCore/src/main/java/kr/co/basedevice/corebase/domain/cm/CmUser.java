@@ -63,14 +63,14 @@ public class CmUser extends BaseEntity implements Serializable{
 	@Column(name = "LAST_LOGIN_IP", length = 23)
 	private String lastLoginIp;
 
-	@Column(name = "USER_STAT_CD", nullable = false, length = 35)
-	@Enumerated(EnumType.STRING)
-	private UserStatCd userStatCd;
-
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "ACUNT_EXP_DT", nullable = false, length = 8)
 	private LocalDate acuntExpDt;
 
+	@Column(name = "USER_STAT_CD", nullable = false, length = 35)
+	@Enumerated(EnumType.STRING)
+	private UserStatCd userStatCd;
+	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;

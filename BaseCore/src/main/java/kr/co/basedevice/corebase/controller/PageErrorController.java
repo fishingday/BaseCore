@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class PageErrorController implements ErrorController {
 			}	
 		}
 
-		loggingService.writeCriticalLog(request, WriteMakrCd.OTHER_ERRROR, cmUser != null ? cmUser.getUserSeq() : null);
+		loggingService.writeCriticalLog(request, LogMakrCd.OTHER_ERRROR, cmUser != null ? cmUser.getUserSeq() : null);
 
 		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 		if (status != null) {

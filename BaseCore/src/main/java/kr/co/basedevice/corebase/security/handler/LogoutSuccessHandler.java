@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 
@@ -33,7 +33,7 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
     		userSeq =  cmUser != null ? cmUser.getUserSeq() : null;
     	}
         
-        loggingService.writeCriticalLog(request, WriteMakrCd.LOGOUT_SUCCESS, userSeq);
+        loggingService.writeCriticalLog(request, LogMakrCd.LOGOUT_SUCCESS, userSeq);
          
         super.onLogoutSuccess(request, response, authentication);
     }  

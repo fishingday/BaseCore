@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.dto.ExceptionDto;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
@@ -40,7 +40,7 @@ public class RestGlobalExceptionHandler {
 			}	
 		}
     	
-    	loggingService.writeCriticalLog(request, WriteMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);
+    	loggingService.writeCriticalLog(request, LogMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);
 		
 		return ResponseEntity.status(ex.getHttpStatus()).body(ex);
     }
@@ -61,7 +61,7 @@ public class RestGlobalExceptionHandler {
 			}	
 		}
     	
-    	loggingService.writeCriticalLog(request, WriteMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);
+    	loggingService.writeCriticalLog(request, LogMakrCd.INTERNAL_SERVER_ERROR, cmUser != null ? cmUser.getUserSeq() : null);
 
 		
 		return ResponseEntity.status(ex.getHttpStatus()).body(ex);

@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.service.common.LoggingService;
@@ -56,7 +56,7 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         	cmUserRepository.save(cmUser);     
         }
         
-        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeCriticalLog(request, LogMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
         
         setDefaultFailureUrl("/common/login.html?error=true&exception=" + errorMessage);
 

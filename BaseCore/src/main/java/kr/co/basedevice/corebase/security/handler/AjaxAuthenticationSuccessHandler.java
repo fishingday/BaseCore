@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.service.common.UserService;
@@ -60,7 +60,7 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
         userService.setOtherInfo(account);
         
         // 로깅..
-        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
+        loggingService.writeCriticalLog(request, LogMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
         
         mapper.writeValue(response.getWriter(), cmUser);
     }

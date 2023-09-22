@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.repository.cm.CmUserRepository;
 import kr.co.basedevice.corebase.service.common.LoggingService;
@@ -63,7 +63,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
         	cmUserRepository.save(cmUser);     
         }
                 
-        loggingService.writeCriticalLog(request, WriteMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeCriticalLog(request, LogMakrCd.LOGIN_FAIL_FORM, cmUser != null ? cmUser.getUserSeq() : null);
 
 		mapper.writeValue(response.getWriter(), errorMessage);
 	}

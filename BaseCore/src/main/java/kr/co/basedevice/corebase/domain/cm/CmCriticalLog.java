@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import org.springframework.http.HttpStatus;
 
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,16 +30,15 @@ public class CmCriticalLog {
 	@Column(name = "CRITICAL_LOG_SEQ", nullable = false)
 	private Long criticalLogSeq;
 	
-	// 기록 제조 코드
-	@Column(name = "WRITE_MAKR_CD", length = 255, nullable = false)
+	@Column(name = "LOG_MAKR_CD", length = 255, nullable = false)
 	@Enumerated(EnumType.STRING)
-	private WriteMakrCd writeMakrCd;
+	private LogMakrCd logMakrCd;	
+	
+	@Column(name = "REQ_URI", length = 2000, nullable = false)
+	private String reqUri;
 	
 	@Column(name = "REQ_IP", length = 20, nullable = false)
 	private String reqIp;
-	
-	@Column(name = "REQ_URI", length = 2000, nullable = false)
-	private String reqUri;	
 	
 	@Column(name = "PARAM", length = 4000)
 	private String param;

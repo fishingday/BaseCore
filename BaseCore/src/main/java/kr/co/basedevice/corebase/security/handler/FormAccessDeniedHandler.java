@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.WriteMakrCd;
+import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.util.WebUtil;
@@ -43,7 +43,7 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CmUser cmUser = ((AccountContext) authentication.getPrincipal()).getCmUser();		
         
-        loggingService.writeCriticalLog(request, WriteMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
+        loggingService.writeCriticalLog(request, LogMakrCd.ACCESS_DENIED, cmUser != null ? cmUser.getUserSeq() : null);
 		
 		if (WebUtil.isAjax(request)) {
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);

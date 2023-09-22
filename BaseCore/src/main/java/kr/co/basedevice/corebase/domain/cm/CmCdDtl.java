@@ -43,6 +43,9 @@ public class CmCdDtl extends BaseEntity implements Serializable {
 	@Column(name = "CD_DESC", length = 2000)
 	private String cdDesc;
 	
+	@Column(name = "PRNT_ORD", nullable = false)
+	private Integer prntOrd;
+	
 	@Column(name = "OPT_1", length = 256)
 	private String opt1;
 
@@ -57,10 +60,7 @@ public class CmCdDtl extends BaseEntity implements Serializable {
 
 	@Column(name = "OPT_5", length = 256)
 	private String opt5;
-	
-	@Column(name = "PRNT_ORD", nullable = false)
-	private Integer prntOrd;
-	
+		
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;

@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.domain.code;
 
-public enum WriteMakrCd {
+public enum LogMakrCd {
 
     /* 로그인 성공(form) */
     LOGIN_SUCCESS_FORM

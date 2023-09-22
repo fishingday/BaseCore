@@ -34,11 +34,11 @@ public class CmUserAccesLog implements Serializable {
 	@Column(name = "USER_ACCES_LOG_SEQ", nullable = false)
 	private Long userAccesLogSeq;
 	
-	@Column(name = "REQ_URL", length = 255, nullable = false)
-	private String reqUrl;
-	
 	@Column(name = "REQ_IP", length = 20, nullable = false)
 	private String reqIp;
+		
+	@Column(name = "REQ_URL", length = 255, nullable = false)
+	private String reqUrl;
 	
 	@Column(name = "HTTP_METHOD", length = 255, nullable = false)
 	@Enumerated(EnumType.STRING)
