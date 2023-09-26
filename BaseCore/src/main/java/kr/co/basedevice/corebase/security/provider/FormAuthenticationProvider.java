@@ -1,9 +1,12 @@
 package kr.co.basedevice.corebase.security.provider;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,9 +14,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 
+import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
 import kr.co.basedevice.corebase.security.common.FormWebAuthenticationDetails;
 import kr.co.basedevice.corebase.security.service.AccountContext;
+import kr.co.basedevice.corebase.service.common.UserService;
 
 public class FormAuthenticationProvider implements AuthenticationProvider {
 
@@ -23,6 +29,9 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private UserService userService;
+    
     private PasswordEncoder passwordEncoder;
 
     public FormAuthenticationProvider(PasswordEncoder passwordEncoder) {
@@ -48,6 +57,24 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 	            throw new IllegalArgumentException("Invalid Secret");
 	        }
         }
+        
+        List<CmUserAlowIp> cmUserAlowIpList = userService.findByUserSeq4CmUserAlowIp(accountContext.getCmUser().getUserSeq());
+        if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
+        	boolean isAllowIp = false;
+        	String remoteAddress = ((FormWebAuthenticationDetails) authentication.getDetails()).getIpAddr();	
+			for(CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
+				IpAddressMatcher matcher = new IpAddressMatcher(cmUserAlowIp.getAlowIp().trim());
+				if(matcher.matches(remoteAddress)) {
+					isAllowIp = true;
+					break;
+				}
+			}
+			if(!isAllowIp) {
+				throw new AccessDeniedException("Invailid Allow IpAddress");
+			}
+			accountContext.setAllowIpList(cmUserAlowIpList);
+        }
+        userService.setOtherInfo(accountContext);
 
         return new UsernamePasswordAuthenticationToken(accountContext, null, accountContext.getAuthorities());
     }

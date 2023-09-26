@@ -39,7 +39,7 @@ public class IpAddressVoter implements AccessDecisionVoter<Object> {
 					}
 				}
 				// 중간에 못나오면 아웃
-				throw new AccessDeniedException("Invailid IpAddress");
+				throw new AccessDeniedException("Not an allowed IP address");
 			}
 		}
 		

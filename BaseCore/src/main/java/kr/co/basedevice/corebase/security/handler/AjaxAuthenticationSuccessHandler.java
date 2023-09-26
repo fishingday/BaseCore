@@ -56,9 +56,6 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
         
         userService.saveCmUser(cmUser);
         
-        // 나머지 정보를 설정한다.
-        userService.setOtherInfo(account);
-        
         // 로깅..
         loggingService.writeCriticalLog(request, LogMakrCd.LOGIN_SUCCESS_FORM, cmUser.getUserSeq());
         

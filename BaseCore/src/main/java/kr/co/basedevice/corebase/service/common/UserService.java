@@ -375,12 +375,6 @@ public class UserService {
         if(cmOrgList != null && !cmOrgList.isEmpty()) {
         	account.setOrgList(cmOrgList);
         	account.setCurrOrg(cmOrgList.get(0));
-        }        
-        
-        // 사용자의 허용 IP가 설정되어 있다면..
-        List<CmUserAlowIp> cmUserAlowIpList = cmUserAlowIpRepository.findByUserSeqAndDelYn(cmUser.getUserSeq(), Yn.N);
-        if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
-        	account.setAllowIpList(cmUserAlowIpList);
         }
 	}
 
