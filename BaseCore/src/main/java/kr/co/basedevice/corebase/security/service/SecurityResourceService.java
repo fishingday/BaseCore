@@ -41,7 +41,7 @@ public class SecurityResourceService {
                 {
                     List<ConfigAttribute> configAttributeList = new ArrayList<>();
                     menuDtl.getCmMenuDtlRoleMapList().forEach(ro -> {
-                        configAttributeList.add(new SecurityConfig(ro.getCmRole().getRoleCd().toString()));
+                        configAttributeList.add(new SecurityConfig("ROLE_" + ro.getCmRole().getRoleSeq().toString()));
                         result.put(new AntPathRequestMatcher(menuDtl.getCmMenu().getMenuPath() + menuDtl.getMenuDtlPath()), configAttributeList);
                     });
                 }
@@ -54,7 +54,7 @@ public class SecurityResourceService {
                 {
                     List<ConfigAttribute> configAttributeList = new ArrayList<>();
                     menu.getCmRoleMenuMapList().forEach(ro -> {
-                        configAttributeList.add(new SecurityConfig(ro.getCmRole().getRoleCd().toString()));
+                        configAttributeList.add(new SecurityConfig("ROLE_" + ro.getCmRole().getRoleSeq().toString()));
                         
                         // 한번은 그냥 
                         result.put(new AntPathRequestMatcher(menu.getMenuPath()), configAttributeList);

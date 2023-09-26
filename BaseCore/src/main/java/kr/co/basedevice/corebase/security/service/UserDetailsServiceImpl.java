@@ -49,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             
         Set<String> userRoles = cmRoleRepository.findByUserSeq(cmUser.getUserSeq())
                 .stream()
-                .map(userRole -> userRole.getRoleCd().toString())
+                .map(userRole -> ("ROLE_" + userRole.getRoleSeq().toString()))
                 .collect(Collectors.toSet());
 
         List<GrantedAuthority> collect = userRoles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());

@@ -287,8 +287,7 @@ public class UserService {
 	/**
 	 * 일괄 사용자 역할 변경
 	 * 
-	 * @param userSeqList
-	 * @param roleCdList
+	 * @param saveUserRole
 	 * @param userSeq
 	 * @return
 	 */

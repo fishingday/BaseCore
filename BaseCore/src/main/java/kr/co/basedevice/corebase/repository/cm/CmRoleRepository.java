@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import kr.co.basedevice.corebase.domain.cm.CmRole;
-import kr.co.basedevice.corebase.domain.code.RoleCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 
 public interface CmRoleRepository extends JpaRepository<CmRole, Long>{
@@ -27,15 +26,6 @@ public interface CmRoleRepository extends JpaRepository<CmRole, Long>{
 	 * @return
 	 */
 	List<CmRole> findByDelYn(Yn delYn);
-
-	/**
-	 * 역할 코드로 역할 조회
-	 * 
-	 * @param valueOf
-	 * @param n
-	 * @return
-	 */
-	List<CmRole> findByRoleCdAndDelYn(RoleCd roleCd, Yn delYn);
 
 	/**
 	 * 메뉴별 역할 목록

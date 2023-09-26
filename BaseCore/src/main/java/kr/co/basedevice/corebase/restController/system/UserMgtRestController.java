@@ -88,8 +88,7 @@ public class UserMgtRestController {
 	/**
 	 * 사용자 역할 일괄 변경
 	 * 
-	 * @param userSeqList
-	 * @param roleCdList
+	 * @param saveUserRole
 	 * @return
 	 */
 	@PutMapping("/chg_bulk_user_role.json")

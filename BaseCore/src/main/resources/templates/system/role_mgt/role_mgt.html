@@ -43,22 +43,16 @@
             <div id="tabRoleInfoDiv">
               <h4 class="mt-4 mb-3" id="form-title">역할 정보 입력</h4>
               <div class="row g-3">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                   <label for="roleNm" class="form-label">역할 명</label>
                   <input type="text" class="form-control" id="roleNm">
                   <input type="hidden" id="roleSeq">
                 </div>
-                <div class="col-sm-6">
-                  <label for="roleCd" class="form-label">역할 코드</label>
-                  <input type="text" class="form-control" id="roleCd">
-                </div>
-
-                <div class="col-12">
+                <div class="col-sm-12">
                   <label for="defPage" class="form-label">대시 보드</label>
                   <input type="url" class="form-control" id="defPage">
                 </div>
-
-                <div class="col-12">
+                <div class="col-sm-12">
                   <label for="roleDesc" class="form-label">역할 설명</label>
                   <textarea class="form-control" id="roleDesc" rows="3"></textarea>
                 </div>
@@ -215,7 +209,6 @@
           initForm: function(){
             $("#form-title").text("");
             $("#roleSeq").val('');
-            $("#roleCd").val('');
             $("#roleNm").val('');
             $("#roleDesc").val('');
             $("#defPage").val('');
@@ -223,7 +216,6 @@
           setForm: function(cmRole){
             $("#form-title").text("["+ cmRole.roleNm +"] 역할정보");
             $("#roleSeq").val(cmRole.roleSeq);
-            $("#roleCd").val(cmRole.roleCd);
             $("#roleNm").val(cmRole.roleNm);
             $("#roleDesc").val(cmRole.roleDesc);
             $("#defPage").val(cmRole.defPage);
@@ -306,16 +298,6 @@
               return;
             }
 
-            if($("#roleCd").val() === ''){
-              Swal.fire({
-                title: '필수 입력 항목',
-                text: '역할 코드는 필수 입력 항목입니다.',
-                icon: 'info',
-                confirmButtonText: '닫기'
-              });
-              return;
-            }
-
             if($("#defPage").val() === ''){
               Swal.fire({
                 title: '필수 입력 항목',
@@ -329,7 +311,6 @@
             let cmRole = {};
             cmRole.roleSeq  = $("#roleSeq").val();
             cmRole.roleNm   = $("#roleNm").val();
-            cmRole.roleCd   = $("#roleCd").val();
             cmRole.defPage  = $("#defPage").val();
             cmRole.roleDesc = $("#roleDesc").val();
 
@@ -635,9 +616,8 @@
               },
               columns: [
                 {field: 'roleSeq',  title: '역할순번',    align: 'center', valign: 'middle', visible: false, switchable: false},
-                {field: 'roleCd',   title: '역할코드',    align: 'center', valign: 'middle', sortable: true},
                 {field: 'roleNm',   title: '역할명',     align: 'center', valign: 'middle', sortable: true},
-                {field: 'defPage',  title: '역할명',     align: 'center', valign: 'middle', visible: false},
+                {field: 'defPage',  title: 'def-page',  align: 'left', valign: 'middle', sortable: true},
               ],
               responseHandler: function (data) { // 데이터 처리
                 return data;
