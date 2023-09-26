@@ -15,13 +15,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.dto.MyMenuDto;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.security.token.AjaxAuthenticationToken;
+import kr.co.basedevice.corebase.service.common.UserService;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/common")
+@RequiredArgsConstructor
 public class CommonController {
+	
+
+	final private UserService userService;
 	
 	@GetMapping("/login.html")
 	public String login(@RequestParam(value = "error", required = false) String error,
@@ -64,5 +72,39 @@ public class CommonController {
 	public String joinUs() {
 		
 		return "/common/register.html";
+	}
+	
+	/**
+	 * 역할 변경
+	 * - 현재 역할 변경
+	 * - 역할별 메뉴목록 변경
+	 * 
+	 * @param roleSeq
+	 * @return
+	 */
+	@GetMapping("/chg_role.html")
+	public String chgRole(Long roleSeq){
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		AccountContext account = ((AccountContext) authentication.getPrincipal());
+		
+		CmRole currRole = null;
+		for(CmRole cmRole : account.getAuthRoleList()) {
+			if(cmRole.getRoleSeq() == roleSeq) {
+				currRole = cmRole;
+				break;
+			}
+		}
+		
+		if(currRole == null) {
+			throw new IllegalArgumentException("올바른 역할 정보가 아닙니다.");
+		}
+		account.setCurrRole(currRole);
+		
+		MyMenuDto myMenu = userService.findRolesMenuWithSetting(account.getCmUser().getUserSeq(), currRole.getRoleSeq());
+		
+		account.setMyMenu(myMenu);
+		
+		return "redirect:/";
 	}
 }

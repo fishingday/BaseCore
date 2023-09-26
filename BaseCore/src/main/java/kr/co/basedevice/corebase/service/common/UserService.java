@@ -523,4 +523,13 @@ public class UserService {
 		
 		return true;
 	}
+
+	/**
+	 * 로그인 완료 시 처리
+	 * 
+	 * @param cmUser
+	 */
+	public void afterLogin(CmUser cmUser) {
+		cmUserRepository.save(cmUser);
+	}
 }

@@ -33,7 +33,7 @@
                   [[${auth.currRole.roleNm}]]
                 </button>
                 <ul class="dropdown-menu text-small">
-                  <li th:each="roleItem: ${auth.authRoleList}"><a class="dropdown-item" href="#">[[${roleItem.roleNm}]]</a></li>
+                  <li th:each="roleItem: ${auth.authRoleList}"><a class="dropdown-item" th:classappend="${roleItem.roleSeq == auth.currRole.roleSeq} ? 'active' :''" th:href="@{/common/chg_role.html(roleSeq=${roleItem.roleSeq})}">[[${roleItem.roleNm}]]</a></li>
                 </ul>
               </div>
               <div class="dropdown text-end">
