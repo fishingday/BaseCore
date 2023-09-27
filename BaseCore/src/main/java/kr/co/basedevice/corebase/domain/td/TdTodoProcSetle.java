@@ -23,19 +23,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_ACTOR_QUIZ_USE")
-@IdClass(TdActorQuizUseId.class)
-public class TdActorQuizUse extends BaseEntity implements Serializable {
-
-	private static final long serialVersionUID = -5918461434462651471L;
+@Table(name = "TD_TODO_PROC_SETLE")
+@IdClass(TdTodoProcSetleId.class)
+public class TdTodoProcSetle extends BaseEntity implements Serializable {
+	
+	private static final long serialVersionUID = -7049311875233855750L;
 
 	@Id
-	@Column(name = "QUIZ_SEQ", nullable = false)
-	private Long quizSeq;
+	@Column(name = "TODO_SETLE_SEQ", nullable = false)
+	private Long todoSetleSeq;
 	
 	@Id
 	@Column(name = "WORK_SEQ", nullable = false)
-	private Long work_seq;
+	private Long workSeq;
 	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
@@ -43,8 +43,8 @@ public class TdActorQuizUse extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "QUIZ_SEQ", updatable = false, insertable = false)
-	private TdQuiz tdQuiz;
+	@JoinColumn(name = "TODO_SETLE_SEQ", updatable = false, insertable = false)
+	private TdTodoSetle tdTodoSetle;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore

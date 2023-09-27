@@ -56,7 +56,7 @@ public class CmUser extends BaseEntity implements Serializable{
 	@Column(name = "LOGIN_FAIL_CNT", nullable = false)
 	private Integer loginFailCnt;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	@Column(name = "LOGIN_DT")
 	private LocalDateTime loginDt;
 

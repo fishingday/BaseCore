@@ -38,7 +38,7 @@ public class CmRole extends BaseEntity implements Serializable{
 	@Column(name = "ROLE_SEQ", nullable = false)
 	private Long roleSeq;
 
-	@Column(name = "ROLE_NM", length = 30)
+	@Column(name = "ROLE_NM", length = 30, nullable = false)
 	private String roleNm;
 
 	@Column(name = "DEF_PAGE", length = 255)
