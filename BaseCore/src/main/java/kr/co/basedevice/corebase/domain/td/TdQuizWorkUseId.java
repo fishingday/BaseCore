@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TdActorQuizUseId implements Serializable {
+public class TdQuizWorkUseId implements Serializable {
 
 	private static final long serialVersionUID = 6247422308560833494L;
 

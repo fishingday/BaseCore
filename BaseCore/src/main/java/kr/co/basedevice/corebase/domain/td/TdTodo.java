@@ -61,8 +61,8 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private TodoTypCd todoTypCd;
 	
-	@Column(name = "TODO_SPEC_VAL", length = 128)
-	private String todoSpecVal;
+	@Column(name = "TODO_DTL_VAL", length = 128)
+	private String todoDtlVal;
 	
 	@Column(name = "DATE_LIMIT_CNT", nullable = false)
 	private Integer dateLimitCnt;

@@ -23,8 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_ACTOR_QUIZ_USE")
-@IdClass(TdActorQuizUseId.class)
+@Table(name = "TD_QUIZ_WORK_USE")
+@IdClass(TdQuizWorkUseId.class)
 public class TdActorQuizUse extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -5918461434462651471L;

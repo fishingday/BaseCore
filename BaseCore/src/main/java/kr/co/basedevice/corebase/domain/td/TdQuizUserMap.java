@@ -44,6 +44,9 @@ public class TdQuizUserMap extends BaseEntity implements Serializable{
 	@Column(name = "USER_ANSWER", length = 128, nullable = false)
 	private String userAnswer;
 	
+	@Column(name = "ANSWER_CNT", nullable = false)
+	private Integer answerCnt;
+	
 	@Column(name = "SUCES_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn sucesYn;
