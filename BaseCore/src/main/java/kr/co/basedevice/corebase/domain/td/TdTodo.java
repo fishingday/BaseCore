@@ -51,6 +51,9 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Column(name = "TODO_CONT", length = 2000, nullable = false)
 	private String todoCont;
 	
+	@Column(name = "TODO_DESC", length = 2000)
+	private String todoDesc;
+	
 	@Column(name = "COMPLET_CONDI_VAL", length = 128, nullable = false)
 	private String completCondiVal;
 	
@@ -79,12 +82,12 @@ public class TdTodo extends BaseEntity implements Serializable{
 	
 	@DateTimeFormat(pattern = "HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
-	@Column(name = "EXEC_BEGIN_TM", nullable = false)
+	@Column(name = "EXEC_BEGIN_TM")
 	private LocalTime execBeginTm;
 	
 	@DateTimeFormat(pattern = "HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
-	@Column(name = "EXEC_END_TM", nullable = false)
+	@Column(name = "EXEC_END_TM")
 	private LocalTime execEndTm;
 	
 	@Column(name = "QUIZ_USE_YN", nullable = false, length = 1)

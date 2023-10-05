@@ -41,12 +41,18 @@ public class TdTodoSetle extends BaseEntity implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_TODO_SETLE")
 	@Column(name = "TODO_SETLE_SEQ", nullable = false)
 	private Long todoSetleSeq;
+
+	@Column(name = "SETLE_USER_SEQ", nullable = false)
+	private Long setleUserSeq;
 	
 	@Column(name = "SETLER_SEQ", nullable = false)
 	private Long setlerSeq;
 	
 	@Column(name = "TOTAL_SETLE_POINT", nullable = false)
 	private Integer totalSetlePoint;
+	
+	@Column(name = "SETLE_DESC", nullable = false)
+	private String setleDesc;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
@@ -59,5 +65,5 @@ public class TdTodoSetle extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdTodoSetle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdTodoProcSetle> tdTodoProcSetleList = new ArrayList<>(1);
+	private List<TdTodoSetleDtl> tdTodoSetleDtlList = new ArrayList<>(1);
 }

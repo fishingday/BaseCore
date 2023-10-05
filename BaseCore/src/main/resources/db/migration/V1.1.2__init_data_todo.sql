@@ -1,0 +1,45 @@
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,'아침퀴즈','기상','7:00~7:10 사이 문제 풀기','문제 정답 맞추기',1000,'WAKEUP',null,1,'2023-09-01','9999-12-31','7:00','7:30','Y','ENG_WORD','N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,'취침미션','취침','23:30분 전에 잠자기','확인자가 확인',1000,'SLEEP',null,1,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,'방청소','방청소','취침전 자기방 청소','확인자가 확인',1000,'CLEAN',null,1,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,'영어일기','영어 일기','500자 이상','500이상',1000,'DIARY','500',1,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,'운동','운동','자전거 10km, 조깅 5km, 출넘기 1000','운동기록 업로드',1000,'EXERCISE',null,1,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,'독서','독서','100page 이상 읽기, 만화책 제외','읽은 페이지 기입과 한 줄 소감',1000,'READING',null,1,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,'시험100','시험','중간고사, 기발고사','과목당, 점수 공개 (100점은 90점과 동시 입력)',4000,'EXAM',null,0,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,'시험90','시험','중간고사, 기발고사','과목당, 점수 공개 (100점은 91점과 동시 입력)',1000,'EXAM',null,0,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (108,'쪽지시험100','시험','영어, 수학 학원 시험','증거 사진 첨부',4000,'EXAM',null,0,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+insert into td_todo(todo_seq, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (109,'쪽지시험90','시험','영어, 수학 학원 시험','증거 사진 첨부',1000,'EXAM',null,0,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
+
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,101,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,102,'N',100, now(), 100, now());
+insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,102,'N',100, now(), 100, now());
+
+
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,103,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (108,104,'N',100, now(), 100, now());
+insert into td_actor_target_map(todo_seq, actor_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (109,104,'N',100, now(), 100, now());

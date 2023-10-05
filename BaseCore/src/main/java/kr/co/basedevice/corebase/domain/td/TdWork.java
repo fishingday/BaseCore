@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.BaseEntity;
+import kr.co.basedevice.corebase.domain.code.TodoStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,9 +59,9 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "WORK_DT", nullable = false)
 	private LocalDateTime workDt;
 	
-	@Column(name = "COMPLET_YN", nullable = false, length = 1)
+	@Column(name = "TODO_STAT_CD", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
-	private Yn completYn;
+	private TodoStatCd todoStatCd;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
@@ -73,13 +74,17 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "CHECKER_SEQ")
 	private Long checkerSeq;
 	
+	@Column(name = "SETLE_YN", nullable = false, length = 1)
+	@Enumerated(EnumType.STRING)
+	private Yn setleYn;
+	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	
 	@OneToMany(mappedBy = "tdWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdTodoProcSetle> tdTodoProcSetleList = new ArrayList<>(1);
+	private List<TdTodoSetleDtl> tdTodoSetleDtlList = new ArrayList<>(1);
 	
 	@OneToMany(mappedBy = "tdWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore

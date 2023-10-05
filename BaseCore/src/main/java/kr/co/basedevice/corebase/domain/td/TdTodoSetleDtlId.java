@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TdTodoProcSetleId implements Serializable {
+public class TdTodoSetleDtlId implements Serializable {
 	
 	private static final long serialVersionUID = -8995938541079692049L;
 

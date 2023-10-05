@@ -36,7 +36,7 @@ public class TdQuiz extends BaseEntity implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_QUIZ")
-	@Column(name = "ROLE_SEQ", nullable = false)
+	@Column(name = "QUIZ_SEQ", nullable = false)
 	private Long quizSeq;
 
 	@Column(name = "QUIZ_TYP_CD", nullable = false, length = 35)

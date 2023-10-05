@@ -24,8 +24,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_TODO_PROC_SETLE")
-@IdClass(TdTodoProcSetleId.class)
-public class TdTodoProcSetle extends BaseEntity implements Serializable {
+@IdClass(TdTodoSetleDtlId.class)
+public class TdTodoSetleDtl extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = -7049311875233855750L;
 
