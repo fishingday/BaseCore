@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import kr.co.basedevice.corebase.dto.MailTO;
-import kr.co.basedevice.corebase.service.MailService;
+import kr.co.basedevice.corebase.service.common.MailService;
 
 @SpringBootTest
 public class MailTester {

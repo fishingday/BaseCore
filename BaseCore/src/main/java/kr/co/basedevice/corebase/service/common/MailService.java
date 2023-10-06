@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.service;
+package kr.co.basedevice.corebase.service.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
