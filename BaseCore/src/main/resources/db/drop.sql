@@ -23,7 +23,7 @@ drop table if exists td_quiz CASCADE;
 drop table if exists td_quiz_user_map CASCADE; 
 drop table if exists td_todo CASCADE; 
 drop table if exists td_todo_checker_map CASCADE; 
-drop table if exists td_todo_proc_setle CASCADE; 
+drop table if exists td_todo_setle_dtl CASCADE; 
 drop table if exists td_todo_setle CASCADE;
 drop table if exists td_work CASCADE;
 drop sequence if exists seq_cm_critical_log;

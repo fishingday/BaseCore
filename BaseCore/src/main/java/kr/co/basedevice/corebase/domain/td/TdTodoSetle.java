@@ -45,8 +45,8 @@ public class TdTodoSetle extends BaseEntity implements Serializable{
 	@Column(name = "SETLE_USER_SEQ", nullable = false)
 	private Long setleUserSeq;
 	
-	@Column(name = "SETLER_SEQ", nullable = false)
-	private Long setlerSeq;
+	@Column(name = "ACOUNT_SEQ", nullable = false)
+	private Long acountSeq;
 	
 	@Column(name = "TOTAL_SETLE_POINT", nullable = false)
 	private Integer totalSetlePoint;

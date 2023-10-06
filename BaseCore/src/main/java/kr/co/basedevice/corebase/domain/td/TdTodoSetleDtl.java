@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_TODO_PROC_SETLE")
+@Table(name = "TD_TODO_SETLE_DTL")
 @IdClass(TdTodoSetleDtlId.class)
 public class TdTodoSetleDtl extends BaseEntity implements Serializable {
 	

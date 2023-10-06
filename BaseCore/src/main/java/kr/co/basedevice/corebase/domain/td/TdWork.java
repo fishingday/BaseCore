@@ -51,6 +51,9 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "ACTOR_SEQ", nullable = false)
 	private Long actorSeq;
 	
+	@Column(name = "WORK_TITL", length = 200)
+	private String workTitl;
+	
 	@Column(name = "WORK_CONT", length = 4000)
 	private String workCont;
 	
