@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class SearchTodo {
 	
-	private Long actorSeq;
+	private Long workerSeq;
 	
 	private LocalDate toDay;
 	

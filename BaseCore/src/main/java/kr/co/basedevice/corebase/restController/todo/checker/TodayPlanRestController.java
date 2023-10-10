@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.todo.TdTodo;
 import kr.co.basedevice.corebase.domain.todo.TdWork;
-import kr.co.basedevice.corebase.dto.todo.TodoPlanDto;
+import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
@@ -42,8 +42,8 @@ public class TodayPlanRestController {
 	 * @param SearchGrpCd 
 	 * @return
 	 */
-	@GetMapping("/get_todo_plan_list.json")
-	public ResponseEntity<Map<String,Object>> findByTodoPlanList(SearchTodo searchTodo){
+	@GetMapping("/get_today_plan_list.json")
+	public ResponseEntity<Map<String,Object>> findByTodayPlanList(SearchTodo searchTodo){
 		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		searchTodo.setCheckerSeq(checker.getUserSeq());
 		
@@ -53,8 +53,8 @@ public class TodayPlanRestController {
 		
 		Map<String,Object> retMap = new HashMap<>();
 		// 해당일에 할일 목록
-		List <TodoPlanDto> todoPlanList = todoService.findByTodoPlanList4Checker(searchTodo);
-		retMap.put("todoPlanList", todoPlanList);
+		List <TodayPlanDto> todayPlanList = todoService.findByTodayPlanList4Checker(searchTodo);
+		retMap.put("todayPlanList", todayPlanList);
 		
 		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
 		List <TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Checker(searchTodo);

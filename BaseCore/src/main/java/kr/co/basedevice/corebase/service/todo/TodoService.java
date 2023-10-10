@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import kr.co.basedevice.corebase.domain.todo.TdTodo;
 import kr.co.basedevice.corebase.domain.todo.TdWork;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
-import kr.co.basedevice.corebase.dto.todo.TodoPlanDto;
+import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
+import kr.co.basedevice.corebase.dto.todo.TodayTodoDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
@@ -26,7 +27,7 @@ public class TodoService {
 	 * @param searchTodo
 	 * @return
 	 */
-	public List<TodoPlanDto> findByTodoPlanList4Checker(SearchTodo searchTodo) {
+	public List<TodayPlanDto> findByTodayPlanList4Checker(SearchTodo searchTodo) {
 		// TODO 해당일에 생성된 확인자의 할일/작업 목록
 		
 		return null;
@@ -57,6 +58,21 @@ public class TodoService {
 	public TodoDetailDto getTdTodoDetail(Long todoSeq) {
 		// TODO 할일, 작업자, 확인자
 		return null;
+	}
+
+	public List<TodayTodoDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
+		// 사용자용 오늘의 할일
+		return null;
+	}
+
+	public List<TodoSummaryDto> findByPointSummary4Worker(SearchTodo searchTodo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void saveTdWork(TdWork tdWork) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

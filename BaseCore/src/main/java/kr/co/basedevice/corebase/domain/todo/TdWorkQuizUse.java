@@ -35,7 +35,7 @@ public class TdWorkQuizUse extends BaseEntity implements Serializable {
 	
 	@Id
 	@Column(name = "WORK_SEQ", nullable = false)
-	private Long work_seq;
+	private Long workSeq;
 	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)

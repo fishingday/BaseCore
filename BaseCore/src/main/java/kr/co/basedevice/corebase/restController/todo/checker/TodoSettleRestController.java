@@ -12,5 +12,14 @@ import lombok.RequiredArgsConstructor;
 public class TodoSettleRestController {
 	
 	final private TodoService todoService;
+	
+	
+	// 정산 목록 with 사용자별 미정산 현황 
+	
+	
+	// 정산 상세 조회
+	
+	
+	// 정산 하기
 
 }
