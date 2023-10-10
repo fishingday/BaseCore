@@ -48,8 +48,8 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "TODO_SEQ", nullable = false)
 	private Long todoSeq;
 	
-	@Column(name = "ACTOR_SEQ", nullable = false)
-	private Long actorSeq;
+	@Column(name = "WORKER_SEQ", nullable = false)
+	private Long workerSeq;
 	
 	@Column(name = "WORK_TITL", length = 200)
 	private String workTitl;
@@ -91,7 +91,7 @@ public class TdWork extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdActorQuizUse> tdActorQuizUseList = new ArrayList<>(1);
+	private List<TdWorkQuizUse> tdWorkerQuizUseList = new ArrayList<>(1);
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)

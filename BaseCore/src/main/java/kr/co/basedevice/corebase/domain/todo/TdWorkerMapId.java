@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TdActorTargetMapId  implements Serializable {
+public class TdWorkerMapId  implements Serializable {
 	
 	private static final long serialVersionUID = -7776591826807851074L;
 
 	private Long todoSeq;
 
-	private Long actorSeq;
+	private Long workerSeq;
 }

@@ -15,5 +15,5 @@ public class TdQuizWorkUseId implements Serializable {
 
 	private Long quizSeq;
 	
-	private Long work_seq;
+	private Long workSeq;
 }

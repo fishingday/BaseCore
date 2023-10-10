@@ -23,19 +23,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_QUIZ_WORK_USE")
-@IdClass(TdQuizWorkUseId.class)
-public class TdActorQuizUse extends BaseEntity implements Serializable {
+@Table(name = "TD_WORKER_MAP")
+@IdClass(TdWorkerMapId.class)
+public class TdWorkerMap extends BaseEntity implements Serializable {
 
-	private static final long serialVersionUID = -5918461434462651471L;
-
-	@Id
-	@Column(name = "QUIZ_SEQ", nullable = false)
-	private Long quizSeq;
+	private static final long serialVersionUID = -7899404903530496762L;
 	
 	@Id
-	@Column(name = "WORK_SEQ", nullable = false)
-	private Long work_seq;
+	@Column(name = "TODO_SEQ", nullable = false)
+	private Long todoSeq;
+	
+	@Id
+	@Column(name = "WORKER_SEQ", nullable = false)
+	private Long workerSeq;
 	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
@@ -43,11 +43,6 @@ public class TdActorQuizUse extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "QUIZ_SEQ", updatable = false, insertable = false)
-	private TdQuiz tdQuiz;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
-	@JoinColumn(name = "WORK_SEQ", updatable = false, insertable = false)
-	private TdWork tdWork;
+	@JoinColumn(name = "TODO_SEQ", updatable = false, insertable = false)
+	private TdTodo tdTodo;
 }

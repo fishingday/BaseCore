@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.restController.todo.actor;
+package kr.co.basedevice.corebase.restController.todo.worker;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,7 +7,7 @@ import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/todo/actor/point_settle")
+@RequestMapping("/todo/worker/point_settle")
 @RequiredArgsConstructor
 public class PointSettleRestController {
 	

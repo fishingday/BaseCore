@@ -73,7 +73,7 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul") //날짜 포멧 바꾸기
 	@Column(name = "POST_BEGIN_DATE", nullable = false)
-	private LocalDate postBeginDate;	
+	private LocalDate postBeginDate;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul") //날짜 포멧 바꾸기
@@ -113,6 +113,6 @@ public class TdTodo extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdTodo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdActorTargetMap> tdActorTargetMapList = new ArrayList<>(1);
+	private List<TdWorkerMap> tdWorkerMapList = new ArrayList<>(1);
 	
 }

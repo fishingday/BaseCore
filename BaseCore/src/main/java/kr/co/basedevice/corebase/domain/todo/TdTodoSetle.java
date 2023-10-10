@@ -42,8 +42,8 @@ public class TdTodoSetle extends BaseEntity implements Serializable{
 	@Column(name = "TODO_SETLE_SEQ", nullable = false)
 	private Long todoSetleSeq;
 
-	@Column(name = "SETLE_USER_SEQ", nullable = false)
-	private Long setleUserSeq;
+	@Column(name = "WORKER_SEQ", nullable = false)
+	private Long workerSeq;
 	
 	@Column(name = "ACOUNT_SEQ", nullable = false)
 	private Long acountSeq;

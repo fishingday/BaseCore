@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/todo/actor")
-public class TodoActorController {
+@RequestMapping("/todo/worker")
+public class TodoWorkerController {
 	
 	/**
 	 * 오늘의 할일
@@ -15,7 +15,7 @@ public class TodoActorController {
 	 */
 	@GetMapping(value={"/today_todo", "/today_todo/init.html"})
 	public String viewTodayPlan() {
-		return "/todo/actor/today_todo.html";
+		return "/todo/worker/today_todo.html";
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class TodoActorController {
 	 */
 	@GetMapping(value={"/todo_mgt", "/todo_mgt/init.html"})
 	public String viewTodoSettle() {
-		return "/todo/actor/todo_mgt.html";
+		return "/todo/worker/todo_mgt.html";
 	}
 		
 	/** 
@@ -35,16 +35,16 @@ public class TodoActorController {
 	 */
 	@GetMapping(value={"/todo_history", "/todo_history/init.html"})
 	public String viewTodoMgt() {
-		return "/todo/actor/todo_history.html";
+		return "/todo/worker/todo_history.html";
 	}
 		
 	/** 
-	 * Quiz 관리
+	 * 포인트 관리
 	 * 
 	 * @return
 	 */
 	@GetMapping(value={"/point_settle", "/point_settle/init.html"})
-	public String viewQuizMgt() {
-		return "/todo/actor/point_settle.html";
+	public String viewPointSettleMgt() {
+		return "/todo/worker/point_settle.html";
 	}
 }

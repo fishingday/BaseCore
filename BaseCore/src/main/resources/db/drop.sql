@@ -18,7 +18,7 @@ drop table if exists cm_user_bookmark CASCADE;
 drop table if exists cm_user_pwd CASCADE; 
 drop table if exists cm_user_role_map CASCADE; 
 drop table if exists td_quiz_work_use CASCADE; 
-drop table if exists td_actor_target_map CASCADE; 
+drop table if exists td_worker_map CASCADE; 
 drop table if exists td_quiz CASCADE;
 drop table if exists td_quiz_user_map CASCADE; 
 drop table if exists td_todo CASCADE; 

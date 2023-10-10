@@ -62,6 +62,6 @@ public class TdQuiz extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdQuiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdActorQuizUse> tdActorQuizUseList = new ArrayList<>(1);
+	private List<TdWorkQuizUse> tdWorkerQuizUseList = new ArrayList<>(1);
 	
 }
