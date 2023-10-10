@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.service.todo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -20,6 +21,20 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @Service
 public class TodoService {
+	
+	/**
+	 * 유효한 할일들로 부터 작업을 생성한다.
+	 * 
+	 * @param today
+	 * @return
+	 */
+	public boolean createWorkItems(LocalDate today) {
+		
+		
+		
+		return true;
+	}
+	
 	
 	/**
 	 * 확인자 용 할일 목록
