@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.td;
+package kr.co.basedevice.corebase.domain.todo;
 
 import java.io.Serializable;
 
@@ -23,19 +23,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_TODO_SETLE_DTL")
-@IdClass(TdTodoSetleDtlId.class)
-public class TdTodoSetleDtl extends BaseEntity implements Serializable {
+@Table(name = "TD_TODO_CHECKER_MAP")
+@IdClass(TdTodCheckerMapId.class)
+public class TdTodCheckerMap extends BaseEntity implements Serializable {
 	
-	private static final long serialVersionUID = -7049311875233855750L;
+	private static final long serialVersionUID = 6688519416637991812L;
 
 	@Id
-	@Column(name = "TODO_SETLE_SEQ", nullable = false)
-	private Long todoSetleSeq;
+	@Column(name = "TODO_SEQ", nullable = false)
+	private Long todoSeq;
 	
 	@Id
-	@Column(name = "WORK_SEQ", nullable = false)
-	private Long workSeq;
+	@Column(name = "CHECKER_SEQ", nullable = false)
+	private Long checkerSeq;
 	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
@@ -43,11 +43,6 @@ public class TdTodoSetleDtl extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "TODO_SETLE_SEQ", updatable = false, insertable = false)
-	private TdTodoSetle tdTodoSetle;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
-	@JoinColumn(name = "WORK_SEQ", updatable = false, insertable = false)
-	private TdWork tdWork;
+	@JoinColumn(name = "TODO_SEQ", updatable = false, insertable = false)
+	private TdTodo tdTodo;
 }

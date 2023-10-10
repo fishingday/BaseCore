@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.td;
+package kr.co.basedevice.corebase.domain.todo;
 
 import java.io.Serializable;
 
@@ -23,19 +23,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_TODO_CHECKER_MAP")
-@IdClass(TdTodCheckerMapId.class)
-public class TdTodCheckerMap extends BaseEntity implements Serializable {
-	
-	private static final long serialVersionUID = 6688519416637991812L;
+@Table(name = "TD_ACTOR_TARGET_MAP")
+@IdClass(TdActorTargetMapId.class)
+public class TdActorTargetMap extends BaseEntity implements Serializable {
 
+	private static final long serialVersionUID = -7899404903530496762L;
+	
 	@Id
 	@Column(name = "TODO_SEQ", nullable = false)
 	private Long todoSeq;
 	
 	@Id
-	@Column(name = "CHECKER_SEQ", nullable = false)
-	private Long checkerSeq;
+	@Column(name = "ACTOR_SEQ", nullable = false)
+	private Long actorSeq;
 	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)

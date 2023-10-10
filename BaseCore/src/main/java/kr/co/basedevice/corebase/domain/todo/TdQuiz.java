@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.td;
+package kr.co.basedevice.corebase.domain.todo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
