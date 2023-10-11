@@ -1,21 +1,27 @@
 package kr.co.basedevice.corebase.service;
 
-import java.time.LocalDateTime;
-import java.time.format.TextStyle;
-import java.util.Locale;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
+import org.quartz.Job;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
+import org.quartz.impl.matchers.GroupMatcher;
+import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
+import kr.co.basedevice.corebase.quartz.component.JobRequest;
+import kr.co.basedevice.corebase.quartz.component.JobResponse;
+import kr.co.basedevice.corebase.quartz.component.StatusResponse;
+import kr.co.basedevice.corebase.util.DateTimeUtils;
+import kr.co.basedevice.corebase.util.JobUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,77 +29,182 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 public class QuartzService {
-    private final Scheduler scheduler;
+    final private SchedulerFactoryBean schedulerFactoryBean;
 
-    public void addSimpleJob(Class job, String name, String desc, Map params, Integer seconds) throws SchedulerException {
-        JobDetail jobDetail = buildJobDetail(job, name, desc, params);
+    final private ApplicationContext context;
+    
+    public boolean addJob(JobRequest jobRequest, Class<? extends Job> jobClass) {
+        JobKey jobKey = null;
+        JobDetail jobDetail;
+        Trigger trigger;
 
-        if (scheduler.checkExists(jobDetail.getKey())) {
-            scheduler.deleteJob(jobDetail.getKey());
+        try {
+            trigger = JobUtils.createTrigger(jobRequest);
+            jobDetail = JobUtils.createJob(jobRequest, jobClass, context);
+            jobKey = JobKey.jobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
+
+            Date dt = schedulerFactoryBean.getScheduler().scheduleJob(jobDetail, trigger);
+            log.debug("Job with jobKey : {} scheduled successfully at date : {}", jobDetail.getKey(), dt);
+            return true;
+        } catch (SchedulerException e) {
+            log.error("error occurred while scheduling with jobKey : {}", jobKey, e);
+        }
+        return false;
+    }
+
+    public boolean deleteJob(JobKey jobKey) {
+        log.debug("[schedulerdebug] deleting job with jobKey : {}", jobKey);
+        try {
+            return schedulerFactoryBean.getScheduler().deleteJob(jobKey);
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error occurred while deleting job with jobKey : {}", jobKey, e);
+        }
+        return false;
+    }
+
+    public boolean updateJob(JobRequest jobRequest) {
+        JobKey jobKey = null;
+        Trigger newTrigger;
+
+        try {
+            newTrigger = JobUtils.createTrigger(jobRequest);
+            jobKey = JobKey.jobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
+
+            Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobRequest.getJobName()), newTrigger);
+            log.debug("Job with jobKey : {} rescheduled successfully at date : {}", jobKey, dt);
+            return true;
+        } catch (SchedulerException e) {
+            log.error("error occurred while scheduling with jobKey : {}", jobKey, e);
+        }
+        return false;
+    }
+
+    public boolean pauseJob(JobKey jobKey) {
+        log.debug("[schedulerdebug] pausing job with jobKey : {}", jobKey);
+        try {
+            schedulerFactoryBean.getScheduler().pauseJob(jobKey);
+            return true;
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error occurred while deleting job with jobKey : {}", jobKey, e);
+        }
+        return false;
+    }
+
+    public boolean resumeJob(JobKey jobKey) {
+        log.debug("[schedulerdebug] resuming job with jobKey : {}", jobKey);
+        try {
+            schedulerFactoryBean.getScheduler().resumeJob(jobKey);
+            return true;
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error occurred while resuming job with jobKey : {}", jobKey, e);
+        }
+        return false;
+    }
+
+    public boolean stopJob(JobKey jobKey) {
+        log.debug("[schedulerdebug] stopping job with jobKey : {}", jobKey);
+        try {
+            return schedulerFactoryBean.getScheduler().interrupt(jobKey);
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error occurred while stopping job with jobKey : {}", jobKey, e);
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+	public StatusResponse getAllJobs() {
+        JobResponse jobResponse;
+        List<JobResponse> jobs = new ArrayList<>();
+        int numOfRunningJobs = 0;
+        int numOfGroups = 0;
+        int numOfAllJobs = 0;
+
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            for (String groupName : scheduler.getJobGroupNames()) {
+                numOfGroups++;
+                for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                    List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
+
+                    jobResponse = JobResponse.builder()
+                            .jobName(jobKey.getName())
+                            .groupName(jobKey.getGroup())
+                            .scheduleTime(DateTimeUtils.toString(triggers.get(0).getStartTime()))
+                            .lastFiredTime(DateTimeUtils.toString(triggers.get(0).getPreviousFireTime()))
+                            .nextFireTime(DateTimeUtils.toString(triggers.get(0).getNextFireTime()))
+                            .build();
+
+                    if (isJobRunning(jobKey)) {
+                        jobResponse.setJobStatus("RUNNING");
+                        numOfRunningJobs++;
+                    } else {
+                        String jobState = getJobState(jobKey);
+                        jobResponse.setJobStatus(jobState);
+                    }
+                    numOfAllJobs++;
+                    jobs.add(jobResponse);
+                }
+            }
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error while fetching all job info", e);
         }
 
-        scheduler.scheduleJob(
-                jobDetail,
-                buildSimpleJobTrigger(seconds)
-        );
-        
-        log.debug("addSimpleJob : {}",  jobDetail);
+        StatusResponse statusResponse = StatusResponse.builder()
+        .numOfAllJobs(numOfAllJobs)
+        .numOfRunningJobs(numOfRunningJobs)
+        .numOfGroups(numOfGroups)
+        .jobs(jobs)
+        .build();
+        return statusResponse;
     }
 
-    public void addCronJob(Class job, String name, String desc, Map params, String expression) throws SchedulerException {
-        JobDetail jobDetail = buildJobDetail(job, name, desc, params);
-
-        if (scheduler.checkExists(jobDetail.getKey())) {
-            scheduler.deleteJob(jobDetail.getKey());
+    public boolean isJobRunning(JobKey jobKey) {
+        try {
+            List<JobExecutionContext> currentJobs = schedulerFactoryBean.getScheduler().getCurrentlyExecutingJobs();
+            if (currentJobs != null) {
+                for (JobExecutionContext jobCtx : currentJobs) {
+                    if (jobKey.getName().equals(jobCtx.getJobDetail().getKey().getName())) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error occurred while checking job with jobKey : {}", jobKey, e);
         }
-
-        scheduler.scheduleJob(
-                jobDetail,
-                buildCronJobTrigger(expression)
-        );
-        
-
-        log.debug("addCronJob : {}",  jobDetail);
+        return false;
     }
 
-    private JobDetail buildJobDetail(Class job, String name, String desc, Map params) {
-        JobDataMap jobDataMap = new JobDataMap();
-        if(params != null) jobDataMap.putAll(params);
-        return JobBuilder
-                .newJob(job)
-                .withIdentity(name)
-                .withDescription(desc)
-                .usingJobData(jobDataMap)
-                .build();
+    public boolean isJobExists(JobKey jobKey) {
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            if (scheduler.checkExists(jobKey)) {
+                return true;
+            }
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] error occurred while checking job exists :: jobKey : {}", jobKey, e);
+        }
+        return false;
     }
 
-    /**
-     * Cron Job Trigger
-     * 
-     *  *  *   *   *   *   *     *
-     *  초  분  시   일   월  요일  년도(생략가능)
-     */    
-    private Trigger buildCronJobTrigger(String scheduleExp) {
-        return TriggerBuilder.newTrigger()
-                .withSchedule(CronScheduleBuilder.cronSchedule(scheduleExp))
-                .build();
-    }
+    public String getJobState(JobKey jobKey) {
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 
-    /**
-     * Simple Job Trigger
-     */
-    private Trigger buildSimpleJobTrigger(Integer seconds) {
-        return TriggerBuilder.newTrigger()
-                .withSchedule(SimpleScheduleBuilder
-                        .simpleSchedule()
-                        .repeatForever()
-                        .withIntervalInSeconds(seconds))
-                .build();
-    }
+            List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobDetail.getKey());
 
-    public static String buildCronExpression(LocalDateTime time) {
-        LocalDateTime fireTime = time.plusSeconds(10);
-        // 0 0 0 15 FEB ? 2021
-        return String.format("%d %d %d %d %s ? %d", fireTime.getSecond(), fireTime.getMinute(), fireTime.getHour(), fireTime.getDayOfMonth(), fireTime.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase(), fireTime.getYear());
+            if (triggers != null && triggers.size() > 0) {
+                for (Trigger trigger : triggers) {
+                    Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+                    if (Trigger.TriggerState.NORMAL.equals(triggerState)) {
+                        return "SCHEDULED";
+                    }
+                    return triggerState.name().toUpperCase();
+                }
+            }
+        } catch (SchedulerException e) {
+            log.error("[schedulerdebug] Error occurred while getting job state with jobKey : {}", jobKey, e);
+        }
+        return null;
     }
 }

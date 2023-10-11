@@ -8,5 +8,5 @@ public enum TodoTypCd {
 	EXERCISE, // 운동
 	READING,  // 독서
 	EXAM,     // 시험
-	SPECIAL   // 특수
+	SOME      // 이것 저것!
 }

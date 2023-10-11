@@ -12,7 +12,7 @@ import kr.co.basedevice.corebase.service.common.LoggingService;
 @Configuration
 public class WebConfig implements WebMvcConfigurer{
 	
-	private String [] excludePathPatternArray = {"/common/**", "/css/**", "/images/**", "/js/**"};
+	private String [] excludePathPatternArray = {"/common/**", "/css/**", "/images/**", "/js/**", "/scheduler/**"};
 	
 	@Autowired 
 	private SecurityResourceService securityResourceService;

@@ -30,6 +30,7 @@ import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
 
+//@Convert(converter = CryptoConverter.class, attributeName = "userTelNo") // 클래스 레벨에 적용
 @Getter
 @Setter
 @Entity
@@ -46,10 +47,11 @@ public class CmUser extends BaseEntity implements Serializable{
 
 	@Column(name = "LOGIN_ID", nullable = false, unique = true)
 	private String loginId;
-
+	
 	@Column(name = "USER_NM", nullable = false, length = 30)
 	private String userNm;
 
+	//@Convert(converter = CryptoConverter.class)
 	@Column(name = "USER_TEL_NO", length = 20)
 	private String userTelNo;
 

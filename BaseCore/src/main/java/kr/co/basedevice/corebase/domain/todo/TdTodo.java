@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
+import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -69,6 +70,13 @@ public class TdTodo extends BaseEntity implements Serializable{
 	
 	@Column(name = "DATE_LIMIT_CNT", nullable = false)
 	private Integer dateLimitCnt;
+	
+	@Column(name = "TODO_CRE_CD", nullable = false, length = 35)
+	@Enumerated(EnumType.STRING)
+	private TodoCreCd todoCreCd;
+	
+	@Column(name = "TODO_CRE_DTL_VAL", length = 128)
+	private String todoCreDtlVal;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul") //날짜 포멧 바꾸기
