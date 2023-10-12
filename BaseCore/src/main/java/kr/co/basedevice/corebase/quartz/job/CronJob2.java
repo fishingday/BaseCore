@@ -51,7 +51,7 @@ public class CronJob2 extends QuartzJobBean implements InterruptableJob {
         isJobInterrupted = true;
         if (currThread != null) {        	
             loggingService.writeBatchLog(new CmQuartzLog(
-            		QuartzLogTypCd.JOB_INTERRUPTED,
+            		QuartzLogTypCd.INTERRUPTED,
             		this.getClass().getName(),
             		currThread.getName()
             	));
