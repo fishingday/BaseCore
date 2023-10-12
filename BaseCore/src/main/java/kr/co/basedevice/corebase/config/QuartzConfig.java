@@ -1,31 +1,41 @@
 package kr.co.basedevice.corebase.config;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import kr.co.basedevice.corebase.quartz.AutowiringSpringBeanJobFactory;
 import kr.co.basedevice.corebase.quartz.component.JobsListener;
 import kr.co.basedevice.corebase.quartz.component.TriggersListener;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class QuartzConfig {
 	
-	@Autowired
-	private TriggersListener triggersListener;
-
-	@Autowired
-	private JobsListener jobsListener;
+	final private DataSource dataSource;
+	final private ApplicationContext applicationContext;
+	final private PlatformTransactionManager platformTransactionManager;
+	
+	final private TriggersListener triggersListener;
+	final private JobsListener jobsListener;
 
 	/**
 	 * Quartz 관련 설정
@@ -34,20 +44,39 @@ public class QuartzConfig {
 	 * @return SchedulerFactoryBean
 	 */
 	@Bean
-	SchedulerFactoryBean schedulerFactoryBean(ApplicationContext applicationContext) {
-		SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
-
-		AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();
-		jobFactory.setApplicationContext(applicationContext);
-		schedulerFactoryBean.setJobFactory(jobFactory);
-
-		schedulerFactoryBean.setApplicationContext(applicationContext);
-
-		schedulerFactoryBean.setGlobalTriggerListeners(triggersListener);
-		schedulerFactoryBean.setGlobalJobListeners(jobsListener);
-		schedulerFactoryBean.setOverwriteExistingJobs(true);
-		schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
-		return schedulerFactoryBean;
+	SchedulerFactoryBean schedulerFactoryBean() {
+	   SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();	 
+	   AutowiringSpringBeanJobFactory autowiringSpringBeanJobFactory = new AutowiringSpringBeanJobFactory();	   
+	   autowiringSpringBeanJobFactory.setApplicationContext(applicationContext);
+	   schedulerFactoryBean.setJobFactory(autowiringSpringBeanJobFactory);
+	   schedulerFactoryBean.setApplicationContext(applicationContext);
+	   
+	   schedulerFactoryBean.setDataSource(dataSource);
+	   schedulerFactoryBean.setTransactionManager(platformTransactionManager);
+	 
+	   schedulerFactoryBean.setOverwriteExistingJobs(true);
+	   schedulerFactoryBean.setAutoStartup(true);
+	   schedulerFactoryBean.setQuartzProperties(quartzProperties());
+	   schedulerFactoryBean.setGlobalTriggerListeners(triggersListener);
+	   schedulerFactoryBean.setGlobalJobListeners(jobsListener);
+	   schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
+	   
+	   return schedulerFactoryBean;
+	}
+	
+	private Properties quartzProperties() {
+		PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
+		propertiesFactoryBean.setLocation(new ClassPathResource("quartz.properties"));
+		Properties properties = null;
+		
+		try {
+			propertiesFactoryBean.afterPropertiesSet();
+			properties = propertiesFactoryBean.getObject();
+		}catch(IOException ie) {
+			log.error("quartzProperties parse error : {}", ie);
+		}
+		
+		return properties;
 	}
 	
 	/**

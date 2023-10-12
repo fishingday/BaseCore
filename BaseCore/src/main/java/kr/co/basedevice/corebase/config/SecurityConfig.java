@@ -42,9 +42,11 @@ import kr.co.basedevice.corebase.security.provider.FormAuthenticationProvider;
 import kr.co.basedevice.corebase.security.service.SecurityResourceService;
 import kr.co.basedevice.corebase.security.voter.IpAddressVoter;
 import kr.co.basedevice.corebase.service.common.LoggingService;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Value("${login.set.login-page:/common/login.html}")
@@ -65,29 +67,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${login.password-parameter:password}")
 	private String passwordParameter;
 	
-	@Autowired
-	private LoggingService cmImprtantLogService;
-
-    @Autowired
-    private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
-    
-    @Autowired
-    private AuthenticationSuccessHandler formAuthenticationSuccessHandler;
-    
-    @Autowired
-    private AuthenticationFailureHandler formAuthenticationFailureHandler;
-    
-    @Autowired
-    private LogoutSuccessHandler logoutSuccessHandler;
-    
-    @Autowired
-    private UserDetailsService userDetailsService;
-    
-    @Autowired
-    private SecurityResourceService securityResourceService;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	final private LoggingService cmImprtantLogService;
+    final private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
+    final private AuthenticationSuccessHandler formAuthenticationSuccessHandler;
+    final private AuthenticationFailureHandler formAuthenticationFailureHandler;
+    final private LogoutSuccessHandler logoutSuccessHandler;
+    final private UserDetailsService userDetailsService;
+    final private SecurityResourceService securityResourceService;
+    final private PasswordEncoder passwordEncoder;
     
     
     @Override
