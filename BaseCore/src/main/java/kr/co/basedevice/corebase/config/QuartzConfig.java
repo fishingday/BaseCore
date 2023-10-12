@@ -22,7 +22,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
 import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
 import kr.co.basedevice.corebase.quartz.AutowiringSpringBeanJobFactory;
-import kr.co.basedevice.corebase.quartz.component.JobsListener;
 import kr.co.basedevice.corebase.quartz.component.TriggersListener;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ public class QuartzConfig {
 	final private PlatformTransactionManager platformTransactionManager;
 	
 	final private TriggersListener triggersListener;
-	final private JobsListener jobsListener;	
+	//final private JobsListener jobsListener;	
 
 	final private LoggingService loggingService;
 
@@ -63,7 +62,7 @@ public class QuartzConfig {
 	   schedulerFactoryBean.setAutoStartup(true);
 	   schedulerFactoryBean.setQuartzProperties(quartzProperties());
 	   schedulerFactoryBean.setGlobalTriggerListeners(triggersListener);
-	   schedulerFactoryBean.setGlobalJobListeners(jobsListener);
+	   //schedulerFactoryBean.setGlobalJobListeners(jobsListener);
 	   schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
 	   
 	   return schedulerFactoryBean;
