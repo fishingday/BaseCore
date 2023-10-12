@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.todo;
+package kr.co.basedevice.corebase.domain.td;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -91,7 +91,7 @@ public class TdWork extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdWorkQuizUse> tdWorkerQuizUseList = new ArrayList<>(1);
+	private List<TdQuizWorkUse> tdWorkerQuizUseList = new ArrayList<>(1);
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)

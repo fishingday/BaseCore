@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.todo.TdTodo;
-import kr.co.basedevice.corebase.domain.todo.TdWork;
+import kr.co.basedevice.corebase.domain.td.TdTodo;
+import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;

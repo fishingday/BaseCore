@@ -7,9 +7,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import kr.co.basedevice.corebase.domain.todo.TdTodo;
-import kr.co.basedevice.corebase.domain.todo.TdWork;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
+import kr.co.basedevice.corebase.domain.td.TdTodo;
+import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodayTodoDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;

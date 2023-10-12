@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.todo;
+package kr.co.basedevice.corebase.domain.td;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -62,6 +62,6 @@ public class TdQuiz extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdQuiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdWorkQuizUse> tdWorkerQuizUseList = new ArrayList<>(1);
+	private List<TdQuizWorkUse> tdWorkerQuizUseList = new ArrayList<>(1);
 	
 }

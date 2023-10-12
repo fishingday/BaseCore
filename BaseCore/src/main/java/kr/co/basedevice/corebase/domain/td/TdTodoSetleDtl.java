@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.domain.todo;
+package kr.co.basedevice.corebase.domain.td;
 
 import java.io.Serializable;
 
@@ -23,15 +23,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_QUIZ_WORK_USE")
-@IdClass(TdQuizWorkUseId.class)
-public class TdWorkQuizUse extends BaseEntity implements Serializable {
-
-	private static final long serialVersionUID = -5918461434462651471L;
+@Table(name = "TD_TODO_SETLE_DTL")
+@IdClass(TdTodoSetleDtlId.class)
+public class TdTodoSetleDtl extends BaseEntity implements Serializable {
+	
+	private static final long serialVersionUID = -7049311875233855750L;
 
 	@Id
-	@Column(name = "QUIZ_SEQ", nullable = false)
-	private Long quizSeq;
+	@Column(name = "TODO_SETLE_SEQ", nullable = false)
+	private Long todoSetleSeq;
 	
 	@Id
 	@Column(name = "WORK_SEQ", nullable = false)
@@ -43,8 +43,8 @@ public class TdWorkQuizUse extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "QUIZ_SEQ", updatable = false, insertable = false)
-	private TdQuiz tdQuiz;
+	@JoinColumn(name = "TODO_SETLE_SEQ", updatable = false, insertable = false)
+	private TdTodoSetle tdTodoSetle;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore

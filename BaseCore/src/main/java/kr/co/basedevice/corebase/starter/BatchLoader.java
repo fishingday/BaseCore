@@ -1,21 +1,18 @@
 package kr.co.basedevice.corebase.starter;
 
+import java.time.LocalDateTime;
+
 import org.quartz.JobDataMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import kr.co.basedevice.corebase.domain.code.JobType;
 import kr.co.basedevice.corebase.quartz.component.JobRequest;
 import kr.co.basedevice.corebase.quartz.job.CronJob;
 import kr.co.basedevice.corebase.quartz.job.CronJob2;
 import kr.co.basedevice.corebase.quartz.job.SimpleJob;
 import kr.co.basedevice.corebase.service.QuartzService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
