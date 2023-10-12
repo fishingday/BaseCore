@@ -17,11 +17,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
+import kr.co.basedevice.corebase.quartz.QuartzJobUtils;
 import kr.co.basedevice.corebase.quartz.component.JobRequest;
 import kr.co.basedevice.corebase.quartz.component.JobResponse;
 import kr.co.basedevice.corebase.quartz.component.StatusResponse;
 import kr.co.basedevice.corebase.util.DateTimeUtils;
-import kr.co.basedevice.corebase.util.JobUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,8 +39,8 @@ public class QuartzService {
         Trigger trigger;
 
         try {
-            trigger = JobUtils.createTrigger(jobRequest);
-            jobDetail = JobUtils.createJob(jobRequest, jobClass, context);
+            trigger = QuartzJobUtils.createTrigger(jobRequest);
+            jobDetail = QuartzJobUtils.createJob(jobRequest, jobClass, context);
             jobKey = JobKey.jobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
 
             Date dt = schedulerFactoryBean.getScheduler().scheduleJob(jobDetail, trigger);
@@ -67,7 +67,7 @@ public class QuartzService {
         Trigger newTrigger;
 
         try {
-            newTrigger = JobUtils.createTrigger(jobRequest);
+            newTrigger = QuartzJobUtils.createTrigger(jobRequest);
             jobKey = JobKey.jobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
 
             Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobRequest.getJobName()), newTrigger);

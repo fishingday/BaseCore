@@ -1,4 +1,4 @@
-package kr.co.basedevice.corebase.util;
+package kr.co.basedevice.corebase.quartz;
 
 import static org.quartz.CronExpression.isValidExpression;
 
@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
@@ -21,7 +22,7 @@ import kr.co.basedevice.corebase.quartz.component.JobRequest;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public final class JobUtils {
+public final class QuartzJobUtils {
 
     public static JobDetail createJob(JobRequest jobRequest, Class<? extends Job> jobClass, ApplicationContext context) {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
@@ -59,7 +60,7 @@ public final class JobUtils {
         factoryBean.setName(jobRequest.getJobName());
         factoryBean.setGroup(jobRequest.getJobGroup());
         factoryBean.setCronExpression(jobRequest.getCronExpression());
-        factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+        factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW);
         try {
             factoryBean.afterPropertiesSet();
         } catch (ParseException e) {

@@ -1,17 +1,21 @@
 package kr.co.basedevice.corebase.quartz.component;
 
 import org.quartz.JobExecutionContext;
-import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
-import org.springframework.stereotype.Component;
 import org.quartz.TriggerListener;
+import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
+import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
+import kr.co.basedevice.corebase.service.common.LoggingService;
+import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @Component
+@RequiredArgsConstructor
 public class TriggersListener  implements TriggerListener {
+	final private LoggingService loggingService;
+	
 	
 	@Override	
 	public String getName() {
@@ -19,10 +23,12 @@ public class TriggersListener  implements TriggerListener {
 	}
 
 	@Override
-	public void triggerFired(Trigger trigger, JobExecutionContext context) {
-        JobKey jobKey = trigger.getJobKey();
-        log.info("================================================ Trigger Begin.");
-        log.info("triggerFired at {} :: jobKey : {}", trigger.getStartTime(), jobKey);
+	public void triggerFired(Trigger trigger, JobExecutionContext context) {        
+        loggingService.writeBatchLog(new CmQuartzLog(
+        		QuartzLogTypCd.TRIGGER_FIRE,
+        		trigger.getJobKey().toString(),
+        		context.getJobDetail().getJobDataMap().toString()
+        	));
 	}
 
 	@Override
@@ -32,16 +38,21 @@ public class TriggersListener  implements TriggerListener {
 
 	@Override
 	public void triggerMisfired(Trigger trigger) {
-        JobKey jobKey = trigger.getJobKey();
-        log.info("triggerMisfired at {} :: jobKey : {}", trigger.getStartTime(), jobKey);		
+		loggingService.writeBatchLog(new CmQuartzLog(
+    		QuartzLogTypCd.TRIGGER_MIS,
+    		trigger.getJobKey().toString(),
+    		null
+    	));
 	}
 
 	@Override
 	public void triggerComplete(Trigger trigger, JobExecutionContext context,
 			CompletedExecutionInstruction triggerInstructionCode) {
-        JobKey jobKey = trigger.getJobKey();
-        log.info("triggerComplete at {} :: jobKey : {}", trigger.getStartTime(), jobKey);
-        log.info("================================================ Trigger End.");
+        loggingService.writeBatchLog(new CmQuartzLog(
+        		QuartzLogTypCd.TRIGGER_COMPLET,
+        		trigger.getJobKey().toString(),
+        		context.getJobDetail().getJobDataMap().toString()
+        	));
 	} 
   
 }

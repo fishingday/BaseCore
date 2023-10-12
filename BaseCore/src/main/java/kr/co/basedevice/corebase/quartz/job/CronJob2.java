@@ -5,7 +5,12 @@ import org.quartz.InterruptableJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
+import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -17,6 +22,9 @@ public class CronJob2 extends QuartzJobBean implements InterruptableJob {
 
     private volatile Thread currThread;
 
+    @Autowired
+    private LoggingService loggingService;
+    
     @Override
     public void executeInternal(JobExecutionContext context) throws JobExecutionException {
         JobKey jobKey = context.getJobDetail().getKey();
@@ -41,8 +49,12 @@ public class CronJob2 extends QuartzJobBean implements InterruptableJob {
     @Override
     public void interrupt() {
         isJobInterrupted = true;
-        if (currThread != null) {
-            log.info("interrupting - {}", currThread.getName());
+        if (currThread != null) {        	
+            loggingService.writeBatchLog(new CmQuartzLog(
+            		QuartzLogTypCd.JOB_INTERRUPTED,
+            		this.getClass().getName(),
+            		currThread.getName()
+            	));
             currThread.interrupt();
         }
     }

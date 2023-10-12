@@ -13,8 +13,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
+import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
 import kr.co.basedevice.corebase.dto.common.UserInfoDto;
 import kr.co.basedevice.corebase.search.common.SearchUserInfo;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 import kr.co.basedevice.corebase.service.common.UserService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +35,9 @@ public class SimpleJob extends QuartzJobBean implements InterruptableJob {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private LoggingService loggingService;
     
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
@@ -70,7 +76,11 @@ public class SimpleJob extends QuartzJobBean implements InterruptableJob {
     public void interrupt() {
         isJobInterrupted = true;
         if (currThread != null) {
-            log.info("interrupting - {}", currThread.getName());
+            loggingService.writeBatchLog(new CmQuartzLog(
+            		QuartzLogTypCd.JOB_INTERRUPTED,
+            		this.getClass().getName(),
+            		currThread.getName()
+            	));
             currThread.interrupt();
         }
     }

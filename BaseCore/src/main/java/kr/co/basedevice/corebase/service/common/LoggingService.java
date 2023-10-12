@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.cm.CmCriticalLog;
+import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
 import kr.co.basedevice.corebase.domain.cm.CmRoleChgLog;
 import kr.co.basedevice.corebase.domain.cm.CmUserAccesLog;
 import kr.co.basedevice.corebase.domain.code.AccesLogTypCd;
@@ -21,7 +22,9 @@ import kr.co.basedevice.corebase.repository.cm.CmRoleChgLogRepository;
 import kr.co.basedevice.corebase.repository.cm.CmUserAccesLogRepository;
 import kr.co.basedevice.corebase.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -30,6 +33,13 @@ public class LoggingService {
 	final private CmCriticalLogRepository criticalLogRepository;
 	final private CmUserAccesLogRepository accesLogRepository;
 	final private CmRoleChgLogRepository chgLogRepository;
+	
+	public void writeBatchLog(CmQuartzLog cmQuartzLog) {
+		log.info("BATCH-LOG => LogType:{}, key:{}, data:{} "
+				, cmQuartzLog.getQuartzLogTypCd()
+				, cmQuartzLog.getKey()
+				, cmQuartzLog.getShortData());
+	}
 	
 	public void writeCriticalLog(HttpServletRequest request, LogMakrCd writeMakrCd, Long userSeq) {
 //		CmCriticalLog log = new CmCriticalLog();

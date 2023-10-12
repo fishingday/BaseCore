@@ -8,8 +8,12 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
+import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -18,6 +22,9 @@ public class CronJob extends QuartzJobBean implements InterruptableJob {
 	private int MAX_SLEEP_IN_SECONDS = 5;
 
 	private volatile Thread currThread;
+
+    @Autowired
+    private LoggingService loggingService;
 
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
@@ -47,8 +54,12 @@ public class CronJob extends QuartzJobBean implements InterruptableJob {
 	public void interrupt() {
 		isJobInterrupted = true;
 		if (currThread != null) {
-			log.info("interrupting - {}", currThread.getName());
-			currThread.interrupt();
+            loggingService.writeBatchLog(new CmQuartzLog(
+            		QuartzLogTypCd.JOB_INTERRUPTED,
+            		this.getClass().getName(),
+            		currThread.getName()
+            	));
+            currThread.interrupt();
 		}
 	}
 }

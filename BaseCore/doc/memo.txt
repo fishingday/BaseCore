@@ -124,3 +124,4 @@ $(document.body).ready(function () {
 https://blog.advenoh.pe.kr/tags/quartz
 https://pooney.tistory.com/99
 http://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/ConfigMain.html
+https://velog.io/@park2348190/Spring-Boot-%ED%99%98%EA%B2%BD%EC%9D%98-Quartz-Scheduler-%ED%99%9C%EC%9A%A9

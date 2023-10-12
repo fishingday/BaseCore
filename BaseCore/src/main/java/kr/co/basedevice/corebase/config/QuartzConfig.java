@@ -19,9 +19,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
+import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
 import kr.co.basedevice.corebase.quartz.AutowiringSpringBeanJobFactory;
 import kr.co.basedevice.corebase.quartz.component.JobsListener;
 import kr.co.basedevice.corebase.quartz.component.TriggersListener;
+import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +38,9 @@ public class QuartzConfig {
 	final private PlatformTransactionManager platformTransactionManager;
 	
 	final private TriggersListener triggersListener;
-	final private JobsListener jobsListener;
+	final private JobsListener jobsListener;	
+
+	final private LoggingService loggingService;
 
 	/**
 	 * Quartz 관련 설정
@@ -116,6 +121,11 @@ public class QuartzConfig {
 				isRunning = false;
 
 				try {
+			        loggingService.writeBatchLog(new CmQuartzLog(
+			        		QuartzLogTypCd.SHUTDOWN,
+			        		null,
+			        		null
+			        	));
 					log.info("Quartz Graceful Shutdown...");
 					interruptJobs(schedulerFactoryBean);
 					schedulerFactoryBean.destroy();
