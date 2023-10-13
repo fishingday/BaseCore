@@ -1,40 +1,34 @@
 package kr.co.basedevice.corebase.service.todo;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
+import kr.co.basedevice.corebase.domain.code.TodoCreCd;
+import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodayTodoDto;
+import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class TodoService {
 	
-	/**
-	 * 유효한 할일들로 부터 작업을 생성한다.
-	 * 
-	 * @param today
-	 * @return
-	 */
-	public boolean createWorkItems(LocalDate today) {
-		
-		
-		
-		return true;
-	}
-	
+	final private TdTodoRepository tdTodoRepository;
 	
 	/**
 	 * 확인자 용 할일 목록
@@ -60,7 +54,7 @@ public class TodoService {
 
 	public List<TodoSummaryDto> findByPointSummary4Checker(SearchTodo searchTodo) {
 		// TODO 확인자의 할일을 완룐한 수행자의 해당일 획득 포인트와 지급예정포인트 
-		
+		log.info("############################ 한번은 똮!");
 		return null;
 	}
 
@@ -88,6 +82,35 @@ public class TodoService {
 	public void saveTdWork(TdWork tdWork) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/**
+	 * 생성일에 해당하는 할일 조회 
+	 * 
+	 * @param createDate
+	 * @return
+	 */
+	public List<TdTodo> findByTargetTodoItem(LocalDate createDate) {
+		
+		List<TdTodo> tdTodoList = tdTodoRepository
+				.findByDelYnAndTodoCreCdInAndPostBeginDateLessThanEqualAndPostEndDateGreaterThanEqual(
+						Yn.N, 
+						Arrays.asList(TodoCreCd.DAILY, TodoCreCd.WEEK, TodoCreCd.MONTH),
+						createDate, 
+						createDate);
+		
+		return tdTodoList;
+	}
+
+
+	public int createWorkItems(LocalDate createDate, Long todoSeq) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int closeWorkItems() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

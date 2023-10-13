@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.basedevice.corebase.quartz.component.ApiResponse;
 import kr.co.basedevice.corebase.quartz.component.JobRequest;
 import kr.co.basedevice.corebase.quartz.component.StatusResponse;
-import kr.co.basedevice.corebase.quartz.job.CronJob;
+import kr.co.basedevice.corebase.quartz.job.TodoCreateWorkJob;
 import kr.co.basedevice.corebase.quartz.job.SimpleJob;
 import kr.co.basedevice.corebase.service.QuartzService;
 
@@ -40,7 +40,7 @@ public class ScheduleRestController {
             if (jobRequest.isJobTypeSimple()) {
                 scheduleService.addJob(jobRequest, SimpleJob.class);
             } else {
-                scheduleService.addJob(jobRequest, CronJob.class);
+                scheduleService.addJob(jobRequest, TodoCreateWorkJob.class);
             }
         } else {
             return new ResponseEntity<>(new ApiResponse(false, "Job already exits"),

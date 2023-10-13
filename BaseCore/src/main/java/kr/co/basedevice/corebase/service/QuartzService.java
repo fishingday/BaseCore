@@ -44,7 +44,7 @@ public class QuartzService {
             jobKey = JobKey.jobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
 
             Date dt = schedulerFactoryBean.getScheduler().scheduleJob(jobDetail, trigger);
-            log.debug("Job with jobKey : {} scheduled successfully at date : {}", jobDetail.getKey(), dt);
+            log.info("Add Job with jobKey : {} scheduled successfully at date : {}", jobDetail.getKey(), dt);
             return true;
         } catch (SchedulerException e) {
             log.error("error occurred while scheduling with jobKey : {}", jobKey, e);
