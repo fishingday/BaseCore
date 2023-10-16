@@ -54,6 +54,14 @@ spring:
     jdbc:
       initialize-schema: never
 
+  batch:
+    jdbc:
+      initialize-schema: never
+      table-prefix: BATCH_
+    job:
+      enabled: false
+      names: JobParameters
+
   thymeleaf:
     mode: HTML
     encoding: UTF-8

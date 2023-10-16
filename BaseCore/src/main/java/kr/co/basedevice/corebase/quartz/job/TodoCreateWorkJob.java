@@ -1,23 +1,24 @@
 package kr.co.basedevice.corebase.quartz.job;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Date;
 
 import org.quartz.InterruptableJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.util.ObjectUtils;
 
 import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
 import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
-import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.service.common.LoggingService;
-import kr.co.basedevice.corebase.service.todo.TodoService;
+import kr.co.basedevice.corebase.util.BeanUtil;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -28,6 +29,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob {
+	final static public String JOB_NAME = "TodoCreateWorkJob";
 	final static public String CREATE_DATE_KEY = "CreateDate";
 	final static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
@@ -38,14 +40,29 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
     private LoggingService loggingService;
     
     @Autowired
-    private TodoService todoService;
+    private BeanUtil beanUtil;
+    
+    @Autowired 
+    private JobLauncher jobLauncher;
 
+    @SneakyThrows
 	@Override
-	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+	protected void executeInternal(JobExecutionContext context){
 		JobKey jobKey = context.getJobDetail().getKey();
 		JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
+		
 		if (!isJobInterrupted) {
 			currThread = Thread.currentThread();
+	        //전달받은 JodDataMap에서 Job이름을 꺼내오고 그 Job이름으로 context에서 bean을 가져온다
+	        Job job = (Job) beanUtil.getBean(TodoCreateWorkJob.JOB_NAME);
+
+	        JobParameters jobParameters = new JobParametersBuilder()
+	                .addDate("curDate", new Date())
+	                .toJobParameters();
+
+	        jobLauncher.run(job, jobParameters);
+			
+			/*
 			// 1. 생성할 날짜가 있나?
 			LocalDate createDate = null;
 			if(jobDataMap != null && ObjectUtils.isEmpty(jobDataMap.getString(TodoCreateWorkJob.CREATE_DATE_KEY))) {
@@ -67,6 +84,7 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
 				}
 			}
 			log.info("TodoCreateWorkJob :: STEP3 jobKey : {} - {} : result count = {} ", jobKey, currThread.getName(), creItemCnt);
+			*/
 		}
 	}
 

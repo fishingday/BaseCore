@@ -4,6 +4,7 @@ import org.quartz.InterruptableJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -20,6 +21,9 @@ public class TodoCloseWorkJob extends QuartzJobBean implements InterruptableJob 
 
     @Autowired
     private LoggingService loggingService;
+    
+    @Autowired 
+    private JobLauncher jobLauncher;
 
     @Autowired
     private TodoService todoService;

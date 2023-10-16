@@ -46,13 +46,14 @@ public class BatchLoader implements ApplicationListener<ContextRefreshedEvent> {
             closeWorkJobRequest.setCronExpression("0 0 0 ? * *");
             scheduleService.addJob(closeWorkJobRequest, TodoCloseWorkJob.class);
             
-            // 처음 등록 시 한번은 실행하게 하자.
-            JobRequest nowCreateWorkJobRequest = new JobRequest();
-            nowCreateWorkJobRequest.setJobGroup("INIT");
-            nowCreateWorkJobRequest.setJobName("TodoCreateWorkJob");
-            nowCreateWorkJobRequest.setStartDateAt(LocalDateTime.now());
-            scheduleService.addJob(nowCreateWorkJobRequest, TodoCreateWorkJob.class);            
         }
+
+        // 처음 실행 시 한번은 실행하게 하자.
+        JobRequest nowCreateWorkJobRequest = new JobRequest();
+        nowCreateWorkJobRequest.setJobGroup("INIT");
+        nowCreateWorkJobRequest.setJobName("TodoCreateWorkJob");
+        nowCreateWorkJobRequest.setStartDateAt(LocalDateTime.now());
+        scheduleService.addJob(nowCreateWorkJobRequest, TodoCreateWorkJob.class);
     }
 
 }
