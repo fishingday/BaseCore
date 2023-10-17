@@ -62,7 +62,7 @@ public class TodoCreateWorkBatchJob {
 		return stepBuilderFactory.get("createWorkBatch4TodoReader")
 				.<TdTodo, TdTodo>chunk(chunkSize)
                 .reader(jpaPagingItemReaderTodo(null))
-                .writer(itemWriterWork(null))
+                .writer(itemWriterWork(createDate))
                 .build();
 				
     }
@@ -84,7 +84,7 @@ public class TodoCreateWorkBatchJob {
     }
     
     @StepScope
-    private ItemWriter<TdTodo> itemWriterWork(@Value("#{jobParameters[createDate]}") String createDate) {
+    private ItemWriter<TdTodo> itemWriterWork(String createDate) {
         return list -> {
             for (TdTodo tdTodo: list) {
             	LocalDate toDay = LocalDate.parse(createDate, formatter);
