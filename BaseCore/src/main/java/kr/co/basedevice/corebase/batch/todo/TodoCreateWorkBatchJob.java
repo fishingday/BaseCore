@@ -83,7 +83,6 @@ public class TodoCreateWorkBatchJob {
                 .build();
     }
     
-    @Bean
     @StepScope
     private ItemWriter<TdTodo> itemWriterWork(@Value("#{jobParameters[createDate]}") String createDate) {
         return list -> {
