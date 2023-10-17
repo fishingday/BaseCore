@@ -25,6 +25,7 @@ public class SpringBatchConfig {
 	    JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
 	    factory.setDataSource(dataSource);
 	    factory.setTransactionManager(platformTransactionManager);
+	    factory.setIsolationLevelForCreate("ISOLATION_DEFAULT");
 	    return factory.getObject();
 	}
 }

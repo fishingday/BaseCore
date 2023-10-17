@@ -104,12 +104,12 @@ public class TodoService {
 
 
 	public int createWorkItems(LocalDate createDate, Long todoSeq) {
-		// TODO Auto-generated method stub
+		log.info("#############################################################");
 		return 0;
 	}
 
 	public int closeWorkItems() {
-		// TODO Auto-generated method stub
+		log.info("★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★");
 		return 0;
 	}
 
