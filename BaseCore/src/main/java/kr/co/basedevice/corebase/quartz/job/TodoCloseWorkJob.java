@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.quartz.job;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.quartz.InterruptableJob;
@@ -56,11 +56,11 @@ public class TodoCloseWorkJob extends QuartzJobBean implements InterruptableJob 
 		if (!isJobInterrupted) {
 			currThread = Thread.currentThread();
 			
-			LocalDate closeDate = null; // 기록용 날짜... 의미 없음.
+			LocalDateTime closeDate = null; // 기록용 날짜... 의미 없음.
 			if(jobDataMap != null && ObjectUtils.isEmpty(jobDataMap.getString(TodoCloseWorkJob.CLOSE_DATE_KEY))) {
-				closeDate = LocalDate.now();
+				closeDate = LocalDateTime.now();
 			}else {
-				closeDate = LocalDate.parse(jobDataMap.getString(TodoCloseWorkJob.CLOSE_DATE_KEY), formatter);
+				closeDate = LocalDateTime.parse(jobDataMap.getString(TodoCloseWorkJob.CLOSE_DATE_KEY), formatter);
 			}
 			
 	        //전달받은 JodDataMap에서 Job이름을 꺼내오고 그 Job이름으로 context에서 bean을 가져온다

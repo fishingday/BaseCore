@@ -27,22 +27,22 @@ insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_
 insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,102,'N',100, now(), 100, now());
 
 
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,103,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (108,104,'N',100, now(), 100, now());
-insert into td_worker_map(todo_seq, worker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (109,104,'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,103, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (108,104, 'Y', 'N',100, now(), 100, now());
+insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (109,104, 'Y', 'N',100, now(), 100, now());
 
 insert into td_work(work_seq, todo_seq, worker_seq, work_titl, work_cont, work_dt, confm_dt, todo_stat_cd, gain_point, checker_seq, setle_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,100,103,'2023/09/01 - 기상','10.lot','2023-09-01','2023-09-01','DONE',1000,101,'Y','N',100, now(), 100, now());  
 insert into td_work(work_seq, todo_seq, worker_seq, work_titl, work_cont, work_dt, confm_dt, todo_stat_cd, gain_point, checker_seq, setle_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,100,104,'2023/09/01 - 기상 ','11.name','2023-09-01','2023-09-01','FAIL',0,101,'Y','N',100, now(), 100, now()); 
