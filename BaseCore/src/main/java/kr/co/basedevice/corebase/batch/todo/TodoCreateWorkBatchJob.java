@@ -2,7 +2,6 @@ package kr.co.basedevice.corebase.batch.todo;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +45,6 @@ public class TodoCreateWorkBatchJob {
     private final EntityManagerFactory entityManagerFactory;
     private final TodoService todoService;
     
-    public final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     public final static int chunkSize = 10;
 
 	@Bean(name = TodoCreateWorkJob.JOB_NAME)
@@ -58,21 +56,21 @@ public class TodoCreateWorkBatchJob {
 
 	@Bean
 	@JobScope
-    Step createWorkBatch4TodoReader(@Value("#{jobParameters[createDate]}") String createDate) {
+    Step createWorkBatch4TodoReader(@Value("#{jobParameters["+TodoCreateWorkJob.CREATE_DATE_KEY+"]}") String createDate) {
 		return stepBuilderFactory.get("createWorkBatch4TodoReader")
 				.<TdTodo, TdTodo>chunk(chunkSize)
                 .reader(jpaPagingItemReaderTodo(null))
-                .writer(itemWriterWork(createDate))
+                .writer(itemWriterWork(null))
                 .build();
 				
     }
 	
     @Bean
     @StepScope
-    JpaPagingItemReader<TdTodo> jpaPagingItemReaderTodo(@Value("#{jobParameters[createDate]}") String createDate) {
+    JpaPagingItemReader<TdTodo> jpaPagingItemReaderTodo(@Value("#{jobParameters["+TodoCreateWorkJob.CREATE_DATE_KEY+"]}") String createDate) {
     	
     	Map<String, Object> paramValues = new HashMap<>();
-        paramValues.put("createDate", LocalDate.parse(createDate, formatter));
+        paramValues.put(TodoCreateWorkJob.CREATE_DATE_KEY, LocalDate.parse(createDate, TodoCreateWorkJob.formatter)); // 데이터를 준 놈이 포맷을 알고 있음
     	
         return new JpaPagingItemReaderBuilder<TdTodo>()
                 .name("jpaPagingItemReaderTodo")
@@ -83,11 +81,12 @@ public class TodoCreateWorkBatchJob {
                 .build();
     }
     
+    @Bean
     @StepScope
-    private ItemWriter<TdTodo> itemWriterWork(String createDate) {
+    ItemWriter<TdTodo> itemWriterWork(@Value("#{jobParameters["+TodoCreateWorkJob.CREATE_DATE_KEY+"]}") String createDate) {
         return list -> {
             for (TdTodo tdTodo: list) {
-            	LocalDate toDay = LocalDate.parse(createDate, formatter);
+            	LocalDate toDay = LocalDate.parse(createDate, TodoCreateWorkJob.formatter); // 데이터를 준 놈이 포맷을 알고 있음
             	
             	if(tdTodo.getTodoCreCd() == TodoCreCd.MONTH) {
             		// 상세 값이 없으면 실행 할 수 없다.

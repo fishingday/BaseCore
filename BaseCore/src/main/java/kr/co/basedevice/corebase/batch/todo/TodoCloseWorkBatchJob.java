@@ -1,6 +1,7 @@
 package kr.co.basedevice.corebase.batch.todo;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import kr.co.basedevice.corebase.quartz.job.TodoCloseWorkJob;
-import kr.co.basedevice.corebase.quartz.job.TodoCreateWorkJob;
 import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +37,9 @@ public class TodoCloseWorkBatchJob {
 	
     private final TodoService todoService;
     
-    public final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     public final static int chunkSize = 10;
 
-	@Bean(name = TodoCreateWorkJob.JOB_NAME)
+	@Bean(name = TodoCloseWorkJob.JOB_NAME)
     Job createWorkTodoBatchJob(){
         return jobBuilderFactory.get(TodoCloseWorkJob.JOB_NAME)
                 .start(stepCloseWorkBatch4Todo(null)) // 할일 조회
@@ -49,7 +48,7 @@ public class TodoCloseWorkBatchJob {
 
 	@Bean
 	@JobScope
-    Step stepCloseWorkBatch4Todo(@Value("#{jobParameters[closeDate]}") String closeDate) {
+    Step stepCloseWorkBatch4Todo(@Value("#{jobParameters[" + TodoCloseWorkJob.CLOSE_DATE_KEY + "]}") String closeDate) {
 		return stepBuilderFactory.get("stepCloseWorkBatch4Todo")
 				.tasklet(taskletCloseWorkTodo(null))
                 .build();				
@@ -57,11 +56,15 @@ public class TodoCloseWorkBatchJob {
 	
 	@Bean
 	@StepScope
-	Tasklet taskletCloseWorkTodo(@Value("#{jobParameters[closeDate]}") String closeDate) {
+	Tasklet taskletCloseWorkTodo(@Value("#{jobParameters["+ TodoCloseWorkJob.CLOSE_DATE_KEY +"]}") String closeDate) {
 		
 		return (contribution, chunkContext) -> {
 			
-			int closeWorkItems = todoService.closeWorkItems();
+			// 오늘 이전에 셋팅된 작업에 대하여...
+			LocalDateTime closeDateTime = LocalDateTime.parse(closeDate, TodoCloseWorkJob.formatter)
+					.truncatedTo(ChronoUnit.DAYS);
+			
+			int closeWorkItems = todoService.closeWorkItems(closeDateTime);
 			log.info("Close Work Items Count : {}", closeWorkItems);
 			return RepeatStatus.FINISHED;
 		};

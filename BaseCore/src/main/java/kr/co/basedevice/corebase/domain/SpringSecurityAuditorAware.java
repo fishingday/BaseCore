@@ -18,12 +18,12 @@ public class SpringSecurityAuditorAware implements AuditorAware<Long> {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	
         if(authentication == null) {
-            return null;
+            return Optional.of(0L);
         }
         
         CmUser cmUser = ((AccountContext) authentication.getPrincipal()).getCmUser();
         if(cmUser == null) {
-        	return null;
+        	return Optional.of(0L);
         }
 
         return Optional.ofNullable(cmUser.getUserSeq());
