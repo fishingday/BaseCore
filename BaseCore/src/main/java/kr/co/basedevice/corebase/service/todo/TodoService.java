@@ -15,16 +15,16 @@ import javax.transaction.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
-import groovyjarjarantlr4.v4.parse.ANTLRParser.throwsSpec_return;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
-import kr.co.basedevice.corebase.domain.code.TodoStatCd;
+import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
-import kr.co.basedevice.corebase.dto.todo.TodayTodoDto;
+import kr.co.basedevice.corebase.dto.todo.TodayWorkDto;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
@@ -86,37 +86,79 @@ public class TodoService {
 		return null;
 	}
 
-	public List<TodayTodoDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
-		
-		return null;
-	}
-
 	/**
-	 * 한방에 하려면 
+	 * 해당일 작업 목록
 	 * 
 	 * @param searchTodo
 	 * @return
 	 */
-	public List<TodoSummaryDto> findByPointSummary4Worker(SearchTodo searchTodo) {
-		StringBuilder sb = new StringBuilder();
-
+	public List<TodayWorkDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
+		if(ObjectUtils.isEmpty(searchTodo.getToDay())) {
+			searchTodo.setToDay(LocalDate.now());
+		}
 		
-		List<Object> listArgs = new ArrayList<>();
-		List<TodoSummaryDto> todoSummaryList = JdbcTemplate.query(sb.toString() 
+		List<TodayWorkDto> listTodayWorkDto = null;
+		
+		return listTodayWorkDto;
+	}
+
+	/**
+	 * 작업자별 포인트 현황 목록
+	 * 
+	 * @param searchTodo
+	 * @return
+	 */
+	public List<TodoSummaryDto> findByPointSummary4Worker() {
+		StringBuilder sb = new StringBuilder("SELECT A.WORKER_SEQ, A.USER_NM ")
+				.append("      ,NVL(B.ACCUMULATE_POINT, 0) as ACCU_POINT ")
+				.append("      ,NVL(C.USE_POINT, 0) as USE_POINT ")
+				.append("      ,NVL(D.POSS_POINT, 0) as POSS_POINT ")
+				.append("      ,NVL(B.ACCUMULATE_POINT, 0) - NVL(C.USE_POINT, 0) as AVAIL_POINT ")
+				.append("  FROM ( SELECT X.WORKER_SEQ, S.USER_NM ")
+				.append("           FROM TD_WORKER_MAP X INNER JOIN CM_USER S ON S.USER_SEQ = X.WORKER_SEQ ")
+				.append("          WHERE X.DEL_YN = 'N' ")
+				.append("          GROUP BY X.WORKER_SEQ) A ")
+				.append("       LEFT OUTER JOIN ( ")
+				.append("        SELECT Y.WORKER_SEQ, SUM(Y.TOTAL_SETLE_POINT) as ACCU_POINT ")
+				.append("          FROM TD_TODO_SETLE Y ")
+				.append("         WHERE Y.DEL_YN = 'N' ")
+				.append("         GROUP BY Y.WORKER_SEQ ")
+				.append("       ) B ON (A.WORKER_SEQ = B.WORKER_SEQ) ")
+				.append("       LEFT OUTER JOIN ( ")
+				.append("        SELECT Z.USER_SEQ, SUM(Z.USE_POINT) as USE_POINT ")
+				.append("          FROM TD_POINT_USE Z ")
+				.append("         WHERE Z.DEL_YN ='N' ")
+				.append("         GROUP BY Z.USER_SEQ ")
+				.append("       ) C ON (A.WORKER_SEQ = C.USER_SEQ) ")
+				.append("       LEFT OUTER JOIN ( ")
+				.append("        SELECT V.WORKER_SEQ, SUM(V.GAIN_POINT) as POSS_POINT ")
+				.append("          FROM TD_WORK V ")
+				.append("         WHERE V.DEL_YN = 'N' ")
+				.append("           AND V.WORK_STAT_CD != 'FAIL' ")
+				.append("           AND NOT EXISTS ( ")
+				.append("           SELECT 'X' FROM TD_TODO_SETLE_DTL W WHERE W.DEL_YN ='N' AND V.WORK_SEQ = W.WORK_SEQ ")
+				.append("          ) ")
+				.append("         GROUP BY V.WORKER_SEQ ")
+				.append("       ) D ON (A.WORKER_SEQ = D.WORKER_SEQ)");
+		
+		List<TodoSummaryDto> todoSummaryList = JdbcTemplate.query(
+				sb.toString()
 				,new RowMapper<TodoSummaryDto>() {
 					@Override
 					public TodoSummaryDto mapRow(ResultSet rs, int rowNum) throws SQLException{
 						TodoSummaryDto todoSummaryDto = new TodoSummaryDto(
-							//rs.getLong("userSeq")	
-								
-						);
-						
+							 LocalDate.now()
+							,rs.getLong("WORKER_SEQ")
+							,rs.getString("USER_NM")
+							,rs.getInt("POSS_POINT")
+							,rs.getInt("AVAIL_POINT")
+							,rs.getInt("USE_POINT")
+							,rs.getInt("ACCU_POINT")					
+						);						
 						return todoSummaryDto;
 					}
-				}
-		        , listArgs				
-			);
-		
+				}			
+			);		
 		
 		return todoSummaryList;
 	}
@@ -156,6 +198,35 @@ public class TodoService {
 	 * @return
 	 */
 	public int createWorkItems(LocalDate createDate, Long todoSeq) {
+// H2 database 
+//			INSERT INTO TD_WORK (WORK_SEQ, TODO_SEQ, WORKER_SEQ, WORK_STAT_CD, GAIN_POINT, WORK_TITL, SETLE_YN, DEL_YN, CRE_DT, CREATOR_SEQ, UPD_DT, UPDATOR_SEQ) 
+//			SELECT NEXTVAL('SEQ_TD_WORK') as WORK_SEQ
+//			      ,A.TODO_SEQ as TODO_SEQ
+//			      ,B.WORKER_SEQ as WORKER_SEQ
+//			      ,'READY' as TODO_STAT_CD
+//			      ,A.TODO_POINT as GAIN_POINT
+//			      ,A.TODO_TITL || '(' || FORMATDATETIME(NOW(),   'yyyy/MM/dd') ||')' as WORK_TITL
+//			      ,'N' as SETLE_YN
+//			      ,'N' as DEL_YN
+//			      ,NOW() as CRE_DT
+//			      ,0 as CREATOR_SEQ
+//			      ,NOW() as UPD_DT
+//			      , 0 as UPDATOR_SEQ
+//			  FROM TD_TODO A, TD_WORKER_MAP B
+//			 WHERE A.DEL_YN = 'N'
+//			   AND A.TODO_CRE_CD IN ('DAILY', 'WEEK', 'MONTH')
+//			   AND A.TODO_SEQ = B.TODO_SEQ
+//			   AND B.DEL_YN = 'N'
+//			   AND B.WORKER_AGRE_YN = 'Y'
+//			   AND 1 =(CASE WHEN A.TODO_CRE_CD = 'DAILY' THEN 1
+//			                WHEN A.TODO_CRE_CD = 'WEEK' THEN INSTR(A.TODO_CRE_DTL_VAL, DAY_OF_WEEK(NOW()))
+//			                WHEN A.TODO_CRE_CD = 'MONTH' AND A.TODO_CRE_DTL_VAL = 'LAST' THEN 
+//			                     CASE WHEN DAY_OF_MONTH(NOW()) = day_of_month(dateadd(DAY, -1, dateadd(MONTH,1,date_trunc('MONTH', now())))) THEN 1 ELSE 0 END
+//			                WHEN A.TODO_CRE_CD = 'MONTH' AND A.TODO_CRE_DTL_VAL != 'LAST' THEN 
+//			                     CASE WHEN DAY_OF_MONTH(NOW()) = A.TODO_CRE_DTL_VAL THEN 1 ELSE 0 END
+//			                ELSE 0
+//			           END)
+//			           
 		List<TdWorkerMap> listTdWorkerMap = tdWorkerMapRepository.findByWorkerAgre(todoSeq);
 
 		int createSize = 0;
@@ -166,7 +237,7 @@ public class TodoService {
 				TdWork tdWork = new TdWork();
 				tdWork.setTodoSeq(todoSeq);
 				tdWork.setWorkerSeq(tdWorkerMap.getWorkerSeq());
-				tdWork.setTodoStatCd(TodoStatCd.READY);
+				tdWork.setWorkStatCd(WorkStatCd.READY);
 				tdWork.setGainPoint(tdTodo.get().getTodoPoint());
 				tdWork.setWorkTitl(new StringBuilder(tdTodo.get().getTodoTitl()).append("(")
 						.append(createDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")))

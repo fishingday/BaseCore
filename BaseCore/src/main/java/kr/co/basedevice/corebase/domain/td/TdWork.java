@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.BaseEntity;
-import kr.co.basedevice.corebase.domain.code.TodoStatCd;
+import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,9 +62,15 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "WORK_DT")
 	private LocalDateTime workDt;
 	
-	@Column(name = "TODO_STAT_CD", nullable = false, length = 1)
+	@Column(name = "WORK_STAT_CD", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
-	private TodoStatCd todoStatCd;
+	private WorkStatCd workStatCd;
+	
+	@Column(name = "WORK_POSS_BEGIN_DT", nullable = false)
+	private LocalDateTime workPossBeginDt;
+	
+	@Column(name = "WORK_POSS_END_DT", nullable = false)
+	private LocalDateTime workPossEndDt;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기

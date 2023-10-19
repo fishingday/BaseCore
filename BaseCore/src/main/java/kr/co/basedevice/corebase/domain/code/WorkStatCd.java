@@ -1,5 +1,5 @@
 package kr.co.basedevice.corebase.domain.code;
 
-public enum TodoStatCd {
+public enum WorkStatCd {
 	READY, ONGOING, FAIL, DONE;
 }

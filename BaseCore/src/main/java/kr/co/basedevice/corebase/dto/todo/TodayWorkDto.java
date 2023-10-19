@@ -1,5 +1,5 @@
 package kr.co.basedevice.corebase.dto.todo;
 
-public class TodayTodoDto {
+public class TodayWorkDto {
 
 }

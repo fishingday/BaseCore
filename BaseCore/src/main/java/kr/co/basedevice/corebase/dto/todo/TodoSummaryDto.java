@@ -2,9 +2,11 @@ package kr.co.basedevice.corebase.dto.todo;
 
 import java.time.LocalDate;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class TodoSummaryDto {
 	
 	private LocalDate toDay;
@@ -13,12 +15,12 @@ public class TodoSummaryDto {
 	
 	private String userNm;
 	
-	private Integer todayPoint; // 오늘 적립 가능 포인트
+	private Integer possPoint; // 적립 가능 포인트
 	
 	private Integer availPoint; // 가용 포인트
 	
 	private Integer usePoint; // 사용 포인트
 	
-	private Integer accumulate; // 누적 포인트
+	private Integer accuPoint; // 누적 포인트
 	
 }

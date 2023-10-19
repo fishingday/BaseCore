@@ -215,6 +215,7 @@
                             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
                             <options>
                                 <querydsl.entityAccessors>true</querydsl.entityAccessors>
+                                <querydsl.generatedAnnotationClass>javax.annotation.Generated</querydsl.generatedAnnotationClass>
                             </options>
                         </configuration>
                     </execution>

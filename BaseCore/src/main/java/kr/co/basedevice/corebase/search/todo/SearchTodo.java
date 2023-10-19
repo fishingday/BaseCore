@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class SearchTodo {
 	
-	private Long workerSeq;
-	
 	private LocalDate toDay;
+	
+	private Long workerSeq;
 	
 	private String todoTitle;
 	
