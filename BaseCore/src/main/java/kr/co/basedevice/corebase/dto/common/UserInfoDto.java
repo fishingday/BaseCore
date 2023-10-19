@@ -65,7 +65,7 @@ public class UserInfoDto {
 		if(this.cmRoleList != null && !cmRoleList.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			for(CmRole cmRole : this.cmRoleList) {
-				if(!sb.isEmpty()) {
+				if(sb.length() != 0) {
 					sb.append(",");
 				}
 				sb.append(cmRole.getRoleNm());
@@ -80,7 +80,7 @@ public class UserInfoDto {
 		if(this.cmOrgList != null && !cmOrgList.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			for(CmOrg cmOrg : this.cmOrgList) {
-				if(!sb.isEmpty()) {
+				if(sb.length() != 0) {
 					sb.append(",");
 				}
 				sb.append(cmOrg.getOrgNm());

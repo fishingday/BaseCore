@@ -75,7 +75,7 @@ public class CommonService {
 	public CmCdGrp findCmCdGrpById(String grpCd) {
 		Optional<CmCdGrp> CmCdGrp = cmCdGrpRepository.findById(grpCd);
 		
-		if(CmCdGrp.isEmpty()) {
+		if(!CmCdGrp.isPresent()) {
 			return null;
 		}else {
 			return CmCdGrp.get();
@@ -130,7 +130,7 @@ public class CommonService {
 	public CmCdDtl findCmCdDtlById(CmCdDtlId cmCdDtlId) {				
 		Optional<CmCdDtl> cmCdDtl = cmCdDtlRepository.findById(cmCdDtlId);
 		
-		if(cmCdDtl.isEmpty()) {
+		if(!cmCdDtl.isPresent()) {
 			return null;
 		}else {
 			return cmCdDtl.get();

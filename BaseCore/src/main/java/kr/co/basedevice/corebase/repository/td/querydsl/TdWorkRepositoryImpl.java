@@ -18,8 +18,6 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	
 	@Override
 	public List<TodoSummaryDto> findByUserSummary(SearchTodo searchTodo) {
-
-		
 		
 		
 		return null;

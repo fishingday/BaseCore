@@ -1,5 +1,7 @@
 package kr.co.basedevice.corebase.service.todo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,8 +12,11 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import groovyjarjarantlr4.v4.parse.ANTLRParser.throwsSpec_return;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -39,6 +44,8 @@ public class TodoService {
 	final private TdTodoRepository tdTodoRepository;
 	final private TdWorkRepository tdWorkRepository;
 	final private TdWorkerMapRepository tdWorkerMapRepository;
+	
+	final private JdbcTemplate JdbcTemplate;
 	
 	/**
 	 * 확인자 용 할일 목록
@@ -81,8 +88,6 @@ public class TodoService {
 
 	public List<TodayTodoDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
 		
-		
-		
 		return null;
 	}
 
@@ -93,7 +98,25 @@ public class TodoService {
 	 * @return
 	 */
 	public List<TodoSummaryDto> findByPointSummary4Worker(SearchTodo searchTodo) {
-		List<TodoSummaryDto> todoSummaryList = tdWorkRepository.findByUserSummary(searchTodo);
+		StringBuilder sb = new StringBuilder();
+
+		
+		List<Object> listArgs = new ArrayList<>();
+		List<TodoSummaryDto> todoSummaryList = JdbcTemplate.query(sb.toString() 
+				,new RowMapper<TodoSummaryDto>() {
+					@Override
+					public TodoSummaryDto mapRow(ResultSet rs, int rowNum) throws SQLException{
+						TodoSummaryDto todoSummaryDto = new TodoSummaryDto(
+							//rs.getLong("userSeq")	
+								
+						);
+						
+						return todoSummaryDto;
+					}
+				}
+		        , listArgs				
+			);
+		
 		
 		return todoSummaryList;
 	}

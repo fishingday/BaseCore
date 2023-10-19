@@ -186,7 +186,7 @@ public class OrgService {
 				Optional<CmOrgUserMap> otpCmOrgUserMap = cmOrgUserMapRepository.findById(cmOrgUserMapId);
 				CmOrgUserMap cmOrgUserMap = null;
 				
-				if(otpCmOrgUserMap.isEmpty()) {
+				if(!otpCmOrgUserMap.isPresent()) {
 					cmOrgUserMap = new CmOrgUserMap();
 					cmOrgUserMap.setUserSeq(userSeq);
 					cmOrgUserMap.setOrgSeq(chooseUsers.getOrgSeq());
@@ -212,7 +212,7 @@ public class OrgService {
 				cmOrgUserMapId.setOrgSeq(chooseUsers.getOrgSeq());
 				Optional<CmOrgUserMap> otpCmOrgUsereMap = cmOrgUserMapRepository.findById(cmOrgUserMapId);
 						
-				if(otpCmOrgUsereMap.isEmpty()) {
+				if(!otpCmOrgUsereMap.isPresent()) {
 					continue;
 				}
 				CmOrgUserMap cmOrgUserMap = otpCmOrgUsereMap.get();

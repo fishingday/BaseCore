@@ -12,7 +12,8 @@ import kr.co.basedevice.corebase.repository.td.querydsl.TdWorkRepositoryQuerydsl
 public interface TdWorkRepository extends JpaRepository<TdWork, Long>, TdWorkRepositoryQuerydsl{
 
 	@Modifying
-	@Query("update TdWork a set a.todoStatCd = 'FAIL' where a.delYn = 'N' and a.todoStatCd = 'READY' and a.workCont is null and creDt < ?1")
+	@Query("update TdWork a set a.todoStatCd = 'FAIL', a.gainPoint= 0, a.updDt = now(), updatorSeq = 0 "
+		 + "where a.delYn = 'N' and a.todoStatCd = 'READY' and a.workCont is null and creDt < ?1")
 	int updateFailWorks(LocalDateTime closeDateTime);
 
 }
