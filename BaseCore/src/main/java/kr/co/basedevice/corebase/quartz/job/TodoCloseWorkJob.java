@@ -24,7 +24,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 완료되지 않은 작업을 완료 처리함.
+ * 완료되지 않은 할일 작업을 완료 처리함.
  * 
  * @author fishingday
  *
@@ -68,7 +68,7 @@ public class TodoCloseWorkJob extends QuartzJobBean implements InterruptableJob 
 	        JobParameters jobParameters = new JobParametersBuilder()
 	        		.addString("QuartzJobGroup", jobKey.getGroup())
 	        		.addString("QuartzJobName", jobKey.getName())
-	                .addString("closeDate", closeDate.format(formatter))
+	                .addString(TodoCloseWorkJob.CLOSE_DATE_KEY, closeDate.format(formatter))
 	                .toJobParameters();
 
 	        jobLauncher.run(job, jobParameters);

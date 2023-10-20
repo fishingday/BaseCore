@@ -23,7 +23,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * 오늘의 TODO 생성 
+ * 오늘의 할일 생성 
  * - Quartz을 이용하여 실행
  * 
  * @author fishingday
@@ -32,7 +32,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob {
 	final static public String JOB_NAME = "TodoCreateWorkJob";
-	final static public String CREATE_DATE_KEY = "CreateDate";
+	final static public String CREATE_DATE_KEY = "createDate";
 	final static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
 	private volatile boolean isJobInterrupted = false;
@@ -57,10 +57,10 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
 			currThread = Thread.currentThread();
 			
 			LocalDate createDate = null;
-			if(jobDataMap != null && ObjectUtils.isEmpty(jobDataMap.getString(TodoCreateWorkJob.CREATE_DATE_KEY))) {
-				createDate = LocalDate.now();
-			}else {
+			if(jobDataMap != null && !ObjectUtils.isEmpty(jobDataMap.getString(TodoCreateWorkJob.CREATE_DATE_KEY))) {
 				createDate = LocalDate.parse(jobDataMap.getString(TodoCreateWorkJob.CREATE_DATE_KEY), formatter);
+			}else {
+				createDate = LocalDate.now();				
 			}
 			
 	        //전달받은 JodDataMap에서 Job이름을 꺼내오고 그 Job이름으로 context에서 bean을 가져온다
@@ -68,7 +68,7 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
 	        JobParameters jobParameters = new JobParametersBuilder()
 	        		.addString("QuartzJobGroup", jobKey.getGroup())
 	        		.addString("QuartzJobName", jobKey.getName())
-	                .addString("createDate", createDate.format(formatter))
+	                .addString(TodoCreateWorkJob.CREATE_DATE_KEY, createDate.format(formatter))
 	                .toJobParameters();
 
 	        jobLauncher.run(job, jobParameters);

@@ -117,7 +117,7 @@ public class TdTodo extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdTodo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdTodCheckerMap> tdTodCheckerMapList = new ArrayList<>(1);
+	private List<TdCheckerMap> tdCheckerMapList = new ArrayList<>(1);
 	
 	@OneToMany(mappedBy = "tdTodo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore

@@ -23,9 +23,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_TODO_CHECKER_MAP")
-@IdClass(TdTodCheckerMapId.class)
-public class TdTodCheckerMap extends BaseEntity implements Serializable {
+@Table(name = "TD_CHECKER_MAP")
+@IdClass(TdCheckerMapId.class)
+public class TdCheckerMap extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6688519416637991812L;
 

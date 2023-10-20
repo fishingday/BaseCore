@@ -70,6 +70,7 @@ public class TodoCreateWorkBatchJob {
     JpaPagingItemReader<TdTodo> jpaPagingItemReaderTodo(@Value("#{jobParameters["+TodoCreateWorkJob.CREATE_DATE_KEY+"]}") String createDate) {
     	
     	Map<String, Object> paramValues = new HashMap<>();
+    	log.debug("jpaPagingItemReaderTodo.#jobParameters[{}= {}", TodoCreateWorkJob.CREATE_DATE_KEY, createDate);
         paramValues.put(TodoCreateWorkJob.CREATE_DATE_KEY, LocalDate.parse(createDate, TodoCreateWorkJob.formatter)); // 데이터를 준 놈이 포맷을 알고 있음
     	
         return new JpaPagingItemReaderBuilder<TdTodo>()

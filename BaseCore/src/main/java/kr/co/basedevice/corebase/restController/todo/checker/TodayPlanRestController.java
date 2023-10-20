@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
@@ -43,7 +46,11 @@ public class TodayPlanRestController {
 	 * @return
 	 */
 	@GetMapping("/get_today_plan_list.json")
-	public ResponseEntity<Map<String,Object>> findByTodayPlanList(SearchTodo searchTodo){
+	public ResponseEntity<Map<String,Object>> findByTodayPlanList(SearchTodo searchTodo, Pageable page){
+		if(page == null) {
+			page = PageRequest.of(0, 10);
+		}
+		
 		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		searchTodo.setCheckerSeq(checker.getUserSeq());
 		
@@ -53,8 +60,8 @@ public class TodayPlanRestController {
 		
 		Map<String,Object> retMap = new HashMap<>();
 		// 해당일에 할일 목록
-		List <TodayPlanDto> todayPlanList = todoService.findByTodayPlanList4Checker(searchTodo);
-		retMap.put("todayPlanList", todayPlanList);
+		 Page<TodayPlanDto> pageTodayPlan = todoService.pageTodayPlan(searchTodo, page);
+		retMap.put("pageTodayPlan", pageTodayPlan);
 		
 		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
 		List <TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Checker(searchTodo);

@@ -2,6 +2,9 @@ package kr.co.basedevice.corebase.restController.todo.checker;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,23 +28,26 @@ public class CheckerTodoMgtRestController {
 	
 	/** 
 	 * 등록된 할일 목록	
+	 * - 단순히 등록된 할일 목록을 보여준다.
 	 * 
 	 * @param searchTodoMgt
 	 * @return
 	 */
 	@GetMapping("/get_todo_list.json")
-	public ResponseEntity<List<TodoDetailDto>> findByTodoList(SearchTodoMgt searchTodoMgt){
-		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		searchTodoMgt.setCheckerSeq(checker.getUserSeq());
-		
-		List<TodoDetailDto> todoDetailDtoList = todoService.findByTodoList(searchTodoMgt);
+	public ResponseEntity<Page<TodoDetailDto>> findByTodoList(SearchTodoMgt searchTodoMgt, Pageable page){
+		if(page == null) {
+			page = PageRequest.of(0, 10);
+		}
 				
-		return ResponseEntity.ok(todoDetailDtoList);
+		Page<TodoDetailDto> pageTodoDetailDto = todoService.pageTodoDetailInfo(searchTodoMgt, page);
+				
+		return ResponseEntity.ok(pageTodoDetailDto);
 	}
 	
 	
 	/**
 	 * 할일 상세 보기
+	 * 
 	 * 
 	 * @param todoSeq
 	 * @return
@@ -56,7 +62,12 @@ public class CheckerTodoMgtRestController {
 	}
 	
 	
-	// 할일 저장
+	/**
+	 * 할일 저장
+	 * 
+	 * @param todoDetailDto
+	 * @return
+	 */
 	@PutMapping("/save_todo.json")
 	public ResponseEntity<Boolean> saveTodo(TodoDetailDto todoDetailDto){
 		

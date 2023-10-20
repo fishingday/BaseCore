@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TdTodCheckerMapId implements Serializable {
+public class TdCheckerMapId implements Serializable {
 
 	private static final long serialVersionUID = 8059767690213090781L;
 

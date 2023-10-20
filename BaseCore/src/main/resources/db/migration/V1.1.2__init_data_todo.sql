@@ -9,22 +9,22 @@ insert into td_todo(todo_seq, todo_cre_cd, todo_titl, todo_cont, todo_desc, comp
 insert into td_todo(todo_seq, todo_cre_cd, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (108,'DIRECT', '쪽지시험100','시험','영어, 수학 학원 시험','증거 사진 첨부',4000,'EXAM',null,0,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
 insert into td_todo(todo_seq, todo_cre_cd, todo_titl, todo_cont, todo_desc, complet_condi_val, todo_point, todo_typ_cd, todo_dtl_val, date_limit_cnt, post_begin_date, post_end_date, exec_begin_tm, exec_end_tm, quiz_use_yn, quiz_typ_cd, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (109,'DIRECT', '쪽지시험90','시험','영어, 수학 학원 시험','증거 사진 첨부',1000,'EXAM',null,0,'2023-09-01','9999-12-31',null,null,'N',null,'N',100, now(), 100, now());
 
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,101,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,102,'N',100, now(), 100, now());
-insert into td_todo_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,101,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,102,'N',100, now(), 100, now());
+insert into td_checker_map(todo_seq, checker_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,102,'N',100, now(), 100, now());
 
 
 insert into td_worker_map(todo_seq, worker_seq, worker_agre_yn, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,103, 'Y', 'N',100, now(), 100, now());

@@ -8,8 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
+import kr.co.basedevice.corebase.repository.td.querydsl.TdTodoRepositoryQuerydsl;
 
-public interface TdTodoRepository extends JpaRepository<TdTodo, Long> {
+public interface TdTodoRepository extends JpaRepository<TdTodo, Long>, TdTodoRepositoryQuerydsl {
 
 	/**
 	 * 일자 기반 할일 조회

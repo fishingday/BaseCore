@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -48,15 +51,41 @@ public class TodoService {
 	final private JdbcTemplate JdbcTemplate;
 	
 	/**
+	 * 등록된 할일 목록 조회
+	 * 
+	 * @param searchTodoMgt
+	 * @param pageable
+	 * @return
+	 */
+	public Page<TodoDetailDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable pageable){
+		
+		Page<TodoDetailDto> pageTodoDetailInfo =  tdTodoRepository.pageTodoDetailInfo(searchTodoMgt, pageable);
+		
+		if(pageTodoDetailInfo != null && !pageTodoDetailInfo.isEmpty()) {
+			
+			for(TodoDetailDto todoDetailDto : pageTodoDetailInfo.getContent()) {
+				// 확인자 목록
+				todoDetailDto.setCheckerList(tdTodoRepository.getCheckerList(todoDetailDto.getTodoSeq()));
+				
+				// 작업자 목록
+				todoDetailDto.setWorkerList(tdTodoRepository.getWorkerList(todoDetailDto.getTodoSeq()));;
+			}
+		}
+		
+		return pageTodoDetailInfo;
+	}
+	
+	
+	/**
 	 * 확인자 용 할일 목록
 	 * 
 	 * @param searchTodo
 	 * @return
 	 */
-	public List<TodayPlanDto> findByTodayPlanList4Checker(SearchTodo searchTodo) {
-		// TODO 해당일에 생성된 확인자의 할일/작업 목록
+	public Page<TodayPlanDto> pageTodayPlan(SearchTodo searchTodo, Pageable pageable){
+		Page<TodayPlanDto> pageTodayPlanDto =  tdWorkRepository.pageTodayPlan(searchTodo, pageable);
 		
-		return null;
+		return pageTodayPlanDto;
 	}
 
 	public TdWork getTdWork(Long workSeq) {
@@ -72,12 +101,6 @@ public class TodoService {
 	public List<TodoSummaryDto> findByPointSummary4Checker(SearchTodo searchTodo) {
 		// TODO 확인자의 할일을 완룐한 수행자의 해당일 획득 포인트와 지급예정포인트 
 		log.info("############################ 한번은 똮!");
-		return null;
-	}
-
-	public List<TodoDetailDto> findByTodoList(SearchTodoMgt searchTodoMgt) {
-		
-		// TODO 확인자가 생성한 할일 목록 조회
 		return null;
 	}
 
@@ -199,34 +222,35 @@ public class TodoService {
 	 */
 	public int createWorkItems(LocalDate createDate, Long todoSeq) {
 // H2 database 
-//			INSERT INTO TD_WORK (WORK_SEQ, TODO_SEQ, WORKER_SEQ, WORK_STAT_CD, GAIN_POINT, WORK_TITL, SETLE_YN, DEL_YN, CRE_DT, CREATOR_SEQ, UPD_DT, UPDATOR_SEQ) 
-//			SELECT NEXTVAL('SEQ_TD_WORK') as WORK_SEQ
-//			      ,A.TODO_SEQ as TODO_SEQ
-//			      ,B.WORKER_SEQ as WORKER_SEQ
-//			      ,'READY' as TODO_STAT_CD
-//			      ,A.TODO_POINT as GAIN_POINT
-//			      ,A.TODO_TITL || '(' || FORMATDATETIME(NOW(),   'yyyy/MM/dd') ||')' as WORK_TITL
-//			      ,'N' as SETLE_YN
-//			      ,'N' as DEL_YN
-//			      ,NOW() as CRE_DT
-//			      ,0 as CREATOR_SEQ
-//			      ,NOW() as UPD_DT
-//			      , 0 as UPDATOR_SEQ
-//			  FROM TD_TODO A, TD_WORKER_MAP B
-//			 WHERE A.DEL_YN = 'N'
-//			   AND A.TODO_CRE_CD IN ('DAILY', 'WEEK', 'MONTH')
-//			   AND A.TODO_SEQ = B.TODO_SEQ
-//			   AND B.DEL_YN = 'N'
-//			   AND B.WORKER_AGRE_YN = 'Y'
-//			   AND 1 =(CASE WHEN A.TODO_CRE_CD = 'DAILY' THEN 1
-//			                WHEN A.TODO_CRE_CD = 'WEEK' THEN INSTR(A.TODO_CRE_DTL_VAL, DAY_OF_WEEK(NOW()))
-//			                WHEN A.TODO_CRE_CD = 'MONTH' AND A.TODO_CRE_DTL_VAL = 'LAST' THEN 
-//			                     CASE WHEN DAY_OF_MONTH(NOW()) = day_of_month(dateadd(DAY, -1, dateadd(MONTH,1,date_trunc('MONTH', now())))) THEN 1 ELSE 0 END
-//			                WHEN A.TODO_CRE_CD = 'MONTH' AND A.TODO_CRE_DTL_VAL != 'LAST' THEN 
-//			                     CASE WHEN DAY_OF_MONTH(NOW()) = A.TODO_CRE_DTL_VAL THEN 1 ELSE 0 END
-//			                ELSE 0
-//			           END)
-//			           
+//		INSERT INTO TD_WORK (WORK_SEQ, TODO_SEQ, WORKER_SEQ, WORK_STAT_CD,  WORK_POSS_BEGIN_DT, WORK_POSS_END_DT , GAIN_POINT, WORK_TITL, SETLE_YN, DEL_YN, CRE_DT, CREATOR_SEQ, UPD_DT, UPDATOR_SEQ) 
+//		SELECT NEXTVAL('SEQ_TD_WORK') as WORK_SEQ
+//		      ,A.TODO_SEQ as TODO_SEQ
+//		      ,B.WORKER_SEQ as WORKER_SEQ
+//		      ,'READY' as TODO_STAT_CD
+//            ,FORMATDATETIME(NOW(),   'yyyy-MM-dd') || ' 00:00:00'
+//            ,FORMATDATETIME(NOW(),   'yyyy-MM-dd') || ' 23:59:59'
+//		      ,A.TODO_POINT as GAIN_POINT
+//		      ,A.TODO_TITL || '(' || FORMATDATETIME(NOW(),   'yyyy/MM/dd') ||')' as WORK_TITL
+//		      ,'N' as SETLE_YN
+//		      ,'N' as DEL_YN
+//		      ,NOW() as CRE_DT
+//		      ,0 as CREATOR_SEQ
+//		      ,NOW() as UPD_DT
+//		      , 0 as UPDATOR_SEQ
+//		  FROM TD_TODO A, TD_WORKER_MAP B
+//		 WHERE A.DEL_YN = 'N'
+//		   AND A.TODO_CRE_CD IN ('DAILY', 'WEEK', 'MONTH')
+//		   AND A.TODO_SEQ = B.TODO_SEQ
+//		   AND B.DEL_YN = 'N'
+//		   AND B.WORKER_AGRE_YN = 'Y'
+//		   AND 1 =(CASE WHEN A.TODO_CRE_CD = 'DAILY' THEN 1
+//		                WHEN A.TODO_CRE_CD = 'WEEK' THEN INSTR(A.TODO_CRE_DTL_VAL, DAY_OF_WEEK(NOW()))
+//		                WHEN A.TODO_CRE_CD = 'MONTH' AND A.TODO_CRE_DTL_VAL = 'LAST' THEN 
+//		                     CASE WHEN DAY_OF_MONTH(NOW()) = day_of_month(dateadd(DAY, -1, dateadd(MONTH,1,date_trunc('MONTH', now())))) THEN 1 ELSE 0 END
+//		                WHEN A.TODO_CRE_CD = 'MONTH' AND A.TODO_CRE_DTL_VAL != 'LAST' THEN 
+//		                     CASE WHEN DAY_OF_MONTH(NOW()) = A.TODO_CRE_DTL_VAL THEN 1 ELSE 0 END
+//		                ELSE 0
+//		           END)
 		List<TdWorkerMap> listTdWorkerMap = tdWorkerMapRepository.findByWorkerAgre(todoSeq);
 
 		int createSize = 0;
@@ -238,9 +262,26 @@ public class TodoService {
 				tdWork.setTodoSeq(todoSeq);
 				tdWork.setWorkerSeq(tdWorkerMap.getWorkerSeq());
 				tdWork.setWorkStatCd(WorkStatCd.READY);
+				
+				LocalTime workPossBeginTime = null;
+				if(ObjectUtils.isEmpty(tdTodo.get().getExecBeginTm())){
+					workPossBeginTime = LocalTime.of(0, 0, 0);
+				}else {
+					workPossBeginTime = tdTodo.get().getExecBeginTm();
+				}
+				tdWork.setWorkPossBeginDt(LocalDateTime.of(createDate, workPossBeginTime));
+				
+				LocalTime workPossEndTime = null;
+				if(ObjectUtils.isEmpty(tdTodo.get().getExecEndTm())){
+					workPossEndTime = LocalTime.of(23, 59, 59);
+				}else {
+					workPossEndTime = tdTodo.get().getExecEndTm();
+				}
+				tdWork.setWorkPossEndDt(LocalDateTime.of(createDate, workPossEndTime));
+								
 				tdWork.setGainPoint(tdTodo.get().getTodoPoint());
 				tdWork.setWorkTitl(new StringBuilder(tdTodo.get().getTodoTitl()).append("(")
-						.append(createDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")))
+						.append(createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 						.append(")").toString());
 				tdWork.setSetleYn(Yn.N);
 				tdWork.setDelYn(Yn.N);
@@ -263,5 +304,4 @@ public class TodoService {
 	public int closeWorkItems(LocalDateTime closeDateTime) {
 		return tdWorkRepository.updateFailWorks(closeDateTime);
 	}
-
 }
