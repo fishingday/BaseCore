@@ -40,12 +40,12 @@ public class TodayPlanRestController {
 	final private TodoService todoService;
 		
 	/** 
-	 * 확인자가 생성한 할일의 오늘 수행 목록
+	 * 작업자의 할일 목록 조회
 	 * 
 	 * @param SearchGrpCd 
 	 * @return
 	 */
-	@GetMapping("/get_today_plan_list.json")
+	@GetMapping("/page_today_plan_list.json")
 	public ResponseEntity<Map<String,Object>> findByTodayPlanList(SearchTodo searchTodo, Pageable page){
 		if(page == null) {
 			page = PageRequest.of(0, 10);
@@ -64,7 +64,7 @@ public class TodayPlanRestController {
 		retMap.put("pageTodayPlan", pageTodayPlan);
 		
 		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
-		List <TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Checker(searchTodo);
+		List<TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Worker(searchTodo);
 		retMap.put("todoSummaryList", todoSummaryList);
 		
 		return ResponseEntity.ok(retMap);
@@ -102,10 +102,9 @@ public class TodayPlanRestController {
 	 */
 	@PutMapping("/save_todo_work.json")
 	public ResponseEntity<Boolean> saveTodoWork(TdWork tdWork){
-		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		tdWork.setCheckerSeq(checker.getUserSeq());
+
+		boolean isSave = todoService.saveTdWork(tdWork);
 		
-		
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(isSave);
 	}
 }

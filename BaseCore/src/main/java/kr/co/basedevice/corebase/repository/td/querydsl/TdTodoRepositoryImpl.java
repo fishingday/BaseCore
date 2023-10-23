@@ -42,7 +42,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 		QTdWorkerMap tdWorkerMap = QTdWorkerMap.tdWorkerMap;
 		QTdTodo tdTodo = QTdTodo.tdTodo;
 		
-		JPQLQuery<TodoDetailDto> query = jpaQueryFactory.selectDistinct(
+		JPQLQuery<TodoDetailDto> query = jpaQueryFactory.select(
 				Projections.bean(TodoDetailDto.class,
 					 tdTodo.todoSeq
 					,tdTodo.todoTitl

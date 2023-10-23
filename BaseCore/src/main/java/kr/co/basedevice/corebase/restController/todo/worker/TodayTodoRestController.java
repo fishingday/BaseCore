@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
-import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodayWorkDto;
-import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
@@ -47,13 +45,18 @@ public class TodayTodoRestController {
 			searchTodo.setToDay(LocalDate.now());
 		}
 		
+
+		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		searchTodo.setCheckerSeq(checker.getUserSeq());
+		
+		
 		Map<String,Object> retMap = new HashMap<>();
 		// 해당일에 할일 목록
 		List <TodayWorkDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchTodo);
 		retMap.put("todoPlanList", todoPlanList);
 		
 		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
-		List <TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Worker();
+		List <TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Worker(searchTodo);
 		retMap.put("todoSummaryList", todoSummaryList);
 		
 		return ResponseEntity.ok(retMap);

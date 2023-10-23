@@ -38,7 +38,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		QTdWork tdWork = QTdWork.tdWork;
 		QCmUser cmUser = QCmUser.cmUser; 
 		
-		JPQLQuery<TodayPlanDto> query = jpaQueryFactory.selectDistinct(
+		JPQLQuery<TodayPlanDto> query = jpaQueryFactory.select(
 				Projections.bean(TodayPlanDto.class,
 					 tdTodo.todoSeq
 					,tdTodo.todoTitl

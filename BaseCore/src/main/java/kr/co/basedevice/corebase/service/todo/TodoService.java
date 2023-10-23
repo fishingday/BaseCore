@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,7 @@ import org.springframework.util.ObjectUtils;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
+import kr.co.basedevice.corebase.domain.td.TdCheckerMap;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
@@ -30,15 +32,14 @@ import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodayWorkDto;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
 import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkerMapRepository;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -87,26 +88,84 @@ public class TodoService {
 		
 		return pageTodayPlanDto;
 	}
+	
+	/**
+	 *  할일 저장
+	 * 
+	 * @param todoDetailDto
+	 * @return
+	 */
+	public boolean saveTodo(TodoDetailDto todoDetailDto) {
+		
+		TdTodo tdTodo = new TdTodo();
+		BeanUtils.copyProperties(todoDetailDto, tdTodo, "checkerList", "workerList");
+		
+		List <TdCheckerMap> listTdCheckerMap = new ArrayList<>(1);
+		if(todoDetailDto.getCheckerList() != null && !todoDetailDto.getCheckerList().isEmpty()) {
+			for(TodoUserDto TodoUserDto : todoDetailDto.getCheckerList()){
+				TdCheckerMap tdCheckerMap = new TdCheckerMap();
+				tdCheckerMap.setCheckerSeq(TodoUserDto.getUserSeq());
+				tdCheckerMap.setDelYn(Yn.N);
+				listTdCheckerMap.add(tdCheckerMap);
+			}
+		}
+		
+		List<TdWorkerMap> listTdWorkerMap = new ArrayList<>(1);
+		if(todoDetailDto.getWorkerList() != null && !todoDetailDto.getWorkerList().isEmpty()) {
+			for(TodoUserDto TodoUserDto : todoDetailDto.getWorkerList()){
+				TdWorkerMap tdWorkerMap = new TdWorkerMap();
+				tdWorkerMap.setWorkerSeq(TodoUserDto.getUserSeq());
+				tdWorkerMap.setWorkerAgerYn(Yn.N);
+				tdWorkerMap.setDelYn(Yn.N);
+				listTdWorkerMap.add(tdWorkerMap);
+			}
+		}
+		
+		tdTodo.setDelYn(Yn.N);
+		tdTodo.setTdCheckerMapList(listTdCheckerMap);
+		tdTodo.setTdWorkerMapList(listTdWorkerMap);
+		
+		tdTodoRepository.save(tdTodo);		
+		
+		return true;
+	}
 
+	/**
+	 * 작업 조회
+	 * 
+	 * @param workSeq
+	 * @return
+	 */
 	public TdWork getTdWork(Long workSeq) {
-		// TODO 작업 조회
-		return null;
+		Optional<TdWork> optTdWork = tdWorkRepository.findById(workSeq);
+				
+		return optTdWork.get();
 	}
 
+	/**
+	 * 할일 조회
+	 * 
+	 * @param todoSeq
+	 * @return
+	 */
 	public TdTodo getTdTodo(Long todoSeq) {
-		// TODO 할일 조회 
-		return null;
-	}
-
-	public List<TodoSummaryDto> findByPointSummary4Checker(SearchTodo searchTodo) {
-		// TODO 확인자의 할일을 완룐한 수행자의 해당일 획득 포인트와 지급예정포인트 
-		log.info("############################ 한번은 똮!");
-		return null;
+		Optional<TdTodo> optTdTodo = tdTodoRepository.findById(todoSeq);
+		
+		return optTdTodo.get();
 	}
 
 	public TodoDetailDto getTdTodoDetail(Long todoSeq) {
-		// TODO 할일, 작업자, 확인자
-		return null;
+
+		Optional<TdTodo> optTdTodo = tdTodoRepository.findById(todoSeq);
+		TodoDetailDto todoDetailDto = new TodoDetailDto();
+		BeanUtils.copyProperties(optTdTodo.get(), todoDetailDto, "tdWorkList", "tdCheckerMapList", "tdWorkerMapList");
+		
+		// 확인자 목록
+		todoDetailDto.setCheckerList(tdTodoRepository.getCheckerList(todoDetailDto.getTodoSeq()));		
+		// 작업자 목록
+		todoDetailDto.setWorkerList(tdTodoRepository.getWorkerList(todoDetailDto.getTodoSeq()));;
+		
+		return todoDetailDto;
 	}
 
 	/**
@@ -131,7 +190,7 @@ public class TodoService {
 	 * @param searchTodo
 	 * @return
 	 */
-	public List<TodoSummaryDto> findByPointSummary4Worker() {
+	public List<TodoSummaryDto> findByPointSummary4Worker(SearchTodo searchTodo) {
 		StringBuilder sb = new StringBuilder("SELECT A.WORKER_SEQ, A.USER_NM ")
 				.append("      ,NVL(B.ACCUMULATE_POINT, 0) as ACCU_POINT ")
 				.append("      ,NVL(C.USE_POINT, 0) as USE_POINT ")
@@ -191,8 +250,10 @@ public class TodoService {
 	 * 
 	 * @param tdWork
 	 */
-	public void saveTdWork(TdWork tdWork) {		
+	public boolean saveTdWork(TdWork tdWork) {		
 		tdWorkRepository.save(tdWork);
+		
+		return true;
 	}
 
 	/**

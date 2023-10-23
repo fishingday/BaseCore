@@ -1,21 +1,16 @@
 package kr.co.basedevice.corebase.restController.todo.checker;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
-import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 
@@ -71,8 +66,9 @@ public class CheckerTodoMgtRestController {
 	@PutMapping("/save_todo.json")
 	public ResponseEntity<Boolean> saveTodo(TodoDetailDto todoDetailDto){
 		
+		boolean isSave = todoService.saveTodo(todoDetailDto);
 		
-		return ResponseEntity.ok(true); 
+		return ResponseEntity.ok(isSave); 
 	}
 	
 }
