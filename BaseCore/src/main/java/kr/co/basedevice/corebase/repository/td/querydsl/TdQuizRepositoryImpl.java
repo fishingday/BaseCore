@@ -172,6 +172,4 @@ public class TdQuizRepositoryImpl implements TdQuizRepositoryQueryDsl{
 		
 		return query.where(builder).fetch();
 	}
-	
-	
 }
