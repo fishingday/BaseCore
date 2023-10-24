@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TdTodoSetleDtlId implements Serializable {
+public class TdWorkSetleMapId implements Serializable {
 	
 	private static final long serialVersionUID = -8995938541079692049L;
 
-	private Long todoSetleSeq;
+	private Long setleSeq;
 	
 	private Long workSeq;
 }

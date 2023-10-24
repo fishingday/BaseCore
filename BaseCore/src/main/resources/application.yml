@@ -50,6 +50,7 @@ spring:
     
     
   jpa:
+    defer-datasource-initialization: false
     open-in-view: false
     hibernate:
       ddl-auto: validate
@@ -57,7 +58,6 @@ spring:
       hibernate:
         jdbc:
           lob.non_contextual_creation:true
-
     
   flyway:
     enabled: true

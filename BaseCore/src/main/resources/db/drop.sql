@@ -17,18 +17,20 @@ drop table if exists cm_user_alow_ip CASCADE;
 drop table if exists cm_user_bookmark CASCADE; 
 drop table if exists cm_user_pwd CASCADE; 
 drop table if exists cm_user_role_map CASCADE; 
+
 drop table if exists td_quiz_work_use CASCADE; 
 drop table if exists td_worker_map CASCADE; 
 drop table if exists td_quiz CASCADE;
 drop table if exists td_quiz_user_map CASCADE; 
 drop table if exists td_todo CASCADE; 
 drop table if exists td_todo_checker_map CASCADE; 
-drop table if exists td_todo_setle_dtl CASCADE;
-drop table if exists td_todo_setle CASCADE;
+drop table if exists td_work_setle_map CASCADE;
+drop table if exists td_setle CASCADE;
 drop table if exists td_work CASCADE;
 drop table if exists td_checker_map CASCADE;
 drop table if exists td_point_use CASCADE;
 drop table if exists td_checker_worker_map CASCADE;
+
 drop sequence if exists seq_cm_critical_log;
 drop sequence if exists seq_cm_menu;
 drop sequence if exists seq_cm_menu_dtl;
@@ -39,9 +41,10 @@ drop sequence if exists seq_cm_role_chg_log;
 drop sequence if exists seq_cm_user;
 drop sequence if exists seq_cm_user_acces_log;
 drop sequence if exists seq_cm_user_alow_ip;
+
 drop sequence if exists seq_td_quiz;
 drop sequence if exists seq_td_todo;
-drop sequence if exists seq_td_todo_setle;
+drop sequence if exists seq_td_setle;
 drop sequence if exists seq_td_work;
 drop sequence if exists seq_td_point_use;
 

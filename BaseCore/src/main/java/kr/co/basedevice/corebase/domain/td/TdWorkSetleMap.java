@@ -23,15 +23,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_TODO_SETLE_DTL")
-@IdClass(TdTodoSetleDtlId.class)
-public class TdTodoSetleDtl extends BaseEntity implements Serializable {
+@Table(name = "TD_WORK_SETLE_MAP")
+@IdClass(TdWorkSetleMapId.class)
+public class TdWorkSetleMap extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = -7049311875233855750L;
 
 	@Id
-	@Column(name = "TODO_SETLE_SEQ", nullable = false)
-	private Long todoSetleSeq;
+	@Column(name = "SETLE_SEQ", nullable = false)
+	private Long setleSeq;
 	
 	@Id
 	@Column(name = "WORK_SEQ", nullable = false)
@@ -43,8 +43,8 @@ public class TdTodoSetleDtl extends BaseEntity implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
-	@JoinColumn(name = "TODO_SETLE_SEQ", updatable = false, insertable = false)
-	private TdTodoSetle tdTodoSetle;
+	@JoinColumn(name = "SETLE_SEQ", updatable = false, insertable = false)
+	private TdSetle tdSetle;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore

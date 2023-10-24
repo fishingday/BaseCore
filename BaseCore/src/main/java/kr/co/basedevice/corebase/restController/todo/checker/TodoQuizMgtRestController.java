@@ -35,7 +35,7 @@ public class TodoQuizMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/page_quiz_list.json")
-	public ResponseEntity<Page<QuizInfoDto>> findByQuizList(SearchQuiz searchQuiz, Pageable page){
+	public ResponseEntity<Page<QuizInfoDto>> pageQuizList(SearchQuiz searchQuiz, Pageable page){
 		if(page == null) {
 			page = PageRequest.of(0, 10);
 		}
@@ -47,7 +47,12 @@ public class TodoQuizMgtRestController {
 	}
 	
 	
-	// 퀴즈 상세 조회
+	/**
+	 * 퀴즈 상세 조회
+	 * 
+	 * @param quizSeq
+	 * @return
+	 */
 	@GetMapping("/get_quiz_info.json")
 	public ResponseEntity<Map<String, Object>> getQuiz(Long quizSeq){
 				

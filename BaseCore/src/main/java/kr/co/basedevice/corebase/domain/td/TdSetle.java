@@ -31,16 +31,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_TODO_SETLE")
-@SequenceGenerator(name = "SEQGEN_TD_TODO_SETLE", sequenceName = "SEQ_TD_TODO_SETLE", initialValue = 1000, allocationSize = 1)
-public class TdTodoSetle extends BaseEntity implements Serializable{
+@Table(name = "TD_SETLE")
+@SequenceGenerator(name = "SEQGEN_TD_SETLE", sequenceName = "SEQ_TD_SETLE", initialValue = 1000, allocationSize = 1)
+public class TdSetle extends BaseEntity implements Serializable{
 	
 	private static final long serialVersionUID = -8236512668919876948L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_TODO_SETLE")
-	@Column(name = "TODO_SETLE_SEQ", nullable = false)
-	private Long todoSetleSeq;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_SETLE")
+	@Column(name = "SETLE_SEQ", nullable = false)
+	private Long setleSeq;
 
 	@Column(name = "WORKER_SEQ", nullable = false)
 	private Long workerSeq;
@@ -63,7 +63,7 @@ public class TdTodoSetle extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	
-	@OneToMany(mappedBy = "tdTodoSetle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "tdSetle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdTodoSetleDtl> tdTodoSetleDtlList = new ArrayList<>(1);
+	private List<TdWorkSetleMap> tdWorkSetleMapList = new ArrayList<>(1);
 }
