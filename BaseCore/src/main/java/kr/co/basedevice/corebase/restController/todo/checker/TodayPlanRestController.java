@@ -23,6 +23,7 @@ import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
+import kr.co.basedevice.corebase.service.todo.SettleService;
 import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class TodayPlanRestController {
 	
 	final private TodoService todoService;
+	final private SettleService settleService;
 		
 	/** 
 	 * 작업자의 할일 목록 조회
@@ -64,7 +66,7 @@ public class TodayPlanRestController {
 		retMap.put("pageTodayPlan", pageTodayPlan);
 		
 		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
-		List<TodoSummaryDto> todoSummaryList = todoService.findByPointSummary4Worker(searchTodo);
+		List<TodoSummaryDto> todoSummaryList = settleService.findByPointSummary4Worker(searchTodo);
 		retMap.put("todoSummaryList", todoSummaryList);
 		
 		return ResponseEntity.ok(retMap);

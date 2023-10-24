@@ -45,4 +45,13 @@ public interface TdWorkRepository extends JpaRepository<TdWork, Long>, TdWorkRep
 	 */
 	List<TdWork> findByDelYnAndSetleYnAndWorkerSeqAndWorkSeqInAndWorkStatCdIn(Yn delYn, Yn setleYn, Long workerSeq, List<Long> workSeqList, List<WorkStatCd> workStatCdList );
 
+	/**
+	 * 적립 가능 포인트
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	@Query("select SUM(m.gainPoint) from TdWork m where m.setleYn = 'N' and m.delYn = 'N' and m.workStatCd != 'FAIL' and m.workerSeq = ?1 ")
+	int getPossPoint4Worker(Long userSeq);
+
 }

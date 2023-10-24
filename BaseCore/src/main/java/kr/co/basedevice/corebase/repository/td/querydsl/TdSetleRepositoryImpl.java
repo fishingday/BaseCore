@@ -19,6 +19,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdSetle;
+import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +99,7 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 	}
 
 	@Override
-	public SettleInfoDto getSettleInfo(Long setleSeq) {
+	public SettleInfoDto getSettleInfo(GetSettelDto getSettelDto) {
 		QTdSetle todoSetle = QTdSetle.tdSetle;
 		QCmUser worker = QCmUser.cmUser;
 		QCmUser acounter = QCmUser.cmUser;
@@ -122,7 +123,14 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(todoSetle.delYn.eq(Yn.N));
-		builder.and(todoSetle.setleSeq.eq(setleSeq));
+		builder.and(todoSetle.setleSeq.eq(getSettelDto.getSetleSeq()));
+		
+		if(!ObjectUtils.isEmpty(getSettelDto.getWorkerSeq())) {
+			builder.and(todoSetle.workerSeq.eq(getSettelDto.getWorkerSeq()));
+		}
+		if(!ObjectUtils.isEmpty(getSettelDto.getAcountSeq())) {
+			builder.and(todoSetle.acountSeq.eq(getSettelDto.getAcountSeq()));
+		}
 		
 		query.where(builder);
 		

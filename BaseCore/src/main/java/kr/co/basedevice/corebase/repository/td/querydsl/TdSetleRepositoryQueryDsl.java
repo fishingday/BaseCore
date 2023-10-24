@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.repository.td.querydsl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 
@@ -20,9 +21,9 @@ public interface TdSetleRepositoryQueryDsl {
 	/**
 	 * 정산 정보
 	 * 
-	 * @param setleSeq
+	 * @param getSettelDto
 	 * @return
 	 */
-	SettleInfoDto getSettleInfo(Long setleSeq);
+	SettleInfoDto getSettleInfo(GetSettelDto getSettelDto);
 
 }

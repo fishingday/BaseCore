@@ -1,7 +1,5 @@
 package kr.co.basedevice.corebase.service.todo;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,8 +14,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -31,7 +27,6 @@ import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodayWorkDto;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
-import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
 import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
@@ -49,7 +44,7 @@ public class TodoService {
 	final private TdWorkRepository tdWorkRepository;
 	final private TdWorkerMapRepository tdWorkerMapRepository;
 	
-	final private JdbcTemplate JdbcTemplate;
+
 	
 	/**
 	 * 등록된 할일 목록 조회
@@ -184,66 +179,6 @@ public class TodoService {
 		return listTodayWorkDto;
 	}
 
-	/**
-	 * 작업자별 포인트 현황 목록
-	 * 
-	 * @param searchTodo
-	 * @return
-	 */
-	public List<TodoSummaryDto> findByPointSummary4Worker(SearchTodo searchTodo) {
-		StringBuilder sb = new StringBuilder("SELECT A.WORKER_SEQ, A.USER_NM ")
-				.append("      ,NVL(B.ACCUMULATE_POINT, 0) as ACCU_POINT ")
-				.append("      ,NVL(C.USE_POINT, 0) as USE_POINT ")
-				.append("      ,NVL(D.POSS_POINT, 0) as POSS_POINT ")
-				.append("      ,NVL(B.ACCUMULATE_POINT, 0) - NVL(C.USE_POINT, 0) as AVAIL_POINT ")
-				.append("  FROM ( SELECT X.WORKER_SEQ, S.USER_NM ")
-				.append("           FROM TD_WORKER_MAP X INNER JOIN CM_USER S ON S.USER_SEQ = X.WORKER_SEQ ")
-				.append("          WHERE X.DEL_YN = 'N' ")
-				.append("          GROUP BY X.WORKER_SEQ) A ")
-				.append("       LEFT OUTER JOIN ( ")
-				.append("        SELECT Y.WORKER_SEQ, SUM(Y.TOTAL_SETLE_POINT) as ACCU_POINT ")
-				.append("          FROM TD_TODO_SETLE Y ")
-				.append("         WHERE Y.DEL_YN = 'N' ")
-				.append("         GROUP BY Y.WORKER_SEQ ")
-				.append("       ) B ON (A.WORKER_SEQ = B.WORKER_SEQ) ")
-				.append("       LEFT OUTER JOIN ( ")
-				.append("        SELECT Z.USER_SEQ, SUM(Z.USE_POINT) as USE_POINT ")
-				.append("          FROM TD_POINT_USE Z ")
-				.append("         WHERE Z.DEL_YN ='N' ")
-				.append("         GROUP BY Z.USER_SEQ ")
-				.append("       ) C ON (A.WORKER_SEQ = C.USER_SEQ) ")
-				.append("       LEFT OUTER JOIN ( ")
-				.append("        SELECT V.WORKER_SEQ, SUM(V.GAIN_POINT) as POSS_POINT ")
-				.append("          FROM TD_WORK V ")
-				.append("         WHERE V.DEL_YN = 'N' ")
-				.append("           AND V.WORK_STAT_CD != 'FAIL' ")
-				.append("           AND NOT EXISTS ( ")
-				.append("           SELECT 'X' FROM TD_TODO_SETLE_DTL W WHERE W.DEL_YN ='N' AND V.WORK_SEQ = W.WORK_SEQ ")
-				.append("          ) ")
-				.append("         GROUP BY V.WORKER_SEQ ")
-				.append("       ) D ON (A.WORKER_SEQ = D.WORKER_SEQ)");
-		
-		List<TodoSummaryDto> todoSummaryList = JdbcTemplate.query(
-				sb.toString()
-				,new RowMapper<TodoSummaryDto>() {
-					@Override
-					public TodoSummaryDto mapRow(ResultSet rs, int rowNum) throws SQLException{
-						TodoSummaryDto todoSummaryDto = new TodoSummaryDto(
-							 LocalDate.now()
-							,rs.getLong("WORKER_SEQ")
-							,rs.getString("USER_NM")
-							,rs.getInt("POSS_POINT")
-							,rs.getInt("AVAIL_POINT")
-							,rs.getInt("USE_POINT")
-							,rs.getInt("ACCU_POINT")					
-						);						
-						return todoSummaryDto;
-					}
-				}			
-			);		
-		
-		return todoSummaryList;
-	}
 
 	/**
 	 * 작업 내역 저장

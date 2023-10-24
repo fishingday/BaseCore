@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdWork;
+import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 import kr.co.basedevice.corebase.security.service.AccountContext;
@@ -24,11 +25,11 @@ import kr.co.basedevice.corebase.service.todo.SettleService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/todo/checker/todo_settle")
+@RequestMapping("/todo/checker/settle")
 @RequiredArgsConstructor
 public class TodoSettleRestController {
 	
-	final private SettleService settleService;	
+	final private SettleService settleService;
 	
 	/**
 	 * 정산 목록 with 사용자별 미정산 현황 
@@ -42,6 +43,9 @@ public class TodoSettleRestController {
 		if(page == null) {
 			page = PageRequest.of(0, 10);
 		}
+		
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		searchSettle.setAcountSeq(cmUser.getUserSeq());
 		
 		Page<SettleInfoDto> pageSettleInfo = settleService.pageSettleInfo(searchSettle, page);
 		
@@ -57,8 +61,13 @@ public class TodoSettleRestController {
 	 */
 	@GetMapping("/get_settle_info.json")
 	public ResponseEntity<Map<String,Object>> getSettleInfo(Long setleSeq){
-
-		SettleInfoDto settleInfoDto = settleService.getSettleInfo(setleSeq);
+				  
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		GetSettelDto getSettelDto = new GetSettelDto();
+		getSettelDto.setSetleSeq(setleSeq);
+		getSettelDto.setAcountSeq(cmUser.getUserSeq());
+		
+		SettleInfoDto settleInfoDto = settleService.getSettleInfo(getSettelDto);
 		
 		Map<String,Object> retMap = new HashMap<>();
 		retMap.put("settleInfo", settleInfoDto);
