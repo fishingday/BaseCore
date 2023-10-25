@@ -22,7 +22,9 @@ import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdTodo;
 import kr.co.basedevice.corebase.domain.td.QTdWork;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
+import kr.co.basedevice.corebase.dto.todo.WorkDetailInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
+import kr.co.basedevice.corebase.search.todo.SearchWork;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -120,6 +122,98 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		}
 		
 		QueryResults<TodayPlanDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
+
+		return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
+	}
+
+
+	@Override
+	public Page<WorkDetailInfoDto> pageWorkHistory(SearchWork searchWork, Pageable page) {
+		QTdTodo tdTodo = QTdTodo.tdTodo;
+		QTdWork tdWork = QTdWork.tdWork;
+		
+		JPQLQuery<WorkDetailInfoDto> query = jpaQueryFactory.select(
+				Projections.bean(WorkDetailInfoDto.class,
+					 tdTodo.todoSeq
+					,tdTodo.todoTitl
+					,tdTodo.todoCont
+					,tdTodo.todoDesc
+					,tdTodo.completCondiVal
+					,tdTodo.todoPoint
+					,tdTodo.todoTypCd
+					,tdTodo.dateLimitCnt
+					,tdTodo.todoCreCd
+					,tdTodo.quizUseYn
+					,tdTodo.quizTypCd
+					
+					,tdWork.workSeq
+					,tdWork.workerSeq
+					,tdWork.workTitl
+					,tdWork.workCont
+					,tdWork.workDt
+					,tdWork.workStatCd
+					,tdWork.confmDt
+					,tdWork.gainPoint
+					,tdWork.checkerSeq
+					,tdWork.setleYn
+				)
+			)
+			.from(tdTodo)
+			.innerJoin(tdWork).on(tdTodo.todoSeq.eq(tdWork.todoSeq));
+
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(tdTodo.delYn.eq(Yn.N));
+		builder.and(tdWork.delYn.eq(Yn.N));
+		builder.and(tdWork.workerSeq.eq(searchWork.getWorkerSeq()));
+		
+		if(!ObjectUtils.isEmpty(searchWork.getTodoTitl())) {
+			builder.and(tdTodo.todoTitl.contains(searchWork.getTodoTitl()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getTodoTypCd())) {
+			builder.and(tdTodo.todoTypCd.eq(searchWork.getTodoTypCd()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getTodoCreCd())) {
+			builder.and(tdTodo.todoCreCd.eq(searchWork.getTodoCreCd()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkTitl())) {
+			builder.and(tdWork.workTitl.contains(searchWork.getWorkTitl()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkCont())) {
+			builder.and(tdWork.workCont.contains(searchWork.getWorkCont()));
+		}
+
+		if(!ObjectUtils.isEmpty(searchWork.getWorkStatCd())) {
+			builder.and(tdWork.workStatCd.eq(searchWork.getWorkStatCd()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkBeginDt())) {			
+			if(ObjectUtils.isEmpty(searchWork.getWorkEndDt())) {
+				searchWork.setWorkEndDt(searchWork.getWorkBeginDt());			}
+			builder.and(tdWork.workDt.between(LocalDateTime.of(searchWork.getWorkBeginDt(), LocalTime.of(0, 0, 0))
+					, LocalDateTime.of(searchWork.getWorkBeginDt(), LocalTime.of(23, 59, 59))));
+		}
+		
+		query.where(builder);
+		
+		if(!ObjectUtils.isEmpty(searchWork.getOrder()) && !ObjectUtils.isEmpty(searchWork.getSort())) {
+	    	Order direction = Order.valueOf(searchWork.getOrder().toUpperCase());
+	    	
+	        if(searchWork.getSort().equals("workTitl")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdWork.workTitl));
+	        }else if(searchWork.getSort().equals("todoTitl")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdTodo.todoTitl));
+	        }else{
+	        	query.orderBy(tdWork.workSeq.desc());
+	        }
+		}else {
+        	query.orderBy(tdWork.workSeq.desc());
+		}
+		
+		QueryResults<WorkDetailInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
 
 		return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
 	}
