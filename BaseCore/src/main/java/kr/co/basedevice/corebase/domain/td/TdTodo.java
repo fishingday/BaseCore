@@ -45,7 +45,10 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_TODO")
 	@Column(name = "TODO_SEQ", nullable = false)
 	private Long todoSeq;
-		
+
+	@Column(name = "UP_TODO_SEQ")
+	private Long upTodoSeq;		
+	
 	@Column(name = "TODO_TITL", length = 200, nullable = false)
 	private String todoTitl;
 	
@@ -77,6 +80,9 @@ public class TdTodo extends BaseEntity implements Serializable{
 	
 	@Column(name = "TODO_CRE_DTL_VAL", length = 128)
 	private String todoCreDtlVal;
+	
+	@Column(name = "APLYTO_ORD")
+	private Integer aplytoOrd;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul") //날짜 포멧 바꾸기
