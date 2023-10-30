@@ -45,5 +45,5 @@ public class WorkerTodoMgtRestController {
 	// 미할당/할당 작업 목록 조회 with 일/주/월별 예상 포인트
 	
 	
-	// 할당/미할당 할일 저정
+	// 할당/미할당 할일 저장
 }

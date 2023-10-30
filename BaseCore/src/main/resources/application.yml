@@ -73,7 +73,7 @@ spring:
   batch:
     jdbc:
       initialize-schema: never
-      table-prefix: BATCH_
+      table-prefix: BATCH_      
     job:
       enabled: false
       

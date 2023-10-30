@@ -10,6 +10,7 @@ import org.quartz.JobKey;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -44,6 +45,9 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
     @Autowired
     private BeanUtil beanUtil;
     
+    @Autowired
+    private JobExplorer jobExplorer;
+    
     @Autowired 
     private JobLauncher jobLauncher;
 
@@ -65,13 +69,13 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
 			
 	        //전달받은 JodDataMap에서 Job이름을 꺼내오고 그 Job이름으로 context에서 bean을 가져온다
 	        Job job = (Job) beanUtil.getBean(TodoCreateWorkJob.JOB_NAME);
-	        JobParameters jobParameters = new JobParametersBuilder()
+	        JobParameters jobParameters = new JobParametersBuilder(this.jobExplorer)
 	        		.addString("QuartzJobGroup", jobKey.getGroup())
 	        		.addString("QuartzJobName", jobKey.getName())
 	                .addString(TodoCreateWorkJob.CREATE_DATE_KEY, createDate.format(formatter))
 	                .toJobParameters();
 
-	        jobLauncher.run(job, jobParameters);
+	        this.jobLauncher.run(job, jobParameters);
 	        log.info("Quartz Job Run - {} :: JobKey={} - ThreadName : {} - JobParameters : {} ", 
 	        		this.getClass().getName(), jobKey, currThread.getName(), jobParameters.toString());
 		}
