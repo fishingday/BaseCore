@@ -28,11 +28,14 @@ import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodayWorkDto;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
+import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerAgreeTodoDto;
 import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkerMapRepository;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
+import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -110,7 +113,7 @@ public class TodoService {
 			for(TodoUserDto TodoUserDto : todoDetailDto.getWorkerList()){
 				TdWorkerMap tdWorkerMap = new TdWorkerMap();
 				tdWorkerMap.setWorkerSeq(TodoUserDto.getUserSeq());
-				tdWorkerMap.setWorkerAgerYn(Yn.N);
+				tdWorkerMap.setWorkerAgreYn(Yn.N);
 				tdWorkerMap.setDelYn(Yn.N);
 				listTdWorkerMap.add(tdWorkerMap);
 			}
@@ -299,5 +302,64 @@ public class TodoService {
 	 */
 	public int closeWorkItems(LocalDateTime closeDateTime) {
 		return tdWorkRepository.updateFailWorks(closeDateTime);
+	}
+
+
+	/**
+	 * 작업자 할일 목록 및 예상 적립 금액
+	 * 
+	 * @param searchTodoWorker
+	 * @param page
+	 * @return
+	 */
+	public Page<TodoWorkerInfoDto> pageTodoWorkerInfo(SearchTodoWorker searchTodoWorker, Pageable page) {		
+		
+		Page<TodoWorkerInfoDto> pageTodoWorkerInfo = tdTodoRepository.pageTodoWorkerInfo(searchTodoWorker, page);
+		
+		return pageTodoWorkerInfo;
+	}
+
+	/**
+	 * 동의한 할일 목록
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public List<TdTodo> findByAgreeTodo(Long userSeq) {
+		List<TdTodo> listTdTodo = tdTodoRepository.findByAgreeTodo(userSeq);
+				
+		return listTdTodo;
+	}
+
+	/**
+	 * 동의할지 않은 할일 목록
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public List<TdTodo> findByUnAgreeTodo(Long userSeq) {
+		List<TdTodo> listTdTodo = tdTodoRepository.findByUnAgreeTodo(userSeq);
+		
+		return listTdTodo;
+	}
+
+	/**
+	 *  할일에 대한 동의/미동의 저장
+	 * 
+	 * @param workerAgreeTodo
+	 * @return
+	 */
+	public boolean saveWorkerAgreeTodo(WorkerAgreeTodoDto workerAgreeTodo) {
+		
+		List<TdWorkerMap> listTdWorkerMap = tdWorkerMapRepository.findByWorkerSeqAndTodoSeqInAndDelYn(workerAgreeTodo.getWorkerSeq(), workerAgreeTodo.getListTodoSeq(), Yn.N);
+		
+		if(listTdWorkerMap != null && !listTdWorkerMap.isEmpty()) {
+			for(TdWorkerMap tdWorkerMap : listTdWorkerMap) {
+				tdWorkerMap.setWorkerAgreYn(workerAgreeTodo.getAgreeYn());
+			}
+			tdWorkerMapRepository.saveAll(listTdWorkerMap);
+		}
+		
+		return true;
 	}
 }

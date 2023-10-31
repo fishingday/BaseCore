@@ -24,7 +24,9 @@ import kr.co.basedevice.corebase.domain.td.QTdTodo;
 import kr.co.basedevice.corebase.domain.td.QTdWorkerMap;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
+import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
+import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -150,7 +152,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 					,cmUser.loginId
 					,cmUser.userNm
 					,cmUser.userTelNo
-					,tdWorkerMap.workerAgerYn
+					,tdWorkerMap.workerAgreYn
 				)
 			)
 			.from(cmUser).innerJoin(tdWorkerMap).on(cmUser.userSeq.eq(tdWorkerMap.workerSeq))
@@ -158,6 +160,68 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 				
 		return query.fetch();
 	}
-	
+
+
+	/**
+	 * 할일 작업자
+	 * 
+	 * @param searchTodoWorker
+	 * @param page
+	 * @return
+	 */
+	@Override
+	public Page<TodoWorkerInfoDto> pageTodoWorkerInfo(SearchTodoWorker searchTodoWorker, Pageable page) {
+		
+		QTdTodo tdTodo = QTdTodo.tdTodo;
+		QTdWorkerMap tdWorkerMap = QTdWorkerMap.tdWorkerMap;
+		
+		JPQLQuery<TodoWorkerInfoDto> query = jpaQueryFactory.select(
+				Projections.bean(TodoWorkerInfoDto.class,
+					 tdTodo.todoSeq
+					,tdTodo.todoTitl
+					,tdTodo.todoCont
+					,tdTodo.todoDesc
+					,tdTodo.completCondiVal
+					,tdTodo.todoPoint
+					,tdTodo.todoTypCd
+					,tdTodo.todoDtlVal
+					,tdTodo.dateLimitCnt
+					,tdTodo.todoCreCd
+					,tdTodo.todoCreDtlVal
+					,tdTodo.postBeginDate
+					,tdTodo.postEndDate
+				)
+			)
+			.from(tdTodo).innerJoin(tdWorkerMap).on(tdTodo.todoSeq.eq(tdWorkerMap.todoSeq));
+			BooleanBuilder builder = new BooleanBuilder();
+			builder.and(tdTodo.delYn.eq(Yn.N));
+			builder.and(tdWorkerMap.delYn.eq(Yn.N));
+			builder.and(tdWorkerMap.workerSeq.eq(searchTodoWorker.getWorkerSeq()));			
+			builder.and(tdTodo.postBeginDate.goe(searchTodoWorker.getTargetDay())); // <=
+			builder.and(tdTodo.postEndDate.loe(searchTodoWorker.getTargetDay()));   // >= 
+			
+			if(!ObjectUtils.isEmpty(searchTodoWorker.getWorkerAgerYn())) {
+				builder.and(tdWorkerMap.workerAgreYn.eq(searchTodoWorker.getWorkerAgerYn()));
+			}
+			
+			query.where(builder);
+			if(!ObjectUtils.isEmpty(searchTodoWorker.getOrder()) && !ObjectUtils.isEmpty(searchTodoWorker.getSort())) {
+		    	Order direction = Order.valueOf(searchTodoWorker.getOrder().toUpperCase());
+		    	
+		        if(searchTodoWorker.getSort().equals("todoTitl")) {
+			        query.orderBy(new OrderSpecifier<>(direction, tdTodo.todoSeq));
+		        }else if( searchTodoWorker.getSort().equals("todoPoint")) {
+			       	query.orderBy(new OrderSpecifier<>(direction, tdTodo.todoPoint));
+		        }else{
+		        	query.orderBy(tdTodo.todoSeq.asc());
+		        }
+			}else {
+	        	query.orderBy(tdTodo.todoSeq.asc());
+			}
+			
+			QueryResults<TodoWorkerInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
+
+			return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
+	}
 	
 }

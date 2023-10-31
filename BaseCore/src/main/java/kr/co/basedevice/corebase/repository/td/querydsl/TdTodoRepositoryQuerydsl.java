@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
+import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
+import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
 
 public interface TdTodoRepositoryQuerydsl {
 
@@ -35,4 +37,14 @@ public interface TdTodoRepositoryQuerydsl {
 	 * @return
 	 */
 	List<TodoUserDto> getWorkerList(Long todoSeq);
+	
+
+	/**
+	 * 할일 작업자
+	 * 
+	 * @param searchTodoWorker
+	 * @param page
+	 * @return
+	 */
+	Page<TodoWorkerInfoDto> pageTodoWorkerInfo(SearchTodoWorker searchTodoWorker, Pageable page);
 }
