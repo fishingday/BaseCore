@@ -25,5 +25,5 @@ public interface TdSetleRepositoryQueryDsl {
 	 * @return
 	 */
 	SettleInfoDto getSettleInfo(GetSettelDto getSettelDto);
-
+	
 }

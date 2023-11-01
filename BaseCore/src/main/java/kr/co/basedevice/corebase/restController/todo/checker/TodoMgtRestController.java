@@ -15,9 +15,9 @@ import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/todo/checker/todo_mgt")
+@RequestMapping("/checker/todo_mgt")
 @RequiredArgsConstructor
-public class CheckerTodoMgtRestController {
+public class TodoMgtRestController {
 	
 	final private TodoService todoService;
 	

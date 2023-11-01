@@ -132,8 +132,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         
-        
-
         customConfigurer(http);
     }
     

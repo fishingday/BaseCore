@@ -29,15 +29,15 @@ import kr.co.basedevice.corebase.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 할일 할당 및 할일 목록 조회
+ * 할일 동의 및 할일 목록 조회
  * 
  * @author fishingday
  *
  */
 @RestController
-@RequestMapping("/todo/worker/todo_mgt")
+@RequestMapping("/worker/work_mgt")
 @RequiredArgsConstructor
-public class WorkerTodoMgtRestController {
+public class WorkerWorkMgtRestController {
 	
 	final private TodoService todoService;
 
@@ -49,8 +49,8 @@ public class WorkerTodoMgtRestController {
 	 * @param page
 	 * @return
 	 */
-	@GetMapping("/page_settle_info.json")
-	public ResponseEntity<Map<String, Object>> pageTodoWorkerInfo(SearchTodoWorker searchTodoWorker, Pageable page){
+	@GetMapping("/page_work_info.json")
+	public ResponseEntity<Map<String, Object>> pageWorkInfo(SearchTodoWorker searchTodoWorker, Pageable page){
 		if(page == null) {
 			page = PageRequest.of(0, 10);
 		}

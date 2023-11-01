@@ -22,7 +22,7 @@ import kr.co.basedevice.corebase.service.todo.QuizService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/todo/checker/quiz_mgt")
+@RequestMapping("/checker/quiz_mgt")
 @RequiredArgsConstructor
 public class TodoQuizMgtRestController {
 	

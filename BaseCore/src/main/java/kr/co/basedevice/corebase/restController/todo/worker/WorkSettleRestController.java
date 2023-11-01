@@ -32,9 +32,9 @@ import lombok.RequiredArgsConstructor;
  *
  */
 @RestController
-@RequestMapping("/todo/worker/settle")
+@RequestMapping("/worker/settle")
 @RequiredArgsConstructor
-public class PointSettleRestController {
+public class WorkSettleRestController {
 	
 	final private SettleService settleService;
 

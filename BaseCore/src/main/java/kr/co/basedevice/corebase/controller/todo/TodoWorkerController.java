@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/todo/worker")
+@RequestMapping("/worker")
 public class TodoWorkerController {
 	
 	/**
@@ -13,19 +13,19 @@ public class TodoWorkerController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value={"/today_todo", "/today_todo/init.html"})
+	@GetMapping(value={"/today_work", "/today_work/init.html"})
 	public String viewTodayPlan() {
-		return "/todo/worker/today_todo.html";
+		return "/todo/worker/today_work.html";
 	}
 	
 	/**
-	 * 할일 관리(사용자)
+	 * 할일 동의 및 관리(사용자)
 	 * 
 	 * @return
 	 */
-	@GetMapping(value={"/todo_mgt", "/todo_mgt/init.html"})
+	@GetMapping(value={"/work_mgt", "/work_mgt/init.html"})
 	public String viewTodoSettle() {
-		return "/todo/worker/todo_mgt.html";
+		return "/todo/worker/work_mgt.html";
 	}
 		
 	/** 
@@ -33,9 +33,9 @@ public class TodoWorkerController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value={"/todo_history", "/todo_history/init.html"})
+	@GetMapping(value={"/history", "/history/init.html"})
 	public String viewTodoMgt() {
-		return "/todo/worker/todo_history.html";
+		return "/todo/worker/work_history.html";
 	}
 		
 	/** 
@@ -43,8 +43,8 @@ public class TodoWorkerController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value={"/point_settle", "/point_settle/init.html"})
+	@GetMapping(value={"/settle", "/settle/init.html"})
 	public String viewPointSettleMgt() {
-		return "/todo/worker/point_settle.html";
+		return "/todo/worker/settle.html";
 	}
 }

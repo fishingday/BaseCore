@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
  *
  */
 @RestController
-@RequestMapping("/todo/checker/today_plan")
+@RequestMapping("/checker/today_plan")
 @RequiredArgsConstructor
 public class TodayPlanRestController {
 	

@@ -68,7 +68,7 @@ public class TodoCloseWorkJob extends QuartzJobBean implements InterruptableJob 
 			}
 			
 	        //전달받은 JodDataMap에서 Job이름을 꺼내오고 그 Job이름으로 context에서 bean을 가져온다
-	        Job job = (Job) beanUtil.getBean(TodoCreateWorkJob.JOB_NAME);
+	        Job job = (Job) beanUtil.getBean(TodoCloseWorkJob.JOB_NAME);
 	        JobParameters jobParameters = new JobParametersBuilder(this.jobExplorer)
 	        		.addString("QuartzJobGroup", jobKey.getGroup())
 	        		.addString("QuartzJobName", jobKey.getName())

@@ -9,6 +9,12 @@ import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 대시보드
+ * - 역할에 따라 대시보드를 
+ * 
+ * 
+ */
 @RequiredArgsConstructor
 @Controller
 public class DashBoardController {
@@ -20,7 +26,7 @@ public class DashBoardController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		if(authentication != null && !"anonymousUser".equals(authentication.getPrincipal())) {			
-			CmRole cmRole = ((AccountContext) authentication.getPrincipal()).getCurrRole();			
+			CmRole cmRole = ((AccountContext) authentication.getPrincipal()).getCurrRole();
 			rolePage =  cmRole.getDefPage();			
 		}else{
 			rolePage = "/dashboard/default";

@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
  *
  */
 @RestController
-@RequestMapping("/todo/worker/work_history")
+@RequestMapping("/worker/history")
 @RequiredArgsConstructor
 public class WorkHistoryRestController {
 	

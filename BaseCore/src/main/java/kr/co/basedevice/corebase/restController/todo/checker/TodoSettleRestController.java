@@ -19,13 +19,14 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/todo/checker/settle")
+@RequestMapping("/checker/settle")
 @RequiredArgsConstructor
 public class TodoSettleRestController {
 	
@@ -96,5 +97,22 @@ public class TodoSettleRestController {
 		boolean isSave = settleService.saveTdSetle(settleInfoDto);
 		
 		return ResponseEntity.ok(isSave);
+	}
+	
+	/**
+	 * 작업자별 정산 현황
+	 * - 대시보드용
+	 * 
+	 * @param searchSettle
+	 * @param page
+	 * @return
+	 */
+	@GetMapping("/list_worker_settle_info.json")
+	public ResponseEntity<List<WorkerSettleInfoDto>> listWorkerSettleInfo(){
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		List<WorkerSettleInfoDto> listWorkerSettleInfoDto = settleService.listWorkerSettleInfo(cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(listWorkerSettleInfoDto);
 	}
 }

@@ -24,10 +24,14 @@ import kr.co.basedevice.corebase.service.todo.SettleService;
 import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 오늘의 할일
+ * 
+ */
 @RestController
-@RequestMapping("/todo/worker/today_todo")
+@RequestMapping("/worker/today_work")
 @RequiredArgsConstructor
-public class TodayTodoRestController {
+public class TodayWorkRestController {
 	
 	private final TodoService todoService;
 	private final SettleService settleService;
@@ -57,7 +61,7 @@ public class TodayTodoRestController {
 		List <TodayWorkDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchTodo);
 		retMap.put("todoPlanList", todoPlanList);
 		
-		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
+		// 작업자별 요약 : 지정일의 포인트, 미지급 포인트
 		List <TodoSummaryDto> todoSummaryList = settleService.findByPointSummary4Worker(searchTodo);
 		retMap.put("todoSummaryList", todoSummaryList);
 		

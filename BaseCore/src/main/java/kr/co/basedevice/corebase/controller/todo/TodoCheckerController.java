@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/todo/checker")
+@RequestMapping("/checker")
 public class TodoCheckerController {
 
 	/**
@@ -23,7 +23,7 @@ public class TodoCheckerController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value={"/todo_settle", "/todo_settle/init.html"})
+	@GetMapping(value={"/settle", "/settle/init.html"})
 	public String viewTodoSettle() {
 		return "/todo/checker/todo_settle.html";
 	}

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdSetle;
@@ -216,5 +217,53 @@ public class SettleService {
 	public int accuPoint4Worker(Long userSeq) {
 		int accuPoint = setleRepository.accuPoint4Worker(userSeq);
 		return accuPoint;
+	}
+
+	/**
+	 * 작업자별 정산 현황
+	 * - 대시보드용
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public List<WorkerSettleInfoDto> listWorkerSettleInfo(Long checkerSeq) {
+		StringBuilder sb = new StringBuilder("SELECT Z.USER_SEQ, Z.USER_NM, X.SETTLE_AMOUNT, Y.UNSETTLE_AMOUNT ")
+				.append("  FROM CM_USER Z LEFT JOIN ")
+				.append("      (SELECT A.WORKER_SEQ, SUM(A.TOTAL_SETLE_POINT) as SETTLE_AMOUNT ")
+				.append("          FROM TD_SETLE A ")
+				.append("         WHERE A.DEL_YN = 'N' ")
+				.append("           AND A.ACOUNT_SEQ = ? ")
+				.append("         GROUP BY A.WORKER_SEQ ")
+				.append("       ) X ON (Z.USER_SEQ = X.WORKER_SEQ) LEFT JOIN ")
+				.append("       (SELECT A.WORKER_SEQ, SUM(A.GAIN_POINT) as UNSETTLE_AMOUNT ")
+				.append("          FROM TD_WORK A  ")
+				.append("         WHERE A.DEL_YN = 'N' ")
+				.append("           AND A.WORK_STAT_CD = 'DONE' ")
+				.append("           AND A.SETLE_YN = 'N' ")
+				.append("           AND A.CHECKER_SEQ = ? ")
+				.append("         GROUP BY A.WORKER_SEQ ")
+				.append("       ) Y ON (Z.USER_SEQ = Y.WORKER_SEQ)")
+				.append(" WHERE Z.DEL_YN = 'N' ")
+		        .append("   AND Z.USER_SEQ IN (SELECT K.WORKER_SEQ FROM TD_WORKER_MAP K WHERE K.DEL_YN = 'N' ) ");
+				
+		List<WorkerSettleInfoDto> listWorkerSettleInfoDto =  JdbcTemplate.query(
+				sb.toString()
+				,new RowMapper<WorkerSettleInfoDto>() {
+					@Override
+					public WorkerSettleInfoDto mapRow(ResultSet rs, int rowNum) throws SQLException{
+						WorkerSettleInfoDto workerSettleInfoDto 
+						= new WorkerSettleInfoDto(
+							 rs.getLong("USER_SEQ")
+							,rs.getString("USER_SEQ")
+							,rs.getLong("SETTLE_AMOUNT")
+							,rs.getLong("UNSETTLE_AMOUNT")
+							,LocalDateTime.now()
+						);						
+						return workerSettleInfoDto;
+					}
+				}
+				,checkerSeq ,checkerSeq
+			);		
+		return listWorkerSettleInfoDto;
 	}
 }
