@@ -14,6 +14,13 @@
 	            <h1>확인자님 환영합니다.</h1>
 	            <div class="row">
                 <h4 class="text-primary">작업자별 정산 포인트</h4>
+                <table
+                  id="table-settle"
+                  data-search="false"
+                  data-click-to-select="true"
+                  data-id-field="workerSeq"
+                  th:data-url="@{/checker/settle/list_worker_settle_info.json}">
+                </table>
               </div>
 	            <div class="row">
                 <h4 class="text-primary">작업자별 오늘의 작업!</h4>
@@ -36,27 +43,38 @@
           },
           page: {
             init: function(){
-              fnObj.action.workerSettleInfo();
+              fnObj.grid.init_Settle();
             }
           },
           action: {
-            workerSettleInfo : function(){
-              $.ajax({
-                url: "[[@{/checker/settle/list_worker_settle_info.json}]]",
-                type: "GET",
-                async: true,
-                dataType : "json"
-              }).done(function(data, textStatus, xhr){
-                if(textStatus === "success"){
-                   console.log(data);
+            
+          },
+          grid: {
+            init_Settle: function(){
+              $('#table-settle').bootstrapTable('destroy').bootstrapTable({
+                height: 'auto',
+                locale: 'ko-KR',
+                classes: 'table table-bordered table-hover',
+                headerStyle : function(){
+                  return {classes: 'table-primary'};
+                },
+                columns: [
+                  {field: 'workerSeq',     title: '작업자순번',  visible: false},
+                  {field: 'workerNm',      title: '작업자',     align: 'center',valign: 'middle', sortable: true},
+                  {field: 'settleAmount',  title: '미정산포인트', align: 'right',valign: 'middle', sortable: true,
+                    formatter: function(value, row, index) {
+                      return value.toLocaleString();
+                    }   
+                  },
+                  {field: 'unSettleAmount',title: '누적포인트',   align: 'right',valign: 'middle', sortable: true,
+                    formatter: function(value, row, index) {
+                      return value.toLocaleString();
+                    }    
+                  }
+                ],
+                responseHandler: function (data) { // 데이터 처리
+                  return data;
                 }
-              }).fail(function(xhr, textStatus, errorThrown) {
-                Swal.fire({
-                  title: xhr.responseJSON.httpStatus,
-                  text: xhr.responseJSON.message,
-                  icon: 'error',
-                  confirmButtonText: '닫기'
-                });
               });
             }
           }

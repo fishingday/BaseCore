@@ -244,7 +244,7 @@ public class SettleService {
 				.append("         GROUP BY A.WORKER_SEQ ")
 				.append("       ) Y ON (Z.USER_SEQ = Y.WORKER_SEQ)")
 				.append(" WHERE Z.DEL_YN = 'N' ")
-		        .append("   AND Z.USER_SEQ IN (SELECT K.WORKER_SEQ FROM TD_WORKER_MAP K WHERE K.DEL_YN = 'N' ) ");
+		        .append("   AND Z.USER_SEQ IN (SELECT K.TARGETER_SEQ FROM CM_USER_RELAT K WHERE K.DEL_YN = 'N' AND K.TARGETER_AGRE_YN = 'Y' AND K.RELATOR_SEQ = ? ) ");
 				
 		List<WorkerSettleInfoDto> listWorkerSettleInfoDto =  JdbcTemplate.query(
 				sb.toString()
@@ -254,7 +254,7 @@ public class SettleService {
 						WorkerSettleInfoDto workerSettleInfoDto 
 						= new WorkerSettleInfoDto(
 							 rs.getLong("USER_SEQ")
-							,rs.getString("USER_SEQ")
+							,rs.getString("USER_NM")
 							,rs.getLong("SETTLE_AMOUNT")
 							,rs.getLong("UNSETTLE_AMOUNT")
 							,LocalDateTime.now()
@@ -262,7 +262,7 @@ public class SettleService {
 						return workerSettleInfoDto;
 					}
 				}
-				,checkerSeq ,checkerSeq
+				,checkerSeq ,checkerSeq ,checkerSeq 
 			);		
 		return listWorkerSettleInfoDto;
 	}

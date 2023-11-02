@@ -16,7 +16,8 @@ drop table if exists cm_user_acces_log CASCADE;
 drop table if exists cm_user_alow_ip CASCADE; 
 drop table if exists cm_user_bookmark CASCADE; 
 drop table if exists cm_user_pwd CASCADE; 
-drop table if exists cm_user_role_map CASCADE; 
+drop table if exists cm_user_role_map CASCADE;
+drop table if exists cm_user_relat CASCADE;  
 
 drop table if exists td_quiz_work_use CASCADE; 
 drop table if exists td_worker_map CASCADE; 

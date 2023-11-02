@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TodoCloseWorkJob extends QuartzJobBean implements InterruptableJob {
 	final static public String JOB_NAME = "TodoCloseWorkJob";
 	final static public String CLOSE_DATE_KEY = "closeDate";
-	final static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+	final static public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 	
     private volatile boolean isJobInterrupted = false;
     private volatile Thread currThread;

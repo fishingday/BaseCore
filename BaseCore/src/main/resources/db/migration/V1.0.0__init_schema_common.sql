@@ -27,6 +27,8 @@ create table cm_user_alow_ip (user_alow_ip_seq bigint not null, cre_dt timestamp
 create table cm_user_bookmark (menu_seq bigint not null, role_seq bigint not null, user_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, book_mark_nm varchar(30) not null, del_yn varchar(1) not null, primary key (menu_seq, role_seq, user_seq));
 create table cm_user_pwd (user_pwd_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, pwd_exp_dt date, user_pwd varchar(256) not null, user_seq bigint not null, primary key (user_pwd_seq));
 create table cm_user_role_map (role_seq bigint not null, user_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, prnt_ord integer not null, primary key (role_seq, user_seq));
+create table cm_user_relat (relator_seq bigint not null, targeter_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, user_relat_cd varchar(35) not null, relat_aply_dt timestamp, targeter_agre_yn varchar(1) not null, targeter_agre_dt timestamp, primary key (relator_seq, targeter_seq));
+
 
 alter table cm_user add constraint UK_k3f18xcjet2p2id7v534udwsg unique (login_id);
 alter table cm_cd_dtl add constraint FKexu40blbaqa1ui4wj5t7fet70 foreign key (grp_cd) references cm_cd_grp;

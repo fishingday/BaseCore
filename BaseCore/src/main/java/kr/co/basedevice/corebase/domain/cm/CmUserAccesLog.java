@@ -50,7 +50,7 @@ public class CmUserAccesLog implements Serializable {
 	@Column(name = "SESS_ID", length = 50)
 	private String sessId;
 	
-	@Column(name = "ACCES_LOG_TYP_CD", length = 255)
+	@Column(name = "ACCES_LOG_TYP_CD", length = 35)
 	@Enumerated(EnumType.STRING)
 	private AccesLogTypCd accesLogTypCd;
 	
