@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 public class SearchWork {
+	
 	private Long workerSeq;
 	
 	private String todoTitl;

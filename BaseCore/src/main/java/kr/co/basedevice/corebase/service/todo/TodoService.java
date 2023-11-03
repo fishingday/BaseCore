@@ -25,7 +25,7 @@ import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
-import kr.co.basedevice.corebase.dto.todo.TodayWorkDto;
+import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
@@ -33,6 +33,7 @@ import kr.co.basedevice.corebase.dto.todo.WorkerAgreeTodoDto;
 import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkerMapRepository;
+import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
 import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
@@ -172,12 +173,12 @@ public class TodoService {
 	 * @param searchTodo
 	 * @return
 	 */
-	public List<TodayWorkDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
+	public List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
 		if(ObjectUtils.isEmpty(searchTodo.getToDay())) {
 			searchTodo.setToDay(LocalDate.now());
 		}
 		
-		List<TodayWorkDto> listTodayWorkDto = null;
+		List<PlanWorkInfoDto> listTodayWorkDto = null;
 		
 		return listTodayWorkDto;
 	}
@@ -361,5 +362,14 @@ public class TodoService {
 		}
 		
 		return true;
+	}
+
+
+	
+	public List<PlanWorkInfoDto> listPlanWorkInfo(SearchPlanWork searchPlanWork) {
+		
+		List<PlanWorkInfoDto> listTodayWorkInfoDto = tdWorkRepository.listPlanWorkInfo(searchPlanWork);
+		
+		return listTodayWorkInfoDto;
 	}
 }

@@ -1,6 +1,8 @@
 package kr.co.basedevice.corebase.restController.todo.checker;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
+import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
@@ -109,4 +113,29 @@ public class TodayPlanRestController {
 		
 		return ResponseEntity.ok(isSave);
 	}
+	
+	/**
+	 * 작업자별 할일 목록
+	 * - 대시보드용
+	 * 
+	 * @param searchSettle
+	 * @param page
+	 * @return
+	 */
+	@GetMapping("/list_today_workinfo.json")
+	public ResponseEntity<List<PlanWorkInfoDto>> listWorkerSettleInfo(){
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		SearchPlanWork searchPlanWork = new SearchPlanWork();
+		searchPlanWork.setCheckerSeq(cmUser.getUserSeq());
+		searchPlanWork.setBeginDate(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusSeconds(1L));
+		searchPlanWork.setEndDate(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.DAYS));
+		searchPlanWork.setSort("workerNm");
+		searchPlanWork.setOrder("ASC");
+		
+		List<PlanWorkInfoDto> listPlanWorkInfoDto = todoService.listPlanWorkInfo(searchPlanWork);
+		
+		return ResponseEntity.ok(listPlanWorkInfoDto);
+	}
+	
 }

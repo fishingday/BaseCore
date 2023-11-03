@@ -2,6 +2,8 @@ package kr.co.basedevice.corebase;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import kr.co.basedevice.corebase.util.DateTimeUtils;
 
@@ -38,6 +40,9 @@ public class DateTester {
 		
 		// 수요일은 몃개? 
 		System.err.println("cntWeekdayOfMonth :" + DateTimeUtils.cntWeekdayOfMonth(today, lastDate, DayOfWeek.FRIDAY));
+		
+		
+		System.err.println("truncatedTo(ChronoUnit.HOURS) : " + LocalDateTime.now().truncatedTo(ChronoUnit.DAYS));
 		
 
 	}

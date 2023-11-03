@@ -1,10 +1,14 @@
 package kr.co.basedevice.corebase.repository.td.querydsl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.WorkDetailInfoDto;
+import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
 
@@ -27,4 +31,12 @@ public interface TdWorkRepositoryQuerydsl {
 	 * @return
 	 */
 	Page<WorkDetailInfoDto> pageWorkHistory(SearchWork searchWork, Pageable page);
+	
+	/**
+	 * 작업 목록
+	 * 
+	 * @param searchPlanWork
+	 * @return
+	 */
+	List<PlanWorkInfoDto> listPlanWorkInfo(SearchPlanWork searchPlanWork);
 }

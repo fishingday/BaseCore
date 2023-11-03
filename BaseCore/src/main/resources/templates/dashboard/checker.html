@@ -23,7 +23,14 @@
                 </table>
               </div>
 	            <div class="row">
-                <h4 class="text-primary">작업자별 오늘의 작업!</h4>
+                <h4 class="text-primary">작업자별 오늘의 작업</h4>
+                <table
+                  id="table-planwork"
+                  data-search="false"
+                  data-click-to-select="true"
+                  data-id-field="workSeq"
+                  th:data-url="@{/checker/today_plan/list_today_workinfo.json}">
+                </table>
               </div>
 	        </div>
 	    </div>
@@ -44,6 +51,7 @@
           page: {
             init: function(){
               fnObj.grid.init_Settle();
+              fnObj.grid.init_PlanWork();
             }
           },
           action: {
@@ -75,6 +83,64 @@
                 responseHandler: function (data) { // 데이터 처리
                   return data;
                 }
+              });
+            },
+            init_PlanWork: function(){
+              $('#table-planwork').bootstrapTable('destroy').bootstrapTable({
+                height: 'auto',
+                locale: 'ko-KR',
+                classes: 'table table-bordered table-hover',
+                headerStyle : function(){
+                  return {classes: 'table-primary'};
+                },
+                columns: [
+                  {field: 'workSeq',       title: '작업순번',  visible: false},
+                  {field: 'workerSeq',     title: '작업자순번', visible: false},
+                  {field: 'workerNm',      title: '작업자', align: 'center',valign: 'middle', sortable: true},
+                  {field: 'workTitl',      title: '작업명', align: 'left',valign: 'middle', sortable: true},
+                  {field: 'workStatCd',    title: '작업상태',align: 'center',valign: 'middle', sortable: true},
+                  {field: 'gainPoint',     title: '포인트',  align: 'right'  ,valign: 'middle', sortable: true},
+                ],
+                responseHandler: function (data) { // 데이터 처리
+                  return data;
+                }
+              });
+              
+              // merge
+              $('#table-planwork').on('post-body.bs.table', function(data){
+                let getData = $('#table-planwork').bootstrapTable('getData');
+                
+                if(getData.length){
+                  let workerNm = null;
+                  let mergeData = [];                  
+                  let start = -1;
+                  let end = 0;
+                  for(let i = 0; i < getData.length; ){                    
+                    if(workerNm !== getData[i].workerNm){
+                      end = i - 1; // 마지막을 기록
+                      if(start >= 0){ // 0이면 처음...
+                        mergeData.push({"begin": start, "end": end});
+                      }
+                      start = i;
+                      workerNm = getData[i].workerNm;
+                    }
+                    
+                    if(i === (getData.length -1)){
+                      end = i;
+                      mergeData.push({"begin": start, "end": end});
+                    }
+                    i++;
+                  }
+                  
+                  for(let i =0; i < mergeData.length; i++){
+                    $('#table-planwork').bootstrapTable('mergeCells', {
+                      index: mergeData[i].begin,
+                      field: 'workerNm',
+                      colspan: 1,
+                      rowspan: ((mergeData[i].end + 1) - mergeData[i].begin)
+                    })
+                  }                  
+                }                
               });
             }
           }

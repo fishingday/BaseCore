@@ -2,6 +2,7 @@ package kr.co.basedevice.corebase.repository.td.querydsl;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,11 +19,14 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
+import kr.co.basedevice.corebase.domain.cm.QCmUserRelat;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdTodo;
 import kr.co.basedevice.corebase.domain.td.QTdWork;
+import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.WorkDetailInfoDto;
+import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
 import lombok.RequiredArgsConstructor;
@@ -216,6 +220,64 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		QueryResults<WorkDetailInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
 
 		return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
+	}
+
+	/**
+	 * 작업 목록
+	 * 
+	 */
+	@Override
+	public List<PlanWorkInfoDto> listPlanWorkInfo(SearchPlanWork searchPlanWork) {
+		QTdWork tdWork = QTdWork.tdWork;
+		QCmUser cmUser = QCmUser.cmUser;
+		QCmUserRelat cmUserRelat = QCmUserRelat.cmUserRelat;
+		
+		JPQLQuery<PlanWorkInfoDto> query = jpaQueryFactory.select(
+				Projections.bean(PlanWorkInfoDto.class
+					,cmUser.loginId
+					,cmUser.userNm.as("workerNm")
+					,tdWork.workSeq
+					,tdWork.workerSeq
+					,tdWork.workTitl
+					,tdWork.workCont
+					,tdWork.workDt
+					,tdWork.workStatCd
+					,tdWork.workPossBeginDt
+					,tdWork.workPossEndDt
+					,tdWork.confmDt
+					,tdWork.gainPoint
+					,tdWork.setleYn
+				)
+			)
+			.from(tdWork)
+			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq))
+			.innerJoin(cmUserRelat).on(tdWork.workerSeq.eq(cmUserRelat.targeterSeq));
+		
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(tdWork.delYn.eq(Yn.N));
+		builder.and(cmUser.delYn.eq(Yn.N));
+		builder.and(cmUserRelat.delYn.eq(Yn.N));
+		builder.and(tdWork.workPossBeginDt.gt(searchPlanWork.getBeginDate()));
+		builder.and(tdWork.workPossBeginDt.lt(searchPlanWork.getEndDate()));
+		builder.and(cmUserRelat.relatorSeq.eq(searchPlanWork.getCheckerSeq()));
+		
+		query.where(builder);
+		
+		if(!ObjectUtils.isEmpty(searchPlanWork.getOrder()) && !ObjectUtils.isEmpty(searchPlanWork.getSort())) {
+	    	Order direction = Order.valueOf(searchPlanWork.getOrder().toUpperCase());
+	    	
+	        if(searchPlanWork.getSort().equals("workerNm")) {
+		        query.orderBy(new OrderSpecifier<>(direction, cmUser.userNm));
+	        }else if(searchPlanWork.getSort().equals("todoTitl")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdWork.workerSeq));
+	        }else{
+	        	query.orderBy(tdWork.workerSeq.desc());
+	        }
+		}else {
+        	query.orderBy(tdWork.workerSeq.desc());
+		}
+		
+		return query.fetch();
 	}
 
 }
