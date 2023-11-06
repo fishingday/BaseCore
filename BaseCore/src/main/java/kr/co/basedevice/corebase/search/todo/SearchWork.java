@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.search.todo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoTypCd;
@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class SearchWork {
 	
+	private Long checkerSeq;
 	private Long workerSeq;
 	
 	private String todoTitl;
@@ -20,8 +21,8 @@ public class SearchWork {
 	private String workCont;
 	private WorkStatCd workStatCd;
 
-	private LocalDate workBeginDt;
-	private LocalDate workEndDt;
+	private LocalDateTime workBeginDt;
+	private LocalDateTime workEndDt;
 	
 	private String order;
 	private String sort;

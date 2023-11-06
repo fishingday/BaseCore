@@ -39,4 +39,13 @@ public interface TdWorkRepositoryQuerydsl {
 	 * @return
 	 */
 	List<PlanWorkInfoDto> listPlanWorkInfo(SearchPlanWork searchPlanWork);
+	
+
+	/**
+	 * 작업자별 할일/작업 목록
+	 * 
+	 * @param searchWork
+	 * @return
+	 */
+	List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchWork searchWork);
 }

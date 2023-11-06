@@ -12,9 +12,20 @@ public class WorkerSettleInfoDto {
 	
 	private String workerNm;
 	
-	private Long settleAmount;
+	/**
+	 * 누적 포인트
+	 */
+	private Long settlePoints;
 	
-	private Long unSettleAmount;
+	/**
+	 * 사용 포인트
+	 */
+	private Long usePoints;
+	
+	/**
+	 * 미 적립 포인트
+	 */
+	private Long unSettlePoints; 
 	
 	private LocalDateTime currentDt;
 }

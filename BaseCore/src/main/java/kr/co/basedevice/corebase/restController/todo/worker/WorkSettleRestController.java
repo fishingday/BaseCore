@@ -19,7 +19,7 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
-import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.dto.todo.PointSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
@@ -91,7 +91,7 @@ public class WorkSettleRestController {
 	
 	// 보유 포인트 현황
 	@GetMapping("/get_have_point.json")
-	public ResponseEntity<TodoSummaryDto> getHavePoint(){
+	public ResponseEntity<PointSummaryDto> getHavePoint(){
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
 		LocalDate toDay = LocalDate.now();
@@ -101,7 +101,7 @@ public class WorkSettleRestController {
 		int accuPoint = settleService.accuPoint4Worker(cmUser.getUserSeq()); // 누적 포인트
 		
 		int availPoint =  accuPoint - usePoint; // 가용 포인트
-		TodoSummaryDto todoSummaryDto = new TodoSummaryDto(
+		PointSummaryDto todoSummaryDto = new PointSummaryDto(
 			toDay, cmUser.getUserSeq(), cmUser.getUserNm(),
 			possPoint,
 			availPoint,

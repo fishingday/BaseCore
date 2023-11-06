@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class TodoSummaryDto {
+public class PointSummaryDto {
 	
 	private LocalDate toDay;
 	

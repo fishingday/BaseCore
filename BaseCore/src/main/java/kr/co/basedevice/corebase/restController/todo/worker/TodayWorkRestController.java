@@ -1,6 +1,8 @@
 package kr.co.basedevice.corebase.restController.todo.worker;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +19,10 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
-import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.dto.todo.PointSummaryDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
+import kr.co.basedevice.corebase.search.todo.SearchWork;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
 import kr.co.basedevice.corebase.service.todo.TodoService;
@@ -35,38 +39,46 @@ public class TodayWorkRestController {
 	
 	private final TodoService todoService;
 	private final SettleService settleService;
-	
+
 	/** 
 	 * 할일의 오늘 수행 목록
 	 * 
 	 * @param SearchGrpCd 
 	 * @return
 	 */
-	@GetMapping("/get_today_todo_list.json")
-	public ResponseEntity<Map<String,Object>> findByTodoPlanList(SearchTodo searchTodo){
+	@GetMapping("/list_today_works.json")
+	public ResponseEntity<List<PlanWorkInfoDto>> findByWorkPlanList(SearchWork searchWork){
 		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		searchTodo.setWorkerSeq(worker.getUserSeq());
 		
-		if(ObjectUtils.isEmpty(searchTodo.getToDay())) {
-			searchTodo.setToDay(LocalDate.now());
-		}
+		searchWork.setWorkerSeq(worker.getUserSeq());
+		searchWork.setWorkBeginDt(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusSeconds(1L));
+		searchWork.setWorkEndDt(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.DAYS));		
+		searchWork.setSort("workDt");
+		searchWork.setOrder("ASC");
 		
-
-		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		searchTodo.setCheckerSeq(checker.getUserSeq());
-		
-		
-		Map<String,Object> retMap = new HashMap<>();
 		// 해당일에 할일 목록
-		List <PlanWorkInfoDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchTodo);
-		retMap.put("todoPlanList", todoPlanList);
-		
-		// 작업자별 요약 : 지정일의 포인트, 미지급 포인트
-		List <TodoSummaryDto> todoSummaryList = settleService.findByPointSummary4Worker(searchTodo);
-		retMap.put("todoSummaryList", todoSummaryList);
-		
-		return ResponseEntity.ok(retMap);
+		List <PlanWorkInfoDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchWork);
+				
+		return ResponseEntity.ok(todoPlanList);
 	}
+	
+	
+	/** 
+	 * 작업자별 포인트 목록
+	 * 
+	 * @param SearchGrpCd 
+	 * @return
+	 */
+	@GetMapping("/point_summary.json")
+	public ResponseEntity<List<WorkerSettleInfoDto>> findByTodoPlanList(SearchWork searchWork){
+		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+
+		// 작업자별 요약 : 지정일의 포인트, 미지급 포인트
+		List<WorkerSettleInfoDto> listWorkerSettleInfo = settleService.getWorkerSettleInfo(worker.getUserSeq());
+		
+		return ResponseEntity.ok(listWorkerSettleInfo);
+	}
+
 	
 	
 	/**

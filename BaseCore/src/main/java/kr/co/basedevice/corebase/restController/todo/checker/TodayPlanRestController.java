@@ -23,9 +23,10 @@ import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
-import kr.co.basedevice.corebase.dto.todo.TodoSummaryDto;
+import kr.co.basedevice.corebase.dto.todo.PointSummaryDto;
 import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
+import kr.co.basedevice.corebase.search.todo.SearchWork;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
 import kr.co.basedevice.corebase.service.todo.TodoService;
@@ -52,26 +53,24 @@ public class TodayPlanRestController {
 	 * @return
 	 */
 	@GetMapping("/page_today_plan_list.json")
-	public ResponseEntity<Map<String,Object>> findByTodayPlanList(SearchTodo searchTodo, Pageable page){
+	public ResponseEntity<Map<String,Object>> findByTodayPlanList(SearchWork searchWork, Pageable page){
 		if(page == null) {
 			page = PageRequest.of(0, 10);
 		}
 		
 		CmUser checker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		searchTodo.setCheckerSeq(checker.getUserSeq());
-		
-		if(ObjectUtils.isEmpty(searchTodo.getToDay())) {
-			searchTodo.setToDay(LocalDate.now());
-		}
+		searchWork.setCheckerSeq(checker.getUserSeq());		
+		searchWork.setWorkBeginDt(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusSeconds(1L));
+		searchWork.setWorkEndDt(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.DAYS));	
 		
 		Map<String,Object> retMap = new HashMap<>();
 		// 해당일에 할일 목록
-		 Page<TodayPlanDto> pageTodayPlan = todoService.pageTodayPlan(searchTodo, page);
-		retMap.put("pageTodayPlan", pageTodayPlan);
+		//Page<TodayPlanDto> pageTodayPlan = todoService.pageTodayPlan(searchWork, page);
+		//retMap.put("pageTodayPlan", pageTodayPlan);
 		
 		// Actor별 요약 : 지정일의 포인트, 미지급 포인트
-		List<TodoSummaryDto> todoSummaryList = settleService.findByPointSummary4Worker(searchTodo);
-		retMap.put("todoSummaryList", todoSummaryList);
+		//List<PointSummaryDto> todoSummaryList = settleService.findByPointSummary4Worker(searchWork);
+		//retMap.put("todoSummaryList", todoSummaryList);
 		
 		return ResponseEntity.ok(retMap);
 	}

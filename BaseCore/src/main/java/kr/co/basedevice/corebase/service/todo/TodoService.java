@@ -37,6 +37,7 @@ import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
 import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
+import kr.co.basedevice.corebase.search.todo.SearchWork;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -173,12 +174,9 @@ public class TodoService {
 	 * @param searchTodo
 	 * @return
 	 */
-	public List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchTodo searchTodo) {
-		if(ObjectUtils.isEmpty(searchTodo.getToDay())) {
-			searchTodo.setToDay(LocalDate.now());
-		}
+	public List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchWork searchWork) {
 		
-		List<PlanWorkInfoDto> listTodayWorkDto = null;
+		List<PlanWorkInfoDto> listTodayWorkDto = tdWorkRepository.findByTodayPlanList4Worker(searchWork);
 		
 		return listTodayWorkDto;
 	}
@@ -365,7 +363,12 @@ public class TodoService {
 	}
 
 
-	
+	/**
+	 * 계획 작업 정보
+	 * 
+	 * @param searchPlanWork
+	 * @return
+	 */
 	public List<PlanWorkInfoDto> listPlanWorkInfo(SearchPlanWork searchPlanWork) {
 		
 		List<PlanWorkInfoDto> listTodayWorkInfoDto = tdWorkRepository.listPlanWorkInfo(searchPlanWork);

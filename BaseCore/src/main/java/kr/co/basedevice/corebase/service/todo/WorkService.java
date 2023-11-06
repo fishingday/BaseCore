@@ -24,6 +24,13 @@ public class WorkService {
 	final private TdTodoRepository tdTodoRepository;
 	final private TdWorkRepository tdWorkRepository;
 	
+	/**
+	 * 작업이력
+	 * 
+	 * @param searchWork
+	 * @param page
+	 * @return
+	 */
 	public Page<WorkDetailInfoDto> pageWorkHistory(SearchWork searchWork, Pageable page) {
 
 		 Page<WorkDetailInfoDto> pageWorkInfo = tdWorkRepository.pageWorkHistory(searchWork, page);

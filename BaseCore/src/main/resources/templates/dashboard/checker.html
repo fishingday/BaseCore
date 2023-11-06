@@ -9,9 +9,9 @@
 
 	<!-- Content 시작 -->
 	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-	        <div class="container text-center">
+	        <div class="container text-center" th:with="auth=${#authentication.principal}">
 	            <h1 class="text-primary">DASHBOARD</h1>
-	            <h1>확인자님 환영합니다.</h1>
+	            <h1[[${auth.cmUser.userNm}]]님 환영합니다.</h1>
 	            <div class="row">
                 <h4 class="text-primary">작업자별 정산 포인트</h4>
                 <table
@@ -69,12 +69,12 @@
                 columns: [
                   {field: 'workerSeq',     title: '작업자순번',  visible: false},
                   {field: 'workerNm',      title: '작업자',     align: 'center',valign: 'middle', sortable: true},
-                  {field: 'settleAmount',  title: '미정산포인트', align: 'right',valign: 'middle', sortable: true,
+                  {field: 'settlePoints',  title: '미정산포인트', align: 'right',valign: 'middle', sortable: true,
                     formatter: function(value, row, index) {
                       return value.toLocaleString();
                     }   
                   },
-                  {field: 'unSettleAmount',title: '누적포인트',   align: 'right',valign: 'middle', sortable: true,
+                  {field: 'unSettlePoints',title: '누적포인트',   align: 'right',valign: 'middle', sortable: true,
                     formatter: function(value, row, index) {
                       return value.toLocaleString();
                     }    

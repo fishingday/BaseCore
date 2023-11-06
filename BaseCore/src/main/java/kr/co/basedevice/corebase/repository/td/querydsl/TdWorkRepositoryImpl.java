@@ -194,13 +194,6 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 			builder.and(tdWork.workStatCd.eq(searchWork.getWorkStatCd()));
 		}
 		
-		if(!ObjectUtils.isEmpty(searchWork.getWorkBeginDt())) {			
-			if(ObjectUtils.isEmpty(searchWork.getWorkEndDt())) {
-				searchWork.setWorkEndDt(searchWork.getWorkBeginDt());			}
-			builder.and(tdWork.workDt.between(LocalDateTime.of(searchWork.getWorkBeginDt(), LocalTime.of(0, 0, 0))
-					, LocalDateTime.of(searchWork.getWorkBeginDt(), LocalTime.of(23, 59, 59))));
-		}
-		
 		query.where(builder);
 		
 		if(!ObjectUtils.isEmpty(searchWork.getOrder()) && !ObjectUtils.isEmpty(searchWork.getSort())) {
@@ -223,7 +216,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	}
 
 	/**
-	 * 작업 목록
+	 * 작업자별 계획 작업 목록
 	 * 
 	 */
 	@Override
@@ -275,6 +268,62 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	        }
 		}else {
         	query.orderBy(tdWork.workerSeq.desc());
+		}
+		
+		return query.fetch();
+	}
+
+
+	/**
+	 * 작업자별 작업 목록
+	 * 
+	 */
+	@Override
+	public List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchWork searchWork) {
+		QTdWork tdWork = QTdWork.tdWork;
+		QCmUser cmUser = QCmUser.cmUser;
+		
+		JPQLQuery<PlanWorkInfoDto> query = jpaQueryFactory.select(
+				Projections.bean(PlanWorkInfoDto.class
+					,cmUser.loginId
+					,cmUser.userNm.as("workerNm")
+					,tdWork.workSeq
+					,tdWork.workerSeq
+					,tdWork.workTitl
+					,tdWork.workCont
+					,tdWork.workDt
+					,tdWork.workStatCd
+					,tdWork.workPossBeginDt
+					,tdWork.workPossEndDt
+					,tdWork.confmDt
+					,tdWork.gainPoint
+					,tdWork.setleYn
+				)
+			)
+			.from(tdWork)
+			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq));
+		
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(tdWork.delYn.eq(Yn.N));
+		builder.and(cmUser.delYn.eq(Yn.N));
+		builder.and(tdWork.workPossBeginDt.gt(searchWork.getWorkBeginDt()));
+		builder.and(tdWork.workPossBeginDt.lt(searchWork.getWorkEndDt()));
+		builder.and(tdWork.workerSeq.eq(searchWork.getWorkerSeq()));
+		
+		query.where(builder);
+		
+		if(!ObjectUtils.isEmpty(searchWork.getOrder()) && !ObjectUtils.isEmpty(searchWork.getSort())) {
+	    	Order direction = Order.valueOf(searchWork.getOrder().toUpperCase());
+	    	
+	        if(searchWork.getSort().equals("workSeq")) {
+		        query.orderBy(new OrderSpecifier<>(direction, cmUser.userNm));
+	        }else if(searchWork.getSort().equals("todoTitl")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdWork.workSeq));
+	        }else{
+	        	query.orderBy(tdWork.workSeq.desc());
+	        }
+		}else {
+        	query.orderBy(tdWork.workSeq.desc());
 		}
 		
 		return query.fetch();
