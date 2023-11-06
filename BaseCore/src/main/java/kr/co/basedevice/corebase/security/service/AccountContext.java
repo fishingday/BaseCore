@@ -45,4 +45,8 @@ public class AccountContext extends User {
 		
 		this.cmUser = cmUser;
 	}
+
+	public void setCurrMenuSeq(Long menuSeq) {
+		currMenu = myMenu.getMenuDto(menuSeq);
+	}
 }

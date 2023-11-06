@@ -48,7 +48,7 @@ public class SecurityResourceService {
         );
         
         // 메인 메뉴 목록을 조회해서 정렬하고...
-    	List<CmMenu> cmMenuList = cmMenuRepository.findAllMenu();    	
+    	List<CmMenu> cmMenuList = cmMenuRepository.findAllMenu();
     	Collections.sort( cmMenuList, (o1,o2) -> o2.getDepth() - o1.getDepth() );
     	cmMenuList.forEach(menu ->
                 {

@@ -42,16 +42,18 @@ public class SessionTracerInterceptor implements HandlerInterceptor {
 		if (authentication != null && authentication.isAuthenticated()) {
 			Object o = authentication.getPrincipal();
 			if (o instanceof UserDetails) {
-				MenuDto currMenu = null;	        	
+				MenuDto currMenu = null;	
 	            for (Map.Entry<RequestMatcher, MenuDto> entry : menuMap.entrySet()) {            	
 	                RequestMatcher matcher = entry.getKey();
-	                if (matcher.matches(request)) {
+	                if (matcher.matches(request)) { // 현재 메뉴를 찾는다.
 	                	currMenu = entry.getValue();
 	                    break;
 	                }
 	            }
-	            userSeq = ((AccountContext) o).getCmUser().getUserSeq();
-	            ((AccountContext) o).setCurrMenu(currMenu);
+	            if(currMenu != null) {
+	            	userSeq = ((AccountContext) o).getCmUser().getUserSeq();
+		            ((AccountContext) o).setCurrMenuSeq(currMenu.getMenuSeq());
+	            }
 			}
         }
 		

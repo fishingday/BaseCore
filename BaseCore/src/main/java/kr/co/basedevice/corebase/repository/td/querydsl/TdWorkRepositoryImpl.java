@@ -315,9 +315,9 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		if(!ObjectUtils.isEmpty(searchWork.getOrder()) && !ObjectUtils.isEmpty(searchWork.getSort())) {
 	    	Order direction = Order.valueOf(searchWork.getOrder().toUpperCase());
 	    	
-	        if(searchWork.getSort().equals("workSeq")) {
-		        query.orderBy(new OrderSpecifier<>(direction, cmUser.userNm));
-	        }else if(searchWork.getSort().equals("todoTitl")) {
+	        if(searchWork.getSort().equals("workTitl")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdWork.workTitl));
+	        }else if(searchWork.getSort().equals("workSeq")) {
 		        query.orderBy(new OrderSpecifier<>(direction, tdWork.workSeq));
 	        }else{
 	        	query.orderBy(tdWork.workSeq.desc());

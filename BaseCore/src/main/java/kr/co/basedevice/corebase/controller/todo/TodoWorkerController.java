@@ -35,7 +35,7 @@ public class TodoWorkerController {
 	 */
 	@GetMapping(value={"/history", "/history/init.html"})
 	public String viewTodoMgt() {
-		return "/todo/worker/work_history.html";
+		return "/todo/worker/history.html";
 	}
 		
 	/** 

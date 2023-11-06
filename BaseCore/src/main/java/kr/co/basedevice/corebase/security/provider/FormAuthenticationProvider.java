@@ -38,46 +38,49 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    @Transactional
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+	@Override
+	@Transactional
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String loginId = authentication.getName();
-        String password = (String) authentication.getCredentials();
+		String loginId = authentication.getName();
+		String password = (String) authentication.getCredentials();
 
-         AccountContext accountContext = (AccountContext)userDetailsService.loadUserByUsername(loginId);
+		AccountContext accountContext = (AccountContext) userDetailsService.loadUserByUsername(loginId);
 
-        if (!passwordEncoder.matches(password, accountContext.getPassword())) {
-        	throw new BadCredentialsException("Invalid password");
-        }
+		// 패스워드가 올바른지... 확인
+		if (!passwordEncoder.matches(password, accountContext.getPassword())) {
+			throw new BadCredentialsException("Invalid password");
+		}
 
-        if(use2factor) { // 추가 인증 구현 시 적용
-	        String otpKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
-	        if (otpKey == null || !otpKey.equals("xxxxx")) {
-	            throw new IllegalArgumentException("Invalid Secret");
-	        }
-        }
-        
-        List<CmUserAlowIp> cmUserAlowIpList = userService.findByUserSeq4CmUserAlowIp(accountContext.getCmUser().getUserSeq());
-        if(cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
-        	boolean isAllowIp = false;
-        	String remoteAddress = ((FormWebAuthenticationDetails) authentication.getDetails()).getIpAddr();	
-			for(CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
+		if (use2factor) { // 추가 인증 구현 시 적용
+			String otpKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
+			if (otpKey == null || !otpKey.equals("xxxxx")) {
+				throw new IllegalArgumentException("Invalid Secret");
+			}
+		}
+
+		// 사용자에게 지정된 IP가 있다면... 체크한다.
+		List<CmUserAlowIp> cmUserAlowIpList = userService
+				.findByUserSeq4CmUserAlowIp(accountContext.getCmUser().getUserSeq());
+		if (cmUserAlowIpList != null && !cmUserAlowIpList.isEmpty()) {
+			boolean isAllowIp = false;
+			String remoteAddress = ((FormWebAuthenticationDetails) authentication.getDetails()).getIpAddr();
+			for (CmUserAlowIp cmUserAlowIp : cmUserAlowIpList) {
 				IpAddressMatcher matcher = new IpAddressMatcher(cmUserAlowIp.getAlowIp().trim());
-				if(matcher.matches(remoteAddress)) {
+				if (matcher.matches(remoteAddress)) {
 					isAllowIp = true;
 					break;
 				}
 			}
-			if(!isAllowIp) {
+			if (!isAllowIp) {
 				throw new AccessDeniedException("Invailid Allow IpAddress");
 			}
 			accountContext.setAllowIpList(cmUserAlowIpList);
-        }
-        userService.setOtherInfo(accountContext);
+		}
+		userService.setOtherInfo(accountContext);
 
-        return new UsernamePasswordAuthenticationToken(accountContext, null, accountContext.getAuthorities());
-    }
+		return new UsernamePasswordAuthenticationToken(accountContext, null, accountContext.getAuthorities());
+	}
 
     @Override
     public boolean supports(Class<?> authentication) {

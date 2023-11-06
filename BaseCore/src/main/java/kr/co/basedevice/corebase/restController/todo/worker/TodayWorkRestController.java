@@ -51,10 +51,13 @@ public class TodayWorkRestController {
 		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
 		searchWork.setWorkerSeq(worker.getUserSeq());
-		searchWork.setWorkBeginDt(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusSeconds(1L));
-		searchWork.setWorkEndDt(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.DAYS));		
-		searchWork.setSort("workDt");
-		searchWork.setOrder("ASC");
+		if(ObjectUtils.isEmpty(searchWork.getWorkBeginDt())) {
+			searchWork.setWorkBeginDt(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusSeconds(1L));
+		}
+		
+		if(ObjectUtils.isEmpty(searchWork.getWorkEndDt())) {
+			searchWork.setWorkEndDt(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.DAYS));
+		}
 		
 		// 해당일에 할일 목록
 		List <PlanWorkInfoDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchWork);

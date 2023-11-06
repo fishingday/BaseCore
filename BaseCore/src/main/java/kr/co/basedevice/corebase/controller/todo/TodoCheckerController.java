@@ -25,7 +25,7 @@ public class TodoCheckerController {
 	 */
 	@GetMapping(value={"/settle", "/settle/init.html"})
 	public String viewTodoSettle() {
-		return "/todo/checker/todo_settle.html";
+		return "/todo/checker/settle.html";
 	}
 		
 	/** 
