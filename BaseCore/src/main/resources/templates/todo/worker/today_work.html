@@ -13,18 +13,18 @@
       <div class="row">
           <h4 class="text-primary">작업 목록</h4>
           <div class="row">
-            <div class="form-floating mb-3 row">
-              <label for="workTitl">작업제목</label>
-              <input type="text" class="form-control" id="workTitl" placeholder="작업제목">
-            </div>
-            <div class="form-floating mb-3 row">
-              <div class="col">
-                <label for="workBeginDt">작업시작시간</label>
-                <input type="datetime-local" class="form-control" id="workBeginDt" value="2023-10-21 08:34">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">작업제목</div>
+                <input type="text" class="form-control" id="workTitl" placeholder="작업 제목" aria-label="작업 제목">
               </div>
-              <div class="col">
-                <label for="workEndDt">작업종료시간</label>
-                <input type="datetime-local" class="form-control" id="workEndDt" placeholder="">
+            </div>
+          <div class="row">
+          </div>
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">작업일</div>
+                <input type="date" class="form-control" id="workDate">
               </div>
             </div>
           </div>
