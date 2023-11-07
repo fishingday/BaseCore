@@ -47,4 +47,5 @@ public interface TdTodoRepositoryQuerydsl {
 	 * @return
 	 */
 	Page<TodoWorkerInfoDto> pageTodoWorkerInfo(SearchTodoWorker searchTodoWorker, Pageable page);
+	
 }

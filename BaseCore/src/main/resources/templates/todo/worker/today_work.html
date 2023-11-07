@@ -30,7 +30,8 @@
           </div>
           <table
             id="table-work"
-            data-search="false"
+            data-search="true"
+            data-show-columns="true"
             data-click-to-select="true"
             data-id-field="workSeq"
             th:data-url="@{/worker/today_work/list_today_works.json}">
@@ -53,6 +54,14 @@
       var fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
+          
+          $("#workTitl").bind("change", function(){
+            fnObj.action.reloadWdorkList();
+          });
+          
+          $("#workDate").bind("change", function(){
+            fnObj.action.reloadWdorkList();
+          });
         },
         page: {
           init: function(){ // 버튼 바인딩 등
@@ -60,7 +69,9 @@
           }
         },
         action: { // 호출이나 화면 동작
-        
+          reloadWdorkList: function(){
+            $('#table-work').bootstrapTable('refresh')
+          }
         },
         grid: { // 그리드 관련
           init_worklist: function(){
@@ -75,14 +86,38 @@
                 {field: 'workSeq',   title: '작업순번',  visible: false},
                 {field: 'workerSeq', title: '작업자순번', visible: false},
                 {field: 'workTitl',  title: '작업명', align: 'left',valign: 'middle', sortable: true},
-                {field: 'workStatCd',title: '작업상태',align: 'center',valign: 'middle', sortable: true},
+                {field: 'workStatCd',title: '상태',align: 'center',valign: 'middle', sortable: true
+                  ,formatter: function(value, row, index) {
+                    if(value === 'READY'){
+                      return '대기'
+                    }else if(value === 'ONGOING'){
+                      return '진행중';
+                    }else if(value === 'FAIL'){
+                      return '실패';
+                    }else if(value === 'DONE'){
+                      return '완료';
+                    }else{
+                      return value
+                    }
+                  }
+                },
                 {field: 'gainPoint', title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true},                
-                {field: 'workDt',    title: '작업일시',  align: 'center'  ,valign: 'middle', sortable: true},
-                {field: 'confmDt',   title: '확인일시',  align: 'center'  ,valign: 'middle', sortable: true},
+                {field: 'workDt',    title: '작업일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
+                {field: 'confmDt',   title: '확인일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
                 
               ],
               responseHandler: function (data) { // 데이터 처리
                 return data;
+              },
+              queryParams: function(params){
+                if($("#workTitl").val() !== ''){
+                  params.workTitl = $("#workTitl").val();
+                }
+
+                if($("#workDate").val() !== ''){
+                  params.workDate = $("#workDate").val();
+                }                
+                return params;
               }
             });
           }

@@ -310,6 +310,18 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		builder.and(tdWork.workPossBeginDt.lt(searchWork.getWorkEndDt()));
 		builder.and(tdWork.workerSeq.eq(searchWork.getWorkerSeq()));
 		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkTitl())){
+			builder.and(tdWork.workTitl.contains(searchWork.getWorkTitl()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkCont())){
+			builder.and(tdWork.workCont.contains(searchWork.getWorkCont()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkStatCd())){
+			builder.and(tdWork.workStatCd.eq(searchWork.getWorkStatCd()));
+		}
+		
 		query.where(builder);
 		
 		if(!ObjectUtils.isEmpty(searchWork.getOrder()) && !ObjectUtils.isEmpty(searchWork.getSort())) {

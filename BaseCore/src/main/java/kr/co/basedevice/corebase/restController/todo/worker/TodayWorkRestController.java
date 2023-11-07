@@ -2,7 +2,7 @@ package kr.co.basedevice.corebase.restController.todo.worker;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +19,7 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
-import kr.co.basedevice.corebase.dto.todo.PointSummaryDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
-import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
@@ -51,13 +49,12 @@ public class TodayWorkRestController {
 		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
 		searchWork.setWorkerSeq(worker.getUserSeq());
-		if(ObjectUtils.isEmpty(searchWork.getWorkBeginDt())) {
-			searchWork.setWorkBeginDt(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusSeconds(1L));
-		}
 		
-		if(ObjectUtils.isEmpty(searchWork.getWorkEndDt())) {
-			searchWork.setWorkEndDt(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.DAYS));
+		if(ObjectUtils.isEmpty(searchWork.getWorkDate())) {
+			searchWork.setWorkDate(LocalDate.now());
 		}
+		searchWork.setWorkBeginDt(LocalDateTime.of(searchWork.getWorkDate(), LocalTime.of(0, 0, 0, 0)).minusSeconds(1));
+		searchWork.setWorkEndDt(LocalDateTime.of(searchWork.getWorkDate().plusDays(1), LocalTime.of(0, 0, 0, 0)));		
 		
 		// 해당일에 할일 목록
 		List <PlanWorkInfoDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchWork);

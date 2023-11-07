@@ -222,6 +222,5 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 			QueryResults<TodoWorkerInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
 
 			return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
-	}
-	
+	}	
 }

@@ -674,10 +674,10 @@
                 },
                 queryParams: function(params){
                   if(params.offset !== undefined){
-                  params.size = params.limit;
+                    params.size = params.limit;
                     params.page = params.offset/params.limit;
                   }else{
-                  params.size = 10000;
+                    params.size = 10000;
                     params.page = 0;
                   }
 

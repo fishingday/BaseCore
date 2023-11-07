@@ -21,6 +21,10 @@ public class TodayPlanDto {
 	private Yn quizUseYn;	
 	private QuizTypCd quizTypCd;
 	
+	private String loginId;
+	private String workerNm;
+	private Long workerSeq;
+	
 	private Long workSeq;
 	private String workTitl;
 	private String workCont;
