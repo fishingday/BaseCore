@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
+import kr.co.basedevice.corebase.dto.todo.TodoMgtDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
@@ -20,7 +20,7 @@ public interface TdTodoRepositoryQuerydsl {
 	 * @param pageable
 	 * @return
 	 */
-	Page<TodoDetailDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable pageable);
+	Page<TodoMgtDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable pageable);
 	
 	/**
 	 * 할일별 확인자 목록

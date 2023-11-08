@@ -103,7 +103,21 @@
                 {field: 'workSeq',       title: '작업순번',  visible: false},
                 {field: 'workerSeq',     title: '작업자순번', visible: false},
                 {field: 'workTitl',      title: '작업명', align: 'left',valign: 'middle', sortable: true},
-                {field: 'workStatCd',    title: '작업상태',align: 'center',valign: 'middle', sortable: true},
+                {field: 'workStatCd',    title: '작업상태',align: 'center',valign: 'middle', sortable: true
+                  ,formatter: function(value, row, index) {
+                    if(value === 'READY'){
+                      return '대기'
+                    }else if(value === 'ONGOING'){
+                      return '진행중';
+                    }else if(value === 'FAIL'){
+                      return '실패';
+                    }else if(value === 'DONE'){
+                      return '완료';
+                    }else{
+                      return value
+                    }
+                  }
+                },
                 {field: 'gainPoint',     title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true},
               ],
               responseHandler: function (data) { // 데이터 처리

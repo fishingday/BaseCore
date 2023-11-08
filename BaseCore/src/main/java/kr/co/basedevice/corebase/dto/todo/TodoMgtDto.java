@@ -11,7 +11,7 @@ import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Data;
 
 @Data
-public class TodoDetailDto {
+public class TodoMgtDto {
 	private Long todoSeq;
 	
 	private String todoTitl;

@@ -26,7 +26,7 @@ import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
-import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
+import kr.co.basedevice.corebase.dto.todo.TodoMgtDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerAgreeTodoDto;
@@ -58,13 +58,13 @@ public class TodoService {
 	 * @param pageable
 	 * @return
 	 */
-	public Page<TodoDetailDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable pageable){
+	public Page<TodoMgtDto> pageTodoMgtList(SearchTodoMgt searchTodoMgt, Pageable pageable){
 		
-		Page<TodoDetailDto> pageTodoDetailInfo =  tdTodoRepository.pageTodoDetailInfo(searchTodoMgt, pageable);
+		Page<TodoMgtDto> pageTodoDetailInfo =  tdTodoRepository.pageTodoDetailInfo(searchTodoMgt, pageable);
 		
 		if(pageTodoDetailInfo != null && !pageTodoDetailInfo.isEmpty()) {
 			
-			for(TodoDetailDto todoDetailDto : pageTodoDetailInfo.getContent()) {
+			for(TodoMgtDto todoDetailDto : pageTodoDetailInfo.getContent()) {
 				// 확인자 목록
 				todoDetailDto.setCheckerList(tdTodoRepository.getCheckerList(todoDetailDto.getTodoSeq()));
 				
@@ -95,7 +95,7 @@ public class TodoService {
 	 * @param todoDetailDto
 	 * @return
 	 */
-	public boolean saveTodo(TodoDetailDto todoDetailDto) {
+	public boolean saveTodo(TodoMgtDto todoDetailDto) {
 		
 		TdTodo tdTodo = new TdTodo();
 		BeanUtils.copyProperties(todoDetailDto, tdTodo, "checkerList", "workerList");
@@ -154,10 +154,10 @@ public class TodoService {
 		return optTdTodo.get();
 	}
 
-	public TodoDetailDto getTdTodoDetail(Long todoSeq) {
+	public TodoMgtDto getTdTodoDetail(Long todoSeq) {
 
 		Optional<TdTodo> optTdTodo = tdTodoRepository.findById(todoSeq);
-		TodoDetailDto todoDetailDto = new TodoDetailDto();
+		TodoMgtDto todoDetailDto = new TodoMgtDto();
 		BeanUtils.copyProperties(optTdTodo.get(), todoDetailDto, "tdWorkList", "tdCheckerMapList", "tdWorkerMapList");
 		
 		// 확인자 목록

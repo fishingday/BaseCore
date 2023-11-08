@@ -4,14 +4,219 @@
       layout:decorate="~{layouts/default_layout}">
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>오늘의 계획</title>
+      <title>오늘의 작업계획</title>
   </head>
-
-  <!-- Content 시작 -->
-      <div layout:fragment="content"style="padding-top:50px;"  class="col">
-          <div class="container text-center">
-              <h1 class="text-primary">여기는 계획관리 페이지 입니다.</h1>
+  <body>
+    <!-- Content 시작 -->
+    <div layout:fragment="content" class="col">
+      <div class="row">
+          <h4 class="text-primary">작업자별 오늘의 작업계획</h4>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">작업명</div>
+                <input type="text" class="form-control" id="workTitl" placeholder="작업명" aria-label="작업명">
+              </div>
+            </div>
           </div>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">작업자</div>
+                <input type="text" class="form-control" id="workerNm" placeholder="작업자 명" aria-label="작업자 명">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">상 태</div>
+                <select class="form-select" id="workStatCd">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">작업일</div>
+                <input type="date" class="form-control" id="workDate">
+              </div>
+            </div>
+          </div>
+          <table
+            id="table-planwork"
+            data-search="true"
+            data-show-columns="true"
+            data-click-to-select="true"
+            data-id-field="workSeq"
+            th:data-url="@{/checker/today_plan/list_today_workinfo.json}">
+          </table>
       </div>
+      <!-- modal -->
+      <div class="modal-staging">
+          
+      </div>
+      <!-- modal -->
+    </div>
+    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+        
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
+
+      var fnObj = {
+        pageStart:  function(){ // 페이지 초기 실행 스크립트
+          fnObj.page.init();
+          
+          $("#workTitl").bind("change", function(){
+            fnObj.action.reloadPlanWdork();
+          });
+          
+          $("#workDate").bind("change", function(){
+            fnObj.action.reloadPlanWdork();
+          });
+          
+          $("#workerNm").bind("change", function(){
+            fnObj.action.reloadPlanWdork();
+          });
+          
+          $("#workStatCd").bind("change", function(){
+            fnObj.action.reloadPlanWdork();
+          });
+        },
+        page: {
+          init: function(){ // 버튼 바인딩 등
+            fnObj.action.initWorkStatCdData();
+            fnObj.grid.init_PlanWork();
+          }
+        },
+        action: { // 호출이나 화면 동작
+          reloadPlanWdork: function(){
+            $('#table-planwork').bootstrapTable('refresh')
+          },
+          initWorkStatCdData: function(){
+            return $.ajax({
+              url: "[[@{/common/code_dtl_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json",
+              data : {grpCd:'WORK_STAT_CD'}
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $("#workStatCd").append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          }
+        },
+        grid: { // 그리드 관련
+          init_PlanWork: function(){
+            $('#table-planwork').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {field: 'workSeq',       title: '작업순번',  visible: false},
+                {field: 'workerSeq',     title: '작업자순번', visible: false},
+                {field: 'workerNm',      title: '작업자', align: 'center',valign: 'middle', sortable: true},
+                {field: 'workTitl',      title: '작업명', align: 'center',valign: 'middle', sortable: true},
+                {field: 'workStatCd',    title: '작업상태',align: 'center',valign: 'middle', sortable: true
+                  ,formatter: function(value, row, index) {
+                    if(value === 'READY'){
+                      return '대기'
+                    }else if(value === 'ONGOING'){
+                      return '진행중';
+                    }else if(value === 'FAIL'){
+                      return '실패';
+                    }else if(value === 'DONE'){
+                      return '완료';
+                    }else{
+                      return value
+                    }
+                  }
+                },
+                {field: 'gainPoint',     title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true},
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                return data;
+              },
+              queryParams: function(params){
+                if($("#workTitl").val() !== ''){
+                  params.workTitl = $("#workTitl").val();
+                }
+
+                if($("#workDate").val() !== ''){
+                  params.workDate = $("#workDate").val();
+                }
+                if($("#workerNm").val() !== ''){
+                  params.workerNm = $("#workerNm").val();
+                }
+                
+                if($("#workStatCd").val() !== ''){
+                  params.workStatCd = $("#workStatCd").val();
+                }                
+                             
+                return params;
+              }
+            });
+            
+            // merge
+            $('#table-planwork').on('post-body.bs.table', function(data){
+              let getData = $('#table-planwork').bootstrapTable('getData');
+              
+              if(getData.length){
+                let workerNm = null;
+                let mergeData = [];                  
+                let start = -1;
+                let end = 0;
+                for(let i = 0; i < getData.length; ){                    
+                  if(workerNm !== getData[i].workerNm){
+                    end = i - 1; // 마지막을 기록
+                    if(start >= 0){ // 0이면 처음...
+                      mergeData.push({"begin": start, "end": end});
+                    }
+                    start = i;
+                    workerNm = getData[i].workerNm;
+                  }
+                  
+                  if(i === (getData.length -1)){
+                    end = i;
+                    mergeData.push({"begin": start, "end": end});
+                  }
+                  i++;
+                }
+                
+                for(let i =0; i < mergeData.length; i++){
+                  $('#table-planwork').bootstrapTable('mergeCells', {
+                    index: mergeData[i].begin,
+                    field: 'workerNm',
+                    colspan: 1,
+                    rowspan: ((mergeData[i].end + 1) - mergeData[i].begin)
+                  })
+                }                  
+              }                
+            });
+          }        
+        }
+      }
+        
+      window.addEventListener("load", function(){
+        fnObj.pageStart();
+      });
+    </script>
   <!-- Content 종료 -->
+  </body>
 </html>

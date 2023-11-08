@@ -7,11 +7,128 @@
       <title>할일 관리</title>
   </head>
 
-  <!-- Content 시작 -->
-      <div layout:fragment="content"style="padding-top:50px;"  class="col">
-          <div class="container text-center">
-              <h1 class="text-primary">여기는 할일 관리 페이지 입니다.</h1>
+    <!-- Content 시작 -->
+    <div layout:fragment="content" class="col">
+      <div class="row">
+          <h4 class="text-primary">할일 관리</h4>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">할일명</div>
+                <input type="text" class="form-control" id="todoTitl" placeholder="할일명" aria-label="할일명">
+              </div>
+            </div>
           </div>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">작업자</div>
+                <input type="text" class="form-control" id="workerNm" placeholder="작업자 명" aria-label="작업자 명">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-2">
+              <div class="input-group">
+                <div class="input-group-text">상 태</div>
+                <select class="form-select" id="workStatCd">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <table
+            id="table-todo"
+            data-search="true"
+            data-show-columns="true"
+            data-pagination="true"
+            data-pagination-loop="false"
+            data-click-to-select="true"
+            data-id-field="todoSeq"
+            data-side-pagination="server"
+            data-server-sort="true"
+            th:data-url="@{/checker/todo_mgt/todo_mgt_list.json}">
+          </table>
       </div>
+      <!-- modal -->
+      <div class="modal-staging">
+          
+      </div>
+      <!-- modal -->
+    </div>
+    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+        
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
+
+      var fnObj = {
+        pageStart:  function(){ // 페이지 초기 실행 스크립트
+          fnObj.page.init();
+          
+        },
+        page: {
+          init: function(){ // 버튼 바인딩 등
+            fnObj.grid.init_todo();
+          }
+        },
+        action: { // 호출이나 화면 동작
+          reloadPlanWdork: function(){
+            $('#table-planwork').bootstrapTable('refresh')
+          }
+        },
+        grid: { // 그리드 관련
+          init_todo: function(){
+            $('#table-todo').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {field: 'todoSeq',       title: '할일순번',  visible: false},
+                {field: 'todoTitl',      title: '할일명',  align: 'center',valign:'middle', sortable: true},
+                {field: 'todoPoint',     title: '포인트',  align: 'center',valign:'middle', sortable: true},
+                {field: 'todoCreCd',     title: '생성유형',  align: 'center',valign:'middle', sortable: true},
+                {field: 'todoCreDtlVal', title: '생성상세', visible: false},
+                {field: 'todoTypCd',     title: '할일유형', align: 'center',valign:'middle', sortable: true},
+                {field: 'todoDtlVal',     title: '할일상세', visible: false},                
+                {field: 'dateLimitCnt',  title: '일제한수', visible: false},
+                                
+                {field: 'postBeginDate', title: '게시시작일', visible: false},
+                {field: 'postEndDate',   title: '게시종료일', visible: false},
+                {field: 'execBeginTm',   title: '시작시간', visible: false},
+                {field: 'execEndTm',     title: '마감시간', visible: false},
+                {field: 'quizUseYn',     title: '할일유형', visible: false},
+                {field: 'quizTypCd',     title: '생성유형', visible: false},
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                  data.rows = data.content; // 이름을 변경해 줘야 한다.
+                  delete data.content;
+                  $.each(data.row, function (i, row) {
+                    row.state = $.inArray(row.todoSeq, selections) !== -1
+                  })
+                  data.total = data.totalElements;
+                  data.totalNotFiltered = data.totalElements;
+
+                  return data;
+              }
+              /*,
+              queryParams: function(params){
+
+                return params;
+              }*/
+            });            
+          }        
+        }
+      }
+        
+      window.addEventListener("load", function(){
+        fnObj.pageStart();
+      });
+    </script>
   <!-- Content 종료 -->
 </html>

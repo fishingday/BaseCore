@@ -250,9 +250,21 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		builder.and(tdWork.delYn.eq(Yn.N));
 		builder.and(cmUser.delYn.eq(Yn.N));
 		builder.and(cmUserRelat.delYn.eq(Yn.N));
-		builder.and(tdWork.workPossBeginDt.gt(searchPlanWork.getBeginDate()));
-		builder.and(tdWork.workPossBeginDt.lt(searchPlanWork.getEndDate()));
+		builder.and(tdWork.workPossBeginDt.gt(searchPlanWork.getWorkBeginDt()));
+		builder.and(tdWork.workPossBeginDt.lt(searchPlanWork.getWorkEndDt()));
 		builder.and(cmUserRelat.relatorSeq.eq(searchPlanWork.getCheckerSeq()));
+		
+		if(!ObjectUtils.isEmpty(searchPlanWork.getWorkTitl())) {
+			builder.and(tdWork.workTitl.contains(searchPlanWork.getWorkTitl()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchPlanWork.getWorkerNm())) {
+			builder.and(cmUser.userNm.contains(searchPlanWork.getWorkerNm()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchPlanWork.getWorkStatCd())) {
+			builder.and(tdWork.workStatCd.eq(searchPlanWork.getWorkStatCd()));
+		}
 		
 		query.where(builder);
 		

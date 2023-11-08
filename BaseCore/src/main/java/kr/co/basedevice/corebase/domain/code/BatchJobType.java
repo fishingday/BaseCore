@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.domain.code;
 
-public enum JobType {
+public enum BatchJobType {
     SIMPLE,
     CRON
 }

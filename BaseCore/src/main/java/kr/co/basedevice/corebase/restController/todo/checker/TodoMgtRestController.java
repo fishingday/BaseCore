@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
+import kr.co.basedevice.corebase.dto.todo.TodoMgtDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
 import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +28,15 @@ public class TodoMgtRestController {
 	 * @param searchTodoMgt
 	 * @return
 	 */
-	@GetMapping("/get_todo_list.json")
-	public ResponseEntity<Page<TodoDetailDto>> findByTodoList(SearchTodoMgt searchTodoMgt, Pageable page){
+	@GetMapping("/todo_mgt_list.json")
+	public ResponseEntity<Page<TodoMgtDto>> findByTodoList(SearchTodoMgt searchTodoMgt, Pageable page){
 		if(page == null) {
 			page = PageRequest.of(0, 10);
 		}
 				
-		Page<TodoDetailDto> pageTodoDetailDto = todoService.pageTodoDetailInfo(searchTodoMgt, page);
+		Page<TodoMgtDto> pageTodoMgtDto = todoService.pageTodoMgtList(searchTodoMgt, page);
 				
-		return ResponseEntity.ok(pageTodoDetailDto);
+		return ResponseEntity.ok(pageTodoMgtDto);
 	}
 	
 	
@@ -48,10 +48,10 @@ public class TodoMgtRestController {
 	 * @return
 	 */
 	@GetMapping("/get_todo.json")
-	public ResponseEntity<TodoDetailDto> getTodo(Long todoSeq){
+	public ResponseEntity<TodoMgtDto> getTodo(Long todoSeq){
 		
 		// 할일 및 작업 대상자, 확인자 목록
-		TodoDetailDto todoDetailDto = todoService.getTdTodoDetail(todoSeq);
+		TodoMgtDto todoDetailDto = todoService.getTdTodoDetail(todoSeq);
 		
 		return ResponseEntity.ok(todoDetailDto);
 	}
@@ -64,7 +64,7 @@ public class TodoMgtRestController {
 	 * @return
 	 */
 	@PutMapping("/save_todo.json")
-	public ResponseEntity<Boolean> saveTodo(TodoDetailDto todoDetailDto){
+	public ResponseEntity<Boolean> saveTodo(TodoMgtDto todoDetailDto){
 		
 		boolean isSave = todoService.saveTodo(todoDetailDto);
 		

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.quartz.JobDataMap;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import kr.co.basedevice.corebase.domain.code.JobType;
+import kr.co.basedevice.corebase.domain.code.BatchJobType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,7 +30,7 @@ public class JobRequest {
         return this.cronExpression == null;
     }
 
-    public JobType getCurrentJobType() {
-        return isJobTypeSimple() ? JobType.SIMPLE : JobType.CRON;
+    public BatchJobType getCurrentJobType() {
+        return isJobTypeSimple() ? BatchJobType.SIMPLE : BatchJobType.CRON;
     }
 }

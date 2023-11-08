@@ -37,6 +37,9 @@ public class CmUserRelat extends BaseEntity implements Serializable {
 	@Column(name = "USER_RELAT_CD", length = 35, nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserRelatCd userRelatCd;
+
+	@Column(name = "USER_RELAT_DTL_VAL", length = 20, nullable = false)
+	private String userRelatDtlVal;
 	
 	@Column(name = "RELAT_APLY_DT")
 	private LocalDateTime relatAplyDt;

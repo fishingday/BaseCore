@@ -22,7 +22,7 @@ import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdCheckerMap;
 import kr.co.basedevice.corebase.domain.td.QTdTodo;
 import kr.co.basedevice.corebase.domain.td.QTdWorkerMap;
-import kr.co.basedevice.corebase.dto.todo.TodoDetailDto;
+import kr.co.basedevice.corebase.dto.todo.TodoMgtDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoMgt;
@@ -39,13 +39,13 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 	 * 
 	 */
 	@Override
-	public Page<TodoDetailDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable page) {
+	public Page<TodoMgtDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable page) {
 		QTdCheckerMap tdCheckerMap = QTdCheckerMap.tdCheckerMap;
 		QTdWorkerMap tdWorkerMap = QTdWorkerMap.tdWorkerMap;
 		QTdTodo tdTodo = QTdTodo.tdTodo;
 		
-		JPQLQuery<TodoDetailDto> query = jpaQueryFactory.select(
-				Projections.bean(TodoDetailDto.class,
+		JPQLQuery<TodoMgtDto> query = jpaQueryFactory.select(
+				Projections.bean(TodoMgtDto.class,
 					 tdTodo.todoSeq
 					,tdTodo.todoTitl
 					,tdTodo.todoCont
@@ -109,7 +109,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 	        	query.orderBy(tdTodo.todoSeq.asc());
 			}
 			
-			QueryResults<TodoDetailDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
+			QueryResults<TodoMgtDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
 
 			return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
 	}
