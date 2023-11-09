@@ -71,16 +71,21 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Column(name = "TODO_DTL_VAL", length = 128)
 	private String todoDtlVal;
 	
+	// 직접생성의 경우 하루 생성 제한
 	@Column(name = "DATE_LIMIT_CNT", nullable = false)
 	private Integer dateLimitCnt;
-	
+		
 	@Column(name = "TODO_CRE_CD", nullable = false, length = 35)
 	@Enumerated(EnumType.STRING)
 	private TodoCreCd todoCreCd;
 	
+	// 생성 유형에 따른 세부값
+	// 주간생성 : DayOfWeek String 값
+	// 월간생성 : 1~31, LAST
 	@Column(name = "TODO_CRE_DTL_VAL", length = 128)
 	private String todoCreDtlVal;
 	
+	// 하위 작업의 경우만 비교 순서
 	@Column(name = "APLYTO_ORD")
 	private Integer aplytoOrd;
 	
@@ -94,15 +99,17 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Column(name = "POST_END_DATE", nullable = false)
 	private LocalDate postEndDate;
 	
+	// 입력 제한 시작 시간
 	@DateTimeFormat(pattern = "HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
-	@Column(name = "EXEC_BEGIN_TM")
-	private LocalTime execBeginTm;
+	@Column(name = "LIMIT_BEGIN_TM")
+	private LocalTime limitBeginTm;
 	
+	// 입력 제한 종료 시간
 	@DateTimeFormat(pattern = "HH:mm.ss.SSS")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
-	@Column(name = "EXEC_END_TM")
-	private LocalTime execEndTm;
+	@Column(name = "LIMIT_END_TM")
+	private LocalTime limitEndTm;
 	
 	@Column(name = "QUIZ_USE_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)

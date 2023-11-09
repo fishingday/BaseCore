@@ -11,27 +11,33 @@
     <div layout:fragment="content" class="col">
       <div class="row">
           <h4 class="text-primary">할일 관리</h4>
-          <div class="row">
-            <div class="col mb-2">
+          <div class="row mb-2">
+            <div class="col">
               <div class="input-group">
                 <div class="input-group-text">할일명</div>
                 <input type="text" class="form-control" id="todoTitl" placeholder="할일명" aria-label="할일명">
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col mb-2">
+            <div class="col">
               <div class="input-group">
-                <div class="input-group-text">작업자</div>
+                <div class="input-group-text">작업자명</div>
                 <input type="text" class="form-control" id="workerNm" placeholder="작업자 명" aria-label="작업자 명">
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col mb-2">
+          <div class="row mb-2">
+            <div class="col">
               <div class="input-group">
-                <div class="input-group-text">상 태</div>
-                <select class="form-select" id="workStatCd">
+                <div class="input-group-text">할일유형</div>
+                <select class="form-select" id="todoTypCd">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">생성유형</div>
+                <select class="form-select" id="todoCreCd">
                   <option value="">전체</option>
                 </select>
               </div>
@@ -39,7 +45,7 @@
           </div>
           <table
             id="table-todo"
-            data-search="true"
+            data-search="false"
             data-show-columns="true"
             data-pagination="true"
             data-pagination-loop="false"
@@ -67,16 +73,54 @@
       var fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
+          $("#todoTitl").bind("change", function(){
+            fnObj.action.reloadTodoList();
+          });
           
+          $("#workerNm").bind("change", function(){
+            fnObj.action.reloadTodoList();
+          });
+          
+          $("#todoTypCd").bind("change", function(){
+            fnObj.action.reloadTodoList();
+          });
+          
+          $("#todoCreCd").bind("change", function(){
+            fnObj.action.reloadTodoList();
+          });
         },
         page: {
-          init: function(){ // 버튼 바인딩 등
-            fnObj.grid.init_todo();
+          init: function(){ // 버튼 바인딩 등            
+            fnObj.action.initCmCodeData("TODO_TYP_CD", "#todoTypCd");
+            fnObj.action.initCmCodeData("TODO_CRE_CD", "#todoCreCd")
+            .then(function(){
+              fnObj.grid.init_todo();
+            });
           }
         },
         action: { // 호출이나 화면 동작
-          reloadPlanWdork: function(){
-            $('#table-planwork').bootstrapTable('refresh')
+          reloadTodoList: function(){
+            $('#table-todo').bootstrapTable('refresh');
+          },
+          initCmCodeData: function(grpCdNm, targetId){
+            return $.ajax({
+              url: "[[@{/common/code_dtl_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json",
+              data : {grpCd:grpCdNm}
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $(targetId).append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
           }
         },
         grid: { // 그리드 관련
@@ -89,19 +133,66 @@
                 return {classes: 'table-primary'};
               },
               columns: [
-                {field: 'todoSeq',       title: '할일순번',  visible: false},
+                {field: 'todoSeq',       title: '할일순번', visible: false, sortable: true},
+                {field: 'todoTypCd',     title: '할일유형', align: 'center',valign:'middle'
+                 ,formatter: function(value, row, index) {
+                    let size = $("#todoTypCd option").length;                    
+                    for(let i = 0; i < size; i++){
+                      let option = $("#todoTypCd option")[i];
+                      if(value === option.value){
+                        return option.text;
+                      }
+                    };
+                    return '-';
+                  }
+                },
+                {field: 'todoDtlVal',    title: '할일상세', visible: false},
                 {field: 'todoTitl',      title: '할일명',  align: 'center',valign:'middle', sortable: true},
-                {field: 'todoPoint',     title: '포인트',  align: 'center',valign:'middle', sortable: true},
-                {field: 'todoCreCd',     title: '생성유형',  align: 'center',valign:'middle', sortable: true},
+                {field: 'todoPoint',     title: '포인트',  align: 'center',valign:'middle', sortable: true},                                
+                {field: 'workerList',    title: '작업자', visible: false
+                 ,formatter: function(value, row, index) {
+                    let retVal = null;
+                    value.forEach((element)=>{
+                      if(retVal === null){
+                        retVal = element.userNm;
+                      }else{
+                        retVal += ("," + element.userNm);
+                      }
+                    });                   
+                    return retVal;
+                  }
+                },
+                {field: 'checkerList',   title: '확인자', visible: false
+                  ,formatter: function(value, row, index) {
+                    let retVal = null;
+                    value.forEach((element)=>{
+                      if(retVal === null){
+                        retVal = element.userNm;
+                      }else{
+                        retVal += ("," + element.userNm);
+                      }
+                    });                   
+                    return retVal;
+                  }
+                },
+                {field: 'todoCreCd',     title: '생성유형',  align: 'center',valign:'middle'
+                 ,formatter: function(value, row, index) {
+                    let size = $("#todoCreCd option").length;                    
+                    for(let i = 0; i < size; i++){
+                      let option = $("#todoCreCd option")[i];
+                      if(value === option.value){
+                        return option.text;
+                      }
+                    };
+                    return '-';
+                  }
+                },
                 {field: 'todoCreDtlVal', title: '생성상세', visible: false},
-                {field: 'todoTypCd',     title: '할일유형', align: 'center',valign:'middle', sortable: true},
-                {field: 'todoDtlVal',     title: '할일상세', visible: false},                
                 {field: 'dateLimitCnt',  title: '일제한수', visible: false},
-                                
                 {field: 'postBeginDate', title: '게시시작일', visible: false},
                 {field: 'postEndDate',   title: '게시종료일', visible: false},
-                {field: 'execBeginTm',   title: '시작시간', visible: false},
-                {field: 'execEndTm',     title: '마감시간', visible: false},
+                {field: 'limitBeginTm',  title: '시작시간', visible: false},
+                {field: 'limitEndTm',    title: '마감시간', visible: false},
                 {field: 'quizUseYn',     title: '할일유형', visible: false},
                 {field: 'quizTypCd',     title: '생성유형', visible: false},
               ],
@@ -115,12 +206,22 @@
                   data.totalNotFiltered = data.totalElements;
 
                   return data;
-              }
-              /*,
+              },
               queryParams: function(params){
-
+                if($("#todoTitl").val() !== ''){
+                  params.todoTitl = $("#todoTitl").val();
+                }
+                if($("#workerNm").val() !== ''){
+                  params.workerNm = $("#workerNm").val();
+                }
+                if($("#todoTypCd").val() !== ''){
+                  params.todoTypCd = $("#todoTypCd").val();
+                }                
+                if($("#todoCreCd").val() !== ''){
+                  params.todoCreCd = $("#todoCreCd").val();
+                }
                 return params;
-              }*/
+              }
             });            
           }        
         }

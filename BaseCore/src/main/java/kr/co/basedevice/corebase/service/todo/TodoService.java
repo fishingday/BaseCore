@@ -60,16 +60,16 @@ public class TodoService {
 	 */
 	public Page<TodoMgtDto> pageTodoMgtList(SearchTodoMgt searchTodoMgt, Pageable pageable){
 		
-		Page<TodoMgtDto> pageTodoDetailInfo =  tdTodoRepository.pageTodoDetailInfo(searchTodoMgt, pageable);
+		Page<TodoMgtDto> pageTodoDetailInfo =  tdTodoRepository.pageTodoMgtList(searchTodoMgt, pageable);
 		
 		if(pageTodoDetailInfo != null && !pageTodoDetailInfo.isEmpty()) {
 			
-			for(TodoMgtDto todoDetailDto : pageTodoDetailInfo.getContent()) {
+			for(TodoMgtDto todoMgt : pageTodoDetailInfo.getContent()) {
 				// 확인자 목록
-				todoDetailDto.setCheckerList(tdTodoRepository.getCheckerList(todoDetailDto.getTodoSeq()));
+				todoMgt.setCheckerList(tdTodoRepository.getCheckerList(todoMgt.getTodoSeq()));
 				
 				// 작업자 목록
-				todoDetailDto.setWorkerList(tdTodoRepository.getWorkerList(todoDetailDto.getTodoSeq()));;
+				todoMgt.setWorkerList(tdTodoRepository.getWorkerList(todoMgt.getTodoSeq()));;
 			}
 		}
 		
@@ -262,18 +262,18 @@ public class TodoService {
 				tdWork.setWorkStatCd(WorkStatCd.READY);
 				
 				LocalTime workPossBeginTime = null;
-				if(ObjectUtils.isEmpty(tdTodo.get().getExecBeginTm())){
+				if(ObjectUtils.isEmpty(tdTodo.get().getLimitBeginTm())){
 					workPossBeginTime = LocalTime.of(0, 0, 0);
 				}else {
-					workPossBeginTime = tdTodo.get().getExecBeginTm();
+					workPossBeginTime = tdTodo.get().getLimitBeginTm();
 				}
 				tdWork.setWorkPossBeginDt(LocalDateTime.of(createDate, workPossBeginTime));
 				
 				LocalTime workPossEndTime = null;
-				if(ObjectUtils.isEmpty(tdTodo.get().getExecEndTm())){
+				if(ObjectUtils.isEmpty(tdTodo.get().getLimitEndTm())){
 					workPossEndTime = LocalTime.of(23, 59, 59);
 				}else {
-					workPossEndTime = tdTodo.get().getExecEndTm();
+					workPossEndTime = tdTodo.get().getLimitEndTm();
 				}
 				tdWork.setWorkPossEndDt(LocalDateTime.of(createDate, workPossEndTime));
 								

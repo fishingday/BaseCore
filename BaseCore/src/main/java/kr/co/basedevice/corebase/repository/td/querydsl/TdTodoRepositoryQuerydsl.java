@@ -20,7 +20,7 @@ public interface TdTodoRepositoryQuerydsl {
 	 * @param pageable
 	 * @return
 	 */
-	Page<TodoMgtDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable pageable);
+	Page<TodoMgtDto> pageTodoMgtList(SearchTodoMgt searchTodoMgt, Pageable pageable);
 	
 	/**
 	 * 할일별 확인자 목록

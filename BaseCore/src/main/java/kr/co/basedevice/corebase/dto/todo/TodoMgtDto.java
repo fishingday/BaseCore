@@ -38,9 +38,9 @@ public class TodoMgtDto {
 	
 	private LocalDate postEndDate;
 	
-	private LocalTime execBeginTm;
+	private LocalTime limitBeginTm;
 	
-	private LocalTime execEndTm;
+	private LocalTime limitEndTm;
 	
 	private Yn quizUseYn;
 	

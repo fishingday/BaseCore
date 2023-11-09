@@ -39,10 +39,12 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 	 * 
 	 */
 	@Override
-	public Page<TodoMgtDto> pageTodoDetailInfo(SearchTodoMgt searchTodoMgt, Pageable page) {
-		QTdCheckerMap tdCheckerMap = QTdCheckerMap.tdCheckerMap;
-		QTdWorkerMap tdWorkerMap = QTdWorkerMap.tdWorkerMap;
+	public Page<TodoMgtDto> pageTodoMgtList(SearchTodoMgt searchTodoMgt, Pageable page) {
 		QTdTodo tdTodo = QTdTodo.tdTodo;
+		QTdCheckerMap tdCheckerMap = QTdCheckerMap.tdCheckerMap;
+		
+		QTdWorkerMap tdWorkerMap = QTdWorkerMap.tdWorkerMap;
+		QCmUser cmUser = QCmUser.cmUser;		
 		
 		JPQLQuery<TodoMgtDto> query = jpaQueryFactory.select(
 				Projections.bean(TodoMgtDto.class,
@@ -59,15 +61,19 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 					,tdTodo.todoCreDtlVal
 					,tdTodo.postBeginDate
 					,tdTodo.postEndDate
-					,tdTodo.execBeginTm
-					,tdTodo.execEndTm
+					,tdTodo.limitBeginTm
+					,tdTodo.limitEndTm
 					,tdTodo.quizUseYn
 					,tdTodo.quizTypCd
 				)
 			)
-			.from(tdTodo);
+			.from(tdTodo).innerJoin(tdCheckerMap).on(tdTodo.todoSeq.eq(tdCheckerMap.todoSeq));
+		
 			BooleanBuilder builder = new BooleanBuilder();
 			builder.and(tdTodo.delYn.eq(Yn.N));
+			builder.and(tdTodo.upTodoSeq.isNull()); // 부모 할일만 조회가 가능...
+			builder.and(tdCheckerMap.delYn.eq(Yn.N));
+			builder.and(tdCheckerMap.checkerSeq.eq(searchTodoMgt.getCheckerSeq()));			
 			
 			if(!ObjectUtils.isEmpty(searchTodoMgt.getTodoTitl())) {
 				builder.and(tdTodo.todoTitl.contains(searchTodoMgt.getTodoTitl()));
@@ -78,19 +84,15 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 			if(!ObjectUtils.isEmpty(searchTodoMgt.getTodoCreCd())) {
 				builder.and(tdTodo.todoCreCd.eq(searchTodoMgt.getTodoCreCd()));
 			}
-			
-			if(!ObjectUtils.isEmpty(searchTodoMgt.getCheckerSeqList()) && searchTodoMgt.getCheckerSeqList().size() > 0) {
-				JPQLQuery <Long> subQuery = 
-			    		  JPAExpressions.select(Projections.bean(Long.class, tdCheckerMap.todoSeq))
-			    	      .from(tdCheckerMap)
-			    	      .where(tdCheckerMap.delYn.eq(Yn.N), tdCheckerMap.checkerSeq.in(searchTodoMgt.getCheckerSeqList()));			    	      
-				builder.and(tdTodo.todoSeq.in(subQuery));
-			}
-			if(!ObjectUtils.isEmpty(searchTodoMgt.getWorkerSeqList()) && searchTodoMgt.getWorkerSeqList().size() > 0) {
+			if(!ObjectUtils.isEmpty(searchTodoMgt.getWorkerNm())) {
 				JPQLQuery <Long> subQuery = 
 			    		  JPAExpressions.select(Projections.bean(Long.class, tdWorkerMap.todoSeq))
 			    	      .from(tdWorkerMap)
-			    	      .where(tdWorkerMap.delYn.eq(Yn.N), tdWorkerMap.workerSeq.in(searchTodoMgt.getWorkerSeqList()));			    	      
+			    	      .innerJoin(cmUser).on(tdWorkerMap.workerSeq.eq(cmUser.userSeq))
+			    	      .where( tdWorkerMap.delYn.eq(Yn.N), 
+			    	    		  cmUser.delYn.eq(Yn.N),
+			    	    		  cmUser.userNm.contains(searchTodoMgt.getWorkerNm())
+			    	    		);
 				builder.and(tdTodo.todoSeq.in(subQuery));
 			}
 		
@@ -98,14 +100,16 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 			if(!ObjectUtils.isEmpty(searchTodoMgt.getOrder()) && !ObjectUtils.isEmpty(searchTodoMgt.getSort())) {
 		    	Order direction = Order.valueOf(searchTodoMgt.getOrder().toUpperCase());
 		    	
-		        if(searchTodoMgt.getSort().equals("todoTitl")) {
+		        if("todoTitl".equals(searchTodoMgt.getSort())) {
 			        query.orderBy(new OrderSpecifier<>(direction, tdTodo.todoSeq));
-		        }else if( searchTodoMgt.getSort().equals("todoPoint")) {
+		        }else if("todoPoint".equals(searchTodoMgt.getSort())) {
 			       	query.orderBy(new OrderSpecifier<>(direction, tdTodo.todoPoint));
+		        }else if("todoSeq".equals(searchTodoMgt.getSort())) {
+			       	query.orderBy(new OrderSpecifier<>(direction, tdTodo.todoSeq));
 		        }else{
 		        	query.orderBy(tdTodo.todoSeq.asc());
 		        }
-			}else {
+			}else{
 	        	query.orderBy(tdTodo.todoSeq.asc());
 			}
 			
