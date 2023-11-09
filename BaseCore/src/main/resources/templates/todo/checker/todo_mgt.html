@@ -148,7 +148,11 @@
                 },
                 {field: 'todoDtlVal',    title: '할일상세', visible: false},
                 {field: 'todoTitl',      title: '할일명',  align: 'center',valign:'middle', sortable: true},
-                {field: 'todoPoint',     title: '포인트',  align: 'center',valign:'middle', sortable: true},                                
+                {field: 'todoPoint',     title: '포인트',  align: 'center',valign:'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }
+                },                                
                 {field: 'workerList',    title: '작업자', visible: false
                  ,formatter: function(value, row, index) {
                     let retVal = null;

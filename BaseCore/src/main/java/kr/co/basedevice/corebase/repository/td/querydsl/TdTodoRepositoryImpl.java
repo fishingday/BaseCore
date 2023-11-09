@@ -127,7 +127,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 		QCmUser cmUser = QCmUser.cmUser;
 		QTdCheckerMap tdCheckerMap = QTdCheckerMap.tdCheckerMap;
 		
-		JPQLQuery<TodoUserDto> query = jpaQueryFactory.selectDistinct(
+		JPQLQuery<TodoUserDto> query = jpaQueryFactory.select(
 				Projections.bean(TodoUserDto.class,
 					cmUser.userSeq
 					,cmUser.loginId
@@ -150,7 +150,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 		QCmUser cmUser = QCmUser.cmUser;
 		QTdWorkerMap tdWorkerMap = QTdWorkerMap.tdWorkerMap;
 		
-		JPQLQuery<TodoUserDto> query = jpaQueryFactory.selectDistinct(
+		JPQLQuery<TodoUserDto> query = jpaQueryFactory.select(
 				Projections.bean(TodoUserDto.class,
 					cmUser.userSeq
 					,cmUser.loginId

@@ -101,7 +101,11 @@
                     }
                   }
                 },
-                {field: 'gainPoint', title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true},                
+                {field: 'gainPoint', title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }
+                },                
                 {field: 'workDt',    title: '작업일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
                 {field: 'confmDt',   title: '확인일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
                 
