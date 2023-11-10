@@ -56,11 +56,11 @@
           fnObj.page.init();
           
           $("#workTitl").bind("change", function(){
-            fnObj.action.reloadWdorkList();
+            fnObj.action.reloadMainList();
           });
           
           $("#workDate").bind("change", function(){
-            fnObj.action.reloadWdorkList();
+            fnObj.action.reloadMainList();
           });
         },
         page: {
@@ -69,7 +69,7 @@
           }
         },
         action: { // 호출이나 화면 동작
-          reloadWdorkList: function(){
+          reloadMainList: function(){
             $('#table-work').bootstrapTable('refresh')
           }
         },

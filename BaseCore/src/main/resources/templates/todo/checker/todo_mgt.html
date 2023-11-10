@@ -4,13 +4,13 @@
       layout:decorate="~{layouts/default_layout}">
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>할일 관리</title>
+      <title>할일관리</title>
   </head>
 
     <!-- Content 시작 -->
     <div layout:fragment="content" class="col">
       <div class="row">
-          <h4 class="text-primary">할일 관리</h4>
+          <h4 class="text-primary">할일관리</h4>
           <div class="row mb-2">
             <div class="col">
               <div class="input-group">
@@ -74,19 +74,19 @@
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
           $("#todoTitl").bind("change", function(){
-            fnObj.action.reloadTodoList();
+            fnObj.action.reloadMainList();
           });
           
           $("#workerNm").bind("change", function(){
-            fnObj.action.reloadTodoList();
+            fnObj.action.reloadMainList();
           });
           
           $("#todoTypCd").bind("change", function(){
-            fnObj.action.reloadTodoList();
+            fnObj.action.reloadMainList();
           });
           
           $("#todoCreCd").bind("change", function(){
-            fnObj.action.reloadTodoList();
+            fnObj.action.reloadMainList();
           });
         },
         page: {
@@ -99,7 +99,7 @@
           }
         },
         action: { // 호출이나 화면 동작
-          reloadTodoList: function(){
+          reloadMainList: function(){
             $('#table-todo').bootstrapTable('refresh');
           },
           initCmCodeData: function(grpCdNm, targetId){

@@ -73,41 +73,42 @@
           fnObj.page.init();
           
           $("#workTitl").bind("change", function(){
-            fnObj.action.reloadPlanWdork();
+            fnObj.action.reloadMainList();
           });
           
           $("#workDate").bind("change", function(){
-            fnObj.action.reloadPlanWdork();
+            fnObj.action.reloadMainList();
           });
           
           $("#workerNm").bind("change", function(){
-            fnObj.action.reloadPlanWdork();
+            fnObj.action.reloadMainList();
           });
           
           $("#workStatCd").bind("change", function(){
-            fnObj.action.reloadPlanWdork();
+            fnObj.action.reloadMainList();
           });
         },
         page: {
           init: function(){ // 버튼 바인딩 등
-            fnObj.action.initWorkStatCdData();
-            fnObj.grid.init_PlanWork();
+            fnObj.action.initCmCodeData("WORK_STAT_CD", "#workStatCd").then(function(){
+              fnObj.grid.init_PlanWork();
+            });
           }
         },
         action: { // 호출이나 화면 동작
-          reloadPlanWdork: function(){
+          reloadMainList: function(){
             $('#table-planwork').bootstrapTable('refresh')
           },
-          initWorkStatCdData: function(){
+          initCmCodeData: function(grpCdNm, targetId){
             return $.ajax({
               url: "[[@{/common/code_dtl_list.json}]]",
               type: "GET",
               async: true,
               dataType : "json",
-              data : {grpCd:'WORK_STAT_CD'}
+              data : {grpCd:grpCdNm}
             }).done(function(data, textStatus, xhr){
               for(var i = 0; i < data.length; i++ ){
-                $("#workStatCd").append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
+                $(targetId).append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
               }
             }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
@@ -135,17 +136,14 @@
                 {field: 'workTitl',      title: '작업명', align: 'center',valign: 'middle', sortable: true},
                 {field: 'workStatCd',    title: '작업상태',align: 'center',valign: 'middle', sortable: true
                   ,formatter: function(value, row, index) {
-                    if(value === 'READY'){
-                      return '대기'
-                    }else if(value === 'ONGOING'){
-                      return '진행중';
-                    }else if(value === 'FAIL'){
-                      return '실패';
-                    }else if(value === 'DONE'){
-                      return '완료';
-                    }else{
-                      return value
-                    }
+                    let size = $("#workStatCd option").length;                    
+                    for(let i = 0; i < size; i++){
+                      let option = $("#workStatCd option")[i];
+                      if(value === option.value){
+                        return option.text;
+                      }
+                    };
+                    return '-';
                   }
                 },
                 {field: 'gainPoint',     title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true

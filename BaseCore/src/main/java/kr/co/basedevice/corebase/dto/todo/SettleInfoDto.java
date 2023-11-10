@@ -3,6 +3,9 @@ package kr.co.basedevice.corebase.dto.todo;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import kr.co.basedevice.corebase.domain.td.TdWork;
 import lombok.Data;
 
 @Data
@@ -18,16 +21,12 @@ public class SettleInfoDto {
 	
 	private String setleDesc;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime setleDt;
 	
 	private String workerNm;
 	
 	private String loginId;
 	
-	private String acountNm;
-	
-	private Integer workItemCnt;
-	
-	private List<Long> workSeqList;
-	
+	private List<TdWork> listTdWork;	
 }

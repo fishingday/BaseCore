@@ -33,7 +33,11 @@ public class TodoSettleRestController {
 	final private SettleService settleService;
 	
 	/**
-	 * 정산 목록 with 사용자별 미정산 현황 
+	 * 화면이 나오면 가장 최근 순으로 정산 목록을 보여준다.
+	 * 정산은 사용자별로 작업목록의 합으로 이루어 진다.	 
+	 * 정산목록은 확장할 수 있으며, 확장된 목록에는 정산별 작업목록이 나온다. 
+	 * 정산은 본인이 한 정산만 나온다.
+	 * 완료된 정산은 수정할 수 없다. 
 	 * 
 	 * @param searchSettle
 	 * @param page

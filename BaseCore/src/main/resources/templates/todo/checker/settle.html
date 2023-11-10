@@ -7,11 +7,158 @@
       <title>정산관리</title>
   </head>
 
-  <!-- Content 시작 -->
-      <div layout:fragment="content"style="padding-top:50px;"  class="col">
-          <div class="container text-center">
-              <h1 class="text-primary">여기는 정산관리 페이지 입니다.</h1>
+    <!-- Content 시작 -->
+    <div layout:fragment="content" class="col">
+      <div class="row">
+          <h4 class="text-primary">정산관리</h4>
+          <div class="row mb-2">
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">작업자명</div>
+                <input type="text" class="form-control" id="workerNm" placeholder="작업자 명" aria-label="작업자 명">
+              </div>
+            </div>
           </div>
+          <div class="row mb-2">
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">정산일</div>
+                <input type="date" class="form-control" id="settleBeginDate">
+                <span>~</span>
+                <input type="date" class="form-control" id="settleEndDate">
+              </div>
+            </div>
+          </div>
+          <table
+            id="table-settle"
+            data-search="false"
+            data-show-columns="true"
+            data-pagination="true"
+            data-pagination-loop="false"
+            data-click-to-select="true"
+            data-id-field="setleSeq"
+            data-side-pagination="server"
+            data-server-sort="true"
+            data-detail-view="true"
+            data-detail-formatter="fnObj.grid.detailFormatter"
+            th:data-url="@{/checker/settle/page_settle_info.json}">
+          </table>
       </div>
+      <!-- modal -->
+      <div class="modal-staging">
+          
+      </div>
+      <!-- modal -->
+    </div>
+    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+        
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
+
+      var fnObj = {
+        pageStart:  function(){ // 페이지 초기 실행 스크립트
+          
+          $("#workerNm").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#settleBeginDate").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#settleEndDate").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          fnObj.page.init();
+        },
+        page: {
+          init: function(){ // 
+            fnObj.grid.init_settle();
+          }
+        },
+        action: { // 호출이나 화면 동작
+          reloadMainList: function(){
+            $('#table-settle').bootstrapTable('refresh');
+          }
+        },
+        grid: { // 그리드 관련
+          init_settle: function(){
+            $('#table-settle').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {field: 'setleSeq',  title: '정산순번', visible: false, sortable: true},
+                {field: 'workerSeq', title: '작업자순번', visible: false, sortable: true},
+                {field: 'workerNm',  title: '작업자명', align: 'center',valign:'middle', sortable: true},
+                {field: 'setleDt',   title: '정산일', align: 'center',valign:'middle', sortable: true},
+                {field: 'totalSetlePoint', title: '정산포인트', align: 'center',valign:'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }
+                },                
+                {field: 'setleCont',   title: '내용', visible: false}
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                  data.rows = data.content; // 이름을 변경해 줘야 한다.
+                  delete data.content;
+                  $.each(data.row, function (i, row) {
+                    row.state = $.inArray(row.todoSeq, selections) !== -1
+                  })
+                  data.total = data.totalElements;
+                  data.totalNotFiltered = data.totalElements;
+
+                  return data;
+              },
+              queryParams: function(params){ 
+                if($("#workerNm").val() !== ''){
+                  params.workerNm = $("#workerNm").val();
+                }
+                if($("#settleBeginDate").val() !== ''){
+                  params.settleBeginDate = $("#settleBeginDate").val();
+                }
+                if($("#settleEndDate").val() !== ''){
+                  params.settleEndDate = $("#settleEndDate").val();
+                }
+                return params;
+              }
+            });
+            
+            $('#table-settle').on('post-body.bs.table', function(data){
+              $("th.detail").addClass('table-primary');    
+            });        
+          },
+          detailFormatter: function(index, row){
+            var html = [];
+            html.push('<table class="table">');
+            html.push('<thead>');
+            html.push('<tr><th scope="col">#</th><th scope="col">작업명</th><th scope="col">포인트</th><th scope="col">작업시간</th></tr>');
+            html.push('</thead><tbody>');
+            let cnt = 1;
+            row.listTdWork.forEach((ele)=>{
+              html.push('<tr>');  
+              html.push('<td>' + cnt++ + '</td>');
+              html.push('<td>' + ele.workTitl + '</td>');
+              html.push('<td>' + ele.gainPoint + '</td>');
+              html.push('<td>' + ele.workDt + '</td>');
+              html.push('</tr>');
+            });
+            html.push('</tbody></table>');
+            return html.join('');
+          }
+        }
+      }
+        
+      window.addEventListener("load", function(){
+        fnObj.pageStart();
+      });
+    </script>
   <!-- Content 종료 -->
 </html>

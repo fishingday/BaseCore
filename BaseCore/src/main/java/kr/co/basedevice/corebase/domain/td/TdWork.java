@@ -57,7 +57,7 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "WORK_CONT", length = 4000)
 	private String workCont;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss.SSS")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
 	@Column(name = "WORK_DT")
 	private LocalDateTime workDt;
@@ -66,13 +66,15 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private WorkStatCd workStatCd;
 	
+	// 작업 가능 시작 시간
 	@Column(name = "WORK_POSS_BEGIN_DT", nullable = false)
 	private LocalDateTime workPossBeginDt;
 	
+	// 작업 가능 종료 시간
 	@Column(name = "WORK_POSS_END_DT", nullable = false)
 	private LocalDateTime workPossEndDt;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss.SSS")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기
 	@Column(name = "CONFM_DT")
 	private LocalDateTime confmDt;

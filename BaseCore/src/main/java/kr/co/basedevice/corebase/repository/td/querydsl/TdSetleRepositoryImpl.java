@@ -1,6 +1,8 @@
 package kr.co.basedevice.corebase.repository.td.querydsl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,51 +34,52 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 
 	@Override
 	public Page<SettleInfoDto> pageSettleInfo(SearchSettle searchSettle, Pageable page) {
-		QTdSetle todoSetle = QTdSetle.tdSetle;
+		QTdSetle tdSetle = QTdSetle.tdSetle;
 		QCmUser worker = QCmUser.cmUser;
 		QCmUser acounter = QCmUser.cmUser;
 		
 		JPQLQuery<SettleInfoDto> query = jpaQueryFactory.select(
 				Projections.bean(SettleInfoDto.class,
-					 todoSetle.setleSeq				
-					,todoSetle.workerSeq
-					,todoSetle.acountSeq
-					,todoSetle.totalSetlePoint
-					,todoSetle.setleDesc
-					,todoSetle.setleDt
+					 tdSetle.setleSeq
+					,tdSetle.workerSeq
+					,tdSetle.acountSeq
+					,tdSetle.totalSetlePoint
+					,tdSetle.setleDesc
+					,tdSetle.setleDt
 				    ,worker.userNm.as("workerNm")
-				    ,worker.loginId
 				    ,acounter.userNm.as("acountNm")
 				)
 			)
-			.from(todoSetle)
-			.innerJoin(worker).on(todoSetle.workerSeq.eq(worker.userSeq))
-			.innerJoin(acounter).on(todoSetle.acountSeq.eq(acounter.userSeq));
+			.from(tdSetle)
+			.innerJoin(worker).on(tdSetle.workerSeq.eq(worker.userSeq))
+			.innerJoin(acounter).on(tdSetle.acountSeq.eq(acounter.userSeq));
 
 		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(todoSetle.delYn.eq(Yn.N));
+		builder.and(tdSetle.delYn.eq(Yn.N));
 		
-		if(!ObjectUtils.isEmpty(searchSettle.getSetleSeq())) {
-			builder.and(todoSetle.setleSeq.eq(searchSettle.getSetleSeq()));
+		if(!ObjectUtils.isEmpty(searchSettle.getAcountSeq())) { // 확인자라면...
+			builder.and(tdSetle.acountSeq.eq(searchSettle.getAcountSeq()));
 		}
 		
-		if(!ObjectUtils.isEmpty(searchSettle.getWorkerSeq())) {
-			builder.and(todoSetle.workerSeq.eq(searchSettle.getWorkerSeq()));
+		if(!ObjectUtils.isEmpty(searchSettle.getWorkerSeq())) { // 작업자라면...
+			builder.and(tdSetle.workerSeq.eq(searchSettle.getWorkerSeq()));
 		}
 		
-		if(!ObjectUtils.isEmpty(searchSettle.getAcountSeq())) {
-			builder.and(todoSetle.acountSeq.eq(searchSettle.getAcountSeq()));
-		}
-		
-		if(!ObjectUtils.isEmpty(searchSettle.getBeginSetleDt())) {
-			if(ObjectUtils.isEmpty(searchSettle.getEndSetleDt())) {
-				searchSettle.setEndSetleDt(LocalDateTime.now());
+		if(!ObjectUtils.isEmpty(searchSettle.getSettleBeginDate())) {
+			if(ObjectUtils.isEmpty(searchSettle.getSettleEndDate())) {
+				searchSettle.setSettleEndDate(LocalDate.now());
 			}			
-			builder.and(todoSetle.setleDt.between(searchSettle.getBeginSetleDt(), searchSettle.getEndSetleDt()));
+			builder.and(tdSetle.setleDt.between(
+					LocalDateTime.of(searchSettle.getSettleBeginDate(), LocalTime.of(0, 0, 0)), 
+					LocalDateTime.of(searchSettle.getSettleEndDate().plusDays(1), LocalTime.of(0, 0, 0).minusSeconds(1))));
 		}
 		
 		if(!ObjectUtils.isEmpty(searchSettle.getWorkerNm())) {
 			builder.and(worker.userNm.contains(searchSettle.getWorkerNm()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchSettle.getSetleDesc())) {
+			builder.and(tdSetle.setleDesc.contains(searchSettle.getSetleDesc()));
 		}
 		
 		query.where(builder);
@@ -86,11 +89,17 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 	    	
 	        if(searchSettle.getSort().equals("workerNm")) {
 		        query.orderBy(new OrderSpecifier<>(direction, worker.userNm));
+	        }else if(searchSettle.getSort().equals("setleDt")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdSetle.setleDt));
+	        }else if(searchSettle.getSort().equals("totalSetlePoint")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdSetle.totalSetlePoint));
+	        }else if(searchSettle.getSort().equals("setleSeq")) {
+		        query.orderBy(new OrderSpecifier<>(direction, tdSetle.setleSeq));
 	        }else{
-	        	query.orderBy(todoSetle.setleSeq.desc());
+	        	query.orderBy(tdSetle.setleSeq.desc());
 	        }
 		}else {
-        	query.orderBy(todoSetle.setleSeq.desc());
+        	query.orderBy(tdSetle.setleSeq.desc());
 		}
 		
 		QueryResults<SettleInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
