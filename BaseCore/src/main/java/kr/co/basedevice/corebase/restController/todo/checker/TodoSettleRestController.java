@@ -50,7 +50,7 @@ public class TodoSettleRestController {
 		}
 		
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		searchSettle.setAcountSeq(cmUser.getUserSeq());
+		searchSettle.setAcountSeq(cmUser.getUserSeq()); // 확인자라면..
 		
 		Page<SettleInfoDto> pageSettleInfo = settleService.pageSettleInfo(searchSettle, page);
 		

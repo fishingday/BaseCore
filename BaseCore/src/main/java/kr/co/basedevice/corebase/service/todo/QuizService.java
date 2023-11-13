@@ -34,7 +34,16 @@ public class QuizService {
 	 */
 	public Page<QuizInfoDto> findByQuizInfo(SearchQuiz searchQuiz, Pageable page) {
 		Page<QuizInfoDto> pageQuizInfoDto = quizRepository.findByQuizInfo(searchQuiz, page);
-				
+		
+		if(!pageQuizInfoDto.isEmpty() && !pageQuizInfoDto.getContent().isEmpty()) {
+			
+			int num = 1 + (pageQuizInfoDto.getNumber() * pageQuizInfoDto.getSize());
+			for(int i = 0; i < pageQuizInfoDto.getContent().size(); i++) {
+				QuizInfoDto quizInfoDto = pageQuizInfoDto.getContent().get(i);
+				quizInfoDto.setNum(num + i);
+			}
+		}
+		
 		return pageQuizInfoDto;
 	}
 

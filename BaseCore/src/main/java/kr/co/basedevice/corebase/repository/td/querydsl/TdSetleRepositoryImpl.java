@@ -35,8 +35,7 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 	@Override
 	public Page<SettleInfoDto> pageSettleInfo(SearchSettle searchSettle, Pageable page) {
 		QTdSetle tdSetle = QTdSetle.tdSetle;
-		QCmUser worker = QCmUser.cmUser;
-		QCmUser acounter = QCmUser.cmUser;
+		QCmUser cmUser = QCmUser.cmUser;
 		
 		JPQLQuery<SettleInfoDto> query = jpaQueryFactory.select(
 				Projections.bean(SettleInfoDto.class,
@@ -46,22 +45,23 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 					,tdSetle.totalSetlePoint
 					,tdSetle.setleDesc
 					,tdSetle.setleDt
-				    ,worker.userNm.as("workerNm")
-				    ,acounter.userNm.as("acountNm")
+				    ,cmUser.userNm
+				    ,cmUser.loginId
 				)
 			)
-			.from(tdSetle)
-			.innerJoin(worker).on(tdSetle.workerSeq.eq(worker.userSeq))
-			.innerJoin(acounter).on(tdSetle.acountSeq.eq(acounter.userSeq));
-
+			.from(tdSetle);
+		
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(tdSetle.delYn.eq(Yn.N));
 		
-		if(!ObjectUtils.isEmpty(searchSettle.getAcountSeq())) { // 확인자라면...
+		// 둘중에 하나는 반드시...
+		if(!ObjectUtils.isEmpty(searchSettle.getAcountSeq())) { // 정산자라면...
+			// 작업자를 조인한다.
+			query.innerJoin(cmUser).on(tdSetle.workerSeq.eq(cmUser.userSeq));			
 			builder.and(tdSetle.acountSeq.eq(searchSettle.getAcountSeq()));
-		}
-		
-		if(!ObjectUtils.isEmpty(searchSettle.getWorkerSeq())) { // 작업자라면...
+		}else{ // 작업자라면...
+			// 정산자를 조인한다.
+			query.innerJoin(cmUser).on(tdSetle.acountSeq.eq(cmUser.userSeq));			
 			builder.and(tdSetle.workerSeq.eq(searchSettle.getWorkerSeq()));
 		}
 		
@@ -74,8 +74,8 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 					LocalDateTime.of(searchSettle.getSettleEndDate().plusDays(1), LocalTime.of(0, 0, 0).minusSeconds(1))));
 		}
 		
-		if(!ObjectUtils.isEmpty(searchSettle.getWorkerNm())) {
-			builder.and(worker.userNm.contains(searchSettle.getWorkerNm()));
+		if(!ObjectUtils.isEmpty(searchSettle.getUserNm())) {
+			builder.and(cmUser.userNm.contains(searchSettle.getUserNm()));
 		}
 		
 		if(!ObjectUtils.isEmpty(searchSettle.getSetleDesc())) {
@@ -87,8 +87,8 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 		if(!ObjectUtils.isEmpty(searchSettle.getOrder()) && !ObjectUtils.isEmpty(searchSettle.getSort())) {
 	    	Order direction = Order.valueOf(searchSettle.getOrder().toUpperCase());
 	    	
-	        if(searchSettle.getSort().equals("workerNm")) {
-		        query.orderBy(new OrderSpecifier<>(direction, worker.userNm));
+	        if(searchSettle.getSort().equals("userNm")) {
+		        query.orderBy(new OrderSpecifier<>(direction, cmUser.userNm));
 	        }else if(searchSettle.getSort().equals("setleDt")) {
 		        query.orderBy(new OrderSpecifier<>(direction, tdSetle.setleDt));
 	        }else if(searchSettle.getSort().equals("totalSetlePoint")) {

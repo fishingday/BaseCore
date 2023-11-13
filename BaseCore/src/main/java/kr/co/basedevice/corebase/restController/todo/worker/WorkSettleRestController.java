@@ -52,7 +52,7 @@ public class WorkSettleRestController {
 		}
 		
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		searchSettle.setWorkerSeq(cmUser.getUserSeq());
+		searchSettle.setWorkerSeq(cmUser.getUserSeq()); // 작업자라면...
 		
 		Page<SettleInfoDto> pageSettleInfo = settleService.pageSettleInfo(searchSettle, page);
 		

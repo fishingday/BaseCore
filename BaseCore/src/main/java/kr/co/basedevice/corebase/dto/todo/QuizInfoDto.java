@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class QuizInfoDto {
 	
+	private Integer num;
+	
 	private Long quizSeq;
 
 	private QuizTypCd quizTypCd;

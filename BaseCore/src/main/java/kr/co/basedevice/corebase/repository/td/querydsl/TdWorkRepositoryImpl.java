@@ -194,6 +194,21 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 			builder.and(tdWork.workStatCd.eq(searchWork.getWorkStatCd()));
 		}
 		
+		if(!ObjectUtils.isEmpty(searchWork.getSetleYn())) {
+			builder.and(tdWork.setleYn.eq(searchWork.getSetleYn()));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkBeginDate())) {
+			builder.and(tdWork.workPossBeginDt.gt(LocalDateTime.of(searchWork.getWorkBeginDate(), LocalTime.of(0, 0, 0, 0)).minusSeconds(1)));
+		}
+		
+		if(!ObjectUtils.isEmpty(searchWork.getWorkEndDate())) {
+			builder.and(tdWork.workPossBeginDt.lt(LocalDateTime.of(searchWork.getWorkEndDate(), LocalTime.of(23, 59, 59, 999))));
+		}
+		
+		
+		
+		
 		query.where(builder);
 		
 		if(!ObjectUtils.isEmpty(searchWork.getOrder()) && !ObjectUtils.isEmpty(searchWork.getSort())) {
@@ -318,8 +333,8 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(tdWork.delYn.eq(Yn.N));
 		builder.and(cmUser.delYn.eq(Yn.N));
-		builder.and(tdWork.workPossBeginDt.gt(searchWork.getWorkBeginDt()));
-		builder.and(tdWork.workPossBeginDt.lt(searchWork.getWorkEndDt()));
+		builder.and(tdWork.workPossBeginDt.gt(LocalDateTime.of(searchWork.getWorkBeginDate(), LocalTime.of(0, 0, 0, 0)).minusSeconds(1)));
+		builder.and(tdWork.workPossBeginDt.lt(LocalDateTime.of(searchWork.getWorkEndDate(), LocalTime.of(0, 0, 0, 0))));
 		builder.and(tdWork.workerSeq.eq(searchWork.getWorkerSeq()));
 		
 		if(!ObjectUtils.isEmpty(searchWork.getWorkTitl())){

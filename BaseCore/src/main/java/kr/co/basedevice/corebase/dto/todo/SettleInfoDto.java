@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 public class SettleInfoDto {
+	private Integer num;
 	
 	private Long setleSeq;
 	
@@ -24,7 +25,7 @@ public class SettleInfoDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime setleDt;
 	
-	private String workerNm;
+	private String userNm;
 	
 	private String loginId;
 	

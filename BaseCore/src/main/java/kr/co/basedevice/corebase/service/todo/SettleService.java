@@ -45,7 +45,12 @@ public class SettleService {
 		Page<SettleInfoDto> pageSettleInfo = setleRepository.pageSettleInfo(searchSettle, page);
 		
 		if(!pageSettleInfo.isEmpty() && !pageSettleInfo.getContent().isEmpty()) {
-			for(SettleInfoDto settleInfo : pageSettleInfo.getContent()) {
+			
+			int num = 1 + (pageSettleInfo.getNumber() * pageSettleInfo.getSize());
+			for(int i = 0; i < pageSettleInfo.getContent().size(); i++) {
+				SettleInfoDto settleInfo = pageSettleInfo.getContent().get(i);
+				settleInfo.setNum(num + i);
+				
 				List<TdWork> listTdWork = workRepository.findByWork4SetleSeq(settleInfo.getSetleSeq());
 				settleInfo.setListTdWork(listTdWork);
 			}

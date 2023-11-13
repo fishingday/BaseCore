@@ -33,7 +33,17 @@ public class WorkService {
 	 */
 	public Page<WorkDetailInfoDto> pageWorkHistory(SearchWork searchWork, Pageable page) {
 
-		 Page<WorkDetailInfoDto> pageWorkInfo = tdWorkRepository.pageWorkHistory(searchWork, page);
+		Page<WorkDetailInfoDto> pageWorkInfo = tdWorkRepository.pageWorkHistory(searchWork, page);
+		
+		if(!pageWorkInfo.isEmpty() && !pageWorkInfo.getContent().isEmpty()) {
+			
+			int num = 1 + (pageWorkInfo.getNumber() * pageWorkInfo.getSize());
+			for(int i = 0; i < pageWorkInfo.getContent().size(); i++) {
+				WorkDetailInfoDto workDetailInfoDto = pageWorkInfo.getContent().get(i);
+				workDetailInfoDto.setNum(num + i);
+			}
+		}
+		 
 		
 		return pageWorkInfo;
 	}

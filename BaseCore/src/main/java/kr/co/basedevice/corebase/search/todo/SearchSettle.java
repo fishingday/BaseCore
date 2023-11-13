@@ -12,7 +12,7 @@ public class SearchSettle {
 	private Long workerSeq;	
 	private Long acountSeq;	
 	
-	private String workerNm;
+	private String userNm;
 	private String setleDesc;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

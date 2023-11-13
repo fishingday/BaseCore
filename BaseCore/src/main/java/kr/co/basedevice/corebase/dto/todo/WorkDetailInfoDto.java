@@ -13,6 +13,8 @@ import lombok.Data;
 
 @Data
 public class WorkDetailInfoDto {
+	private Integer num;
+	
 	private Long todoSeq;
 	private String todoTitl;
 	private String todoCont;

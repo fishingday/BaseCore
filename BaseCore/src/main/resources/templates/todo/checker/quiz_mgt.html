@@ -4,14 +4,214 @@
       layout:decorate="~{layouts/default_layout}">
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>퀴즈관리</title>
+      <title>퀴즈 관리</title>
   </head>
-
-  <!-- Content 시작 -->
-      <div layout:fragment="content"style="padding-top:50px;"  class="col">
-          <div class="container text-center">
-              <h1 class="text-primary">여기는 퀴즈관리 페이지 입니다.</h1>
+    <!-- Content 시작 -->
+    <div layout:fragment="content" class="col">
+      <div class="row">
+          <h4 class="text-primary">퀴즈 관리</h4>
+          <div class="row mb-2">            
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">내용</div>
+                <input type="text" class="form-control" id="quizCont" placeholder="퀴즈내용" aria-label="퀴즈내용">
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">유형</div>
+                <select class="form-select" id="quizTypCd">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>            
           </div>
+          <div class="row mb-2">
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">제목</div>
+                <input type="text" class="form-control" id="quizTitl" placeholder="유형명" aria-label="유형명">
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">답변</div>
+                <input type="text" class="form-control" id="quizAnswer" placeholder="답변내용" aria-label="답변내용">
+              </div>
+            </div>
+          </div>
+          <table
+            id="table-quiz"
+            data-search="false"
+            data-show-columns="true"
+            data-minimum-count-columns="2"
+            data-page-list="[10, 25, 50, 100]"
+            data-pagination="true"
+            data-pagination-loop="false"
+            data-click-to-select="true"
+            data-id-field="quizSeq"
+            data-side-pagination="server"
+            data-server-sort="true"
+            data-detail-view="true"
+            data-detail-formatter="fnObj.grid.detailFormatter"
+            th:data-url="@{/checker/quiz_mgt/page_quiz_list.json}">
+          </table>
       </div>
+      <!-- modal -->
+      <div class="modal-staging">
+          
+      </div>
+      <!-- modal -->
+    </div>
+    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+        
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
+
+      var fnObj = {
+        pageStart:  function(){ // 페이지 초기 실행 스크립트
+          
+          $("#quizTypCd").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#quizTitl").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#quizCont").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#quizAnswer").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          fnObj.page.init();
+        },
+        page: {
+          init: function(){
+            fnObj.action.initCmCodeData("QUIZ_TYP_CD", "#quizTypCd")
+            .then(function(){
+              fnObj.grid.init_quiz();
+            });
+          }
+        },
+        action: { // 호출이나 화면 동작
+          reloadMainList: function(){
+            $('#table-quiz').bootstrapTable('refresh');
+          },
+          initCmCodeData: function(grpCdNm, targetId){
+            return $.ajax({
+              url: "[[@{/common/code_dtl_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json",
+              data : {grpCd:grpCdNm}
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $(targetId).append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          }
+        },
+        grid: { // 그리드 관련
+          init_quiz: function(){
+            $('#table-quiz').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {field: 'num',      title: '번호', align: 'center',valign:'middle'},
+                {field: 'quizSeq',  title: '퀴즈순번', visible: false, sortable: true},
+                {field: 'quizTypCd',title: '유형', align: 'center',valign:'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    let size = $("#quizTypCd option").length;                    
+                    for(let i = 0; i < size; i++){
+                      let option = $("#quizTypCd option")[i];
+                      if(value === option.value){
+                        return option.text;
+                      }
+                    };
+                    return '-';
+                  }
+                },
+                {field: 'quizCont', title: '내용', align: 'center',valign:'middle', sortable: true},
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                  data.rows = data.content; // 이름을 변경해 줘야 한다.
+                  delete data.content;
+                  $.each(data.row, function (i, row) {
+                    row.state = $.inArray(row.quizSeq, selections) !== -1
+                  })
+                  data.total = data.totalElements;
+                  data.totalNotFiltered = data.totalElements;
+
+                  return data;
+              },
+              queryParams: function(params){
+                if(params.offset !== undefined){
+                  params.size = params.limit;
+                  params.page = params.offset/params.limit;
+                }else{
+                  params.size = 10000;
+                  params.page = 0;
+                }
+                
+                if($("#quizTypCd").val() !== ''){
+                  params.quizTypCd = $("#quizTypCd").val();
+                }
+                if($("#quizTitl").val() !== ''){
+                  params.quizTitl = $("#quizTitl").val();
+                }
+                if($("#quizCont").val() !== ''){
+                  params.quizCont = $("#quizCont").val();
+                }
+                if($("#quizAnswer").val() !== ''){
+                  params.quizAnswer = $("#quizAnswer").val();
+                }
+                return params;
+              }
+            });
+            
+            $('#table-quiz').on('post-body.bs.table', function(data){
+              $("th.detail").addClass('table-primary');    
+            });        
+          },
+          detailFormatter: function(index, row){
+            var html = [];
+            html.push('<h5>');
+            html.push(row.quizTitl);
+            html.push('</h5>');
+            html.push('<div>');
+            html.push('<p class="fw-bold">질문</p>');
+            html.push(row.quizCont);
+            html.push('</div>');
+            html.push('<div class="fst-italic mt-2">');
+            html.push('<p class="fw-bold">답변</p>');
+            html.push(row.quizAnswer);
+            html.push('</div>');
+            return html.join('');
+          }
+        }
+      }
+        
+      window.addEventListener("load", function(){
+        fnObj.pageStart();
+      });
+    </script>
   <!-- Content 종료 -->
 </html>

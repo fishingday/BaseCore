@@ -1,8 +1,6 @@
 package kr.co.basedevice.corebase.restController.todo.worker;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +51,8 @@ public class TodayWorkRestController {
 		if(ObjectUtils.isEmpty(searchWork.getWorkDate())) {
 			searchWork.setWorkDate(LocalDate.now());
 		}
-		searchWork.setWorkBeginDt(LocalDateTime.of(searchWork.getWorkDate(), LocalTime.of(0, 0, 0, 0)).minusSeconds(1));
-		searchWork.setWorkEndDt(LocalDateTime.of(searchWork.getWorkDate().plusDays(1), LocalTime.of(0, 0, 0, 0)));		
+		searchWork.setWorkBeginDate(searchWork.getWorkDate());
+		searchWork.setWorkEndDate(searchWork.getWorkDate().plusDays(1));
 		
 		// 해당일에 할일 목록
 		List <PlanWorkInfoDto> todoPlanList = todoService.findByTodayPlanList4Worker(searchWork);
