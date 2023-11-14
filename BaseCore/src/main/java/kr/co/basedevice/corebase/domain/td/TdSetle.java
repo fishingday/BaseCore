@@ -51,7 +51,7 @@ public class TdSetle extends BaseEntity implements Serializable{
 	@Column(name = "TOTAL_SETLE_POINT", nullable = false)
 	private Integer totalSetlePoint;
 	
-	@Column(name = "SETLE_DESC", nullable = false)
+	@Column(name = "SETLE_DESC")
 	private String setleDesc;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm.ss.SSS")

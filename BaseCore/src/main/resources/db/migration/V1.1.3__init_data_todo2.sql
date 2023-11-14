@@ -138,6 +138,15 @@ insert into td_setle(setle_seq, worker_seq, acount_seq, setle_desc, total_setle_
 insert into td_setle(setle_seq, worker_seq, acount_seq, setle_desc, total_setle_point, setle_dt, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,103,102,'정기 정산',27000,'2023-09-28','N',100,now(),100,now());
 insert into td_setle(setle_seq, worker_seq, acount_seq, setle_desc, total_setle_point, setle_dt, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,104,102,'정기 정산',32000,'2023-09-28','N',100,now(),100,now());
 
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,103,100,'POINT', 19000, 19000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (101,104,101,'POINT', 17000, 17000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (102,103,102,'POINT', 45000, 26000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (103,104,103,'POINT', 41000, 24000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (104,103,104,'POINT', 72000, 27000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (105,104,105,'POINT', 69000, 28000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (106,103,106,'POINT', 99000, 27000,'N',100,now(),100,now());
+insert into td_point(point_seq, user_seq, setle_seq, point_aplyto_cd, last_point, aplyto_point, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (107,104,107,'POINT',101000, 32000,'N',100,now(),100,now());
+
 insert into td_work_setle_map(setle_seq, work_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,100,'N',100,now(),100,now());
 insert into td_work_setle_map(setle_seq, work_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,102,'N',100,now(),100,now());
 insert into td_work_setle_map(setle_seq, work_seq, del_yn, creator_seq, cre_dt, updator_seq, upd_dt) values (100,104,'N',100,now(),100,now());

@@ -18,9 +18,9 @@ public class WorkerSettleInfoDto {
 	private Long settlePoints;
 	
 	/**
-	 * 사용 포인트
+	 * 남은 포인트
 	 */
-	private Long usePoints;
+	private Long lastPoints;
 	
 	/**
 	 * 미 적립 포인트

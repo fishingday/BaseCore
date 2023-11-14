@@ -69,12 +69,12 @@
                 columns: [
                   {field: 'workerSeq',     title: '작업자순번',  visible: false},
                   {field: 'workerNm',      title: '작업자',     align: 'center',valign: 'middle', sortable: true},
-                  {field: 'settlePoints',  title: '미정산포인트', align: 'right',valign: 'middle', sortable: true,
+                  {field: 'unSettlePoints',  title: '미정산포인트', align: 'right',valign: 'middle', sortable: true,
                     formatter: function(value, row, index) {
                       return value.toLocaleString();
                     }   
                   },
-                  {field: 'unSettlePoints',title: '누적포인트',   align: 'right',valign: 'middle', sortable: true,
+                  {field: 'settlePoints',title: '누적포인트',   align: 'right',valign: 'middle', sortable: true,
                     formatter: function(value, row, index) {
                       return value.toLocaleString();
                     }    

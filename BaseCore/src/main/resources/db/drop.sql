@@ -29,7 +29,7 @@ drop table if exists td_work_setle_map CASCADE;
 drop table if exists td_setle CASCADE;
 drop table if exists td_work CASCADE;
 drop table if exists td_checker_map CASCADE;
-drop table if exists td_point_use CASCADE;
+drop table if exists td_point CASCADE;
 drop table if exists td_checker_worker_map CASCADE;
 
 drop sequence if exists seq_cm_critical_log;
@@ -47,7 +47,7 @@ drop sequence if exists seq_td_quiz;
 drop sequence if exists seq_td_todo;
 drop sequence if exists seq_td_setle;
 drop sequence if exists seq_td_work;
-drop sequence if exists seq_td_point_use;
+drop sequence if exists seq_td_point;
 
 DROP TABLE QRTZ_FIRED_TRIGGERS;
 DROP TABLE QRTZ_CRON_TRIGGERS;

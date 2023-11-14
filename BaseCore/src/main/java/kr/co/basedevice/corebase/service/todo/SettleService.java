@@ -17,7 +17,7 @@ import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
-import kr.co.basedevice.corebase.repository.td.TdPointUseRepository;
+import kr.co.basedevice.corebase.repository.td.TdPointRepository;
 import kr.co.basedevice.corebase.repository.td.TdSetleRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class SettleService {
 	private final TdSetleRepository setleRepository;
 	private final TdWorkRepository workRepository;
-	private final TdPointUseRepository pointUseRepository;
+	private final TdPointRepository pointUseRepository;
 	
 	final private JdbcTemplate JdbcTemplate;
 		
@@ -136,28 +136,11 @@ public class SettleService {
 	 */
 	public List<WorkerSettleInfoDto> getWorkerSettleInfo(Long workerSeq) {
 		
-		StringBuilder sb = new StringBuilder("SELECT Z.USER_SEQ, Z.USER_NM, X.SETTLE_POINTS, V.USE_POINTS, Y.UNSETTLE_POINTS ")
-				.append("  FROM CM_USER Z LEFT JOIN ")
-				.append("      (SELECT A.WORKER_SEQ, SUM(A.TOTAL_SETLE_POINT) as SETTLE_POINTS ")
-				.append("          FROM TD_SETLE A ")
-				.append("         WHERE A.DEL_YN = 'N' ")
-				.append("           AND A.WORKER_SEQ = ? ")
-				.append("         GROUP BY A.WORKER_SEQ ")
-				.append("       ) X ON (Z.USER_SEQ = X.WORKER_SEQ) LEFT JOIN ")
-				.append("       (SELECT A.WORKER_SEQ, SUM(A.GAIN_POINT) as UNSETTLE_POINTS ")
-				.append("          FROM TD_WORK A  ")
-				.append("         WHERE A.DEL_YN = 'N' ")
-				.append("           AND A.WORK_STAT_CD = 'DONE' ")
-				.append("           AND A.WORKER_SEQ = ? ")
-				.append("           AND A.SETLE_YN = 'N' ")
-				.append("         GROUP BY A.WORKER_SEQ ")
-				.append("       ) Y ON (Z.USER_SEQ = Y.WORKER_SEQ) LEFT JOIN")
-				.append("       (SELECT A.USER_SEQ, SUM(A.USE_POINT) AS USE_POINTS ")
-				.append("          FROM TD_POINT_USE  A  ")
-				.append("         WHERE A.DEL_YN = 'N' ")
-				.append("           AND A.USER_SEQ  = ? ")
-				.append("         GROUP BY A.USER_SEQ ")
-				.append("       ) V ON (Z.USER_SEQ = V.USER_SEQ)")				
+		StringBuilder sb = new StringBuilder("SELECT Z.USER_SEQ, Z.USER_NM, ")
+				.append("  (SELECT SUM(A.TOTAL_SETLE_POINT) FROM TD_SETLE A WHERE A.DEL_YN = 'N' AND A.WORKER_SEQ = Z.USER_SEQ GROUP BY A.WORKER_SEQ ) AS SETTLE_POINTS, ")
+				.append("  (SELECT A.LAST_POINT FROM TD_POINT A WHERE A.POINT_SEQ = (SELECT MAX(K.POINT_SEQ) FROM TD_POINT K WHERE K.DEL_YN = 'N' AND K.USER_SEQ = Z.USER_SEQ) ) AS LAST_POINTS, ")
+				.append("  (SELECT SUM(A.GAIN_POINT) FROM TD_WORK A WHERE A.DEL_YN = 'N' AND A.WORK_STAT_CD = 'DONE' AND A.WORKER_SEQ = Z.USER_SEQ AND A.SETLE_YN = 'N' GROUP BY A.WORKER_SEQ ) AS UNSETTLE_POINTS ")
+				.append("  FROM CM_USER Z ")	
 				.append(" WHERE Z.DEL_YN = 'N' ")
 		        .append("   AND Z.USER_SEQ = ? ");
 		
@@ -171,14 +154,14 @@ public class SettleService {
 							 rs.getLong("USER_SEQ")
 							,rs.getString("USER_NM")
 							,rs.getLong("SETTLE_POINTS")
-							,rs.getLong("USE_POINTS")
+							,rs.getLong("LAST_POINTS")
 							,rs.getLong("UNSETTLE_POINTS")
 							,LocalDateTime.now()
 						);						
 						return workerSettleInfoDto;
 					}
 				}
-				,workerSeq, workerSeq, workerSeq, workerSeq
+				,workerSeq
 			);
 
 		return listWorkerSettleInfoDto;
