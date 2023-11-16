@@ -1,6 +1,9 @@
 package kr.co.basedevice.corebase.dto.todo;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoTypCd;
@@ -34,16 +37,13 @@ public class TodoWorkerInfoDto {
 	
 	private Integer aplytoOrd;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDate postBeginDate;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDate postEndDate;
 	
 	private Yn workerAgreYn;
-	
-	public int computePoint(LocalDate targetDay) {
 		
-		
-		
-		return 0;
-	}
+	private List<TodoUserDto> checkerList;
 }

@@ -4,14 +4,244 @@
       layout:decorate="~{layouts/default_layout}">
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>작업 관리</title>
+      <title>할일 관리</title>
   </head>
-
-  <!-- Content 시작 -->
-      <div layout:fragment="content"style="padding-top:50px;"  class="col">
-          <div class="container text-center">
-              <h1 class="text-primary">여기는 작업 관리 페이지 입니다.</h1>
+    <!-- Content 시작 -->
+    <div layout:fragment="content" class="col">
+      <div class="row">
+          <h4 class="text-primary">할일 관리</h4>
+          <div class="row">
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">제목</div>
+                <input type="text" class="form-control" id="todoTitl" placeholder="제목" aria-label="제목">
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">동의여부</div>
+                <select class="form-select" id="workerAgerYn">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>
+          </div>          
+          <div class="row">
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">할일유형</div>
+                <select class="form-select" id="todoTypCd">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <div class="input-group-text">생성구분</div>
+                <select class="form-select" id="todoCreCd">
+                  <option value="">전체</option>
+                </select>
+              </div>
+            </div>
           </div>
+          <table
+            id="table-todo"
+            data-search="true"
+            data-show-columns="true"
+            data-click-to-select="true"
+            data-id-field="todoSeq"
+            data-detail-view="true"
+            data-detail-formatter="fnObj.grid.detailFormatter"
+            th:data-url="@{/worker/work_mgt/list_todo_info.json}">
+          </table>
       </div>
+      <!-- modal -->
+      <div class="modal-staging">
+          
+      </div>
+      <!-- modal -->
+    </div>
+    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+        
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
+
+      var fnObj = {
+        pageStart:  function(){ // 페이지 초기 실행 스크립트
+          fnObj.page.init();
+          
+          $("#todoTitl").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#workerAgerYn").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#todoTypCd").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+          
+          $("#todoCreCd").bind("change", function(){
+            fnObj.action.reloadMainList();
+          });
+        },
+        page: {
+          init: function(){ // 버튼 바인딩 등
+            fnObj.action.initCmCodeData("TODO_TYP_CD", "#todoTypCd");
+            fnObj.action.initCmCodeData("TODO_CRE_CD", "#todoCreCd")
+            .then(function(){
+              fnObj.grid.init_todolist();
+            });
+          }
+        },
+        action: { // 호출이나 화면 동작
+          reloadMainList: function(){
+            $('#table-todo').bootstrapTable('refresh')
+          },
+          initCmCodeData: function(grpCdNm, targetId){
+            return $.ajax({
+              url: "[[@{/common/code_dtl_list.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json",
+              data : {grpCd:grpCdNm}
+            }).done(function(data, textStatus, xhr){
+              for(var i = 0; i < data.length; i++ ){
+                $(targetId).append("<option value='" + data[i].cd + "'>" + data[i].cdNm + "</option>");
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          },
+          getTodoCreVal: function(code){
+            let size = $("#todoCreCd option").length;                    
+            for(let i = 0; i < size; i++){
+              let option = $("#todoCreCd option")[i];
+              if(code === option.value){
+                return option.text;
+              }
+            };
+            return '-';
+          }
+        },
+        grid: { // 그리드 관련
+          init_todolist: function(){
+            $('#table-todo').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {field: 'todoSeq',   title: '할일순번', visible: false},
+                {field: 'todoTitl',  title: '제목', align: 'center',valign: 'middle', sortable: true},
+                {field: 'todoPoint', title: '포인트',align: 'center',valign: 'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }
+                },
+                {field: 'workerAgreYn', title: '동의',  align: 'center'  ,valign: 'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    if('Y' === value){
+                      return '동의'
+                    }else{
+                      return '미동의'
+                    }
+                  }
+                },
+                {field: 'todoTypCd', title: '유형',align: 'center',valign: 'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    let size = $("#todoTypCd option").length;                    
+                    for(let i = 0; i < size; i++){
+                      let option = $("#todoTypCd option")[i];
+                      if(value === option.value){
+                        return option.text;
+                      }
+                    };
+                    return '-';
+                  }
+                },
+                {field: 'todoCreCd', title: '구분',align: 'center',valign: 'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    let size = $("#todoCreCd option").length;                    
+                    for(let i = 0; i < size; i++){
+                      let option = $("#todoCreCd option")[i];
+                      if(value === option.value){
+                        return option.text;
+                      }
+                    };
+                    return '-';
+                  }
+                },              
+                {field: 'postBeginDate', title: '시작일시',  visible: false},
+                {field: 'postEndDate',   title: '종료일시',  visible: false}                
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                return data;
+              },
+              queryParams: function(params){
+                if($("#todoTitl").val() !== ''){
+                  params.todoTitl = $("#todoTitl").val();
+                }
+                if($("#todoTypCd").val() !== ''){
+                  params.todoTypCd = $("#todoTypCd").val();
+                }
+                if($("#todoCreCd").val() !== ''){
+                  params.todoCreCd = $("#todoCreCd").val();
+                }
+                if($("#workerAgerYn").val() !== ''){
+                  params.workerAgerYn = $("#workerAgerYn").val();
+                }
+                return params;
+              }
+            });
+            
+            $('#table-todo').on('post-body.bs.table', function(data){
+              $("th.detail").addClass('table-primary');    
+            });   
+          },
+          detailFormatter: function(index, row){
+            var html = [];
+            html.push('<h4>');
+            html.push(row.todoTitl);
+            html.push('</h4>');
+            
+            html.push('<br/>');
+            html.push('포인트 : ' + row.todoPoint);
+            
+            if(row.completCondiVal){
+              html.push('<br/>');
+              html.push('완료조건 : ' + row.completCondiVal);
+            }
+            
+            if(row.todoCreDtlVal){
+              html.push('<br/>');
+              html.push('작업조건 : ' + fnObj.action.getTodoCreVal(row.todoCreCd) + ' ' + row.todoCreDtlVal); 
+            }
+            
+            if(row.dateLimitCnt){
+              html.push('<br/>');
+              html.push('제한조건 : ' + fnObj.action.getTodoCreVal(row.todoCreCd) + ' ' + row.dateLimitCnt + '회'); 
+            }
+            
+            return html.join('');
+          }
+        }
+      }
+        
+      window.addEventListener("load", function(){
+        fnObj.pageStart();
+      });
+    </script>
   <!-- Content 종료 -->
 </html>

@@ -25,6 +25,10 @@ import kr.co.basedevice.corebase.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Quartz 작업 관리
+ * 
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -33,6 +37,13 @@ public class QuartzService {
 
     final private ApplicationContext context;
     
+    /**
+     * 일정(작업) 추가
+     * 
+     * @param jobRequest
+     * @param jobClass
+     * @return
+     */
     public boolean addJob(JobRequest jobRequest, Class<? extends Job> jobClass) {
         JobKey jobKey = null;
         JobDetail jobDetail;
@@ -52,6 +63,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 일정(작업) 삭제
+     * 
+     * @param jobKey
+     * @return
+     */
     public boolean deleteJob(JobKey jobKey) {
         log.debug("[schedulerdebug] deleting job with jobKey : {}", jobKey);
         try {
@@ -62,6 +79,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 일정(작업) 수정
+     * 
+     * @param jobRequest
+     * @return
+     */
     public boolean updateJob(JobRequest jobRequest) {
         JobKey jobKey = null;
         Trigger newTrigger;
@@ -79,6 +102,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 일정(작업) 일단멈춤
+     * 
+     * @param jobKey
+     * @return
+     */
     public boolean pauseJob(JobKey jobKey) {
         log.debug("[schedulerdebug] pausing job with jobKey : {}", jobKey);
         try {
@@ -90,6 +119,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 일정(작업) 재개 
+     * 
+     * @param jobKey
+     * @return
+     */
     public boolean resumeJob(JobKey jobKey) {
         log.debug("[schedulerdebug] resuming job with jobKey : {}", jobKey);
         try {
@@ -101,6 +136,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 일정(작업) 중지
+     * 
+     * @param jobKey
+     * @return
+     */
     public boolean stopJob(JobKey jobKey) {
         log.debug("[schedulerdebug] stopping job with jobKey : {}", jobKey);
         try {
@@ -111,6 +152,11 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 일정(작업) 목록
+     * 
+     * @return
+     */
     @SuppressWarnings("unchecked")
 	public StatusResponse getAllJobs() {
         JobResponse jobResponse;
@@ -158,6 +204,12 @@ public class QuartzService {
         return statusResponse;
     }
 
+    /**
+     * 일정(작업) 목록
+     * 
+     * @param jobKey
+     * @return
+     */
     public boolean isJobRunning(JobKey jobKey) {
         try {
             List<JobExecutionContext> currentJobs = schedulerFactoryBean.getScheduler().getCurrentlyExecutingJobs();
@@ -174,6 +226,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 작업 존재 여부
+     * 
+     * @param jobKey
+     * @return
+     */
     public boolean isJobExists(JobKey jobKey) {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -186,6 +244,12 @@ public class QuartzService {
         return false;
     }
 
+    /**
+     * 작업 상태 조회
+     * 
+     * @param jobKey
+     * @return
+     */
     public String getJobState(JobKey jobKey) {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -196,10 +260,7 @@ public class QuartzService {
             if (triggers != null && triggers.size() > 0) {
                 for (Trigger trigger : triggers) {
                     Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
-                    if (Trigger.TriggerState.NORMAL.equals(triggerState)) {
-                        return "SCHEDULED";
-                    }
-                    return triggerState.name().toUpperCase();
+                    return triggerState.name();
                 }
             }
         } catch (SchedulerException e) {

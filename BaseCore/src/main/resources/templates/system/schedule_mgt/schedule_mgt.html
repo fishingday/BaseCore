@@ -4,14 +4,95 @@
       layout:decorate="~{layouts/default_layout}">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <title>스케줄러관리</title>
+	    <title>배치 관리</title>
 	</head>
+    <!-- Content 시작 -->
+    <div layout:fragment="content" class="col">
+      <div class="row">
+          <h4 class="text-primary">배치 관리</h4>
+          <div class="row">
+            <div class="col">
+              
+            </div>
+          </div>
+          <table
+            id="table-quartz"
+            data-search="true"
+            data-show-columns="true"
+            data-click-to-select="true"
+            data-id-field="jobName"
+            data-detail-view="true"
+            data-detail-formatter="fnObj.grid.detailFormatter"
+            th:data-url="@{/system/schedule_mgt/jobs}">
+          </table>
+      </div>
+      <!-- modal -->
+      <div class="modal-staging">
+          
+      </div>
+      <!-- modal -->
+    </div>
+    <script language="javascript" type="text/javascript" layout:fragment="page_script">
+      let token = $("meta[name='_csrf']").attr("content"); 
+      let header = $("meta[name='_csrf_header']").attr("content");
+        
+      $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token); 
+      });
 
-	<!-- Content 시작 -->
-	    <div layout:fragment="content"style="padding-top:50px;"  class="col">
-	        <div class="container text-center">
-	            <h1 class="text-primary">여기는 스케줄러관리 페이지 입니다.</h1>
-	        </div>
-	    </div>
-	<!-- Content 종료 -->
+      var fnObj = {
+        pageStart:  function(){ // 페이지 초기 실행 스크립트
+          fnObj.page.init();
+        },
+        page: {
+          init: function(){ // 버튼 바인딩 등
+            fnObj.grid.init_joblist();
+          }
+        },
+        action: { // 호출이나 화면 동작
+          reloadMainList: function(){
+            $('#table-quartz').bootstrapTable('refresh')
+          }
+        },
+        grid: { // 그리드 관련
+          init_joblist: function(){
+            $('#table-quartz').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {field: 'groupName', title: '그룹명', align: 'center',valign: 'middle', sortable: true},
+                {field: 'jobName',   title: '작업명', align: 'center',valign: 'middle', sortable: true},
+                {field: 'jobStatus', title: '상태',  align: 'center',valign: 'middle', sortable: true},
+                {field: 'scheduleTime', title: '등록',  align: 'center',valign: 'middle', sortable: true, visible: false},
+                {field: 'lastFiredTime',title: '직전',  align: 'center',valign: 'middle', sortable: true, visible: false},
+                {field: 'nextFireTime', title: '예정',  align: 'center',valign: 'middle', sortable: true},
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                return data.jobs;
+              }
+            });
+            
+            $('#table-quartz').on('post-body.bs.table', function(data){
+              $("th.detail").addClass('table-primary');    
+            });   
+          },
+          detailFormatter: function(index, row){
+            var html = [];
+            html.push('<h4>');
+            html.push('소리질러~');
+            html.push('</h4>');
+            return html.join('');
+          }
+        }
+      }
+        
+      window.addEventListener("load", function(){
+        fnObj.pageStart();
+      });
+    </script>
+  <!-- Content 종료 -->
 </html>

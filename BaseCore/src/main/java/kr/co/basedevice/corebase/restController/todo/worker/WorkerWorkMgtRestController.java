@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
@@ -49,11 +46,8 @@ public class WorkerWorkMgtRestController {
 	 * @param page
 	 * @return
 	 */
-	@GetMapping("/page_work_info.json")
-	public ResponseEntity<Map<String, Object>> pageWorkInfo(SearchTodoWorker searchTodoWorker, Pageable page){
-		if(page == null) {
-			page = PageRequest.of(0, 10);
-		}
+	@GetMapping("/list_todo_info.json")
+	public ResponseEntity<List<TodoWorkerInfoDto>> listTodoWorkerInfo(SearchTodoWorker searchTodoWorker){
 		
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		searchTodoWorker.setWorkerSeq(cmUser.getUserSeq());
@@ -63,59 +57,10 @@ public class WorkerWorkMgtRestController {
 			searchTodoWorker.setTargetDay(LocalDate.now());
 		}
 		
-		Map<String, Object> retMap = new HashMap<>();
-		Page<TodoWorkerInfoDto> pageTodoWorkerInfo = todoService.pageTodoWorkerInfo(searchTodoWorker, page);
-		retMap.put("pageTodoWorkerInfo", pageTodoWorkerInfo);
+		List<TodoWorkerInfoDto> listTodoWorkerInfo = todoService.listTodoWorkerInfo(searchTodoWorker);
 				
-		if(pageTodoWorkerInfo != null && !pageTodoWorkerInfo.isEmpty()){			
-			int maxDay = searchTodoWorker.getTargetDay().lengthOfMonth();
-			LocalDate firstDate = searchTodoWorker.getTargetDay().withDayOfMonth(1);
-			
-			// 오늘의 주
-			LocalDate monWeek = searchTodoWorker.getTargetDay().plusDays(searchTodoWorker.getTargetDay().getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue());
-			LocalDate sunWeek = searchTodoWorker.getTargetDay().plusDays(DayOfWeek.SUNDAY.getValue() - searchTodoWorker.getTargetDay().getDayOfWeek().getValue());
-			
-			int maxDayPoint = 0;
-			int maxWeekPoint = 0;
-			int maxMonthPoint = 0;
-			for(TodoWorkerInfoDto todoWorkerInfoDto : pageTodoWorkerInfo.getContent()) {
-				if(todoWorkerInfoDto.getTodoCreCd() == TodoCreCd.DAILY) { // 매일은 허용 횟수가 있다.
-					maxDayPoint += (todoWorkerInfoDto.getTodoPoint().intValue() * todoWorkerInfoDto.getDateLimitCnt().intValue());					
-					maxWeekPoint += (todoWorkerInfoDto.getTodoPoint().intValue() * todoWorkerInfoDto.getDateLimitCnt().intValue()) * 7; // 일주일
-					maxMonthPoint += (todoWorkerInfoDto.getTodoPoint().intValue() * todoWorkerInfoDto.getDateLimitCnt().intValue()) * maxDay;
-				}else if(todoWorkerInfoDto.getTodoCreCd() == TodoCreCd.MONTH) { // 특정 일자를 , 로 구분
-					String [] aplyDays = todoWorkerInfoDto.getTodoDtlVal().split(",");				
-					for(String aplyDay : aplyDays) {
-						if(aplyDay.equals(String.valueOf(searchTodoWorker.getTargetDay().getDayOfMonth()))) { // 오늘이 그날...
-							maxDayPoint += todoWorkerInfoDto.getTodoPoint();
-						}
-						int dayOfYear = LocalDate.now().withDayOfMonth(Integer.valueOf(aplyDay)).getDayOfYear();
-						if(monWeek.getDayOfYear() <= dayOfYear && sunWeek.getDayOfYear() >= dayOfYear) {
-							maxWeekPoint += todoWorkerInfoDto.getTodoPoint();
-						}
-					}
-					
-					maxMonthPoint += todoWorkerInfoDto.getTodoPoint() * aplyDays.length;
-				}else if(todoWorkerInfoDto.getTodoCreCd() == TodoCreCd.WEEK) { // 특정 요일이 몇번 들어가 있는지 확인
-					String [] aplyWeeks = todoWorkerInfoDto.getTodoDtlVal().split(","); // DayOfWeek 값을 넣어야...
-					for(String aplyWeek : aplyWeeks) {
-						DayOfWeek aplyWeekCode = DayOfWeek.valueOf(aplyWeek);
-						
-						if(aplyWeekCode == searchTodoWorker.getTargetDay().getDayOfWeek()) {
-							maxDayPoint += todoWorkerInfoDto.getTodoPoint();
-						}						
-						
-						int cnt = DateTimeUtils.cntWeekdayOfMonth(firstDate, aplyWeekCode);
-						maxMonthPoint += cnt * todoWorkerInfoDto.getTodoPoint();
-					}
-				}
-			}
-			retMap.put("maxDayPoint", maxDayPoint);
-			retMap.put("maxWeekPoint", maxWeekPoint);
-			retMap.put("maxMonthPoint", maxMonthPoint);
-		}
-		
-		return ResponseEntity.ok(retMap);
+				
+		return ResponseEntity.ok(listTodoWorkerInfo);
 	}
 	
 	/**

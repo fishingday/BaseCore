@@ -51,6 +51,9 @@ public class TdSetle extends BaseEntity implements Serializable{
 	@Column(name = "TOTAL_SETLE_POINT", nullable = false)
 	private Integer totalSetlePoint;
 	
+	@Column(name = "ACCUMULT_POINT", nullable = false)
+	private Integer accumultPoint;
+	
 	@Column(name = "SETLE_DESC")
 	private String setleDesc;
 	

@@ -22,11 +22,17 @@ import kr.co.basedevice.corebase.service.QuartzService;
 
 @Slf4j
 @RestController
-@RequestMapping("/scheduler")
+@RequestMapping("/system/schedule_mgt")
 @RequiredArgsConstructor
 public class ScheduleRestController {
 	final private QuartzService scheduleService;
 	
+	/**
+	 * 일정(작업) 추가
+	 * 
+	 * @param jobRequest
+	 * @return
+	 */
     @PostMapping("/job.json")
     public ResponseEntity<?> addScheduleJob(@ModelAttribute JobRequest jobRequest) {
         log.debug("add schedule job :: jobRequest : {}", jobRequest);
@@ -49,6 +55,12 @@ public class ScheduleRestController {
         return new ResponseEntity<>(new ApiResponse(true, "Job created successfully"), HttpStatus.CREATED);
     }
 
+    /**
+     * 일정(작업) 삭제
+     * 
+     * @param jobRequest
+     * @return
+     */
     @DeleteMapping("/job")
     public ResponseEntity<?> deleteScheduleJob(@ModelAttribute JobRequest jobRequest) {
         JobKey jobKey = new JobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
@@ -64,6 +76,12 @@ public class ScheduleRestController {
         return new ResponseEntity<>(new ApiResponse(true, "Job deleted successfully"), HttpStatus.OK);
     }
 
+    /**
+     * 일정(작업) 수정
+     * 
+     * @param jobRequest
+     * @return
+     */
     @PutMapping("/job/update")
     public ResponseEntity<?> updateScheduleJob(@ModelAttribute JobRequest jobRequest) {
         log.debug("update schedule job :: jobRequest : {}", jobRequest);
@@ -86,11 +104,24 @@ public class ScheduleRestController {
         return new ResponseEntity<>(new ApiResponse(true, "Job updated successfully"), HttpStatus.OK);
     }
 
+    /**
+     * 일정(작업) 목록
+     * 
+     * @return
+     */
     @GetMapping("/jobs")
     public StatusResponse getAllJobs() {
+    	// 상태값 : NONE, NORMAL, PAUSED, COMPLETE, ERROR, BLOCKED
+    	
         return scheduleService.getAllJobs();
     }
 
+    /**
+     * 일정(작업) 일단 멈춤
+     * 
+     * @param jobRequest
+     * @return
+     */
     @PutMapping("/job/pause")
     public ResponseEntity<?> pauseJob(@ModelAttribute JobRequest jobRequest) {
         JobKey jobKey = new JobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
@@ -106,6 +137,12 @@ public class ScheduleRestController {
         return new ResponseEntity<>(new ApiResponse(true, "Job paused successfully"), HttpStatus.OK);
     }
 
+    /**
+     * 작업 재개
+     * 
+     * @param jobRequest
+     * @return
+     */
     @PutMapping("/job/resume")
     public ResponseEntity<?> resumeJob(@ModelAttribute JobRequest jobRequest) {
         JobKey jobKey = new JobKey(jobRequest.getJobName(), jobRequest.getJobGroup());
@@ -123,6 +160,12 @@ public class ScheduleRestController {
         return new ResponseEntity<>(new ApiResponse(true, "Job resumed successfully"), HttpStatus.OK);
     }
 
+    /**
+     * 일정(작업) 중지
+     * 
+     * @param jobRequest
+     * @return
+     */
     @PutMapping("/job/stop")
     public ResponseEntity<?> stopJob(@ModelAttribute JobRequest jobRequest) {
         JobKey jobKey = new JobKey(jobRequest.getJobName(), jobRequest.getJobGroup());

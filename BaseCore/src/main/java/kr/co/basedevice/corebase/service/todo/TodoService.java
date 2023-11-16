@@ -161,7 +161,7 @@ public class TodoService {
 		BeanUtils.copyProperties(optTdTodo.get(), todoDetailDto, "tdWorkList", "tdCheckerMapList", "tdWorkerMapList");
 		
 		// 확인자 목록
-		todoDetailDto.setCheckerList(tdTodoRepository.getCheckerList(todoDetailDto.getTodoSeq()));		
+		todoDetailDto.setCheckerList(tdTodoRepository.getCheckerList(todoDetailDto.getTodoSeq()));
 		// 작업자 목록
 		todoDetailDto.setWorkerList(tdTodoRepository.getWorkerList(todoDetailDto.getTodoSeq()));;
 		
@@ -311,11 +311,17 @@ public class TodoService {
 	 * @param page
 	 * @return
 	 */
-	public Page<TodoWorkerInfoDto> pageTodoWorkerInfo(SearchTodoWorker searchTodoWorker, Pageable page) {		
+	public List<TodoWorkerInfoDto> listTodoWorkerInfo(SearchTodoWorker searchTodoWorker) {		
 		
-		Page<TodoWorkerInfoDto> pageTodoWorkerInfo = tdTodoRepository.pageTodoWorkerInfo(searchTodoWorker, page);
+		List<TodoWorkerInfoDto> listTodoWorkerInfo = tdTodoRepository.listTodoWorkerInfo(searchTodoWorker);
 		
-		return pageTodoWorkerInfo;
+		if(listTodoWorkerInfo != null && !listTodoWorkerInfo.isEmpty()) {
+			for(TodoWorkerInfoDto todoWorkerInfoDto : listTodoWorkerInfo) {
+				todoWorkerInfoDto.setCheckerList(tdTodoRepository.getCheckerList(todoWorkerInfoDto.getTodoSeq()));
+			}
+		}
+		
+		return listTodoWorkerInfo;
 	}
 
 	/**
