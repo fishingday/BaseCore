@@ -5,6 +5,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
+import kr.co.basedevice.corebase.domain.code.QuartzJobGroupCd;
 import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
 import kr.co.basedevice.corebase.quartz.component.JobRequest;
 import kr.co.basedevice.corebase.quartz.job.TodoCloseWorkJob;
@@ -33,14 +34,14 @@ public class BatchLoader implements ApplicationListener<ContextRefreshedEvent> {
         	
         	//cron job 생성
             JobRequest createWorkJobRequest = new JobRequest();
-            createWorkJobRequest.setJobGroup("TODO");
-            createWorkJobRequest.setJobName("TodoCreateWorkJob");
+            createWorkJobRequest.setJobGroup(QuartzJobGroupCd.FIXED.name());
+            createWorkJobRequest.setJobName(TodoCreateWorkJob.JOB_NAME);
             createWorkJobRequest.setCronExpression("0 0 0 ? * *");
             scheduleService.addJob(createWorkJobRequest, TodoCreateWorkJob.class);
             
             JobRequest closeWorkJobRequest = new JobRequest();
-            closeWorkJobRequest.setJobGroup("TODO");
-            closeWorkJobRequest.setJobName("TodoCloseWorkJob");
+            closeWorkJobRequest.setJobGroup(QuartzJobGroupCd.FIXED.name());
+            closeWorkJobRequest.setJobName(TodoCloseWorkJob.JOB_NAME);
             closeWorkJobRequest.setCronExpression("0 0 0 ? * *");
             scheduleService.addJob(closeWorkJobRequest, TodoCloseWorkJob.class);
             

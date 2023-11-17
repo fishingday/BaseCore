@@ -6,6 +6,7 @@ import org.quartz.JobDataMap;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import kr.co.basedevice.corebase.domain.code.BatchJobType;
+import kr.co.basedevice.corebase.domain.code.QuartzJobGroupCd;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class JobRequest {
 
-    private String jobGroup = "DEFAULT";
+    private String jobGroup = QuartzJobGroupCd.ONCE.name();
     private String jobName;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

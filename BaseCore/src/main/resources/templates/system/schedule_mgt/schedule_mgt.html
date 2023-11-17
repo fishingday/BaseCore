@@ -15,20 +15,66 @@
               
             </div>
           </div>
+          <div id="toolbar">
+            <button id="create" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createQuartzJob">
+              <i class="bi bi-plus-square-dotted"></i> 즉시 생성
+            </button>
+          </div>
           <table
             id="table-quartz"
+            data-toolbar="#toolbar"
             data-search="true"
             data-show-columns="true"
             data-click-to-select="true"
             data-id-field="jobName"
             data-detail-view="true"
             data-detail-formatter="fnObj.grid.detailFormatter"
-            th:data-url="@{/system/schedule_mgt/jobs}">
+            th:data-url="@{/system/schedule_mgt/jobList.json}">
           </table>
       </div>
       <!-- modal -->
       <div class="modal-staging">
-          
+        <!--/* 사용자 패스워드 변경 */-->
+        <div class="modal fade" id="createQuartzJob" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">즉시 실행 배치</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3 row">
+                  <label for="jobGroup" class="col-sm-4 col-form-label">배치그룹</label>                  
+                  <select class="form-select" id="jobGroup">
+                    <option value="ONCE">ONCE</option>
+                    <option value="FIXED">FIXED</option>
+                  </select>
+                </div>
+                <div class="mb-3 row">
+                  <label for="jobName" class="col-sm-4 col-form-label">배치이름</label>                  
+                  <select class="form-select" id="jobName">
+                    <option value="TodoCreateWorkJob">TodoCreateWorkJob</option>
+                    <option value="TodoCloseWorkJob">TodoCloseWorkJob</option>
+                  </select>
+                </div>
+                <div class="mb-3 row">
+                  <label for="jobDatas" class="col-sm-4 col-form-label">파라메터</label>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control" id="jobDatas" value="createDate:20231031" placeholder="createDate=20231031">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer row">
+              <div class="col-auto me-auto">
+                  <button type="button" class="btn btn-primary" id="btnSaveQuartzJob">실행</button>
+              </div>
+                <div class="col-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- modal -->
     </div>
@@ -39,20 +85,98 @@
       $(document).ajaxSend(function (e, xhr, options) {
         xhr.setRequestHeader(header, token); 
       });
-
+      
       var fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
         },
         page: {
           init: function(){ // 버튼 바인딩 등
-            fnObj.grid.init_joblist();
+            fnObj.grid.init_joblist();            
+            $("#btnSaveQuartzJob").bind("click", function(){
+              fnObj.action.createJob();
+            });
           }
         },
         action: { // 호출이나 화면 동작
           reloadMainList: function(){
             $('#table-quartz').bootstrapTable('refresh')
-          }
+          },
+          edit: function(jobGroup, jobName){
+            console.log("edit : " + jobGroup + " / "+ jobName );
+          },
+          createJob: function(){
+            let jobRequest = {};
+            jobRequest.jobGroup = $("#jobGroup").val();
+            jobRequest.jobName = $("#jobName").val();
+            
+            jobRequest.startDateAt = SimpleDateTimeFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            
+            if($("#jobDatas").val() !== ''){
+              jobRequest.JobDataMap = {};
+              let stringToArray = $("#jobDatas").val().split(",");
+              for(let i = 0; i < stringToArray.length; i++){
+                let keyVal = stringToArray[0].split(":");
+                jobRequest.JobDataMap[keyVal[0]] = keyVal[1];
+              }
+            }
+            
+            $.ajax({
+              url: "[[@{/system/schedule_mgt/add.json}]]",
+              type: "POST",
+              async: true,
+              dataType : "json",
+              data : jobRequest
+            }).done(function(data, textStatus, xhr){
+              fnObj.action.reloadMainList();
+               $("#createQuartzJob").modal("hide");
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          },
+          jobAction: function(jobGroup, jobName, action){            
+            let jobRequest = {};
+            jobRequest.jobGroup = jobGroup;
+            jobRequest.jobName = jobName;
+            
+            let targetUrl = null;
+            let methodType = null;
+            if(action === 'pause'){
+              targetUrl = "[[@{/system/schedule_mgt/pause.json}]]";
+              methodType = "PUT";
+            }else if(action === 'resume'){
+              targetUrl = "[[@{/system/schedule_mgt/resume.json}]]";
+              methodType = "PUT";
+            }else if(action === 'stop'){
+              targetUrl = "[[@{/system/schedule_mgt/stop.json}]]";
+              methodType = "PUT";
+            }else if(action === 'delete'){
+              targetUrl = "[[@{/system/schedule_mgt/delete.json}]]";
+              methodType = "DELETE";
+            }
+            
+            $.ajax({
+              url: targetUrl,
+              type: methodType,
+              async: true,
+              dataType : "json",
+              data : jobRequest
+            }).done(function(data, textStatus, xhr){
+              fnObj.action.reloadMainList();
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          }          
         },
         grid: { // 그리드 관련
           init_joblist: function(){
@@ -81,10 +205,18 @@
             });   
           },
           detailFormatter: function(index, row){
-            var html = [];
-            html.push('<h4>');
-            html.push('소리질러~');
-            html.push('</h4>');
+            let param = '\'' + row.groupName + '\',\'' + row.jobName + '\'' ;
+            let html = [];
+            if('NORMAL' === row.jobStatus){
+              html.push('<button type="button" class="btn btn-primary m-1"><i class="bi bi-pause-circle-fill" onclick="fnObj.action.jobAction('+ param +', \'pause\')"></i></botton>');
+            }
+            if('PAUSED' === row.jobStatus){
+              html.push('<button type="button" class="btn btn-primary m-1"><i class="bi bi-play-btn-fill" onclick="fnObj.action.jobAction('+ param +', \'resume\')"></i></botton>');
+            }
+            html.push('<button type="button" class="btn btn-primary m-1"><i class="bi bi-stop-circle-fill" onclick="fnObj.action.jobAction('+ param +', \'stop\')"></i></botton>');
+            html.push('<button type="button" class="btn btn-primary m-1"><i class="bi bi-pencil-square" onclick="fnObj.action.edit('+ param +')"></i></botton>');
+            html.push('<button type="button" class="btn btn-danger m-1"><i class="bi bi-trash" onclick="fnObj.action.jobAction('+ param +', \'delete\')"></i></botton>');
+            
             return html.join('');
           }
         }

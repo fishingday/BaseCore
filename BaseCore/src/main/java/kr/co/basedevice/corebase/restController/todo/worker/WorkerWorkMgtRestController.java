@@ -1,10 +1,7 @@
 package kr.co.basedevice.corebase.restController.todo.worker;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerAgreeTodoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.TodoService;
-import kr.co.basedevice.corebase.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 
 /**
