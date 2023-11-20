@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -26,21 +25,12 @@ public interface TdTodoRepository extends JpaRepository<TdTodo, Long>, TdTodoRep
 			List<TodoCreCd> todoCreCdList, LocalDate postBeginDate, LocalDate postEndDate);
 
 	/**
-	 * 할당된 할일
+	 * 하위 할일을 조회한다.
 	 * 
-	 * @param userSeq
+	 * @param todoSeq
+	 * @param n
 	 * @return
 	 */
-	@Query("select m from TdTodo m inner join TdWorkerMap n on (m.todoSeq = n.todoSeq) where m.delYn = 'N' and n.delYn = 'N' and n.workerSeq = ?1  ORDER BY m.todoSeq ASC")
-	List<TdTodo> findByAgreeTodo(Long userSeq);
-
-	/**
-	 * 미할당된 할일
-	 * 
-	 * @param userSeq
-	 * @return
-	 */
-	@Query("select m from TdTodo m inner join TdWorkerMap n on (m.todoSeq = n.todoSeq) where m.delYn = 'N' and n.delYn = 'N' and n.workerSeq = ?1  ORDER BY m.todoSeq ASC")
-	List<TdTodo> findByUnAgreeTodo(Long userSeq);
+	List<TdTodo> findByUpTodoSeqAndDelYnOrderByAplytoOrdAsc(Long todoSeq, Yn n);
 
 }

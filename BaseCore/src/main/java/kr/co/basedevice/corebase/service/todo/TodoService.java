@@ -24,6 +24,7 @@ import kr.co.basedevice.corebase.domain.td.TdCheckerMap;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
+import kr.co.basedevice.corebase.domain.td.TdWorkerMapId;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodoMgtDto;
@@ -317,35 +318,16 @@ public class TodoService {
 		
 		if(listTodoWorkerInfo != null && !listTodoWorkerInfo.isEmpty()) {
 			for(TodoWorkerInfoDto todoWorkerInfoDto : listTodoWorkerInfo) {
+				// 확인자 목록 조회
 				todoWorkerInfoDto.setCheckerList(tdTodoRepository.getCheckerList(todoWorkerInfoDto.getTodoSeq()));
+				
+				// 세부 내용 조회... 있다면...
+				List<TdTodo> listSubTodo = tdTodoRepository.findByUpTodoSeqAndDelYnOrderByAplytoOrdAsc(todoWorkerInfoDto.getTodoSeq(), Yn.N);
+				todoWorkerInfoDto.setListSubTodo(listSubTodo);
 			}
 		}
 		
 		return listTodoWorkerInfo;
-	}
-
-	/**
-	 * 동의한 할일 목록
-	 * 
-	 * @param userSeq
-	 * @return
-	 */
-	public List<TdTodo> findByAgreeTodo(Long userSeq) {
-		List<TdTodo> listTdTodo = tdTodoRepository.findByAgreeTodo(userSeq);
-				
-		return listTdTodo;
-	}
-
-	/**
-	 * 동의할지 않은 할일 목록
-	 * 
-	 * @param userSeq
-	 * @return
-	 */
-	public List<TdTodo> findByUnAgreeTodo(Long userSeq) {
-		List<TdTodo> listTdTodo = tdTodoRepository.findByUnAgreeTodo(userSeq);
-		
-		return listTdTodo;
 	}
 
 	/**
@@ -355,14 +337,16 @@ public class TodoService {
 	 * @return
 	 */
 	public boolean saveWorkerAgreeTodo(WorkerAgreeTodoDto workerAgreeTodo) {
+		TdWorkerMapId tdWorkerMapId = new TdWorkerMapId();
+		tdWorkerMapId.setTodoSeq(workerAgreeTodo.getTodoSeq());
+		tdWorkerMapId.setWorkerSeq(workerAgreeTodo.getWorkerSeq());
 		
-		List<TdWorkerMap> listTdWorkerMap = tdWorkerMapRepository.findByWorkerSeqAndTodoSeqInAndDelYn(workerAgreeTodo.getWorkerSeq(), workerAgreeTodo.getListTodoSeq(), Yn.N);
+		Optional<TdWorkerMap> optTdWorkerMap = tdWorkerMapRepository.findById(tdWorkerMapId);
 		
-		if(listTdWorkerMap != null && !listTdWorkerMap.isEmpty()) {
-			for(TdWorkerMap tdWorkerMap : listTdWorkerMap) {
-				tdWorkerMap.setWorkerAgreYn(workerAgreeTodo.getAgreeYn());
-			}
-			tdWorkerMapRepository.saveAll(listTdWorkerMap);
+		if(optTdWorkerMap != null && optTdWorkerMap.isPresent()) {
+			TdWorkerMap tdWorkerMap = optTdWorkerMap.get();
+			tdWorkerMap.setWorkerAgreYn(workerAgreeTodo.getAgreeYn());
+			tdWorkerMapRepository.save(tdWorkerMap);
 		}
 		
 		return true;

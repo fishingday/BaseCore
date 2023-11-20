@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerAgreeTodoDto;
 import kr.co.basedevice.corebase.search.todo.SearchTodoWorker;
@@ -59,34 +58,6 @@ public class WorkerWorkMgtRestController {
 	}
 	
 	/**
-	 * 할당된 할일 목록 조회
-	 * 
-	 * @return
-	 */
-	@GetMapping("/list_assign_todo.json")
-	public ResponseEntity<List<TdTodo>> listAssignTodo(){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		List<TdTodo> listTdTodo = todoService.findByAgreeTodo(cmUser.getUserSeq());
-		
-		return ResponseEntity.ok(listTdTodo);
-	}
-	
-	/**
-	 * 미할달된 할일 목록 조회
-	 * 
-	 * @return
-	 */
-	@GetMapping("/list_unassign_todo.json")
-	public ResponseEntity<List<TdTodo>> listUnassignTodo(){
-		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		List<TdTodo> listTdTodo = todoService.findByUnAgreeTodo(cmUser.getUserSeq());
-		
-		return ResponseEntity.ok(listTdTodo);
-	}
-	
-	/**
 	 * 할일에 대한 동의/미동의 저장
 	 * 
 	 * @param workerAgreeTodo
@@ -97,7 +68,7 @@ public class WorkerWorkMgtRestController {
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		workerAgreeTodo.setWorkerSeq(cmUser.getUserSeq());
 		
-		boolean isSave = todoService.saveWorkerAgreeTodo(workerAgreeTodo);		
+		boolean isSave = todoService.saveWorkerAgreeTodo(workerAgreeTodo);
 		
 		return ResponseEntity.ok(isSave);
 	}	

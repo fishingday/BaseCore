@@ -131,6 +131,48 @@
               }
             };
             return '-';
+          },
+          workerAgre: function(todoSeq, agreeYn){            
+            let workerAgreeTodo = {};
+            workerAgreeTodo.todoSeq = todoSeq;
+            workerAgreeTodo.agreeYn = (agreeYn === 'Y' ? 'N' : 'Y');
+            
+            Swal.fire({
+              title: (workerAgreeTodo.agreeYn === 'Y' ? '동의 하시겠습니까?' : '동의를 취소하시겠습니까?'),
+              text: "동의해야 포인트를 지급받을 수 있습니다.",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: '변경',
+              cancelButtonText: '취소',
+            })
+            .then((result) => {
+              if (result.isConfirmed) {                
+                $.ajax({
+                  url: "[[@{/worker/work_mgt/save_worker_agree}]]",
+                  type: "PUT",
+                  async: true,
+                  dataType : "json",
+                  data : workerAgreeTodo
+                }).done(function(data, textStatus, xhr){
+                  fnObj.action.reloadMainList();
+                  Swal.fire({
+                    title: (workerAgreeTodo.agreeYn === 'Y' ? '동의 하셨습니다.' : '동의를 취소하였습니다.?'),
+                    text: (workerAgreeTodo.agreeYn === 'Y' ? '동의완료' : '동의취소 완료'),
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                  });
+                }).fail(function(xhr, textStatus, errorThrown) {
+                  Swal.fire({
+                    title: xhr.responseJSON.httpStatus,
+                    text: xhr.responseJSON.message,
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                });
+              };
+            });
           }
         },
         grid: { // 그리드 관련
@@ -212,26 +254,57 @@
           },
           detailFormatter: function(index, row){
             var html = [];
-            html.push('<h4>');
+            html.push('<button type="button" class="btn btn-outline-'+ (row.workerAgreYn === 'Y' ? 'primary' : 'secondary' ) +' mb-2" onclick="fnObj.action.workerAgre(' + row.todoSeq + ',\''+ row.workerAgreYn +'\')">');
             html.push(row.todoTitl);
-            html.push('</h4>');
+            html.push('<i class="bi bi-toggle-'+ (row.workerAgreYn === 'Y' ? 'on' : 'off' ) +' m-2"></i>');
+            html.push('</button>');
             
             html.push('<br/>');
             html.push('포인트 : ' + row.todoPoint);
             
+            html.push('<br/>');
+            html.push('확인자 : ');
+            row.checkerList.forEach((item, idx) => {
+              let checkerNms = null;
+              if(idx > 0){
+                checkerNms = ',' + item.userNm;
+              }else{
+                checkerNms =  item.userNm;
+              }
+              html.push(checkerNms);
+            });
+            
             if(row.completCondiVal){
               html.push('<br/>');
-              html.push('완료조건 : ' + row.completCondiVal);
+              html.push('완료 조건 : ' + row.completCondiVal);
             }
             
             if(row.todoCreDtlVal){
               html.push('<br/>');
-              html.push('작업조건 : ' + fnObj.action.getTodoCreVal(row.todoCreCd) + ' ' + row.todoCreDtlVal); 
+              html.push('작업 조건 : ' + fnObj.action.getTodoCreVal(row.todoCreCd) + ' ' + row.todoCreDtlVal); 
             }
             
             if(row.dateLimitCnt){
               html.push('<br/>');
-              html.push('제한조건 : ' + fnObj.action.getTodoCreVal(row.todoCreCd) + ' ' + row.dateLimitCnt + '회'); 
+              html.push('성공 인정 : ' + fnObj.action.getTodoCreVal(row.todoCreCd) + ' ' + row.dateLimitCnt + '회'); 
+            }
+            
+            // 세부 내용이 있다면...
+            if(row.listSubTodo.length){
+              html.push('<br/>');
+              html.push('차등 조건 : ');
+              
+              let joinNm = ' 기준 - ';
+              if(row.todoTypCd ===  'EXAM'){
+                joinNm = ' 점 - '; 
+              }else if(row.todoTypCd ===  'EXAM'){
+                joinNm =  ' 조건 : ';
+              }
+              
+              row.listSubTodo.forEach((item, idx) => {
+                html.push('<br/>');
+                html.push(item.todoDtlVal + joinNm + item.todoPoint + ' Point');              
+              });
             }
             
             return html.join('');

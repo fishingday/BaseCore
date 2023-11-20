@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
+import kr.co.basedevice.corebase.domain.td.TdTodo;
 import lombok.Data;
 
 @Data
@@ -46,4 +47,6 @@ public class TodoWorkerInfoDto {
 	private Yn workerAgreYn;
 		
 	private List<TodoUserDto> checkerList;
+	
+	private List<TdTodo> listSubTodo;
 }
