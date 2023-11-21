@@ -1,9 +1,7 @@
 package kr.co.basedevice.corebase.restController.todo.worker;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
+import kr.co.basedevice.corebase.domain.code.QuizTypCd;
+import kr.co.basedevice.corebase.domain.td.TdQuiz;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
 import kr.co.basedevice.corebase.security.service.AccountContext;
+import kr.co.basedevice.corebase.service.todo.QuizService;
 import kr.co.basedevice.corebase.service.todo.SettleService;
 import kr.co.basedevice.corebase.service.todo.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class TodayWorkRestController {
 	
 	private final TodoService todoService;
+	private final QuizService quizService;
 	private final SettleService settleService;
 
 	/** 
@@ -60,6 +62,20 @@ public class TodayWorkRestController {
 		return ResponseEntity.ok(todoPlanList);
 	}
 	
+	/**
+	 * 작업자별 할일 목록
+	 * 
+	 * @return
+	 */
+	@GetMapping("/list_mytodo.json")
+	public ResponseEntity<List<TdTodo>> findByMyShortTodoList(){
+		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		List<TdTodo> listTdTodo = 	todoService.findByUserSeq(worker.getUserSeq());
+				
+		return ResponseEntity.ok(listTdTodo);
+	}
+	
 	
 	/** 
 	 * 작업자별 포인트 목록
@@ -75,33 +91,7 @@ public class TodayWorkRestController {
 		List<WorkerSettleInfoDto> listWorkerSettleInfo = settleService.getWorkerSettleInfo(worker.getUserSeq());
 		
 		return ResponseEntity.ok(listWorkerSettleInfo);
-	}
-
-	
-	
-	/**
-	 * 할일/작업 상세 조회
-	 * 
-	 * @param workSeq
-	 * @return
-	 */
-	@GetMapping("/get_todo_detail.json")
-	public ResponseEntity<Map<String,Object>> getTodoDetail(Long workSeq){
-		
-		Map<String,Object> retMap = new HashMap<>();
-
-		// 작업 조회
-		TdWork tdWork = todoService.getTdWork(workSeq);
-		retMap.put("tdWork", tdWork);
-		
-		if(!ObjectUtils.isEmpty(tdWork)) { // 작업이 있는 곳에 계획이 있음
-			// 할일 조회
-			TdTodo tdTodo = todoService.getTdTodo(tdWork.getTodoSeq());
-			retMap.put("tdTodo", tdTodo);
-		}
-		
-		return ResponseEntity.ok(retMap);
-	}
+	}	
 	
 	/**
 	 * 작업 입력/수정
@@ -117,5 +107,14 @@ public class TodayWorkRestController {
 		todoService.saveTdWork(tdWork);
 		
 		return ResponseEntity.ok(true);
+	}
+	
+	@GetMapping("/today_quiz.json")
+	public ResponseEntity<TdQuiz> findByQuiz(QuizTypCd quizTypCd){
+		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		TdQuiz tdQuiz =quizService.getTodayQuiz(worker.getUserSeq(), quizTypCd);
+		
+		return ResponseEntity.ok(tdQuiz);
 	}
 }

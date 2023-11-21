@@ -48,7 +48,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 				Projections.bean(TodayPlanDto.class,
 					 tdTodo.todoSeq
 					,tdTodo.todoTitl
-					,tdTodo.todoCont
+					,tdTodo.todoTmpCont
 					,tdTodo.completCondiVal
 					,tdTodo.todoTypCd
 					,tdTodo.todoCreCd
@@ -86,10 +86,6 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 
 		if(!ObjectUtils.isEmpty(searchTodo.getTodoTitl())) {
 			builder.and(tdTodo.todoTitl.contains(searchTodo.getTodoTitl()));			
-		}
-		
-		if(!ObjectUtils.isEmpty(searchTodo.getTodoCont())) {
-			builder.and(tdTodo.todoCont.contains(searchTodo.getTodoCont()));
 		}
 		
 		if(!ObjectUtils.isEmpty(searchTodo.getTodoDesc())) {
@@ -140,7 +136,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 				Projections.bean(WorkDetailInfoDto.class,
 					 tdTodo.todoSeq
 					,tdTodo.todoTitl
-					,tdTodo.todoCont
+					,tdTodo.todoTmpCont
 					,tdTodo.todoDesc
 					,tdTodo.completCondiVal
 					,tdTodo.todoPoint
@@ -314,8 +310,10 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 				Projections.bean(PlanWorkInfoDto.class
 					,cmUser.loginId
 					,cmUser.userNm.as("workerNm")
-					,tdWork.workSeq
 					,tdWork.workerSeq
+					
+					,tdWork.workSeq
+					,tdWork.todoSeq
 					,tdWork.workTitl
 					,tdWork.workCont
 					,tdWork.workDt

@@ -52,8 +52,8 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Column(name = "TODO_TITL", length = 200, nullable = false)
 	private String todoTitl;
 	
-	@Column(name = "TODO_CONT", length = 2000, nullable = false)
-	private String todoCont;
+	@Column(name = "TODO_TMP_CONT", length = 2000, nullable = false)
+	private String todoTmpCont;
 	
 	@Column(name = "TODO_DESC", length = 2000)
 	private String todoDesc;

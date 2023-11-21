@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import kr.co.basedevice.corebase.domain.code.QuizTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdQuiz;
 import kr.co.basedevice.corebase.dto.todo.QuizInfoDto;
@@ -99,6 +100,30 @@ public class QuizService {
 		quizRepository.save(tdQuiz);
 		
 		return true;
+	}
+
+	/**
+	 * 미 사용 퀴즈 조회
+	 * 
+	 * @param userSeq
+	 * @param quizTypCd
+	 * @return
+	 */
+	public TdQuiz getTodayQuiz(Long userSeq, QuizTypCd quizTypCd) {
+		
+		// 사용자가 풀지 않은 퀴즈 수
+		int cnt = 0;
+		int incre = 0;
+		do {
+		  
+			incre++;
+		}while(cnt == 0); // 만약에 없다면... 한번씩 더 풀어 보게...
+			
+		// 랜덤하게 하나...
+		
+		// 하나 조회
+		
+		return null;
 	}
 	
 	

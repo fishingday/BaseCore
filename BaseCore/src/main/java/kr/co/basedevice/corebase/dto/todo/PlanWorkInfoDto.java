@@ -13,19 +13,28 @@ public class PlanWorkInfoDto {
 	private String loginId;
 	private String workerNm;
 	private Long workerSeq;
-	
+		
 	private Long workSeq;
 	private Long todoSeq;
+		
 	private String workTitl;
+	private String workCont;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+	private LocalDateTime workDt;
 	private WorkStatCd workStatCd;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private LocalDateTime confmDt;
+	private LocalDateTime workPossBeginDt;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
-	private LocalDateTime workDt;	
+	private LocalDateTime workPossEndDt;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+	private LocalDateTime confmDt;
+		
 	private Integer gainPoint;
+	
 	private Yn setleYn;
 
 }

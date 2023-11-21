@@ -14,7 +14,7 @@ public class TodayPlanDto {
 	
 	private Long todoSeq;	
 	private String todoTitl;	
-	private String todoCont;	
+	private String todoTmpCont;	
 	private String completCondiVal;
 	private TodoTypCd todoTypCd;
 	private TodoCreCd todoCreCd;

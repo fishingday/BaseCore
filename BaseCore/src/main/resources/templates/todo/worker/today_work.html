@@ -11,15 +11,7 @@
     <!-- Content 시작 -->
     <div layout:fragment="content" class="col">
       <div class="row">
-          <h4 class="text-primary">작업 목록</h4>
-          <div class="row">
-            <div class="col mb-2">
-              <div class="input-group">
-                <div class="input-group-text">작업명</div>
-                <input type="text" class="form-control" id="workTitl" placeholder="작업 제목" aria-label="작업 제목">
-              </div>
-            </div>
-          </div>          
+          <h4 class="text-primary">작업 목록</h4>        
           <div class="row">
             <div class="col mb-2">
               <div class="input-group">
@@ -28,8 +20,14 @@
               </div>
             </div>
           </div>
+          <div id="toolbar">
+            <button id="create" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createWork">
+              <i class="bi bi-plus-square-dotted"></i> 직접등록
+            </button>
+          </div>
           <table
             id="table-work"
+            data-toolbar="#toolbar"
             data-search="true"
             data-show-columns="true"
             data-click-to-select="true"
@@ -39,7 +37,43 @@
       </div>
       <!-- modal -->
       <div class="modal-staging">
-          
+        <!--/* 작업 등록 */-->
+        <div class="modal fade" id="createWork" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">작업 등록</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3 row">
+                  <input type="hidden" id="workSeq">
+                  <input type="hidden" id="todoSeq">
+                  <label for="workTitl" class="col-sm-4 col-form-label">작업명</label>                  
+                  <input type="text" class="form-control" id="workTitl" placeholder="작업명" aria-label="작업명">
+                </div>
+                <div class="mb-3 row">
+                   <textarea class="form-control" placeholder="작업내용" id="workCont"></textarea>
+                   <label for="workCont" id="todoDesc">내용을 입력해 주세요</label>
+                </div>
+                <div class="mb-3 row">
+                  <span id="todoGuide"></span>
+                </div>
+                <div class="mb-3 row">
+                  <span id="pointGuide"></span>
+                </div>
+              </div>
+              <div class="modal-footer row">
+              <div class="col-auto me-auto">
+                  <button type="button" class="btn btn-primary" id="btnSaveWork">등록</button>
+              </div>
+                <div class="col-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- modal -->
     </div>
@@ -65,12 +99,43 @@
         },
         page: {
           init: function(){ // 버튼 바인딩 등
+            fnObj.action.loadMyTodo();
             fnObj.grid.init_worklist();
           }
         },
         action: { // 호출이나 화면 동작
           reloadMainList: function(){
-            $('#table-work').bootstrapTable('refresh')
+            $('#table-work').bootstrapTable('refresh');
+          },
+          loadMyTodo: function(){
+            $.ajax({
+              url: "[[@{/worker/today_work/list_mytodo.json}]]",
+              type: "GET",
+              async: true,
+              dataType : "json"
+            }).done(function(data, textStatus, xhr){
+              if(textStatus === "success"){
+                fnObj.data = {};
+                fnObj.data.myWork = data;
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
+          },
+          getTodoInfo: function(todoSeq){
+            if(fnObj.data.myWork){
+              for(let i = 0; i < fnObj.data.myWork.length ; i++){
+                if(fnObj.data.myWork[i].todoSeq === todoSeq){
+                  return fnObj.data.myWork[i];
+                }
+              }
+            }
+            return null;
           }
         },
         grid: { // 그리드 관련
@@ -114,15 +179,61 @@
                 return data;
               },
               queryParams: function(params){
-                if($("#workTitl").val() !== ''){
-                  params.workTitl = $("#workTitl").val();
-                }
-
                 if($("#workDate").val() !== ''){
                   params.workDate = $("#workDate").val();
                 }                
                 return params;
               }
+            });
+            $('#table-work').on('post-body.bs.table', function(data){
+              $("th.detail").addClass('table-primary');    
+            });
+            $('#table-work').on('click-row.bs.table', function(event, row, field){
+              
+              let todoInfo = fnObj.action.getTodoInfo(row.todoSeq);
+              
+              if(todoInfo.todoTypCd === 'SLEEP' 
+                || todoInfo.todoTypCd === 'CLEAN'){
+                let msg = '';
+                let til = '';
+                
+                if(todoInfo.todoTypCd === 'SLEEP'){
+                  til = "취침 미션은 작업자 등록 불가 항목 입니다.";
+                  msg =  todoInfo.todoDesc;
+                }else if(todoInfo.todoTypCd === 'CLEAN'){
+                  til = "청소 미션은 작업자 등록 불가 항목 입니다.";
+                  msg = todoInfo.todoDesc;
+                }else{
+                  til = "작업자 등록 불가 항목",
+                  msg = "등록 불가 항목 입니다.";
+                }
+                
+                Swal.fire({
+                  title: til,
+                  text: msg,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+              
+              if(todoInfo.quizUseYn === 'Y'){
+                
+              }              
+              
+              $("#workSeq").val(row.workSeq);
+              $("#todoSeq").val(row.todoSeq);
+              $("#workTitl").val(row.workTitl);
+              $("#workTitl").attr("readonly",true);
+              if(todoInfo !== null){
+                $("#todoDesc").html(todoInfo.todoDesc);
+                $("#todoGuide").html("완료조건 : " + todoInfo.completCondiVal);
+                if(row.workCont === null){
+                  $("#workCont").val(todoInfo.todoTmpCont);
+                }                
+              }
+              $("#pointGuide").html("완료시 <strong>" + row.gainPoint  + "</strong> 포인트가 지급됩니다.");
+              $("#createWork").modal("show");
             });
           }
         }

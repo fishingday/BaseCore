@@ -366,4 +366,18 @@ public class TodoService {
 		return listTodayWorkInfoDto;
 	}
 
+
+	/**
+	 * 사용자의 작업 가능 할일 목록 조회
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
+	public List<TdTodo> findByUserSeq(Long userSeq) {
+		
+		List<TdTodo> listTodo = tdTodoRepository.findByUserSeq(userSeq);
+		
+		return listTodo;
+	}
+
 }

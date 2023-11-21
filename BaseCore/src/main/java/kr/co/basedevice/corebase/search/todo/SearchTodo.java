@@ -8,13 +8,12 @@ import lombok.Data;
 @Data
 public class SearchTodo {
 	
-	private LocalDate toDay;	
-	private Long workerSeq;	
-	private String todoTitl;	
-	private String todoCont;	
-	private String todoDesc;	
-	private String workTitl;	
-	private String workCont;	
+	private LocalDate toDay;
+	private Long workerSeq;
+	private String todoTitl;
+	private String todoDesc;
+	private String workTitl;
+	private String workCont;
 	private WorkStatCd workStatCd;
 	private Long checkerSeq;
 		

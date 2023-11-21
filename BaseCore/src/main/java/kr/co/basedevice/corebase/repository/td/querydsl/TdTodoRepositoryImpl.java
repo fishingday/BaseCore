@@ -50,7 +50,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 				Projections.bean(TodoMgtDto.class,
 					 tdTodo.todoSeq
 					,tdTodo.todoTitl
-					,tdTodo.todoCont
+					,tdTodo.todoTmpCont
 					,tdTodo.todoDesc
 					,tdTodo.completCondiVal
 					,tdTodo.todoPoint
@@ -185,7 +185,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 			Projections.bean(TodoWorkerInfoDto.class,
 				 tdTodo.todoSeq
 				,tdTodo.todoTitl
-				,tdTodo.todoCont
+				,tdTodo.todoTmpCont
 				,tdTodo.todoDesc
 				,tdTodo.completCondiVal
 				,tdTodo.todoPoint
@@ -248,5 +248,5 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 		}
 			
 		return query.fetch();
-	}	
+	}
 }

@@ -17,7 +17,7 @@ public class WorkDetailInfoDto {
 	
 	private Long todoSeq;
 	private String todoTitl;
-	private String todoCont;
+	private String todoTmpCont;
 	private String todoDesc;
 	private String completCondiVal;
 	private Integer todoPoint;	
@@ -41,7 +41,7 @@ public class WorkDetailInfoDto {
 	public void setTdTodo(TdTodo tdTodo) {
 		this.todoSeq 		= tdTodo.getTodoSeq();
 		this.todoTitl 		= tdTodo.getTodoTitl();
-		this.todoCont		= tdTodo.getTodoCont();
+		this.todoTmpCont		= tdTodo.getTodoTmpCont();
 		this.todoDesc		= tdTodo.getTodoDesc();
 		this.completCondiVal= tdTodo.getCompletCondiVal();
 		this.todoPoint		= tdTodo.getTodoPoint();
