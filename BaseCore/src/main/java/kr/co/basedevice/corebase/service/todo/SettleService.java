@@ -31,7 +31,7 @@ public class SettleService {
 	private final TdWorkRepository workRepository;
 	private final TdPointRepository pointUseRepository;
 	
-	final private JdbcTemplate JdbcTemplate;
+	final private JdbcTemplate jdbcTemplate;
 		
 	/**
 	 * 정산 정보 페이지 조회
@@ -144,7 +144,7 @@ public class SettleService {
 				.append(" WHERE Z.DEL_YN = 'N' ")
 		        .append("   AND Z.USER_SEQ = ? ");
 		
-		List<WorkerSettleInfoDto> listWorkerSettleInfoDto =  JdbcTemplate.query(
+		List<WorkerSettleInfoDto> listWorkerSettleInfoDto =  jdbcTemplate.query(
 				sb.toString()
 				,new RowMapper<WorkerSettleInfoDto>() {
 					@Override
@@ -227,7 +227,7 @@ public class SettleService {
 				.append(" WHERE Z.DEL_YN = 'N' ")
 		        .append("   AND Z.USER_SEQ IN (SELECT K.TARGETER_SEQ FROM CM_USER_RELAT K WHERE K.DEL_YN = 'N' AND K.TARGETER_AGRE_YN = 'Y' AND K.RELATOR_SEQ = ? ) ");
 				
-		List<WorkerSettleInfoDto> listWorkerSettleInfoDto =  JdbcTemplate.query(
+		List<WorkerSettleInfoDto> listWorkerSettleInfoDto =  jdbcTemplate.query(
 				sb.toString()
 				,new RowMapper<WorkerSettleInfoDto>() {
 					@Override

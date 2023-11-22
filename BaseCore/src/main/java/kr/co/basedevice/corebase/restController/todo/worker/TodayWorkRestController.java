@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.restController.todo.worker;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
@@ -15,9 +16,10 @@ import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
 import kr.co.basedevice.corebase.domain.td.TdQuiz;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
-import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
+import kr.co.basedevice.corebase.dto.todo.TodoWorkDataDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
+import kr.co.basedevice.corebase.quartz.component.ApiResponse;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.QuizService;
@@ -100,17 +102,23 @@ public class TodayWorkRestController {
 	 * @return
 	 */
 	@PutMapping("/save_work.json")
-	public ResponseEntity<Boolean> saveWork(TdWork tdWork){
+	public ResponseEntity<?> saveWork(TodoWorkDataDto todoWorkData){
 		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		tdWork.setWorkerSeq(worker.getUserSeq());
+		todoWorkData.setWorkerSeq(worker.getUserSeq());
 		
-		todoService.saveTdWork(tdWork);
+		ApiResponse apiResponse = todoService.saveTdWork(todoWorkData);
 		
-		return ResponseEntity.ok(true);
+		return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/today_quiz.json")
-	public ResponseEntity<TdQuiz> findByQuiz(QuizTypCd quizTypCd){
+	/**
+	 * 랜덤 퀴즈
+	 * 
+	 * @param quizTypCd
+	 * @return
+	 */
+	@GetMapping("/get_random_quiz.json")
+	public ResponseEntity<TdQuiz> getRandomQuiz(QuizTypCd quizTypCd){
 		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		
 		TdQuiz tdQuiz =quizService.getTodayQuiz(worker.getUserSeq(), quizTypCd);

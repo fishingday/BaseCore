@@ -1,9 +1,5 @@
 package kr.co.basedevice.corebase.restController.todo.checker;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.td.TdQuiz;
 import kr.co.basedevice.corebase.dto.todo.QuizInfoDto;
-import kr.co.basedevice.corebase.dto.todo.QuizUserInfoDto;
-import kr.co.basedevice.corebase.dto.todo.WorkQuizInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchQuiz;
 import kr.co.basedevice.corebase.service.todo.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -44,28 +38,6 @@ public class TodoQuizMgtRestController {
 
 		
 		return ResponseEntity.ok(pageQuizInfo);
-	}
-	
-	
-	/**
-	 * 퀴즈 상세 조회
-	 * 
-	 * @param quizSeq
-	 * @return
-	 */
-	@GetMapping("/get_quiz_info.json")
-	public ResponseEntity<Map<String, Object>> getQuiz(Long quizSeq){
-				
-		TdQuiz tdQuiz = quizService.getQuiz(quizSeq);
-		List<QuizUserInfoDto> listQuizUserInfo = quizService.getQuizUserInfoList(quizSeq);
-		List<WorkQuizInfoDto> listWorkQuizInfo = quizService.getWorkQuizInfoList(quizSeq);
-	
-		Map<String, Object> retMap = new HashMap<>();
-		retMap.put("tdQuiz", tdQuiz);
-		retMap.put("listQuizUserInfo", listQuizUserInfo);
-		retMap.put("listWorkQuizInfo", listWorkQuizInfo);
-				
-		return ResponseEntity.ok(retMap);
 	}
 	
 	/**

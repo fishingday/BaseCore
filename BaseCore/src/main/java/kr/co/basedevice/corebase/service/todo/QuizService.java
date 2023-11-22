@@ -1,5 +1,7 @@
 package kr.co.basedevice.corebase.service.todo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,13 +9,14 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdQuiz;
 import kr.co.basedevice.corebase.dto.todo.QuizInfoDto;
-import kr.co.basedevice.corebase.dto.todo.QuizUserInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkQuizInfoDto;
 import kr.co.basedevice.corebase.repository.td.TdQuizRepository;
 import kr.co.basedevice.corebase.search.todo.SearchQuiz;
@@ -25,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class QuizService {
 	
 	private final TdQuizRepository quizRepository;
+	
+	final private JdbcTemplate jdbcTemplate;
 	
 	/**
 	 * 퀴즈 목록 정보 조회
@@ -60,20 +65,6 @@ public class QuizService {
 		
 		return tdQuiz.get();
 	}
-
-
-	/**
-	 * 퀴증별 사용자 대답 정보
-	 * 
-	 * @param quizSeq
-	 * @return
-	 */
-	public List<QuizUserInfoDto> getQuizUserInfoList(Long quizSeq) {
-		List<QuizUserInfoDto> listQuizUserInfoDto = quizRepository.findByQuizUserInfoList(quizSeq);
-
-		return listQuizUserInfoDto;
-	}
-
 
 	/**
 	 * 퀴즈별 작업 정보
@@ -114,17 +105,65 @@ public class QuizService {
 		// 사용자가 풀지 않은 퀴즈 수
 		int cnt = 0;
 		int incre = 0;
-		do {
-		  
-			incre++;
-		}while(cnt == 0); // 만약에 없다면... 한번씩 더 풀어 보게...
+		while(true) {
+			String strSql = "SELECT COUNT(*) cnt"
+					+ "  FROM TD_QUIZ A "
+					+ " WHERE A.DEL_YN = 'N' "
+					+ "   AND A.QUIZ_TYP_CD = ? "
+					+ "   AND A.QUIZ_SEQ NOT IN ( "
+					+ "       SELECT X.QUIZ_SEQ "
+					+ "         FROM TD_QUIZ_WORK_USE X "
+					+ "        WHERE X.DEL_YN = 'N' "
+					+ "          AND X.USER_SEQ = ? "
+					+ "        GROUP BY X.QUIZ_SEQ "
+					+ "       HAVING COUNT(*) > ? "
+					+ "   )";
+			
+		    cnt = jdbcTemplate.queryForObject(strSql, Integer.class, quizTypCd.name(), userSeq, incre);
+		    
+		    if(cnt > 0) {
+		    	break;
+		    }		    
+			incre++; // 만약에 없다면... 한번씩 더 풀어 보게...
+		}
 			
 		// 랜덤하게 하나...
+		int pickedNum = (int)(Math.random() * cnt);
 		
 		// 하나 조회
+		String sqlstr ="SELECT * "
+				+ "  FROM (SELECT ROW_NUMBER() OVER(ORDER BY A.QUIZ_SEQ) NUM "
+				+ "                      ,A.QUIZ_SEQ, A.QUIZ_TYP_CD, A.QUIZ_TITL, A.QUIZ_CONT, A.QUIZ_ANSWER "
+				+ "          FROM TD_QUIZ A "
+				+ "         WHERE A.DEL_YN = 'N' "
+				+ "           AND A.QUIZ_TYP_CD = ? "
+				+ "           AND A.QUIZ_SEQ NOT IN ( "
+				+ "               SELECT X.QUIZ_SEQ "
+				+ "                 FROM TD_QUIZ_WORK_USE X "
+				+ "                WHERE X.DEL_YN = 'N' "
+				+ "                  AND X.USER_SEQ = ? "
+				+ "                GROUP BY X.QUIZ_SEQ "
+				+ "               HAVING COUNT(*) > ? "
+				+ "           ) "
+				+ "       ) "
+				+ " WHERE NUM = ?";
 		
-		return null;
+		TdQuiz tdQuiz = jdbcTemplate.queryForObject(sqlstr, 
+				new RowMapper<TdQuiz>() {
+						@Override
+						public TdQuiz mapRow(ResultSet rs, int rowNum) throws SQLException{
+							TdQuiz tdQuiz
+							= new TdQuiz(
+								 rs.getLong("QUIZ_SEQ")
+								,QuizTypCd.valueOf(rs.getString("QUIZ_TYP_CD"))
+								,rs.getString("QUIZ_TITL")
+								,rs.getString("QUIZ_CONT")
+								,rs.getString("QUIZ_ANSWER")
+							);						
+							return tdQuiz;
+						}
+					}, quizTypCd.name(), userSeq, incre, pickedNum);
+		
+		return tdQuiz;
 	}
-	
-	
 }

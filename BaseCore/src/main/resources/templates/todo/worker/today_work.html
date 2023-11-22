@@ -21,7 +21,7 @@
             </div>
           </div>
           <div id="toolbar">
-            <button id="create" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createWork">
+            <button id="btnCreateWork" class="btn btn-success">
               <i class="bi bi-plus-square-dotted"></i> 직접등록
             </button>
           </div>
@@ -38,7 +38,7 @@
       <!-- modal -->
       <div class="modal-staging">
         <!--/* 작업 등록 */-->
-        <div class="modal fade" id="createWork" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="createWork" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
               <div class="modal-header">
@@ -49,6 +49,7 @@
                 <div class="mb-3 row">
                   <input type="hidden" id="workSeq">
                   <input type="hidden" id="todoSeq">
+                  <input type="hidden" id="quizSeq">                  
                   <label for="workTitl" class="col-sm-4 col-form-label">작업명</label>                  
                   <input type="text" class="form-control" id="workTitl" placeholder="작업명" aria-label="작업명">
                 </div>
@@ -88,19 +89,24 @@
       var fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
-          
           $("#workTitl").bind("change", function(){
             fnObj.action.reloadMainList();
           });
-          
           $("#workDate").bind("change", function(){
             fnObj.action.reloadMainList();
+          });
+          $("#btnCreateWork").bind("click", function(){
+            fnObj.action.makeWork();
+          });
+          $("#btnSaveWork").bind("click", function(){
+            fnObj.action.saveWork();
           });
         },
         page: {
           init: function(){ // 버튼 바인딩 등
-            fnObj.action.loadMyTodo();
-            fnObj.grid.init_worklist();
+            fnObj.action.loadMyTodo().then(function(){
+              fnObj.grid.init_worklist();
+            });
           }
         },
         action: { // 호출이나 화면 동작
@@ -108,7 +114,7 @@
             $('#table-work').bootstrapTable('refresh');
           },
           loadMyTodo: function(){
-            $.ajax({
+            return $.ajax({
               url: "[[@{/worker/today_work/list_mytodo.json}]]",
               type: "GET",
               async: true,
@@ -136,6 +142,240 @@
               }
             }
             return null;
+          },
+          popRowClick: async function(row){
+            let todoInfo = fnObj.action.getTodoInfo(row.todoSeq);
+            
+            if(todoInfo.todoTypCd === 'SLEEP' 
+              || todoInfo.todoTypCd === 'CLEAN'){
+              let msg = '';
+              let til = '';
+              
+              if(todoInfo.todoTypCd === 'SLEEP'){
+                til = "취침 미션은 작업자 등록 불가 항목 입니다.";
+                msg =  todoInfo.todoDesc;
+              }else if(todoInfo.todoTypCd === 'CLEAN'){
+                til = "청소 미션은 작업자 등록 불가 항목 입니다.";
+                msg = todoInfo.todoDesc;
+              }else{
+                til = "작업자 등록 불가 항목",
+                msg = "등록 불가 항목 입니다.";
+              }
+              
+              Swal.fire({
+                title: til,
+                text: msg,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+            
+            if(todoInfo.quizUseYn === 'Y'){
+              $("#quizUseYn").val("Y");
+              if(row.workCont === null){
+                $.ajax({
+                  url: "[[@{/worker/today_work/get_random_quiz.json}]]",
+                  type: "GET",
+                  async: true,
+                  dataType : "json",
+                  data : {quizTypCd: todoInfo.quizTypCd}
+                }).done(async function(data, textStatus, xhr){
+                  if(textStatus === 'success'){
+                   
+                    let placeholder = data.quizAnswer.slice(0,1);
+                    for(let i = 1; i < data.quizAnswer.length; i++){
+                      placeholder += '*';
+                    }
+                    $("#quizSeq").val(data.quizSeq);
+                    
+                    const { value: quizAnswer } = await Swal.fire({
+                      title: data.quizTitl,
+                      input: "text",
+                      inputLabel: data.quizCont,
+                      inputPlaceholder: placeholder,
+                      inputValidator: (value) => {
+                        if (value !== data.quizAnswer) {
+                          return "정답이 아닙니다.";
+                        }
+                      }
+                    });
+                    
+                    $("#workCont").val(todoInfo.todoTmpCont + quizAnswer);
+                    $("#workCont").attr("readonly",true);
+                  }
+                }).fail(function(xhr, textStatus, errorThrown) {
+                  Swal.fire({
+                    title: xhr.responseJSON.httpStatus,
+                    text: xhr.responseJSON.message,
+                    icon: 'error',
+                    confirmButtonText: '닫기'
+                  });
+                });                
+              }
+            }else{
+              $("#quizUseYn").val("N");
+              $("#workCont").attr("readonly",false);
+            }
+            
+            $("#workSeq").val(row.workSeq);
+            $("#todoSeq").val(row.todoSeq);
+            $("#workTitl").val(row.workTitl);
+            $("#workTitl").attr("readonly",true);
+            if(todoInfo !== null){
+              $("#todoDesc").html(todoInfo.todoDesc);
+              $("#todoGuide").html("완료조건 : " + todoInfo.completCondiVal);
+              if(row.workCont === null){
+                $("#workCont").val(todoInfo.todoTmpCont);
+              }
+              
+              if(todoInfo.todoTypCd === 'DIARY'){
+                $("#workCont").attr('placeholder', '날씨, 한 일, 반성, 결심, 소감 등을 입력 합니다.');
+              }else if(todoInfo.todoTypCd === 'EXERCISE'){
+                $("#workCont").attr('placeholder', '운동 종류, 시간, 거리 등을 기록 합니다.');
+              }else if(todoInfo.todoTypCd === 'READING'){
+                $("#workCont").attr('placeholder', '책 제목, 읽은 페이지의 처음과 끝, 소감 등을 입력합니다.');
+              }else{
+                $("#workCont").attr('placeholder', '내용을 입력해 주세요.');
+              }
+            }
+            $("#pointGuide").html("완료시 <strong>" + row.gainPoint  + "</strong> 포인트가 지급됩니다.");
+            $("#createWork").modal("show");
+          },
+          makeWork: async function(){            
+            let optionWorks = {};
+            if(fnObj.data.myWork && fnObj.data.myWork.length > 0){
+              fnObj.data.myWork.forEach(function(item){
+                if(item.todoCreCd === 'DIRECT'){
+                  optionWorks[item.todoSeq] = item.todoTitl;
+                }
+              });
+            } 
+            
+            const { value: choiceTodoSeq } = await Swal.fire({
+              title: "입력할 작업을 선택해 주세요.",
+              input: "select",
+              inputOptions: optionWorks,
+              inputPlaceholder: "작업 선택",
+              inputValidator: (value) => {
+                if (!value) {
+                  return "작업을 선택해 주세요.";
+                }
+              }
+            });
+            $("#workTitl").attr("readonly",false);
+            $("#workCont").attr("readonly",false);
+            
+            let todoInfo = fnObj.action.getTodoInfo(parseInt(choiceTodoSeq));
+            
+            if(todoInfo.todoTypCd === 'EXAM'){
+              $("#workCont").attr('placeholder', '숫자만 입력');
+              $("#todoGuide").val('100점 만점을 기준으로 합니다. 100점 만점이 아닐 경우 환산해서 입력해 주세요. 예) 100 * (받은점수/만점)');
+            }else{
+              $("#workCont").attr('placeholder', '내용 입력');
+              $("#todoGuide").val('작업한 내용을 입력해 주세요.');
+            }
+            
+            $("#todoSeq").val(parseInt(choiceTodoSeq));
+            $("#createWork").modal("show");
+          },
+          saveWork: function(){
+            if($("#todoSeq").val() === ''){
+              Swal.fire({
+                title: '필수 항목 입력',
+                text: '할일 정보가 없습니다. 화면을 다시 시작해 주세요.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+            
+            let todoInfo = fnObj.action.getTodoInfo(parseInt($("#todoSeq").val()));
+            
+            if($("#quizUseYn").val() === 'Y'){
+              if($("#quizSeq").val() === ''){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '퀴즈 정보가 없습니다. 화면을 다시 시작해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+            }
+            
+            if($("#workTitl").val() === ''){
+              Swal.fire({
+                title: '필수 항목 입력',
+                text: '작업 제목을 입력해 주세요.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+            
+            if($("#workCont").val() === ''){
+              Swal.fire({
+                title: '필수 항목 입력',
+                text: '작업 내용을 입력해 주세요.',
+                icon: 'info',
+                confirmButtonText: '닫기'
+              });
+              return;
+            }
+            
+            if(todoInfo.todoTypCd === 'EXAM'){
+              if(!$.isNumeric($("#workCont").val())){
+                Swal.fire({
+                  title: '필수 항목 입력',
+                  text: '시험점수는 숫자만 입력해 주세요.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+            }
+            
+            let tdWork = {};
+            tdWork.workSeq = $("#workSeq").val();
+            tdWork.todoSeq = $("#todoSeq").val();
+            tdWork.quizSeq = $("#quizSeq").val();            
+            tdWork.workTitl = $("#workTitl").val();
+            tdWork.workCont = $("#workCont").val();
+      
+            $.ajax({
+              url: "[[@{/worker/today_work/save_work.json}]]",
+              type: "PUT",
+              async: true,
+              dataType : "json",
+              data : tdWork
+            }).done(function(data, textStatus, xhr){
+              
+              if(data.success === true){
+                fnObj.action.reloadMainList();
+                Swal.fire({
+                  title: '축하합니다.!',
+                  text: data.message,
+                  icon: 'success',
+                  confirmButtonText: '확인'
+                });
+                $("#createWork").modal("hide");
+              }else{
+                Swal.fire({
+                  title: "등록실패",
+                  text: data.message,
+                  icon: 'error',
+                  confirmButtonText: '닫기'
+                });
+              }
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });
           }
         },
         grid: { // 그리드 관련
@@ -170,7 +410,7 @@
                  ,formatter: function(value, row, index) {
                     return value.toLocaleString();
                   }
-                },                
+                },
                 {field: 'workDt',    title: '작업일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
                 {field: 'confmDt',   title: '확인일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
                 
@@ -186,54 +426,10 @@
               }
             });
             $('#table-work').on('post-body.bs.table', function(data){
-              $("th.detail").addClass('table-primary');    
+              $("th.detail").addClass('table-primary');
             });
             $('#table-work').on('click-row.bs.table', function(event, row, field){
-              
-              let todoInfo = fnObj.action.getTodoInfo(row.todoSeq);
-              
-              if(todoInfo.todoTypCd === 'SLEEP' 
-                || todoInfo.todoTypCd === 'CLEAN'){
-                let msg = '';
-                let til = '';
-                
-                if(todoInfo.todoTypCd === 'SLEEP'){
-                  til = "취침 미션은 작업자 등록 불가 항목 입니다.";
-                  msg =  todoInfo.todoDesc;
-                }else if(todoInfo.todoTypCd === 'CLEAN'){
-                  til = "청소 미션은 작업자 등록 불가 항목 입니다.";
-                  msg = todoInfo.todoDesc;
-                }else{
-                  til = "작업자 등록 불가 항목",
-                  msg = "등록 불가 항목 입니다.";
-                }
-                
-                Swal.fire({
-                  title: til,
-                  text: msg,
-                  icon: 'error',
-                  confirmButtonText: '닫기'
-                });
-                return;
-              }
-              
-              if(todoInfo.quizUseYn === 'Y'){
-                
-              }              
-              
-              $("#workSeq").val(row.workSeq);
-              $("#todoSeq").val(row.todoSeq);
-              $("#workTitl").val(row.workTitl);
-              $("#workTitl").attr("readonly",true);
-              if(todoInfo !== null){
-                $("#todoDesc").html(todoInfo.todoDesc);
-                $("#todoGuide").html("완료조건 : " + todoInfo.completCondiVal);
-                if(row.workCont === null){
-                  $("#workCont").val(todoInfo.todoTmpCont);
-                }                
-              }
-              $("#pointGuide").html("완료시 <strong>" + row.gainPoint  + "</strong> 포인트가 지급됩니다.");
-              $("#createWork").modal("show");
+              fnObj.action.popRowClick(row);
             });
           }
         }

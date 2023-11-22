@@ -483,7 +483,7 @@
               $("#popupUserInfo").modal("hide");
               var pageIdx = $("li.page-item.active > .page-link").text();
               $('#table').bootstrapTable('selectPage', Number(pageIdx));
-                  }).fail(function(xhr, textStatus, errorThrown) {
+            }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
                 title: xhr.responseJSON.httpStatus,
                 text: xhr.responseJSON.message,

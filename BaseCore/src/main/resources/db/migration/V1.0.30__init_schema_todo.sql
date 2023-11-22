@@ -4,10 +4,9 @@ create sequence seq_td_setle start with 1000 increment by 1;
 create sequence seq_td_work start with 1000 increment by 1;
 create sequence seq_td_point start with 1000 increment by 1;
 
-create table td_quiz_work_use (quiz_seq bigint not null, work_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, primary key (quiz_seq, work_seq));
+create table td_quiz_work_use (quiz_seq bigint not null, work_seq bigint not null, user_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, primary key (quiz_seq, work_seq));
 create table td_worker_map (worker_seq bigint not null, todo_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, worker_agre_yn varchar(1) not null, primary key (worker_seq, todo_seq));
 create table td_quiz (quiz_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, quiz_answer varchar(2000) not null, quiz_cont varchar(2000) not null, quiz_titl varchar(200) not null, quiz_typ_cd varchar(35) not null, primary key (quiz_seq));
-create table td_quiz_user_map (quiz_user_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, quiz_seq bigint not null, suces_yn varchar(1) not null, user_answer varchar(2000) not null, answer_cnt integer not null, user_seq bigint not null, primary key (quiz_user_seq));
 create table td_todo (todo_seq bigint not null, up_todo_seq bigint, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, complet_condi_val varchar(128) not null, date_limit_cnt integer not null, del_yn varchar(1) not null, limit_begin_tm time, limit_end_tm time, post_begin_date date not null, post_end_date date not null, todo_cre_cd varchar(35) not null, todo_cre_dtl_val varchar(128), aplyto_ord integer, quiz_typ_cd varchar(35), quiz_use_yn varchar(1) not null, todo_tmp_cont varchar(2000) not null, todo_desc varchar(2000), todo_point integer not null, todo_dtl_val varchar(128), todo_titl varchar(200) not null, todo_typ_cd varchar(35) not null, primary key (todo_seq));
 create table td_checker_map (checker_seq bigint not null, todo_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, primary key (checker_seq, todo_seq));
 create table td_work_setle_map (setle_seq bigint not null, work_seq bigint not null, cre_dt timestamp not null, creator_seq bigint not null, upd_dt timestamp not null, updator_seq bigint not null, del_yn varchar(1) not null, primary key (work_seq, setle_seq));
@@ -18,7 +17,6 @@ create table td_point (point_seq bigint not null, user_seq  bigint not null, set
 alter table td_quiz_work_use add constraint FKf5gs3i836stpwcb6wvor83f6d foreign key (quiz_seq) references td_quiz;
 alter table td_quiz_work_use add constraint FKd3lawkcxrhn2c04f4mnp0w6jh foreign key (work_seq) references td_work;
 alter table td_worker_map add constraint FKnnueh967h9jwh5vwydqh8aaov foreign key (todo_seq) references td_todo;
-alter table td_quiz_user_map add constraint FKdboua24fwetxao3nq6nq8ige7 foreign key (quiz_seq) references td_quiz;
 alter table td_checker_map add constraint FKj165yo5ykqtv37h6jjraoyofa foreign key (todo_seq) references td_todo;
 alter table td_work_setle_map add constraint FKr0rvwfpa8nclbw5alx9236gj4 foreign key (setle_seq) references td_setle;
 alter table td_work_setle_map add constraint FK866y3rnu51q3k3vho51kdax7d foreign key (work_seq) references td_work;

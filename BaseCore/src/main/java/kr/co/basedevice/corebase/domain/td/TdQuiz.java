@@ -23,6 +23,7 @@ import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -30,6 +31,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "TD_QUIZ")
 @SequenceGenerator(name = "SEQGEN_TD_QUIZ", sequenceName = "SEQ_TD_QUIZ", initialValue = 1000, allocationSize = 1)
+@NoArgsConstructor
 public class TdQuiz extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 5523368845285769691L;
@@ -58,10 +60,13 @@ public class TdQuiz extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdQuiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdQuizUserMap> tdQuizUserMapList = new ArrayList<>(1);
-	
-	@OneToMany(mappedBy = "tdQuiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<TdQuizWorkUse> tdWorkerQuizUseList = new ArrayList<>(1);
-	
+
+	public TdQuiz(Long quizSeq, QuizTypCd quizTypCd, String quizTitl, String quizCont, String quizAnswer) {
+		this.quizSeq = quizSeq;
+		this.quizTypCd = quizTypCd; 
+		this.quizTitl = quizTitl;
+		this.quizCont = quizCont;
+		this.quizAnswer = quizAnswer;
+	}
 }

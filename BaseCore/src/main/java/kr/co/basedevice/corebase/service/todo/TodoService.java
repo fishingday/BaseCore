@@ -18,9 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
+import kr.co.basedevice.corebase.domain.code.TodoTypCd;
 import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.TdCheckerMap;
+import kr.co.basedevice.corebase.domain.td.TdQuizWorkUse;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.domain.td.TdWorkerMap;
@@ -29,8 +31,11 @@ import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodoMgtDto;
 import kr.co.basedevice.corebase.dto.todo.TodoUserDto;
+import kr.co.basedevice.corebase.dto.todo.TodoWorkDataDto;
 import kr.co.basedevice.corebase.dto.todo.TodoWorkerInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerAgreeTodoDto;
+import kr.co.basedevice.corebase.quartz.component.ApiResponse;
+import kr.co.basedevice.corebase.repository.td.TdQuizWorkUseRepository;
 import kr.co.basedevice.corebase.repository.td.TdTodoRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkerMapRepository;
@@ -49,7 +54,7 @@ public class TodoService {
 	final private TdTodoRepository tdTodoRepository;
 	final private TdWorkRepository tdWorkRepository;
 	final private TdWorkerMapRepository tdWorkerMapRepository;
-	
+	final private TdQuizWorkUseRepository tdQuizWorkUseRepository;
 
 	
 	/**
@@ -188,10 +193,92 @@ public class TodoService {
 	 * 
 	 * @param tdWork
 	 */
-	public boolean saveTdWork(TdWork tdWork) {		
-		tdWorkRepository.save(tdWork);
+	public ApiResponse saveTdWork(TodoWorkDataDto todoWorkData) {
 		
-		return true;
+		String msg = null;
+		
+		if(ObjectUtils.isEmpty(todoWorkData.getTodoSeq())) {
+			return new ApiResponse(false, "할일 정보가 없는 잘못된 정보입니다.");
+		}
+		
+		Optional<TdTodo> tdTodo = tdTodoRepository.findById(todoWorkData.getTodoSeq());
+		
+		TdWork tdWork = null;
+		if(tdTodo.get().getTodoCreCd() == TodoCreCd.DIRECT) {
+			tdWork = new TdWork();
+			tdWork.setTodoSeq(todoWorkData.getTodoSeq());
+		}else{
+			Optional<TdWork> otpTdWork = tdWorkRepository.findById(todoWorkData.getWorkSeq());
+			if(!otpTdWork.isPresent()) {
+				return new ApiResponse(false, "작업 정보가 없는 잘못된 정보입니다.");
+			}else{
+				tdWork = otpTdWork.get();
+			}
+		}
+
+		TdQuizWorkUse tdQuizWorkUse = null;
+		if(tdTodo.get().getQuizUseYn() == Yn.Y) {
+			if(!ObjectUtils.isEmpty(todoWorkData.getQuizSeq())) {
+				return new ApiResponse(false, "퀴즈 정보가 없습니다.");
+			}
+			tdQuizWorkUse = new TdQuizWorkUse();
+			tdQuizWorkUse.setQuizSeq(todoWorkData.getQuizSeq());
+			tdQuizWorkUse.setUserSeq(todoWorkData.getWorkerSeq());;
+			tdQuizWorkUse.setDelYn(Yn.N);
+		}
+		
+		// 만약 이것이 시험이라면...
+		if(tdTodo.get().getTodoTypCd() == TodoTypCd.EXAM) {
+			int score = 0;
+			try{
+				score = Integer.parseInt(todoWorkData.getWorkCont());
+			}catch(NumberFormatException ex) {
+				return new ApiResponse(false, "시험 점수가 잘못되었습니다.");
+			}
+			
+			List<TdTodo> listTdTodo = tdTodoRepository.findByUpTodoSeqAndDelYnOrderByAplytoOrdAsc(todoWorkData.getTodoSeq(), Yn.N);
+			for(TdTodo tdItm : listTdTodo) {
+				if(Integer.parseInt(tdItm.getTodoDtlVal()) <= score) {
+					tdWork.setGainPoint(tdItm.getTodoPoint());
+					break;
+				}
+			}
+			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
+			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
+		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.DIARY) {
+			msg = tdWork.getGainPoint() + "포인트 적립 되었습니다.";
+			tdWork.setWorkStatCd(WorkStatCd.DONE);
+			tdWork.setConfmDt(LocalDateTime.now());
+		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.SLEEP) {
+			msg = tdWork.getGainPoint() + "포인트 적립 되었습니다.";
+			tdWork.setWorkStatCd(WorkStatCd.DONE);
+			tdWork.setConfmDt(LocalDateTime.now());
+		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.CLEAN) {
+			msg = tdWork.getGainPoint() + "포인트 적립 되었습니다.";
+			tdWork.setWorkStatCd(WorkStatCd.DONE);
+			tdWork.setConfmDt(LocalDateTime.now());
+		}else{
+			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
+			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
+		}
+		
+		tdWork.setTodoSeq(tdTodo.get().getTodoSeq());
+		tdWork.setWorkTitl(todoWorkData.getWorkTitl());
+		tdWork.setWorkCont(todoWorkData.getWorkCont());
+		tdWork.setWorkerSeq(todoWorkData.getWorkerSeq());		
+		tdWork.setWorkDt(LocalDateTime.now());
+		tdWork.setWorkPossBeginDt(LocalDateTime.now());
+		tdWork.setWorkPossEndDt(LocalDateTime.now());
+		tdWork.setSetleYn(Yn.N);
+		tdWork.setDelYn(Yn.N);		
+		
+		TdWork saveWork = tdWorkRepository.save(tdWork);
+		if(tdQuizWorkUse != null) {
+			tdQuizWorkUse.setWorkSeq(saveWork.getWorkSeq());
+			tdQuizWorkUseRepository.save(tdQuizWorkUse);
+		}
+		 
+		return new ApiResponse(true, "축하합니다. " + msg);
 	}
 
 	/**

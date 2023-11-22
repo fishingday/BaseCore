@@ -20,11 +20,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdQuiz;
-import kr.co.basedevice.corebase.domain.td.QTdQuizUserMap;
 import kr.co.basedevice.corebase.domain.td.QTdQuizWorkUse;
 import kr.co.basedevice.corebase.domain.td.QTdWork;
 import kr.co.basedevice.corebase.dto.todo.QuizInfoDto;
-import kr.co.basedevice.corebase.dto.todo.QuizUserInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkQuizInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchQuiz;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +35,6 @@ public class TdQuizRepositoryImpl implements TdQuizRepositoryQueryDsl{
 	@Override
 	public Page<QuizInfoDto> findByQuizInfo(SearchQuiz searchQuiz, Pageable page) {
 		QTdQuiz tdQuiz = QTdQuiz.tdQuiz;
-		QTdQuizUserMap tdQuizUserMap = QTdQuizUserMap.tdQuizUserMap;
 		QTdQuizWorkUse tdQuizWorkUse = QTdQuizWorkUse.tdQuizWorkUse;
 		
 		JPQLQuery<QuizInfoDto> query = jpaQueryFactory.select(
@@ -69,12 +66,8 @@ public class TdQuizRepositoryImpl implements TdQuizRepositoryQueryDsl{
 			builder.and(tdQuiz.quizAnswer.contains(searchQuiz.getQuizAnswer()));			
 		}
 		
-		if(!ObjectUtils.isEmpty(searchQuiz.getQuizUserSeq())) { // 퀴즈 참여자
-			JPQLQuery <Long> subQuery = 
-		    		  JPAExpressions.select(Projections.bean(Long.class, tdQuizUserMap.quizSeq))
-		    	      .from(tdQuizUserMap)
-		    	      .where(tdQuizUserMap.delYn.eq(Yn.N), tdQuizUserMap.userSeq.in(searchQuiz.getQuizUserSeq()));			    	      
-			builder.and(tdQuiz.quizSeq.in(subQuery));
+		if(!ObjectUtils.isEmpty(searchQuiz.getQuizUserSeq())) { // 퀴즈 참여자		    	      
+			builder.and(tdQuizWorkUse.userSeq.eq(searchQuiz.getQuizUserSeq()));
 		}
 		
 		if(!ObjectUtils.isEmpty(searchQuiz.getUseQuizYn())) {
@@ -108,33 +101,6 @@ public class TdQuizRepositoryImpl implements TdQuizRepositoryQueryDsl{
 		
 		QueryResults<QuizInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
 		return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
-	}
-
-	@Override
-	public List<QuizUserInfoDto> findByQuizUserInfoList(Long quizSeq) {
-		QTdQuizUserMap quizUserMap = QTdQuizUserMap.tdQuizUserMap;
-		QCmUser cmUser = QCmUser.cmUser;
-		
-		JPQLQuery<QuizUserInfoDto> query = jpaQueryFactory.select(
-				Projections.bean(QuizUserInfoDto.class,
-					 quizUserMap.quizUserSeq
-					,quizUserMap.quizSeq
-					,cmUser.userSeq
-					,cmUser.loginId
-					,cmUser.userNm
-					,quizUserMap.userAnswer
-					,quizUserMap.answerCnt
-					,quizUserMap.sucesYn
-				)
-			)
-			.from(quizUserMap).innerJoin(cmUser).on(quizUserMap.userSeq.eq(cmUser.userSeq));
-		
-		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(quizUserMap.delYn.eq(Yn.N));
-		builder.and(cmUser.delYn.eq(Yn.N));
-		builder.and(quizUserMap.quizSeq.eq(quizSeq));
-		
-		return query.where(builder).fetch();
 	}
 
 	@Override
