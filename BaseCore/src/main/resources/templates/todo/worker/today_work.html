@@ -86,7 +86,7 @@
         xhr.setRequestHeader(header, token); 
       });
 
-      var fnObj = {
+      let fnObj = {
         pageStart:  function(){ // 페이지 초기 실행 스크립트
           fnObj.page.init();
           $("#workTitl").bind("change", function(){
@@ -242,7 +242,7 @@
             $("#pointGuide").html("완료시 <strong>" + row.gainPoint  + "</strong> 포인트가 지급됩니다.");
             $("#createWork").modal("show");
           },
-          makeWork: async function(){            
+          makeWork: async function(){
             let optionWorks = {};
             if(fnObj.data.myWork && fnObj.data.myWork.length > 0){
               fnObj.data.myWork.forEach(function(item){
@@ -324,16 +324,53 @@
               return;
             }
             
-            if(todoInfo.todoTypCd === 'EXAM'){
+            if(todoInfo.confmMethCd === 'SCORE'){ // 숫자만
               if(!$.isNumeric($("#workCont").val())){
                 Swal.fire({
-                  title: '필수 항목 입력',
-                  text: '시험점수는 숫자만 입력해 주세요.',
+                  title: '숫자 입력',
+                  text: '숫자만 입력해 주세요.',
                   icon: 'info',
                   confirmButtonText: '닫기'
                 });
                 return;
               }
+            }else if(todoInfo.confmMethCd === 'ENG_CNT'){ // 영어 글자수
+              let cntWord = $("#workCont").val().replace(/[^a-z0-9]/gi,'').length;
+              if(parseInt(todoInfo.confmDtlVal) > cntWord){
+                Swal.fire({
+                  title: '영어 글자 수',
+                  text: '영문 '+ todoInfo.confmDtlVal + '글자 이상 입력해야 합니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }
+            }else if(todoInfo.confmMethCd === 'WORD_CNT'){ // 글자수 
+              let cntWord = $("#workCont").val().length;              
+              if(parseInt(todoInfo.confmDtlVal) > cntWord){
+                Swal.fire({
+                  title: '내용 글자 수',
+                  text: todoInfo.confmDtlVal + '글자 이상 입력해야 합니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }              
+            }else if(todoInfo.confmMethCd === 'INTIME'){ // 입력 시간 체크
+              let now = new Date();
+              let dateStr = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
+              let beginDt = new Date(dateStr + ' ' + todoInfo.limitBeginTm);
+              let endDt = new Date(dateStr + ' ' + todoInfo.limitEndTm);
+              
+              if(!(beginDt <= now) || !(endDt >= now)){
+                Swal.fire({
+                  title: '입력 시간',
+                  text: '입력 가능 시간이 아닙니다.',
+                  icon: 'info',
+                  confirmButtonText: '닫기'
+                });
+                return;
+              }            
             }
             
             let tdWork = {};
@@ -396,7 +433,7 @@
                     if(value === 'READY'){
                       return '대기'
                     }else if(value === 'ONGOING'){
-                      return '진행중';
+                      return '확인중';
                     }else if(value === 'FAIL'){
                       return '실패';
                     }else if(value === 'DONE'){
@@ -429,6 +466,10 @@
               $("th.detail").addClass('table-primary');
             });
             $('#table-work').on('click-row.bs.table', function(event, row, field){
+              if(row.workStatCd !== 'READY'){
+                return;
+              }
+              
               fnObj.action.popRowClick(row);
             });
           }

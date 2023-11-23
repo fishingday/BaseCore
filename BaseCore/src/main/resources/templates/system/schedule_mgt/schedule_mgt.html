@@ -110,7 +110,7 @@
             jobRequest.jobGroup = $("#jobGroup").val();
             jobRequest.jobName = $("#jobName").val();
             
-            jobRequest.startDateAt = SimpleDateTimeFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
+            jobRequest.startDateAt = FnComm.SimpleDateTimeFormat(new Date(), "yyyy-MM-dd HH:mm:ss");
             
             if($("#jobDatas").val() !== ''){
               jobRequest.JobDataMap = {};

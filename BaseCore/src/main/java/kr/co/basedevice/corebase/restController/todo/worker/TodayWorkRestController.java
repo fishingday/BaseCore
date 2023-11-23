@@ -106,7 +106,7 @@ public class TodayWorkRestController {
 		CmUser worker = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		todoWorkData.setWorkerSeq(worker.getUserSeq());
 		
-		ApiResponse apiResponse = todoService.saveTdWork(todoWorkData);
+		ApiResponse apiResponse = todoService.saveWorkerInputWork(todoWorkData);
 		
 		return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 	}

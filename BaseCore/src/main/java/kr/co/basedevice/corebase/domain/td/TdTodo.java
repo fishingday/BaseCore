@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.co.basedevice.corebase.domain.BaseEntity;
+import kr.co.basedevice.corebase.domain.code.ConfmMethCd;
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoTypCd;
@@ -68,8 +69,12 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private TodoTypCd todoTypCd;
 	
-	@Column(name = "TODO_DTL_VAL", length = 128)
-	private String todoDtlVal;
+	@Column(name = "CONFM_METH_CD", nullable = false, length = 35)
+	@Enumerated(EnumType.STRING)
+	private ConfmMethCd confmMethCd;
+	
+	@Column(name = "CONFM_DTL_VAL", length = 20)
+	private String confmDtlVal;
 	
 	// 직접생성의 경우 하루 생성 제한
 	@Column(name = "DATE_LIMIT_CNT", nullable = false)

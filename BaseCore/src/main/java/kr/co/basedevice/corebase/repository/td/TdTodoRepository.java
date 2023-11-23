@@ -34,6 +34,12 @@ public interface TdTodoRepository extends JpaRepository<TdTodo, Long>, TdTodoRep
 	 */
 	List<TdTodo> findByUpTodoSeqAndDelYnOrderByAplytoOrdAsc(Long todoSeq, Yn n);
 
+	/**
+	 * 사용자 동의 할일 목록
+	 * 
+	 * @param userSeq
+	 * @return
+	 */
 	@Query("select m from TdTodo m inner join TdWorkerMap n on (m.todoSeq = n.todoSeq) where m.delYn = 'N' and n.workerAgreYn = 'Y' and n.delYn = 'N' and n.workerSeq = ?1  order by m.todoSeq asc")
 	List<TdTodo> findByUserSeq(Long userSeq);
 

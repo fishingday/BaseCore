@@ -66,13 +66,24 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private WorkStatCd workStatCd;
 	
-	// 작업 가능 시작 시간
+	/** 
+	 * 작업 가능 시작 시간
+	 */
 	@Column(name = "WORK_POSS_BEGIN_DT", nullable = false)
 	private LocalDateTime workPossBeginDt;
 	
-	// 작업 가능 종료 시간
+	/** 
+	 * 작업 가능 종료 시간
+	 * 
+	 */
 	@Column(name = "WORK_POSS_END_DT", nullable = false)
 	private LocalDateTime workPossEndDt;
+	
+	/** 
+	 * 확인 내용
+	 */
+	@Column(name = "CONFM_CONT", length = 2000)
+	private String confmCont;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul") //날짜 포멧 바꾸기

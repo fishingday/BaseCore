@@ -193,7 +193,7 @@ public class TodoService {
 	 * 
 	 * @param tdWork
 	 */
-	public ApiResponse saveTdWork(TodoWorkDataDto todoWorkData) {
+	public ApiResponse saveWorkerInputWork(TodoWorkDataDto todoWorkData) {
 		
 		String msg = null;
 		
@@ -207,6 +207,9 @@ public class TodoService {
 		if(tdTodo.get().getTodoCreCd() == TodoCreCd.DIRECT) {
 			tdWork = new TdWork();
 			tdWork.setTodoSeq(todoWorkData.getTodoSeq());
+			// 직접 입력이기 때문에... 
+			tdWork.setWorkPossBeginDt(LocalDateTime.now());
+			tdWork.setWorkPossEndDt(LocalDateTime.now());
 		}else{
 			Optional<TdWork> otpTdWork = tdWorkRepository.findById(todoWorkData.getWorkSeq());
 			if(!otpTdWork.isPresent()) {
@@ -214,11 +217,18 @@ public class TodoService {
 			}else{
 				tdWork = otpTdWork.get();
 			}
+			
+			LocalDateTime now = LocalDateTime.now();
+						
+			// 입력 가능 시간이 있나요?
+			if(!now.isBefore(otpTdWork.get().getWorkPossEndDt()) || !now.isAfter(otpTdWork.get().getWorkPossBeginDt())){
+				return new ApiResponse(false, "입력 가능 시간이 아닙니다.");
+			}
 		}
 
 		TdQuizWorkUse tdQuizWorkUse = null;
 		if(tdTodo.get().getQuizUseYn() == Yn.Y) {
-			if(!ObjectUtils.isEmpty(todoWorkData.getQuizSeq())) {
+			if(ObjectUtils.isEmpty(todoWorkData.getQuizSeq())) {
 				return new ApiResponse(false, "퀴즈 정보가 없습니다.");
 			}
 			tdQuizWorkUse = new TdQuizWorkUse();
@@ -236,27 +246,29 @@ public class TodoService {
 				return new ApiResponse(false, "시험 점수가 잘못되었습니다.");
 			}
 			
+			// 시험은 점수에 따른 레벨이 있음...
 			List<TdTodo> listTdTodo = tdTodoRepository.findByUpTodoSeqAndDelYnOrderByAplytoOrdAsc(todoWorkData.getTodoSeq(), Yn.N);
-			for(TdTodo tdItm : listTdTodo) {
-				if(Integer.parseInt(tdItm.getTodoDtlVal()) <= score) {
-					tdWork.setGainPoint(tdItm.getTodoPoint());
-					break;
+			if(!listTdTodo.isEmpty() && listTdTodo.size() > 0) {
+				for(TdTodo tdItm : listTdTodo) {
+					if(Integer.parseInt(tdItm.getConfmDtlVal()) <= score) {
+						tdWork.setGainPoint(tdItm.getTodoPoint());
+						break;
+					}
 				}
+			}else{ // 없다면..
+				tdWork.setGainPoint(tdTodo.get().getTodoPoint());
 			}
+			
 			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
 			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
-		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.DIARY) {
-			msg = tdWork.getGainPoint() + "포인트 적립 되었습니다.";
-			tdWork.setWorkStatCd(WorkStatCd.DONE);
-			tdWork.setConfmDt(LocalDateTime.now());
-		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.SLEEP) {
-			msg = tdWork.getGainPoint() + "포인트 적립 되었습니다.";
-			tdWork.setWorkStatCd(WorkStatCd.DONE);
-			tdWork.setConfmDt(LocalDateTime.now());
-		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.CLEAN) {
-			msg = tdWork.getGainPoint() + "포인트 적립 되었습니다.";
-			tdWork.setWorkStatCd(WorkStatCd.DONE);
-			tdWork.setConfmDt(LocalDateTime.now());
+		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.DIARY 
+				|| tdTodo.get().getTodoTypCd() == TodoTypCd.READING
+				|| tdTodo.get().getTodoTypCd() == TodoTypCd.EXERCISE
+			) {
+			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
+			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
+		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.SLEEP || tdTodo.get().getTodoTypCd() == TodoTypCd.CLEAN) {			
+			return new ApiResponse(false, "작업자는 입력할 수 없는 작업 입니다.");
 		}else{
 			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
 			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
@@ -267,8 +279,6 @@ public class TodoService {
 		tdWork.setWorkCont(todoWorkData.getWorkCont());
 		tdWork.setWorkerSeq(todoWorkData.getWorkerSeq());		
 		tdWork.setWorkDt(LocalDateTime.now());
-		tdWork.setWorkPossBeginDt(LocalDateTime.now());
-		tdWork.setWorkPossEndDt(LocalDateTime.now());
 		tdWork.setSetleYn(Yn.N);
 		tdWork.setDelYn(Yn.N);		
 		
@@ -278,7 +288,7 @@ public class TodoService {
 			tdQuizWorkUseRepository.save(tdQuizWorkUse);
 		}
 		 
-		return new ApiResponse(true, "축하합니다. " + msg);
+		return new ApiResponse(true, "축! 미션에 성공 하셨습니다. " + msg);
 	}
 
 	/**

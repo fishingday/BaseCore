@@ -55,7 +55,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 					,tdTodo.completCondiVal
 					,tdTodo.todoPoint
 					,tdTodo.todoTypCd
-					,tdTodo.todoDtlVal
+					,tdTodo.confmDtlVal
 					,tdTodo.dateLimitCnt
 					,tdTodo.todoCreCd
 					,tdTodo.todoCreDtlVal
@@ -190,7 +190,7 @@ public class TdTodoRepositoryImpl implements TdTodoRepositoryQuerydsl{
 				,tdTodo.completCondiVal
 				,tdTodo.todoPoint
 				,tdTodo.todoTypCd
-				,tdTodo.todoDtlVal
+				,tdTodo.confmDtlVal
 				,tdTodo.dateLimitCnt
 				,tdTodo.todoCreCd
 				,tdTodo.todoCreDtlVal
