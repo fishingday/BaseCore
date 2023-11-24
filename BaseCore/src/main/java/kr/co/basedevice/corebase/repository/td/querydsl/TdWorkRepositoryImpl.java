@@ -232,6 +232,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	 */
 	@Override
 	public List<PlanWorkInfoDto> listPlanWorkInfo(SearchPlanWork searchPlanWork) {
+		QTdTodo tdTodo = QTdTodo.tdTodo;
 		QTdWork tdWork = QTdWork.tdWork;
 		QCmUser cmUser = QCmUser.cmUser;
 		QCmUserRelat cmUserRelat = QCmUserRelat.cmUserRelat;
@@ -246,14 +247,13 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 					,tdWork.workCont
 					,tdWork.workDt
 					,tdWork.workStatCd
-					,tdWork.workPossBeginDt
-					,tdWork.workPossEndDt
 					,tdWork.confmDt
 					,tdWork.gainPoint
 					,tdWork.setleYn
 				)
 			)
 			.from(tdWork)
+			.innerJoin(tdTodo).on(tdWork.todoSeq.eq(tdTodo.todoSeq))
 			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq))
 			.innerJoin(cmUserRelat).on(tdWork.workerSeq.eq(cmUserRelat.targeterSeq));
 		
@@ -287,10 +287,10 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	        }else if(searchPlanWork.getSort().equals("todoTitl")) {
 		        query.orderBy(new OrderSpecifier<>(direction, tdWork.workerSeq));
 	        }else{
-	        	query.orderBy(tdWork.workerSeq.desc());
+	        	query.orderBy(tdWork.workerSeq.asc());
 	        }
 		}else {
-        	query.orderBy(tdWork.workerSeq.desc());
+        	query.orderBy(tdWork.workerSeq.asc());
 		}
 		
 		return query.fetch();

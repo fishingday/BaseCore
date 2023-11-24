@@ -130,3 +130,19 @@ https://velog.io/@park2348190/Spring-Boot-%ED%99%98%EA%B2%BD%EC%9D%98-Quartz-Sch
 --------------
 # Spring Batch
 https://zzang9ha.tistory.com/category/Spring/Spring%20Batch?page=1
+
+
+--------------
+# UUID
+https://cano721.tistory.com/214
+https://yjh5369.tistory.com/entry/%EC%8B%9C%EA%B0%84-%EA%B8%B0%EB%B0%98-UUID-%EC%83%9D%EC%84%B1Generate-time-based-UUIDs
+https://recordsoflife.tistory.com/710
+https://jeong-pro.tistory.com/251
+
+Snowpark 
+https://ramka-devstory.tistory.com/1
+https://ramka-devstory.tistory.com/2
+https://ramka-devstory.tistory.com/3
+
+https://docs.snowflake.com/ko/developer-guide/snowpark/java/index
+https://docs.snowflake.com/ko/developer-guide/snowpark/java/example

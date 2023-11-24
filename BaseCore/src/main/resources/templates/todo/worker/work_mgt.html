@@ -253,7 +253,7 @@
             });   
           },
           detailFormatter: function(index, row){
-            var html = [];
+            let html = [];
             html.push('<button type="button" class="btn btn-outline-'+ (row.workerAgreYn === 'Y' ? 'primary' : 'secondary' ) +' mb-2" onclick="fnObj.action.workerAgre(' + row.todoSeq + ',\''+ row.workerAgreYn +'\')">');
             html.push(row.todoTitl);
             html.push('<i class="bi bi-toggle-'+ (row.workerAgreYn === 'Y' ? 'on' : 'off' ) +' m-2"></i>');

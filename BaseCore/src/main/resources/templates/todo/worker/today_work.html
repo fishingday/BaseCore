@@ -46,16 +46,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <div class="mb-3 row">
-                  <input type="hidden" id="workSeq">
-                  <input type="hidden" id="todoSeq">
-                  <input type="hidden" id="quizSeq">                  
-                  <label for="workTitl" class="col-sm-4 col-form-label">작업명</label>                  
+                <input type="hidden" id="workSeq">
+                <input type="hidden" id="todoSeq">
+                <input type="hidden" id="quizSeq">
+                <div class="input-group mb-2">
+                  <span class="input-group-text" id="basic-addon1">제목</span>
                   <input type="text" class="form-control" id="workTitl" placeholder="작업명" aria-label="작업명">
                 </div>
-                <div class="mb-3 row">
-                   <textarea class="form-control" placeholder="작업내용" id="workCont"></textarea>
-                   <label for="workCont" id="todoDesc">내용을 입력해 주세요</label>
+                <div class="input-group mb-2">
+                  <span class="input-group-text">내용</span>
+                  <textarea class="form-control" placeholder="작업내용" id="workCont"></textarea>
                 </div>
                 <div class="mb-3 row">
                   <span id="todoGuide"></span>
@@ -65,12 +65,12 @@
                 </div>
               </div>
               <div class="modal-footer row">
-              <div class="col-auto me-auto">
-                  <button type="button" class="btn btn-primary" id="btnSaveWork">등록</button>
-              </div>
+                <div class="col-auto me-auto">
+                    <button type="button" class="btn btn-primary" id="btnSaveWork">등록</button>
+                </div>
                 <div class="col-auto">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-              </div>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
               </div>
             </div>
           </div>
@@ -101,6 +101,9 @@
           $("#btnSaveWork").bind("click", function(){
             fnObj.action.saveWork();
           });
+          $("#workCont").bind("keyup", function(){
+            fnObj.action.adjustHeight();
+          });
         },
         page: {
           init: function(){ // 버튼 바인딩 등
@@ -112,6 +115,12 @@
         action: { // 호출이나 화면 동작
           reloadMainList: function(){
             $('#table-work').bootstrapTable('refresh');
+          },
+          adjustHeight: function() {
+            var textEle = $('#workCont');
+            textEle[0].style.height = 'auto';
+            var textEleHeight = textEle.prop('scrollHeight');
+            textEle.css('height', textEleHeight);
           },
           loadMyTodo: function(){
             return $.ajax({
@@ -223,7 +232,6 @@
             $("#workTitl").val(row.workTitl);
             $("#workTitl").attr("readonly",true);
             if(todoInfo !== null){
-              $("#todoDesc").html(todoInfo.todoDesc);
               $("#todoGuide").html("완료조건 : " + todoInfo.completCondiVal);
               if(row.workCont === null){
                 $("#workCont").val(todoInfo.todoTmpCont);
@@ -465,11 +473,11 @@
             $('#table-work').on('post-body.bs.table', function(data){
               $("th.detail").addClass('table-primary');
             });
+            // row click
             $('#table-work').on('click-row.bs.table', function(event, row, field){
               if(row.workStatCd !== 'READY'){
                 return;
-              }
-              
+              }              
               fnObj.action.popRowClick(row);
             });
           }

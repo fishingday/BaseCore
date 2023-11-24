@@ -11,24 +11,22 @@
     <div layout:fragment="content" class="col">
       <div class="row">
           <h4 class="text-primary">작업자별 오늘의 작업계획</h4>
-          <div class="row">
-            <div class="col mb-2">
+          <div class="row mb-2">
+            <div class="col">
               <div class="input-group">
                 <div class="input-group-text">작업명</div>
                 <input type="text" class="form-control" id="workTitl" placeholder="작업명" aria-label="작업명">
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col mb-2">
+            <div class="col">
               <div class="input-group">
                 <div class="input-group-text">작업자</div>
                 <input type="text" class="form-control" id="workerNm" placeholder="작업자 명" aria-label="작업자 명">
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col mb-2">
+          <div class="row  mb-2">
+            <div class="col">
               <div class="input-group">
                 <div class="input-group-text">상 태</div>
                 <select class="form-select" id="workStatCd">
@@ -36,9 +34,7 @@
                 </select>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col mb-2">
+            <div class="col">
               <div class="input-group">
                 <div class="input-group-text">작업일</div>
                 <input type="date" class="form-control" id="workDate">
@@ -56,7 +52,41 @@
       </div>
       <!-- modal -->
       <div class="modal-staging">
-          
+        <!--/* 작업 등록 */-->
+        <div class="modal fade" id="conformWork" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">작업 확인</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="workSeq">
+                <div class="input-group mb-2">
+                  <span class="input-group-text" id="basic-addon1">제목</span>
+                  <input type="text" class="form-control" id="workTitle" readonly>
+                </div>
+                <div class="input-group mb-2">
+                  <span class="input-group-text">내용</span>
+                  <textarea class="form-control" id="workCont" readonly></textarea>
+                </div>
+                <div class="input-group mb-2" id="divWorkDt">
+                  <span class="input-group-text" id="basic-addon1">작업시간</span>
+                  <input type="text" class="form-control" id="workDt" readonly>
+                </div>
+              </div>
+              <div class="modal-footer row">
+                <div class="col-auto me-auto">
+                    <button type="button" class="btn btn-primary" id="btnSaveWork">등록</button>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!-- modal -->
     </div>
@@ -87,6 +117,7 @@
           $("#workStatCd").bind("change", function(){
             fnObj.action.reloadMainList();
           });
+          
         },
         page: {
           init: function(){ // 버튼 바인딩 등
@@ -200,7 +231,6 @@
                   }
                   i++;
                 }
-                
                 for(let i =0; i < mergeData.length; i++){
                   $('#table-planwork').bootstrapTable('mergeCells', {
                     index: mergeData[i].begin,
@@ -210,6 +240,19 @@
                   })
                 }                  
               }                
+            });
+            // row click
+            $('#table-planwork').on('click-row.bs.table', function(event, row, field){
+              $("#workTitle").val(row.workTitl);
+              $("#workCont").val(row.workCont);
+              $("#workCont").height(100);              
+              if(row.workDt !== null){
+                $("#workDt").val(row.workDt); 
+              }else{
+                $("#divWorkDt").hide();
+              }
+              
+              $("#conformWork").modal("show");
             });
           }        
         }
