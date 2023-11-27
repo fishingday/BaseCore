@@ -62,7 +62,13 @@
               <div class="modal-body">
                 <div class="row">
                   <h5 class="text-primary">정산 대상 및 미 정산 금액</h5>                
-                  - 체크박스, 정산대상자, 미정산 포인트, 정산 포인트
+                  <table
+                    id="table-total"
+                    data-search="false"
+                    data-toggle="table"
+                    data-id-field="workerSeq"
+                    th:data-url="@{/checker/settle/list_worker_settle_info.json}">
+                  </table>
                 </div> 
                 <div class="row">
                   <h5 class="text-primary">정산 대상 작업 목록</h5>                
@@ -106,7 +112,8 @@
             fnObj.action.reloadMainList();
           });
           
-          $("#btnCreateSettle").bind("click", function(){
+          $("#btnCreateSettle").bind("click", function(){            
+            fnObj.grid.init_total();
             $("#createSettle").modal("show");
           });
           
@@ -197,6 +204,40 @@
             });
             html.push('</tbody></table>');
             return html.join('');
+          },
+          init_total: function(){
+            $('#table-total').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {checkbox: true, formatter: function(value, row, index) {
+                    return true;
+                  }
+                },
+                {field: 'workerSeq',     title: '작업자순번',  visible: false},
+                {field: 'workerNm',      title: '작업자',     align: 'center',valign: 'middle', sortable: true},
+                {field: 'unSettlePoints',  title: '미정산포인트', align: 'right',valign: 'middle', sortable: true,
+                  formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }   
+                },
+                {field: 'settlePoints',title: '누적포인트',   align: 'right',valign: 'middle', sortable: true,
+                  formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }    
+                }
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                return data;
+              }
+            });
+            $('#table-total').on('post-body.bs.table', function(data){
+              $("table#table-total th").addClass('table-primary');
+            });
           }
         }
       }
