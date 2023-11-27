@@ -21,7 +21,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdSetle;
-import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 import lombok.RequiredArgsConstructor;
@@ -105,44 +104,5 @@ public class TdSetleRepositoryImpl implements TdSetleRepositoryQueryDsl{
 		QueryResults<SettleInfoDto> queryResults = query.limit(page.getPageSize()).offset(page.getOffset()).fetchResults();
 
 		return new PageImpl<>(queryResults.getResults(), page, queryResults.getTotal());
-	}
-
-	@Override
-	public SettleInfoDto getSettleInfo(GetSettelDto getSettelDto) {
-		QTdSetle todoSetle = QTdSetle.tdSetle;
-		QCmUser worker = QCmUser.cmUser;
-		QCmUser acounter = QCmUser.cmUser;
-		
-		JPQLQuery<SettleInfoDto> query = jpaQueryFactory.select(
-				Projections.bean(SettleInfoDto.class,
-					 todoSetle.setleSeq				
-					,todoSetle.workerSeq
-					,todoSetle.acountSeq
-					,todoSetle.totalSetlePoint
-					,todoSetle.setleDesc
-					,todoSetle.setleDt
-				    ,worker.userNm.as("workerNm")
-				    ,worker.loginId
-				    ,acounter.userNm.as("acountNm")
-				)
-			)
-			.from(todoSetle)
-			.innerJoin(worker).on(todoSetle.workerSeq.eq(worker.userSeq))
-			.innerJoin(acounter).on(todoSetle.acountSeq.eq(acounter.userSeq));
-
-		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(todoSetle.delYn.eq(Yn.N));
-		builder.and(todoSetle.setleSeq.eq(getSettelDto.getSetleSeq()));
-		
-		if(!ObjectUtils.isEmpty(getSettelDto.getWorkerSeq())) {
-			builder.and(todoSetle.workerSeq.eq(getSettelDto.getWorkerSeq()));
-		}
-		if(!ObjectUtils.isEmpty(getSettelDto.getAcountSeq())) {
-			builder.and(todoSetle.acountSeq.eq(getSettelDto.getAcountSeq()));
-		}
-		
-		query.where(builder);
-		
-		return query.fetchOne();
 	}
 }

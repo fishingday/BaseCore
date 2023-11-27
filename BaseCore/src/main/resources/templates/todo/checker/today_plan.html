@@ -71,13 +71,15 @@
                   <textarea class="form-control" id="workCont" readonly></textarea>
                 </div>
                 <div class="input-group mb-2" id="divWorkDt">
-                  <span class="input-group-text" id="basic-addon1">작업시간</span>
+                  <span class="input-group-text" id="basic-addon1">등록시간</span>
                   <input type="text" class="form-control" id="workDt" readonly>
                 </div>
               </div>
               <div class="modal-footer row">
                 <div class="col-auto me-auto">
-                    <button type="button" class="btn btn-primary" id="btnSaveWork">등록</button>
+                    <button type="button" class="btn btn-success" id="btnDoneWork">완료</button>
+                    <button type="button" class="btn btn-warning" id="btnLackWork">보완</button>
+                    <button type="button" class="btn btn-danger" id="btnFailWork">실패</button>
                 </div>
                 <div class="col-auto">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -118,6 +120,17 @@
             fnObj.action.reloadMainList();
           });
           
+          $("#btnDoneWork").bind("click", function(){
+            fnObj.action.saveWork('DONE');
+          });
+          
+          $("#btnLackWork").bind("click", function(){
+            fnObj.action.saveWork('LACK');
+          });
+          
+          $("#btnFailWork").bind("click", function(){
+            fnObj.action.saveWork('FAIL');
+          });
         },
         page: {
           init: function(){ // 버튼 바인딩 등
@@ -149,6 +162,62 @@
                 confirmButtonText: '닫기'
               });
             });
+          },
+          saveWork : async function(workStatCd){
+            let placeholder = null;
+            if(workStatCd === 'DONE'){
+              placeholder = '축하합니다. 미션을 성공했습니다.';
+            }else if(workStatCd === 'LACK'){
+              placeholder = '보안 사항을 입력해 주세요.';
+            }else if(workStatCd === 'FAIL'){
+              placeholder = '실패한 미션에 위로를 해주세요.';
+            }
+            
+            const { value: opnion } = await Swal.fire({
+              title: $("#workTitle").val(),
+              input: "text",
+              inputLabel: $("#workTitle").val() + "의 의견 입력",
+              inputPlaceholder: placeholder,
+              inputValidator: (value) => {
+                if (value.length < 1) {
+                  return "의견이 입력되지 않았습니다.";
+                }
+              }
+            });
+            
+            if(opnion === undefined){
+              return;
+            }
+            
+            let tdWork = {};
+            tdWork.workSeq    = $("#workSeq").val();
+            tdWork.workCont   = $("#workCont").val();
+            tdWork.workStatCd = workStatCd;
+            tdWork.confmCont  = opnion;
+            
+            $.ajax({
+              url: "[[@{/checker/today_plan/save_todo_work.json}]]",
+              type: "PUT",
+              async: true,
+              dataType : "json",
+              data : tdWork
+            }).done(function(data, textStatus, xhr){              
+                fnObj.action.reloadMainList();
+                Swal.fire({
+                  title: '저장 완료.',
+                  text: '저장되었습니다.',
+                  icon: 'success',
+                  confirmButtonText: '확인'
+                });
+                $("#conformWork").modal("hide");
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });            
           }
         },
         grid: { // 그리드 관련
@@ -243,13 +312,21 @@
             });
             // row click
             $('#table-planwork').on('click-row.bs.table', function(event, row, field){
+              $("#workSeq").val(row.workSeq);
               $("#workTitle").val(row.workTitl);
               $("#workCont").val(row.workCont);
-              $("#workCont").height(100);              
+              $("#workCont").height(100);
               if(row.workDt !== null){
                 $("#workDt").val(row.workDt); 
               }else{
                 $("#divWorkDt").hide();
+              }
+              
+              // 버튼 처리 ...
+              if(row.confmMethCd === 'CHECKER'){
+                $("#btnLackWork").hide();
+              }else{
+                $("#btnLackWork").show();
               }
               
               $("#conformWork").modal("show");

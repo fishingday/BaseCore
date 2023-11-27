@@ -3,9 +3,7 @@ package kr.co.basedevice.corebase.restController.todo.checker;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
-import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.TodoService;
+import kr.co.basedevice.corebase.service.todo.WorkService;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -36,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class TodayPlanRestController {
 	
 	final private TodoService todoService;
+	final private WorkService workService;
 		
 	
 	/**
@@ -61,42 +60,20 @@ public class TodayPlanRestController {
 		
 		return ResponseEntity.ok(listPlanWorkInfoDto);
 	}
-	
-	/**
-	 * 작업 상세 조회
-	 * 
-	 * @param workSeq
-	 * @return
-	 */
-	@GetMapping("/get_todo_plan.json")
-	public ResponseEntity<Map<String,Object>> getTodoPlanDetail(Long workSeq){
-		
-		Map<String,Object> retMap = new HashMap<>();
 
-		// 작업 조회
-		TdWork tdWork = todoService.getTdWork(workSeq);
-		retMap.put("tdWork", tdWork);
-		
-		if(!ObjectUtils.isEmpty(tdWork)) { // 작업이 있는 곳에 계획이 있음
-			// 할일 조회
-			TdTodo tdTodo = todoService.getTdTodo(tdWork.getTodoSeq());
-			retMap.put("tdTodo", tdTodo);
-		}
-		
-		return ResponseEntity.ok(retMap);
-	}
-	
 	/**
-	 * 할일 데이터의 편집 또는 생성
+	 * 할일 저장
 	 * 
-	 * @param tdWork
+	 * @param saveWork
 	 * @return
 	 */
 	@PutMapping("/save_todo_work.json")
-	public ResponseEntity<Boolean> saveTodoWork(TdWork tdWork){
-
-		boolean isSave = true; ///todoService.saveTdWork(tdWork);
+	public ResponseEntity<Boolean> saveTodoWork(TdWork confirmWork){
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		confirmWork.setCheckerSeq(cmUser.getUserSeq());
 		
+		boolean isSave = workService.confirmWork(confirmWork);
+				
 		return ResponseEntity.ok(isSave);
 	}	
 }

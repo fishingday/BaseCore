@@ -1,5 +1,6 @@
 package kr.co.basedevice.corebase.service.todo;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -59,7 +60,8 @@ public class WorkService {
 
 		Optional<TdWork> tdWork = tdWorkRepository.findById(workSeq);
 		
-		if(userSeq.longValue() != tdWork.get().getWorkerSeq().longValue()){
+		if(!tdWork.isPresent() 
+				|| userSeq.longValue() != tdWork.get().getWorkerSeq().longValue()){
 			throw new IllegalArgumentException("올바른 작업 정보가 아닙니다.");
 		}
 		
@@ -70,5 +72,29 @@ public class WorkService {
 		workDetailInfoDto.setTdTodo(tdTodo.get());
 		
 		return workDetailInfoDto;
+	}
+
+	/**
+	 * 확인 작업 저장
+	 * 
+	 * @param confirmWork
+	 * @return
+	 */
+	public boolean confirmWork(TdWork confirmWork) {
+		Optional<TdWork> optWork = tdWorkRepository.findById(confirmWork.getWorkSeq());
+		
+		if(!optWork.isPresent()) {
+			throw new IllegalArgumentException("올바른 작업 정보가 아닙니다.");
+		}
+		TdWork tdWork = optWork.get();
+		
+		tdWork.setWorkStatCd(confirmWork.getWorkStatCd());
+		tdWork.setWorkCont(confirmWork.getWorkCont());
+		tdWork.setConfmDt(LocalDateTime.now());
+		tdWork.setConfmCont(confirmWork.getConfmCont());
+		
+		tdWorkRepository.save(tdWork);
+		
+		return true;
 	}	
 }

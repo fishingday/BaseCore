@@ -241,6 +241,9 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 				Projections.bean(PlanWorkInfoDto.class
 					,cmUser.loginId
 					,cmUser.userNm.as("workerNm")
+					,tdTodo.todoTitl
+					,tdTodo.todoTypCd
+					,tdTodo.confmMethCd
 					,tdWork.workSeq
 					,tdWork.workerSeq
 					,tdWork.workTitl

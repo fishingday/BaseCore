@@ -16,7 +16,7 @@ public class PlanWorkInfoDto {
 	private String workerNm;
 	private Long workerSeq;
 	
-	private Long todoTitl;
+	private String todoTitl;
 	private TodoTypCd todoTypCd;
 	private ConfmMethCd confmMethCd;
 		

@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.td.TdWork;
-import kr.co.basedevice.corebase.dto.todo.GetSettelDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.repository.td.TdPointRepository;
@@ -58,17 +57,6 @@ public class SettleService {
 		
 		
 		return pageSettleInfo;
-	}
-
-	/**
-	 * 정산 정보 조회
-	 * 
-	 * @param setleSeq
-	 * @return
-	 */
-	public SettleInfoDto getSettleInfo(GetSettelDto getSettelDto) {
-		SettleInfoDto settleInfoDto = setleRepository.getSettleInfo(getSettelDto);
-		return settleInfoDto;
 	}
 
 	/**
@@ -210,11 +198,15 @@ public class SettleService {
 	public List<WorkerSettleInfoDto> listWorkerSettleInfo(Long checkerSeq) {
 		StringBuilder sb = new StringBuilder("SELECT Z.USER_SEQ, Z.USER_NM, X.SETTLE_POINTS, Y.UNSETTLE_POINTS ")
 				.append("  FROM CM_USER Z LEFT JOIN ")
-				.append("      (SELECT A.WORKER_SEQ, SUM(A.TOTAL_SETLE_POINT) as SETTLE_POINTS ")
-				.append("          FROM TD_SETLE A ")
-				.append("         WHERE A.DEL_YN = 'N' ")
-				.append("           AND A.ACOUNT_SEQ = ? ")
-				.append("         GROUP BY A.WORKER_SEQ ")
+				.append("      (SELECT A.WORKER_SEQ, ACCUMULT_POINT AS SETTLE_POINTS ")
+				.append("		  FROM TD_SETLE A ")
+				.append("		 WHERE A.SETLE_SEQ IN ( ")
+				.append("		       SELECT MAX(A.SETLE_SEQ) ")
+				.append("		         FROM TD_SETLE A ")
+  				.append("		        WHERE A.DEL_YN = 'N' ")
+   				.append("		          AND A.ACOUNT_SEQ = ? ")
+   				.append("		        GROUP BY A.WORKER_SEQ ")
+				.append("		      ) ")				
 				.append("       ) X ON (Z.USER_SEQ = X.WORKER_SEQ) LEFT JOIN ")
 				.append("       (SELECT A.WORKER_SEQ, SUM(A.GAIN_POINT) as UNSETTLE_POINTS ")
 				.append("          FROM TD_WORK A  ")

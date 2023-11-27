@@ -28,8 +28,14 @@
               </div>
             </div>
           </div>
+          <div id="toolbar">
+            <button id="btnCreateSettle" class="btn btn-primary">
+              <i class="bi bi-plus-square-dotted"></i> 정산하기
+            </button>
+          </div>
           <table
             id="table-settle"
+            data-toolbar="#toolbar"
             data-search="false"
             data-show-columns="true"
             data-pagination="true"
@@ -45,7 +51,35 @@
       </div>
       <!-- modal -->
       <div class="modal-staging">
-          
+        <!--/* 정산 하기 */-->
+        <div class="modal fade" id="createSettle" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">정산 하기</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <h5 class="text-primary">정산 대상 및 미 정산 금액</h5>                
+                  - 체크박스, 정산대상자, 미정산 포인트, 정산 포인트
+                </div> 
+                <div class="row">
+                  <h5 class="text-primary">정산 대상 작업 목록</h5>                
+                  - 체크박스, 정산대상자, 작업명, 작업상태, 포인트 - 작업 상태는 완료와 실패만
+                </div>
+              </div>
+              <div class="modal-footer row">
+                <div class="col-auto me-auto">
+                  <button type="button" class="btn btn-primary" id="btnCreateSettle">정산</button>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- modal -->
     </div>
@@ -70,6 +104,10 @@
           
           $("#settleEndDate").bind("change", function(){
             fnObj.action.reloadMainList();
+          });
+          
+          $("#btnCreateSettle").bind("click", function(){
+            $("#createSettle").modal("show");
           });
           
           fnObj.page.init();

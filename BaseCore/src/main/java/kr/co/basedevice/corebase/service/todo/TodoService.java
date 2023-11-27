@@ -154,12 +154,6 @@ public class TodoService {
 	 * @param todoSeq
 	 * @return
 	 */
-	public TdTodo getTdTodo(Long todoSeq) {
-		Optional<TdTodo> optTdTodo = tdTodoRepository.findById(todoSeq);
-		
-		return optTdTodo.get();
-	}
-
 	public TodoMgtDto getTdTodoDetail(Long todoSeq) {
 
 		Optional<TdTodo> optTdTodo = tdTodoRepository.findById(todoSeq);
