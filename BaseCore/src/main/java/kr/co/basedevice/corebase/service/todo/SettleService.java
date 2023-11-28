@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.repository.td.TdPointRepository;
 import kr.co.basedevice.corebase.repository.td.TdSetleRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
@@ -239,5 +240,20 @@ public class SettleService {
 				,checkerSeq ,checkerSeq ,checkerSeq 
 			);
 		return listWorkerSettleInfoDto;
+	}
+
+	/**
+	 * 미정산 작업 목록
+	 * 
+	 * @param listWorkerSeq
+	 * @param userSeq
+	 * @return
+	 */
+	public List<WorkerWorkDto> findByTdWork4UnSettle(List<Long> listWorkerSeq, Long acountSeq) {
+		
+		
+		List<WorkerWorkDto> listTdWork = workRepository.findByWork4UnSettle(listWorkerSeq, acountSeq);
+		
+		return listTdWork;
 	}
 }

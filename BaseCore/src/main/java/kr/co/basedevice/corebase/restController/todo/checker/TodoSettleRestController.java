@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
@@ -70,7 +71,20 @@ public class TodoSettleRestController {
 		return ResponseEntity.ok(listWorkerSettleInfoDto);
 	}
 	
-	// 미정산 목록 조회
+	/**
+	 * 미정산 작업 목록
+	 * 
+	 * @param listWorkerSeq
+	 * @return
+	 */
+	@GetMapping("/list_worker_work.json")
+	public ResponseEntity<List<WorkerWorkDto>> listWorkerWork(List<Long> listWorkerSeq){
+		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		
+		List<WorkerWorkDto> listWorkerWorkDto = settleService.findByTdWork4UnSettle(listWorkerSeq, cmUser.getUserSeq());
+		
+		return ResponseEntity.ok(listWorkerWorkDto);
+	}
 	
 	
 	/**

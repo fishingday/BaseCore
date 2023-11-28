@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.WorkDetailInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
@@ -48,4 +49,14 @@ public interface TdWorkRepositoryQuerydsl {
 	 * @return
 	 */
 	List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchWork searchWork);
+	
+
+	/**
+	 * 미정산 작업 목록
+	 * 
+	 * @param listWorkerSeq
+	 * @param acountSeq
+	 * @return
+	 */
+	List<WorkerWorkDto> findByWork4UnSettle(List<Long> listWorkerSeq, Long acountSeq);
 }

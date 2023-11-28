@@ -26,6 +26,7 @@ import kr.co.basedevice.corebase.domain.td.QTdWork;
 import kr.co.basedevice.corebase.dto.todo.PlanWorkInfoDto;
 import kr.co.basedevice.corebase.dto.todo.TodayPlanDto;
 import kr.co.basedevice.corebase.dto.todo.WorkDetailInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
@@ -264,6 +265,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		builder.and(tdWork.delYn.eq(Yn.N));
 		builder.and(cmUser.delYn.eq(Yn.N));
 		builder.and(cmUserRelat.delYn.eq(Yn.N));
+		builder.and(cmUserRelat.targeterAgreYn.eq(Yn.N));
 		builder.and(tdWork.workPossBeginDt.gt(searchPlanWork.getWorkBeginDt()));
 		builder.and(tdWork.workPossBeginDt.lt(searchPlanWork.getWorkEndDt()));
 		builder.and(cmUserRelat.relatorSeq.eq(searchPlanWork.getCheckerSeq()));
@@ -367,6 +369,45 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		}
 		
 		return query.fetch();
+	}
+
+
+	/**
+	 * 미정산 작업 목록
+	 * 
+	 */
+	@Override
+	public List<WorkerWorkDto> findByWork4UnSettle(List<Long> listWorkerSeq, Long acountSeq) {
+		QTdWork tdWork = QTdWork.tdWork;
+		QCmUser cmUser = QCmUser.cmUser;
+		
+		JPQLQuery<WorkerWorkDto> query = jpaQueryFactory.select(
+				Projections.bean(WorkerWorkDto.class
+					,cmUser.userNm.as("workerNm")
+					,tdWork.workerSeq
+					
+					,tdWork.workSeq
+					,tdWork.todoSeq
+					,tdWork.workTitl
+					,tdWork.workCont
+					,tdWork.workDt
+					,tdWork.workStatCd
+					,tdWork.confmDt
+					,tdWork.gainPoint
+					
+					,tdWork.setleYn
+				)
+			)
+			.from(tdWork)
+			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq));
+		
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(tdWork.delYn.eq(Yn.N));
+		builder.and(cmUser.delYn.eq(Yn.N));
+		
+		
+		
+		return null;
 	}
 
 }

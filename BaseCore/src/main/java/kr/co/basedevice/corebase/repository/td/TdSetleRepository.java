@@ -17,5 +17,4 @@ public interface TdSetleRepository extends JpaRepository<TdSetle, Long>, TdSetle
 	@Query("select SUM(m.totalSetlePoint) from TdSetle m where m.delYn = 'N' and m.workerSeq = ?1 ")
 	int accuPoint4Worker(Long userSeq);
 
-
 }
