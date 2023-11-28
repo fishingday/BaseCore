@@ -1,3 +1,7 @@
+# java 설치
+https://kimvampa.tistory.com/308
+
+
 # thymeleaf
 https://jddng.tistory.com/search/thymeleaf
 
