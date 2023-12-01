@@ -12,6 +12,7 @@ import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
+import kr.co.basedevice.corebase.search.todo.SearchWorker;
 
 public interface TdWorkRepositoryQuerydsl {
 
@@ -54,9 +55,8 @@ public interface TdWorkRepositoryQuerydsl {
 	/**
 	 * 미정산 작업 목록
 	 * 
-	 * @param listWorkerSeq
-	 * @param acountSeq
+	 * @param searchWorker
 	 * @return
 	 */
-	List<WorkerWorkDto> findByWork4UnSettle(List<Long> listWorkerSeq, Long acountSeq);
+	List<WorkerWorkDto> findByWork4UnSettle(SearchWorker searchWorker);
 }

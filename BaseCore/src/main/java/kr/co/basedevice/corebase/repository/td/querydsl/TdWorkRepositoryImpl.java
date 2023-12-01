@@ -20,6 +20,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.cm.QCmUserRelat;
+import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import kr.co.basedevice.corebase.domain.td.QTdTodo;
 import kr.co.basedevice.corebase.domain.td.QTdWork;
@@ -30,6 +31,7 @@ import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchPlanWork;
 import kr.co.basedevice.corebase.search.todo.SearchTodo;
 import kr.co.basedevice.corebase.search.todo.SearchWork;
+import kr.co.basedevice.corebase.search.todo.SearchWorker;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -377,9 +379,10 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	 * 
 	 */
 	@Override
-	public List<WorkerWorkDto> findByWork4UnSettle(List<Long> listWorkerSeq, Long acountSeq) {
+	public List<WorkerWorkDto> findByWork4UnSettle(SearchWorker searchWorker) {
 		QTdWork tdWork = QTdWork.tdWork;
 		QCmUser cmUser = QCmUser.cmUser;
+		QCmUserRelat cmUserRelat = QCmUserRelat.cmUserRelat;
 		
 		JPQLQuery<WorkerWorkDto> query = jpaQueryFactory.select(
 				Projections.bean(WorkerWorkDto.class
@@ -399,15 +402,23 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 				)
 			)
 			.from(tdWork)
-			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq));
+			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq))
+			.innerJoin(cmUserRelat).on(tdWork.workerSeq.eq(cmUserRelat.targeterSeq));
 		
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(tdWork.delYn.eq(Yn.N));
+		builder.and(tdWork.setleYn.eq(Yn.N));
+		builder.and(tdWork.workStatCd.in(WorkStatCd.DONE, WorkStatCd.FAIL));
 		builder.and(cmUser.delYn.eq(Yn.N));
+		builder.and(cmUserRelat.delYn.eq(Yn.N));
+		builder.and(cmUserRelat.targeterAgreYn.eq(Yn.Y));
+		builder.and(cmUserRelat.relatorSeq.eq(searchWorker.getCheckerSeq()));
+		builder.and(cmUserRelat.targeterSeq.in(searchWorker.getListWorkerSeq()));
+		query.where(builder);
 		
+        query.orderBy(tdWork.workSeq.desc());
 		
-		
-		return null;
+		return query.fetch();
 	}
 
 }

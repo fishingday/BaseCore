@@ -17,6 +17,7 @@ import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
+import kr.co.basedevice.corebase.search.todo.SearchWorker;
 import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.todo.SettleService;
 import lombok.RequiredArgsConstructor;
@@ -78,10 +79,11 @@ public class TodoSettleRestController {
 	 * @return
 	 */
 	@GetMapping("/list_worker_work.json")
-	public ResponseEntity<List<WorkerWorkDto>> listWorkerWork(List<Long> listWorkerSeq){
+	public ResponseEntity<List<WorkerWorkDto>> listWorkerWork(SearchWorker searchWorker){
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
-		
-		List<WorkerWorkDto> listWorkerWorkDto = settleService.findByTdWork4UnSettle(listWorkerSeq, cmUser.getUserSeq());
+		searchWorker.setCheckerSeq(cmUser.getUserSeq());
+				
+		List<WorkerWorkDto> listWorkerWorkDto = settleService.findByTdWork4UnSettle(searchWorker);
 		
 		return ResponseEntity.ok(listWorkerWorkDto);
 	}

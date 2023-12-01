@@ -21,6 +21,7 @@ import kr.co.basedevice.corebase.repository.td.TdPointRepository;
 import kr.co.basedevice.corebase.repository.td.TdSetleRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
+import kr.co.basedevice.corebase.search.todo.SearchWorker;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -249,11 +250,10 @@ public class SettleService {
 	 * @param userSeq
 	 * @return
 	 */
-	public List<WorkerWorkDto> findByTdWork4UnSettle(List<Long> listWorkerSeq, Long acountSeq) {
+	public List<WorkerWorkDto> findByTdWork4UnSettle(SearchWorker searchWorker) {
 		
+		List<WorkerWorkDto> listWorkerWorkDto = workRepository.findByWork4UnSettle(searchWorker);
 		
-		List<WorkerWorkDto> listTdWork = workRepository.findByWork4UnSettle(listWorkerSeq, acountSeq);
-		
-		return listTdWork;
+		return listWorkerWorkDto;
 	}
 }

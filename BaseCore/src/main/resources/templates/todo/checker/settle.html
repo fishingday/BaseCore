@@ -30,7 +30,7 @@
           </div>
           <div id="toolbar">
             <button id="btnCreateSettle" class="btn btn-primary">
-              <i class="bi bi-plus-square-dotted"></i> 정산하기
+              <i class="bi bi-calculator-fill"></i> 정산하기
             </button>
           </div>
           <table
@@ -71,8 +71,20 @@
                   </table>
                 </div> 
                 <div class="row">
-                  <h5 class="text-primary">정산 대상 작업 목록</h5>                
-                  - 체크박스, 정산대상자, 작업명, 작업상태, 포인트 - 작업 상태는 완료와 실패만
+                  <h5 class="text-primary">정산 대상 작업 목록</h5>  
+                  <div id="workToolbar">
+                    <button id="btnCreateSettle" class="btn btn-success">
+                      <i class="bi bi-calculator"></i> 정산
+                    </button>
+                  </div>              
+                  <table
+                    id="table-work"
+                    data-toolbar="#workToolbar"
+                    data-search="true"
+                    data-toggle="table"
+                    data-id-field="workSeq"
+                    th:data-url="@{/checker/settle/list_worker_work.json}">
+                  </table>
                 </div>
               </div>
               <div class="modal-footer row">
@@ -235,8 +247,69 @@
                 return data;
               }
             });
+            $('#table-total').on('load-success.bs.table', function(data){
+              fnObj.grid.init_work();
+            });
             $('#table-total').on('post-body.bs.table', function(data){
               $("table#table-total th").addClass('table-primary');
+            });
+          },
+          init_work: function(){
+            $('#table-work').bootstrapTable('destroy').bootstrapTable({
+              height: 'auto',
+              locale: 'ko-KR',
+              classes: 'table table-bordered table-hover',
+              headerStyle : function(){
+                return {classes: 'table-primary'};
+              },
+              columns: [
+                {checkbox: true, formatter: function(value, row, index) {
+                    return true;
+                  }
+                },
+                {field: 'workSeq',   title: '작업순번',  visible: false},
+                {field: 'workerSeq', title: '작업자순번', visible: false},
+                {field: 'workerNm',  title: '작업자명', align: 'left',valign: 'middle', sortable: true},
+                {field: 'workTitl',  title: '작업명', align: 'left',valign: 'middle', sortable: true},
+                {field: 'workStatCd',title: '상태',align: 'center',valign: 'middle', sortable: true
+                  ,formatter: function(value, row, index) {
+                    if(value === 'READY'){
+                      return '대기'
+                    }else if(value === 'ONGOING'){
+                      return '확인중';
+                    }else if(value === 'FAIL'){
+                      return '실패';
+                    }else if(value === 'DONE'){
+                      return '완료';
+                    }else{
+                      return value
+                    }
+                  }
+                },
+                {field: 'gainPoint', title: '포인트',  align: 'center'  ,valign: 'middle', sortable: true
+                 ,formatter: function(value, row, index) {
+                    return value.toLocaleString();
+                  }
+                },
+                {field: 'workDt',    title: '작업일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
+                {field: 'confmDt',   title: '확인일시',  align: 'center'  ,valign: 'middle', sortable: true, visible: false},
+                
+              ],
+              responseHandler: function (data) { // 데이터 처리
+                return data;
+              },
+              queryParams: function(params){
+                const pData = $('#table-total').bootstrapTable('getSelections');
+                if(pData != null && pData.length > 0){
+                   params.listWorkerSeq = pData.map(function(data){
+                     return data.workerSeq;                   
+                   });
+                }                 
+                return params;
+              }
+            });            
+            $('#table-work').on('post-body.bs.table', function(data){
+              $("table#table-work th").addClass('table-primary');
             });
           }
         }
