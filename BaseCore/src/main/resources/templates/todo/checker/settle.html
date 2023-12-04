@@ -66,6 +66,7 @@
                     id="table-total"
                     data-search="false"
                     data-toggle="table"
+                    data-click-to-select="true"
                     data-id-field="workerSeq"
                     th:data-url="@{/checker/settle/list_worker_settle_info.json}">
                   </table>
@@ -73,7 +74,7 @@
                 <div class="row">
                   <h5 class="text-primary">정산 대상 작업 목록</h5>  
                   <div id="workToolbar">
-                    <button id="btnCreateSettle" class="btn btn-success">
+                    <button id="btnCalculatorSettle" class="btn btn-success">
                       <i class="bi bi-calculator"></i> 정산
                     </button>
                   </div>              
@@ -82,15 +83,13 @@
                     data-toolbar="#workToolbar"
                     data-search="true"
                     data-toggle="table"
+                    data-click-to-select="true"
                     data-id-field="workSeq"
                     th:data-url="@{/checker/settle/list_worker_work.json}">
                   </table>
                 </div>
               </div>
               <div class="modal-footer row">
-                <div class="col-auto me-auto">
-                  <button type="button" class="btn btn-primary" id="btnCreateSettle">정산</button>
-                </div>
                 <div class="col-auto">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                 </div>
@@ -129,6 +128,10 @@
             $("#createSettle").modal("show");
           });
           
+          $("#btnCalculatorSettle").bind("click", function(){ 
+            fnObj.action.calculatorSettle();
+          });
+          
           fnObj.page.init();
         },
         page: {
@@ -139,7 +142,24 @@
         action: { // 호출이나 화면 동작
           reloadMainList: function(){
             $('#table-settle').bootstrapTable('refresh');
-          }
+          },
+          calculatorSettle : function(){
+			const checkData = $('#table-work').bootstrapTable('getSelections');
+			if(checkData.length === 0){
+			  Swal.fire({
+	            title: '정산항목 선택',
+	            text: '정산할 작업을 선택해 주세요..',
+	            icon: 'warning',
+	            confirmButtonText: '확인'
+	          });
+              return;
+			}
+			
+			// 여기 어떻게 하지??
+			
+			
+			
+		  }
         },
         grid: { // 그리드 관련
           init_settle: function(){
@@ -252,6 +272,9 @@
             });
             $('#table-total').on('post-body.bs.table', function(data){
               $("table#table-total th").addClass('table-primary');
+            });            
+            $('#table-total').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function(row, element){
+              $('#table-work').bootstrapTable('refresh');
             });
           },
           init_work: function(){

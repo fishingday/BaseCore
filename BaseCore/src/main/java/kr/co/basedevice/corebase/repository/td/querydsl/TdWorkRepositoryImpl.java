@@ -416,7 +416,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		builder.and(cmUserRelat.targeterSeq.in(searchWorker.getListWorkerSeq()));
 		query.where(builder);
 		
-        query.orderBy(tdWork.workSeq.desc());
+        query.orderBy(tdWork.workerSeq.asc(), tdWork.workSeq.desc());
 		
 		return query.fetch();
 	}

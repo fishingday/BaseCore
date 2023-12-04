@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,8 +83,11 @@ public class TodoSettleRestController {
 	public ResponseEntity<List<WorkerWorkDto>> listWorkerWork(SearchWorker searchWorker){
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		searchWorker.setCheckerSeq(cmUser.getUserSeq());
-				
-		List<WorkerWorkDto> listWorkerWorkDto = settleService.findByTdWork4UnSettle(searchWorker);
+		List<WorkerWorkDto> listWorkerWorkDto = null;
+		
+		if(!ObjectUtils.isEmpty(searchWorker.getListWorkerSeq())) {
+			listWorkerWorkDto = settleService.findByTdWork4UnSettle(searchWorker);
+		}
 		
 		return ResponseEntity.ok(listWorkerWorkDto);
 	}
