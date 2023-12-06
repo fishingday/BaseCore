@@ -100,22 +100,25 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private Yn setleYn;
 	
+	@Column(name = "SETLE_SEQ")
+	private Long setleSeq;
+	
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	
 	@OneToMany(mappedBy = "tdWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdWorkSetleMap> tdTodoSetleMapList = new ArrayList<>(1);
-	
-	@OneToMany(mappedBy = "tdWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<TdQuizWorkUse> tdWorkerQuizUseList = new ArrayList<>(1);
-	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinColumn(name = "TODO_SEQ", updatable = false, insertable = false)
-	private TdTodo tdTodo;	
+	private TdTodo tdTodo;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	@JoinColumn(name = "SETLE_SEQ", updatable = false, insertable = false)
+	private TdSetle tdSetle;
 	
 }

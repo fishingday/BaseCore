@@ -68,5 +68,5 @@ public class TdSetle extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "tdSetle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
-	private List<TdWorkSetleMap> tdWorkSetleMapList = new ArrayList<>(1);
+	private List<TdWork> tdWorkList = new ArrayList<>(1);
 }

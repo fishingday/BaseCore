@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerSettleDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.search.todo.SearchSettle;
@@ -100,11 +101,11 @@ public class TodoSettleRestController {
 	 * @return
 	 */
 	@PutMapping("/save_settle.json")
-	public ResponseEntity<Boolean> saveSettle(SettleInfoDto settleInfoDto){
+	public ResponseEntity<Boolean> saveSettle(WorkerSettleDto workerSettle){
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
+		workerSettle.setAcountSeq(cmUser.getUserSeq());
 		
-		settleInfoDto.setAcountSeq(cmUser.getUserSeq());
-		boolean isSave = settleService.saveTdSetle(settleInfoDto);
+		boolean isSave = settleService.saveTdSetle(workerSettle);
 		
 		return ResponseEntity.ok(isSave);
 	}

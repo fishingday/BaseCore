@@ -144,22 +144,64 @@
             $('#table-settle').bootstrapTable('refresh');
           },
           calculatorSettle : function(){
-			const checkData = $('#table-work').bootstrapTable('getSelections');
-			if(checkData.length === 0){
-			  Swal.fire({
-	            title: '정산항목 선택',
-	            text: '정산할 작업을 선택해 주세요..',
-	            icon: 'warning',
-	            confirmButtonText: '확인'
-	          });
+            const checkData = $('#table-work').bootstrapTable('getSelections');
+            if(checkData.length === 0){
+      			  Swal.fire({
+      	            title: '정산항목 선택',
+      	            text: '정산할 작업을 선택해 주세요..',
+      	            icon: 'warning',
+      	            confirmButtonText: '확인'
+              });
               return;
-			}
-			
-			// 여기 어떻게 하지??
-			
-			
-			
-		  }
+            }
+      			
+      			// 여기 어떻게 하지??
+      			let settleData = [];
+      			for(let i = 0; i < checkData.length; i++){
+              let workerData = null;
+              
+              for(let j = 0; j < settleData.length; j++){
+                if(settleData[j].workerSeq === checkData[i].workerSeq){
+                  workerData = settleData[j];
+                }
+              }
+              
+              if(workerData === null){
+                workerData = {};
+                workerData.workerNm  = checkData[i].workerNm;
+                workerData.workerSeq = checkData[i].workerSeq;
+                workerData.sumPoint  = checkData[i].gainPoint;
+                workerData.listWorkSeq = [];
+                workerData.listWorkSeq.push(checkData[i].workSeq);
+                settleData.push(workerData);
+              }else{
+                workerData.sumPoint += checkData[i].gainPoint;
+                workerData.listWorkSeq.push(checkData[i].workSeq);
+              }
+            }
+            
+            let workerSettle = {};
+            workerSettle.listSettleData = settleData;
+            
+            $.ajax({
+              url: "[[@{/checker/settle/save_settle.json}]]",
+              type: "PUT",
+              async: true,
+              dataType : "json",
+              data : workerSettle
+            }).done(function(data, textStatus, xhr){
+              $("#popupUserInfo").modal("hide");
+              var pageIdx = $("li.page-item.active > .page-link").text();
+              $('#table').bootstrapTable('selectPage', Number(pageIdx));
+            }).fail(function(xhr, textStatus, errorThrown) {
+              Swal.fire({
+                title: xhr.responseJSON.httpStatus,
+                text: xhr.responseJSON.message,
+                icon: 'error',
+                confirmButtonText: '닫기'
+              });
+            });            
+          }
         },
         grid: { // 그리드 관련
           init_settle: function(){

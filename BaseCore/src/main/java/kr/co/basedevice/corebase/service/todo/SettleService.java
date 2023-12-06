@@ -14,7 +14,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import kr.co.basedevice.corebase.domain.td.TdWork;
+import kr.co.basedevice.corebase.dto.todo.SettleDataDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
+import kr.co.basedevice.corebase.dto.todo.WorkerSettleDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
 import kr.co.basedevice.corebase.repository.td.TdPointRepository;
@@ -28,9 +30,9 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @Service
 public class SettleService {
-	private final TdSetleRepository setleRepository;
-	private final TdWorkRepository workRepository;
-	private final TdPointRepository pointUseRepository;
+	private final TdSetleRepository tdSetleRepository;
+	private final TdWorkRepository tdWorkRepository;
+	private final TdPointRepository tdPointUseRepository;
 	
 	final private JdbcTemplate jdbcTemplate;
 		
@@ -43,7 +45,7 @@ public class SettleService {
 	 */
 	public Page<SettleInfoDto> pageSettleInfo(SearchSettle searchSettle, Pageable page) {
 	
-		Page<SettleInfoDto> pageSettleInfo = setleRepository.pageSettleInfo(searchSettle, page);
+		Page<SettleInfoDto> pageSettleInfo = tdSetleRepository.pageSettleInfo(searchSettle, page);
 		
 		if(!pageSettleInfo.isEmpty() && !pageSettleInfo.getContent().isEmpty()) {
 			
@@ -52,7 +54,7 @@ public class SettleService {
 				SettleInfoDto settleInfo = pageSettleInfo.getContent().get(i);
 				settleInfo.setNum(num + i);
 				
-				List<TdWork> listTdWork = workRepository.findByWork4SetleSeq(settleInfo.getSetleSeq());
+				List<TdWork> listTdWork = tdWorkRepository.findByWork4SetleSeq(settleInfo.getSetleSeq());
 				settleInfo.setListTdWork(listTdWork);
 			}
 		}
@@ -68,17 +70,30 @@ public class SettleService {
 	 * @return
 	 */
 	public List<TdWork> findByWork4SetleSeq(Long setleSeq) {
-		List<TdWork> listTdWork = workRepository.findByWork4SetleSeq(setleSeq);
+		List<TdWork> listTdWork = tdWorkRepository.findByWork4SetleSeq(setleSeq);
 		return listTdWork;
 	}
 
 	/**
 	 * 정산 저장
 	 * 
-	 * @param settleInfoDto
+	 * @param workerSettle
 	 * @return
 	 */
-	public boolean saveTdSetle(SettleInfoDto settleInfoDto) {
+	public boolean saveTdSetle(WorkerSettleDto workerSettle) {
+		
+		for(SettleDataDto settleData :workerSettle.getListSettleData()) {
+			
+			List<TdWork> listTdWork = tdWorkRepository.findByInWorkSeq(settleData.getListWorkSeq());
+			
+			// 정산 만들기
+			
+			// 작업에 정산 번호 넣기
+			
+			// 포인트 만들기..
+		}
+		
+		
 //		TdSetle tdSetle = new TdSetle();
 //		BeanUtils.copyProperties(settleInfoDto, tdSetle);
 //		
@@ -164,7 +179,7 @@ public class SettleService {
 	 * @return
 	 */
 	public int possPoint4Worker(Long userSeq) {
-		int possPoint = workRepository.getPossPoint4Worker(userSeq);
+		int possPoint = tdWorkRepository.getPossPoint4Worker(userSeq);
 		return possPoint;
 	}
 
@@ -175,7 +190,7 @@ public class SettleService {
 	 * @return
 	 */
 	public int usePoint4Worker(Long userSeq) {
-		int usePoint = pointUseRepository.getUsePoint4Worker(userSeq);
+		int usePoint = tdPointUseRepository.getUsePoint4Worker(userSeq);
 		return usePoint;
 	}
 
@@ -186,7 +201,7 @@ public class SettleService {
 	 * @return
 	 */
 	public int accuPoint4Worker(Long userSeq) {
-		int accuPoint = setleRepository.accuPoint4Worker(userSeq);
+		int accuPoint = tdSetleRepository.accuPoint4Worker(userSeq);
 		return accuPoint;
 	}
 
@@ -252,7 +267,7 @@ public class SettleService {
 	 */
 	public List<WorkerWorkDto> findByTdWork4UnSettle(SearchWorker searchWorker) {
 		
-		List<WorkerWorkDto> listWorkerWorkDto = workRepository.findByWork4UnSettle(searchWorker);
+		List<WorkerWorkDto> listWorkerWorkDto = tdWorkRepository.findByWork4UnSettle(searchWorker);
 		
 		return listWorkerWorkDto;
 	}
