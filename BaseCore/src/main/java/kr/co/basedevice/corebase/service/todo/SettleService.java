@@ -84,7 +84,7 @@ public class SettleService {
 		
 		for(SettleDataDto settleData :workerSettle.getListSettleData()) {
 			
-			List<TdWork> listTdWork = tdWorkRepository.findByInWorkSeq(settleData.getListWorkSeq());
+			List<TdWork> listTdWork = tdWorkRepository.findByWorkSeqIn(settleData.getListWorkSeq());
 			
 			// 정산 만들기
 			

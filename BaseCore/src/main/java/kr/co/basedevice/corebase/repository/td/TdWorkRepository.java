@@ -31,7 +31,7 @@ public interface TdWorkRepository extends JpaRepository<TdWork, Long>, TdWorkRep
 	 * @param setleSeq
 	 * @return
 	 */
-	@Query("select m from TdWork m inner join TdWorkSetleMap n on (m.workSeq = n.workSeq) where m.delYn = 'N' and n.delYn = 'N' and n.setleSeq = ?1 order by m.workSeq asc")
+	@Query("select m from TdWork m where m.delYn = 'N' and m.setleSeq = ?1 order by m.workSeq asc")
 	List<TdWork> findByWork4SetleSeq(Long setleSeq);
 
 	/**
@@ -60,7 +60,7 @@ public interface TdWorkRepository extends JpaRepository<TdWork, Long>, TdWorkRep
 	 * @param listWorkSeq
 	 * @return
 	 */
-	List<TdWork> findByInWorkSeq(List<Long> listWorkSeq);
+	List<TdWork> findByWorkSeqIn(List<Long> listWorkSeq);
 
 
 }
