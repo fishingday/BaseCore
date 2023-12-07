@@ -187,12 +187,27 @@
               url: "[[@{/checker/settle/save_settle.json}]]",
               type: "PUT",
               async: true,
+              contentType: 'application/json',
               dataType : "json",
-              data : workerSettle
+              data : JSON.stringify(workerSettle)
             }).done(function(data, textStatus, xhr){
-              $("#popupUserInfo").modal("hide");
-              var pageIdx = $("li.page-item.active > .page-link").text();
-              $('#table').bootstrapTable('selectPage', Number(pageIdx));
+              $("#createSettle").modal("hide");
+              
+              let msg = null;
+              for(let i = 0; i < settleData.length; i++){
+                if(i > 0){
+                  msg += ',';
+                }
+                msg = '[' + settleData[i].workerNm + '] 님 ' + settleData[i].sumPoint  + ' 포인트' 
+              }
+              
+              Swal.fire({
+                title: "정산완료",
+                text: msg + '정산 되었습니다.',
+                icon: 'success',
+                confirmButtonText: '닫기'
+              });
+              
             }).fail(function(xhr, textStatus, errorThrown) {
               Swal.fire({
                 title: xhr.responseJSON.httpStatus,

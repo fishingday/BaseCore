@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -101,7 +102,7 @@ public class TodoSettleRestController {
 	 * @return
 	 */
 	@PutMapping("/save_settle.json")
-	public ResponseEntity<Boolean> saveSettle(WorkerSettleDto workerSettle){
+	public ResponseEntity<Boolean> saveSettle(@RequestBody WorkerSettleDto workerSettle){
 		CmUser cmUser = ((AccountContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCmUser();
 		workerSettle.setAcountSeq(cmUser.getUserSeq());
 		

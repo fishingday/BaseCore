@@ -50,16 +50,7 @@ public class TdPoint extends BaseEntity implements Serializable{
 
 	@Column(name = "POINT_CONT", length = 2000)
 	private String pointCont;
-	
-	@Column(name = "BANK_NM", length = 30)
-	private String bankNm;
-	
-	@Column(name = "BANK_ACOUNT_NO", length = 20)
-	private String bankAcountNo;
-	
-	@Column(name = "BANK_OWNER_NM", length = 30)
-	private String bankOwnerNm;
-			
+				
 	@Column(name = "DEL_YN", nullable = false, length = 1)
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;

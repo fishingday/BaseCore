@@ -12,13 +12,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import kr.co.basedevice.corebase.domain.code.PointAplytoCd;
+import kr.co.basedevice.corebase.domain.code.Yn;
+import kr.co.basedevice.corebase.domain.td.TdPoint;
+import kr.co.basedevice.corebase.domain.td.TdSetle;
 import kr.co.basedevice.corebase.domain.td.TdWork;
 import kr.co.basedevice.corebase.dto.todo.SettleDataDto;
 import kr.co.basedevice.corebase.dto.todo.SettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerSettleInfoDto;
 import kr.co.basedevice.corebase.dto.todo.WorkerWorkDto;
+import kr.co.basedevice.corebase.exception.OperationException;
 import kr.co.basedevice.corebase.repository.td.TdPointRepository;
 import kr.co.basedevice.corebase.repository.td.TdSetleRepository;
 import kr.co.basedevice.corebase.repository.td.TdWorkRepository;
@@ -32,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 public class SettleService {
 	private final TdSetleRepository tdSetleRepository;
 	private final TdWorkRepository tdWorkRepository;
-	private final TdPointRepository tdPointUseRepository;
+	private final TdPointRepository tdPointRepository;
 	
 	final private JdbcTemplate jdbcTemplate;
 		
@@ -84,50 +90,84 @@ public class SettleService {
 		
 		for(SettleDataDto settleData :workerSettle.getListSettleData()) {
 			
-			List<TdWork> listTdWork = tdWorkRepository.findByWorkSeqIn(settleData.getListWorkSeq());
+			// 작업자와 계산원의 마지막 정산 정보를 찾아온다.
+			List<TdSetle> listSetle = tdSetleRepository.findByWorkerSeqAndAcountSeqAndDelYnOrderByCreDtDesc(
+					settleData.getWorkerSeq(),
+					workerSettle.getAcountSeq(),
+					Yn.N
+				);
+			
+			TdSetle lastSetle = null;
+			
+			if(listSetle != null && !listSetle.isEmpty()) {
+				lastSetle = listSetle.get(0);
+				lastSetle.setDelYn(Yn.Y); // 이건 삭제
+			}else {
+				lastSetle = new TdSetle();
+				lastSetle.setAccumultPoint(0); // 누적된 것이 없으니.. 0
+			}
 			
 			// 정산 만들기
+			TdSetle tdSetle = new TdSetle();
+			tdSetle.setWorkerSeq(settleData.getWorkerSeq());
+			tdSetle.setAcountSeq(workerSettle.getAcountSeq());
+			tdSetle.setSetleDesc(settleData.getSumPoint() + "포인트 정산");
+			tdSetle.setAccumultPoint(lastSetle.getAccumultPoint() + settleData.getSumPoint());
+			tdSetle.setTotalSetlePoint(settleData.getSumPoint());
+			tdSetle.setSetleDt(LocalDateTime.now());
+			tdSetle.setDelYn(Yn.N);
+			
 			
 			// 작업에 정산 번호 넣기
+			TdPoint lastTdPoint = null;
+			List<TdPoint> listTdPoint = tdPointRepository.findByUserSeqAndDelYnOrderByCreDtDesc(settleData.getWorkerSeq(), Yn.N);
+			if(listTdPoint != null && !listTdPoint.isEmpty()) {
+				lastTdPoint = listTdPoint.get(0);
+				lastTdPoint.setDelYn(Yn.Y); // 이건 삭제
+			}else{
+				lastTdPoint = new TdPoint();
+				lastTdPoint.setLastPoint(0);
+			}
 			
-			// 포인트 만들기..
+			// 작업자 점수 데이터 생성
+			TdPoint tdPoint = new TdPoint();
+			tdPoint.setUserSeq(settleData.getWorkerSeq());
+			tdPoint.setPointAplytoCd(PointAplytoCd.ADD);
+			tdPoint.setLastPoint(lastTdPoint.getLastPoint() + settleData.getSumPoint());
+			tdPoint.setAplytoPoint(settleData.getSumPoint());
+			tdPoint.setDelYn(Yn.N);
+			
+			
+			// 일단, 정산을 저장하자.
+			if(!ObjectUtils.isEmpty(lastSetle.getAcountSeq())) {
+				tdSetleRepository.save(lastSetle);
+			}
+			TdSetle aplySetle = tdSetleRepository.save(tdSetle);
+			
+			List<TdWork> listTdWork = tdWorkRepository.findByWorkSeqIn(settleData.getListWorkSeq());
+			int sumPoint = 0;
+			
+			if(listTdWork != null && !listTdWork.isEmpty()) {
+				for(TdWork tdWork : listTdWork) {
+					tdWork.setSetleSeq(aplySetle.getSetleSeq());
+					tdWork.setSetleYn(Yn.Y);
+					sumPoint += tdWork.getGainPoint();
+				}
+			}
+			
+			// 검증 .... 
+			if(sumPoint != settleData.getSumPoint().intValue()){
+				throw new OperationException("정산 금액이 잘못 되었습니다.");
+			}
+			tdWorkRepository.saveAll(listTdWork);
+			
+			if(!ObjectUtils.isEmpty(lastTdPoint.getPointSeq())) {
+				tdPointRepository.save(lastTdPoint);
+			}
+			tdPoint.setSetleSeq(aplySetle.getSetleSeq());
+			tdPointRepository.save(tdPoint);			
 		}
-		
-		
-//		TdSetle tdSetle = new TdSetle();
-//		BeanUtils.copyProperties(settleInfoDto, tdSetle);
-//		
-//		List<WorkStatCd> listWorkStatCd = Arrays.asList(WorkStatCd.DONE, WorkStatCd.FAIL);
-//		
-//		List<TdWork> listTdWork = workRepository.findByDelYnAndSetleYnAndWorkerSeqAndWorkSeqInAndWorkStatCdIn(Yn.N, Yn.N, 
-//				settleInfoDto.getWorkerSeq(), settleInfoDto.getWorkSeqList(), listWorkStatCd);
-//
-//		if(settleInfoDto.getWorkSeqList() != null && settleInfoDto.getWorkSeqList().size() > 0 && 
-//				listTdWork.size() != settleInfoDto.getWorkSeqList().size()) {
-//			throw new IllegalArgumentException("정산 대상의 상태가 올바르지 않습니다.");
-//		}
-//		
-//		List<TdWorkSetleMap> listTdWorkSetleMap = new ArrayList<>(listTdWork.size());
-//		int totalSetlePoint = 0;
-//		for(TdWork tdWork : listTdWork) {
-//			totalSetlePoint += tdWork.getGainPoint();
-//			tdWork.setSetleYn(Yn.Y); // 정산 한거다~ 표시
-//			
-//			TdWorkSetleMap tdWorkSetleMap = new TdWorkSetleMap();
-//			tdWorkSetleMap.setWorkSeq(tdWork.getWorkSeq());
-//			tdWorkSetleMap.setDelYn(Yn.N);
-//			listTdWorkSetleMap.add(tdWorkSetleMap);
-//		}
-//		
-//		tdSetle.setAcountSeq(settleInfoDto.getAcountSeq());
-//		tdSetle.setSetleDt(LocalDateTime.now());
-//		tdSetle.setTotalSetlePoint(totalSetlePoint);
-//		tdSetle.setTdWorkSetleMapList(listTdWorkSetleMap);
-//		tdSetle.setDelYn(Yn.N);
-//		
-//		workRepository.saveAll(listTdWork);
-//		setleRepository.save(tdSetle);
-//				
+			
 		return true;
 	}
 	
@@ -190,7 +230,7 @@ public class SettleService {
 	 * @return
 	 */
 	public int usePoint4Worker(Long userSeq) {
-		int usePoint = tdPointUseRepository.getUsePoint4Worker(userSeq);
+		int usePoint = tdPointRepository.getUsePoint4Worker(userSeq);
 		return usePoint;
 	}
 

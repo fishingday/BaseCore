@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class SettleDataDto {
 	private String workerNm;
-	private String workerSeq;
-	private String sumPoint;
+	private Long workerSeq;
+	private Integer sumPoint;
 	
 	private List<Long> listWorkSeq;
 }
