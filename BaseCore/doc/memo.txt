@@ -165,3 +165,9 @@ https://ramka-devstory.tistory.com/3
 
 https://docs.snowflake.com/ko/developer-guide/snowpark/java/index
 https://docs.snowflake.com/ko/developer-guide/snowpark/java/example
+
+
+
+------
+https://velog.io/@pjh612/Deprecated%EB%90%9C-WebSecurityConfigurerAdapter-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%8C%80%EC%B2%98%ED%95%98%EC%A7%80
+https://devlog-wjdrbs96.tistory.com/434
