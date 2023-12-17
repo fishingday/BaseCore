@@ -171,3 +171,10 @@ https://docs.snowflake.com/ko/developer-guide/snowpark/java/example
 ------
 https://velog.io/@pjh612/Deprecated%EB%90%9C-WebSecurityConfigurerAdapter-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%8C%80%EC%B2%98%ED%95%98%EC%A7%80
 https://devlog-wjdrbs96.tistory.com/434
+
+
+
+-------------------
+https://velog.io/@impala/Spring-Security-%EC%8A%A4%ED%94%84%EB%A7%81-%EC%8B%9C%ED%81%90%EB%A6%AC%ED%8B%B0-%ED%95%84%ED%84%B0-%EC%B2%B4%EC%9D%B8
+https://yenjjun187.tistory.com/710
+https://cares-log.tistory.com/19

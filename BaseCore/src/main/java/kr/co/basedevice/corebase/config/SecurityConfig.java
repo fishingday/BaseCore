@@ -16,9 +16,11 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -77,22 +79,12 @@ public class SecurityConfig{
     final private LogoutSuccessHandler logoutSuccessHandler;
     final private UserDetailsService userDetailsService;
     final private SecurityResourceService securityResourceService;
-    final private PasswordEncoder passwordEncoder;
-    
-    
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider(passwordEncoder));
-        auth.authenticationProvider(ajaxAuthenticationProvider(passwordEncoder));
+        
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {    	
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    //@Override
-    //protected void configure(final HttpSecurity http) throws Exception {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -141,12 +133,15 @@ public class SecurityConfig{
         return http.build();
     }
     
-    
+    /**
+     * 제외 url
+     * @return
+     */
     @Bean
-    public WebSecurity webSecurity() {
+    public WebSecurityCustomizer webSecurityCustomizer() {
+    	//... /css/**, /js/**,/images/**,/webjars,/favicon.*,/*/icon-*
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
-
 
     private void customConfigurer(HttpSecurity http) throws Exception {
         http
@@ -156,6 +151,9 @@ public class SecurityConfig{
                 .loginProcessingUrl("/api/login")
                 .setAuthenticationManager(authenticationManagerBean());
     }
+    
+    
+    
 
     @Bean
     AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder){
