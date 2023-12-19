@@ -76,8 +76,6 @@ public class SecurityConfig{
 	final private UserDetailsService userDetailsService;
 	final private SecurityResourceService securityResourceService;
 	final private PasswordEncoder passwordEncoder;
-	final private AuthenticationConfiguration authenticationConfiguration;
-	final private AuthenticationManagerBuilder authenticationManagerBuilder;
 	    
 //    @Bean 
 //    AuthenticationManagerBuilder authenticationManagerBuilder(AuthenticationManagerBuilder auth) throws Exception {
@@ -88,9 +86,15 @@ public class SecurityConfig{
     
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	    	
+    	AuthenticationManagerBuilder sharedObject = http.getSharedObject(AuthenticationManagerBuilder.class);
+    	sharedObject.authenticationProvider(authenticationProvider(passwordEncoder));
+    	sharedObject.authenticationProvider(ajaxAuthenticationProvider(passwordEncoder));
     	
-    	authenticationManagerBuilder.authenticationProvider(authenticationProvider(passwordEncoder));
-    	authenticationManagerBuilder.authenticationProvider(ajaxAuthenticationProvider(passwordEncoder));
+        AuthenticationManager authenticationManager = sharedObject.build();
+
+        http.authenticationManager(authenticationManager);
+    	
     	
         http
                 .authorizeRequests()
@@ -151,12 +155,14 @@ public class SecurityConfig{
 
 
     private void customConfigurer(HttpSecurity http) throws Exception {
+    	AuthenticationManagerBuilder sharedObject = http.getSharedObject(AuthenticationManagerBuilder.class);
+    	
         http
                 .apply(new AjaxLoginConfigurer<>())
                 .successHandlerAjax(ajaxAuthenticationSuccessHandler())
                 .failureHandlerAjax(ajaxAuthenticationFailureHandler())
                 .loginProcessingUrl("/api/login")
-                .setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
+                .setAuthenticationManager(sharedObject.getObject());
     }
 
     @Bean
