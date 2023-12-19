@@ -33,6 +33,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserService userService;
     
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public AjaxAuthenticationProvider(PasswordEncoder passwordEncoder) {

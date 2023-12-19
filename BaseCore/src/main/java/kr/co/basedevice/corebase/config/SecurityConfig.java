@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,11 +45,9 @@ import kr.co.basedevice.corebase.security.voter.IpAddressVoter;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
 
+@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@Configuration(proxyBeanMethods = false)
-@ConditionalOnDefaultWebSecurity
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfig{
 	
 	@Value("${login.set.login-page:/common/login.html}")
@@ -73,20 +69,29 @@ public class SecurityConfig{
 	private String passwordParameter;
 	
 	final private LoggingService cmImprtantLogService;
-    final private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
-    final private AuthenticationSuccessHandler formAuthenticationSuccessHandler;
-    final private AuthenticationFailureHandler formAuthenticationFailureHandler;
-    final private LogoutSuccessHandler logoutSuccessHandler;
-    final private UserDetailsService userDetailsService;
-    final private SecurityResourceService securityResourceService;
-        
+	final private FormWebAuthenticationDetailsSource formWebAuthenticationDetailsSource;
+	final private AuthenticationSuccessHandler formAuthenticationSuccessHandler;
+	final private AuthenticationFailureHandler formAuthenticationFailureHandler;
+	final private LogoutSuccessHandler logoutSuccessHandler;
+	final private UserDetailsService userDetailsService;
+	final private SecurityResourceService securityResourceService;
+	final private PasswordEncoder passwordEncoder;
+	final private AuthenticationConfiguration authenticationConfiguration;
+	final private AuthenticationManagerBuilder authenticationManagerBuilder;
+	    
+//    @Bean 
+//    AuthenticationManagerBuilder authenticationManagerBuilder(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(authenticationProvider(passwordEncoder));
+//        auth.authenticationProvider(ajaxAuthenticationProvider(passwordEncoder));
+//        return auth;
+//    }
+    
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {    	
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	
+    	authenticationManagerBuilder.authenticationProvider(authenticationProvider(passwordEncoder));
+    	authenticationManagerBuilder.authenticationProvider(ajaxAuthenticationProvider(passwordEncoder));
+    	
         http
                 .authorizeRequests()
                 .anyRequest()
@@ -130,18 +135,20 @@ public class SecurityConfig{
         
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         
+        customConfigurer(http);
+        
         return http.build();
     }
     
-    /**
-     * 제외 url
-     * @return
+    /*
+     * 참고 : https://github.com/spring-projects/spring-security/issues/10938
      */
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
+    WebSecurityCustomizer webSecurityCustomizer() {
     	//... /css/**, /js/**,/images/**,/webjars,/favicon.*,/*/icon-*
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
+
 
     private void customConfigurer(HttpSecurity http) throws Exception {
         http
@@ -149,11 +156,8 @@ public class SecurityConfig{
                 .successHandlerAjax(ajaxAuthenticationSuccessHandler())
                 .failureHandlerAjax(ajaxAuthenticationFailureHandler())
                 .loginProcessingUrl("/api/login")
-                .setAuthenticationManager(authenticationManagerBean());
+                .setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
     }
-    
-    
-    
 
     @Bean
     AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder){
