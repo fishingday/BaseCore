@@ -63,11 +63,11 @@ public class CmNoti  extends BaseEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private SendMediaTypCd sendMediaTypCd;	
 
-	@Column(name = "SEND_YN", nullable = false, length = 1)
+	@Column(name = "SEND_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn sendYn;
 
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 

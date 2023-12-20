@@ -50,14 +50,14 @@ public class CmUserRelat extends BaseEntity implements Serializable {
 	@Column(name = "RELAT_APLY_DT")
 	private LocalDateTime relatAplyDt;
 	
-	@Column(name = "TARGETER_AGRE_YN", nullable = false, length = 1)
+	@Column(name = "TARGETER_AGRE_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn targeterAgreYn;
 	
 	@Column(name = "TARGETER_AGRE_DT")
 	private LocalDateTime targeterAgreDt;
 	
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 }

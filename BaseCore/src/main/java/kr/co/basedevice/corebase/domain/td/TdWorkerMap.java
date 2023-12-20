@@ -37,11 +37,11 @@ public class TdWorkerMap extends BaseEntity implements Serializable {
 	@Column(name = "WORKER_SEQ", nullable = false)
 	private Long workerSeq;
 	
-	@Column(name = "WORKER_AGRE_YN", nullable = false, length = 1)
+	@Column(name = "WORKER_AGRE_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn workerAgreYn;
 	
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	

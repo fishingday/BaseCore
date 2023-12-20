@@ -51,7 +51,7 @@ public class TdPoint extends BaseEntity implements Serializable{
 	@Column(name = "POINT_CONT", length = 2000)
 	private String pointCont;
 				
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 }

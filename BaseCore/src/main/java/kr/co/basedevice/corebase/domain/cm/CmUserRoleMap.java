@@ -40,7 +40,7 @@ public class CmUserRoleMap extends BaseEntity implements Serializable {
 	@Column(name = "PRNT_ORD", nullable = false)
 	private Integer prntOrd;
 
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 

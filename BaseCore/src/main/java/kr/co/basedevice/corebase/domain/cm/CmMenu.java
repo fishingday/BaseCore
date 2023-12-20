@@ -61,18 +61,18 @@ public class CmMenu extends BaseEntity implements Serializable{
 	@Column(name = "ICON_INFO", length = 255)
 	private String iConInfo;
 	
-	@Column(name = "PRNT_YN", length = 1, nullable = false)
+	@Column(name = "PRNT_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn prntYn;
 		
-	@Column(name = "CM_SCREN_YN", length = 1, nullable = false)
+	@Column(name = "CM_SCREN_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn cmScrenYn;
 	
 	@Column(name = "PRNT_ORD", nullable = false)
 	private Integer prntOrd;
 
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	

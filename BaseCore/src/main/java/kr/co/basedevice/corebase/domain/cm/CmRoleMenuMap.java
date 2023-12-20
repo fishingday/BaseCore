@@ -38,7 +38,7 @@ public class CmRoleMenuMap extends BaseEntity implements Serializable {
 	@Column(name = "MENU_SEQ", nullable = false)
 	private Long menuSeq;
 
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	

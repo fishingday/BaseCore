@@ -61,7 +61,7 @@ public class CmCdDtl extends BaseEntity implements Serializable {
 	@Column(name = "OPT_5", length = 256)
 	private String opt5;
 		
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	

@@ -37,7 +37,7 @@ public class CmMenuDtlRoleMap extends BaseEntity implements Serializable{
 	@Column(name = "ROLE_SEQ", nullable = false)
 	private Long roleSeq;
 	
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 

@@ -51,14 +51,14 @@ public class CmNotiUserMap  extends BaseEntity implements Serializable{
 	@Column(name = "VIEW_CNT", nullable = false)
 	private Integer viewCnt;
 	
-	@Column(name = "CLOSE_YN", length = 1, nullable = false)
+	@Column(name = "CLOSE_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn closeYn;
 	
 	@Column(name = "QRY_DT")
 	private LocalDateTime qryDt;
 
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 		

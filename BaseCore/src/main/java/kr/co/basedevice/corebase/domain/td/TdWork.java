@@ -62,7 +62,7 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "WORK_DT")
 	private LocalDateTime workDt;
 	
-	@Column(name = "WORK_STAT_CD", nullable = false, length = 1)
+	@Column(name = "WORK_STAT_CD", nullable = false, length = 35)
 	@Enumerated(EnumType.STRING)
 	private WorkStatCd workStatCd;
 	
@@ -96,14 +96,14 @@ public class TdWork extends BaseEntity implements Serializable{
 	@Column(name = "CHECKER_SEQ")
 	private Long checkerSeq;
 	
-	@Column(name = "SETLE_YN", nullable = false, length = 1)
+	@Column(name = "SETLE_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn setleYn;
 	
 	@Column(name = "SETLE_SEQ")
 	private Long setleSeq;
 	
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	

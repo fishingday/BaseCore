@@ -44,7 +44,7 @@ public class CmUserBookmark extends BaseEntity implements Serializable {
 	@Column(name = "BOOK_MARK_NM", length = 30, nullable = false)
 	private String bookMarkNm;
 	
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 		

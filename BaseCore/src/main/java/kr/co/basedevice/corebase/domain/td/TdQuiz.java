@@ -54,7 +54,7 @@ public class TdQuiz extends BaseEntity implements Serializable{
 	@Column(name = "QUIZ_ANSWER", length = 128, nullable = false)
 	private String quizAnswer;
 	
-	@Column(name = "DEL_YN", nullable = false, length = 1)
+	@Column(name = "DEL_YN", nullable = false, columnDefinition = "VARCHAR(1)")
 	@Enumerated(EnumType.STRING)
 	private Yn delYn;
 	
