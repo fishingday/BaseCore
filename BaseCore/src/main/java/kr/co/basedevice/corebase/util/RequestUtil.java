@@ -1,6 +1,6 @@
 package kr.co.basedevice.corebase.util;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class RequestUtil {
 

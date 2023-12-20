@@ -2,7 +2,7 @@ package kr.co.basedevice.corebase.security.common;
 
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class AjaxWebAuthenticationDetails extends WebAuthenticationDetails {
 

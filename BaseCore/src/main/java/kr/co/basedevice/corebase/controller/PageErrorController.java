@@ -15,8 +15,8 @@ import kr.co.basedevice.corebase.security.service.AccountContext;
 import kr.co.basedevice.corebase.service.common.LoggingService;
 import lombok.RequiredArgsConstructor;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @Controller

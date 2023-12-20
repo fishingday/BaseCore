@@ -37,7 +37,7 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		
 		return jpaQueryFactory.selectFrom(cmMenu)
 				.innerJoin(cmMenu.cmRoleMenuMapList, cmRoleMenuMap).fetchJoin()
-				.innerJoin(cmRoleMenuMap.cmRole(), cmRole).fetchJoin()
+				.innerJoin(cmRoleMenuMap.cmRole, cmRole).fetchJoin()
 		.where(
 			cmMenu.delYn.eq(Yn.N),
 			cmMenu.cmScrenYn.eq(Yn.N),
@@ -55,9 +55,9 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		QCmRole cmRole = QCmRole.cmRole;
 		
 		return jpaQueryFactory.selectFrom(cmMenuDtl)
-				.innerJoin(cmMenuDtl.cmMenu(), cmMenu).fetchJoin()
+				.innerJoin(cmMenuDtl.cmMenu, cmMenu).fetchJoin()
 				.innerJoin(cmMenuDtl.cmMenuDtlRoleMapList, cmMenuDtlRoleMap).fetchJoin()
-				.innerJoin(cmMenuDtlRoleMap.cmRole(), cmRole).fetchJoin()
+				.innerJoin(cmMenuDtlRoleMap.cmRole, cmRole).fetchJoin()
 		.where(
 				cmMenu.delYn.eq(Yn.N),
 				cmMenu.cmScrenYn.eq(Yn.N),
@@ -80,9 +80,9 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		
 		return jpaQueryFactory.selectFrom(cmMenu)
 				.innerJoin(cmMenu.cmRoleMenuMapList, cmRoleMenuMap)
-				.innerJoin(cmRoleMenuMap.cmRole(), cmRole)
+				.innerJoin(cmRoleMenuMap.cmRole, cmRole)
 				.innerJoin(cmRole.cmUserRoleMapList, cmUserRoleMap)
-				.innerJoin(cmUserRoleMap.cmUser(), cmUser)
+				.innerJoin(cmUserRoleMap.cmUser, cmUser)
 		.where(
 			cmMenu.delYn.eq(Yn.N),
 			cmMenu.cmScrenYn.eq(Yn.N),
@@ -109,9 +109,9 @@ public class CmMenuRepositoryImpl implements CmMenuRepositoryQuerydsl{
 		
 		return jpaQueryFactory.selectFrom(cmMenu)
 				.innerJoin(cmMenu.cmRoleMenuMapList, cmRoleMenuMap)
-				.innerJoin(cmRoleMenuMap.cmRole(), cmRole)
+				.innerJoin(cmRoleMenuMap.cmRole, cmRole)
 				.innerJoin(cmRole.cmUserRoleMapList, cmUserRoleMap)
-				.innerJoin(cmUserRoleMap.cmUser(), cmUser)
+				.innerJoin(cmUserRoleMap.cmUser, cmUser)
 		.where(
 			cmMenu.delYn.eq(Yn.N),
 			cmMenu.cmScrenYn.eq(Yn.N),

@@ -1,7 +1,7 @@
 package kr.co.basedevice.corebase.domain;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 /**
  * 개인정보 암호화 컨버터

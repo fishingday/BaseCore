@@ -1,26 +1,14 @@
 package kr.co.basedevice.corebase.service.common;
 
-import java.time.LocalDateTime;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import kr.co.basedevice.corebase.domain.cm.CmCriticalLog;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import kr.co.basedevice.corebase.domain.cm.CmQuartzLog;
 import kr.co.basedevice.corebase.domain.cm.CmRoleChgLog;
-import kr.co.basedevice.corebase.domain.cm.CmUserAccesLog;
 import kr.co.basedevice.corebase.domain.code.AccesLogTypCd;
 import kr.co.basedevice.corebase.domain.code.LogMakrCd;
-import kr.co.basedevice.corebase.repository.cm.CmCriticalLogRepository;
-import kr.co.basedevice.corebase.repository.cm.CmRoleChgLogRepository;
-import kr.co.basedevice.corebase.repository.cm.CmUserAccesLogRepository;
-import kr.co.basedevice.corebase.util.RequestUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class LoggingService {
 
-	final private CmCriticalLogRepository criticalLogRepository;
-	final private CmUserAccesLogRepository accesLogRepository;
-	final private CmRoleChgLogRepository chgLogRepository;
+	//final private CmCriticalLogRepository criticalLogRepository;
+	//final private CmUserAccesLogRepository accesLogRepository;
+	//final private CmRoleChgLogRepository chgLogRepository;
 	
 	public void writeBatchLog(CmQuartzLog cmQuartzLog) {
 		log.info("BATCH-LOG => LogType:{}, key:{}, data:{} "

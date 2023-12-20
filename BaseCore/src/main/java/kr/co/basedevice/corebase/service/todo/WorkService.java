@@ -3,7 +3,7 @@ package kr.co.basedevice.corebase.service.todo;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
