@@ -1,4 +1,4 @@
-debug: true
+debug: false
 
 server:
   error:
@@ -34,7 +34,7 @@ spring:
 #  profiles: local
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/~/test
+      jdbc-url: jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=mysql
       driver-class-name: org.h2.Driver
       username: sa
       password:

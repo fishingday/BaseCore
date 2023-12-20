@@ -136,6 +136,10 @@ https://velog.io/@park2348190/Spring-Boot-%ED%99%98%EA%B2%BD%EC%9D%98-Quartz-Sch
 https://zzang9ha.tistory.com/category/Spring/Spring%20Batch?page=1
 
 
+
+# TSID
+https://velog.io/@ssssujini99/%EA%B0%9C%EB%B0%9C-idPK-%EC%A7%81%EC%A0%91%ED%95%A0%EB%8B%B9-%EC%A0%84%EB%9E%B5-Random-UUID-TSID-%EA%B0%81%EA%B0%81-%EB%B9%84%EA%B5%90%EB%B6%84%EC%84%9D
+
 --------------
 # UUID
 https://cano721.tistory.com/214
@@ -162,7 +166,6 @@ Snowpark
 https://ramka-devstory.tistory.com/1
 https://ramka-devstory.tistory.com/2
 https://ramka-devstory.tistory.com/3
-
 https://docs.snowflake.com/ko/developer-guide/snowpark/java/index
 https://docs.snowflake.com/ko/developer-guide/snowpark/java/example
 
