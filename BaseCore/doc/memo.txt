@@ -180,5 +180,7 @@ https://yenjjun187.tistory.com/710
 https://cares-log.tistory.com/19
 
 ------------------
+#Time-Sorted Unique Identifier
 https://github.com/f4b6a3/tsid-creator
 https://github.com/vladmihalcea/hypersistence-tsid
+https://ssdragon.tistory.com/162
