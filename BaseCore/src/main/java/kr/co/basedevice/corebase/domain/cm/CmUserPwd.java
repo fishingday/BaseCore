@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -27,13 +28,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_USER_PWD")
-@SequenceGenerator(name = "SEQGEN_CM_USER_PWD", sequenceName = "SEQ_CM_USER_PWD", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_USER_PWD", sequenceName = "SEQ_CM_USER_PWD", initialValue = 1000, allocationSize = 1)
 public class CmUserPwd extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -8303293010611426407L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU_DTL")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU_DTL")
 	@Column(name = "USER_PWD_SEQ", nullable = false)
 	private Long userPwdSeq;
 	

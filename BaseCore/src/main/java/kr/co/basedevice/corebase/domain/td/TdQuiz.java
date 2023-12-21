@@ -19,6 +19,7 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -30,14 +31,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_QUIZ")
-@SequenceGenerator(name = "SEQGEN_TD_QUIZ", sequenceName = "SEQ_TD_QUIZ", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_TD_QUIZ", sequenceName = "SEQ_TD_QUIZ", initialValue = 1000, allocationSize = 1)
 @NoArgsConstructor
 public class TdQuiz extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 5523368845285769691L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_QUIZ")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_QUIZ")
 	@Column(name = "QUIZ_SEQ", nullable = false)
 	private Long quizSeq;
 

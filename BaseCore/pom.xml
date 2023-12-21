@@ -131,7 +131,11 @@
 		    <version>5.0.0</version>
 		    <classifier>jakarta</classifier>
 		</dependency>
-
+		<dependency>
+		    <groupId>io.hypersistence</groupId>
+		    <artifactId>hypersistence-utils-hibernate-63</artifactId>
+		    <version>3.7.0</version>
+		</dependency>
         <dependency>
             <groupId>org.bgee.log4jdbc-log4j2</groupId>
             <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>

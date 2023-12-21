@@ -3,6 +3,7 @@ package kr.co.basedevice.corebase.domain.cm;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,13 +22,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_ROLE_CHG_LOG")
-@SequenceGenerator(name = "SEQGEN_CM_ROLE_CHG_LOG", sequenceName = "SEQ_CM_ROLE_CHG_LOG", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_ROLE_CHG_LOG", sequenceName = "SEQ_CM_ROLE_CHG_LOG", initialValue = 1000, allocationSize = 1)
 public class CmRoleChgLog implements Serializable {
 	
 	private static final long serialVersionUID = 3245653795178558196L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_ROLE_CHG_LOG")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_ROLE_CHG_LOG")
 	@Column(name = "ROLE_CHG_LOG_SEQ", nullable = false)
 	private Long roleChgLogSeq;
 

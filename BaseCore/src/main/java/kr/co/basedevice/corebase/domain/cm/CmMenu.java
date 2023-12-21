@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -36,13 +37,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_MENU")
-@SequenceGenerator(name = "SEQGEN_CM_MENU", sequenceName = "SEQ_CM_MENU", initialValue = 10000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_MENU", sequenceName = "SEQ_CM_MENU", initialValue = 10000, allocationSize = 1)
 public class CmMenu extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -4796441346567889052L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU")
 	@Column(name = "MENU_SEQ", nullable = false)
 	private Long menuSeq;
 	

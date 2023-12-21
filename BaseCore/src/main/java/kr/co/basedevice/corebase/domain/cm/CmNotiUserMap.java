@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.SendMediaTypCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -28,13 +29,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_NOTI_USER_MAP")
-@SequenceGenerator(name = "SEQGEN_CM_NOTI_USER_MAP", sequenceName = "SEQ_CM_NOTI_USER_MAP", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_NOTI_USER_MAP", sequenceName = "SEQ_CM_NOTI_USER_MAP", initialValue = 1000, allocationSize = 1)
 public class CmNotiUserMap  extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -3683964229919126606L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_NOTI_USER_MAP")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_NOTI_USER_MAP")
 	@Column(name = "NOTI_USER_MAP_SEQ", nullable = false)
 	private Long menuSeq;
 	

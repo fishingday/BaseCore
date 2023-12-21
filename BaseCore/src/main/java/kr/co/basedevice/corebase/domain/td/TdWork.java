@@ -25,6 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.WorkStatCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -35,13 +36,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_WORK")
-@SequenceGenerator(name = "SEQGEN_TD_WORK", sequenceName = "SEQ_TD_WORK", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_TD_WORK", sequenceName = "SEQ_TD_WORK", initialValue = 1000, allocationSize = 1)
 public class TdWork extends BaseEntity implements Serializable{
 	
 	private static final long serialVersionUID = -5123848958747519005L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_WORK")
+	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_WORK")
+	@Tsid
 	@Column(name = "WORK_SEQ", nullable = false)
 	private Long workSeq;
 	

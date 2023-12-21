@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 
 import org.springframework.http.HttpStatus;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.code.LogMakrCd;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,11 +23,11 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_CRITICAL_LOG")
-@SequenceGenerator(name = "SEQGEN_CM_CRITICAL_LOG", sequenceName = "SEQ_CM_CRITICAL_LOG", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_CRITICAL_LOG", sequenceName = "SEQ_CM_CRITICAL_LOG", initialValue = 1000, allocationSize = 1)
 public class CmCriticalLog {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_CRITICAL_LOG")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_CRITICAL_LOG")
 	@Column(name = "CRITICAL_LOG_SEQ", nullable = false)
 	private Long criticalLogSeq;
 	

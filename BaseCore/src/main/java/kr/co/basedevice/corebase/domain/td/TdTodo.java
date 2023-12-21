@@ -24,6 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.ConfmMethCd;
 import kr.co.basedevice.corebase.domain.code.QuizTypCd;
@@ -37,13 +38,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_TODO")
-@SequenceGenerator(name = "SEQGEN_TD_TODO", sequenceName = "SEQ_TD_TODO", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_TD_TODO", sequenceName = "SEQ_TD_TODO", initialValue = 1000, allocationSize = 1)
 public class TdTodo extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 7601560038609308698L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_TODO")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_TODO")
 	@Column(name = "TODO_SEQ", nullable = false)
 	private Long todoSeq;
 

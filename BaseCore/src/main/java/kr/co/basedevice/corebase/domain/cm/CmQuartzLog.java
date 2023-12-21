@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.code.QuartzLogTypCd;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +26,13 @@ import lombok.Setter;
 @NoArgsConstructor
 //@Entity
 @Table(name = "CM_QUARTZ_LOG")
-@SequenceGenerator(name = "SEQGEN_CM_QUARTZ_LOG", sequenceName = "SEQ_CM_QUARTZ_LOG", initialValue = 1, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_QUARTZ_LOG", sequenceName = "SEQ_CM_QUARTZ_LOG", initialValue = 1, allocationSize = 1)
 public class CmQuartzLog implements Serializable{
 
 	private static final long serialVersionUID = -185494336443799876L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_QUARTZ_LOG")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_QUARTZ_LOG")
 	@Column(name = "QUARTZ_LOG_SEQ", nullable = false)
 	private Long quartzlogSeq;
 

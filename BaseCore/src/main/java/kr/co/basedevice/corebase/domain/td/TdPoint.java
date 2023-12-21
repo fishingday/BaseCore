@@ -2,6 +2,7 @@ package kr.co.basedevice.corebase.domain.td;
 
 import java.io.Serializable;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,13 +23,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_POINT")
-@SequenceGenerator(name = "SEQGEN_TD_POINT", sequenceName = "SEQ_TD_POINT", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_TD_POINT", sequenceName = "SEQ_TD_POINT", initialValue = 1000, allocationSize = 1)
 public class TdPoint extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 263907859673969324L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_POINT")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_POINT")
 	@Column(name = "POINT_SEQ", nullable = false)
 	private Long pointSeq;
 	

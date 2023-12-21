@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -27,13 +28,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_ORG")
-@SequenceGenerator(name = "SEQGEN_CM_ORG", sequenceName = "SEQ_CM_ORG", initialValue = 1000, allocationSize = 1)
+//@SequenceGenerator(name = "SEQGEN_CM_ORG", sequenceName = "SEQ_CM_ORG", initialValue = 1000, allocationSize = 1)
 public class CmOrg extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -5944084318276973516L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_ORG")
+	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_ORG")
 	@Column(name = "ORG_SEQ", nullable = false)
 	private Long orgSeq;
 	
