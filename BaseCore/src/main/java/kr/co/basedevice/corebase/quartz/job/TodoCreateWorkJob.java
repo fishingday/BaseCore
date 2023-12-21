@@ -68,13 +68,14 @@ public class TodoCreateWorkJob extends QuartzJobBean implements InterruptableJob
 			}
 			
 	        //전달받은 JodDataMap에서 Job이름을 꺼내오고 그 Job이름으로 context에서 bean을 가져온다
-	        Job job = (Job) beanUtil.getBean(TodoCreateWorkJob.JOB_NAME);
+	        Job batchJob = (Job) beanUtil.getBean(TodoCreateWorkJob.JOB_NAME);
 	        JobParameters jobParameters = new JobParametersBuilder(this.jobExplorer)
 	        		.addString("QuartzJobName", jobKey.getName())
 	                .addString(TodoCreateWorkJob.CREATE_DATE_KEY, createDate.format(formatter))
 	                .toJobParameters();
 
-	        this.jobLauncher.run(job, jobParameters);
+	        // Batch  실행
+	        this.jobLauncher.run(batchJob, jobParameters);
 	        log.info("Quartz Job Run - {} :: JobKey={} - ThreadName : {} - JobParameters : {} ", 
 	        		this.getClass().getName(), jobKey, currThread.getName(), jobParameters.toString());
 		}

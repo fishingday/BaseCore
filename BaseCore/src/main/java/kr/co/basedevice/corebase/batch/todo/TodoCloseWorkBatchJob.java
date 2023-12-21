@@ -5,15 +5,18 @@ import java.time.temporal.ChronoUnit;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import kr.co.basedevice.corebase.quartz.job.TodoCloseWorkJob;
 import kr.co.basedevice.corebase.service.todo.TodoService;
@@ -31,26 +34,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class TodoCloseWorkBatchJob {
-	private final JobBuilderFactory jobBuilderFactory;
-	private final StepBuilderFactory stepBuilderFactory;
+public class TodoCloseWorkBatchJob extends DefaultBatchConfiguration {
 	
     private final TodoService todoService;
     
     public final static int chunkSize = 10;
 
 	@Bean(name = TodoCloseWorkJob.JOB_NAME)
-    Job createWorkTodoBatchJob(){
-        return jobBuilderFactory.get(TodoCloseWorkJob.JOB_NAME)
-                .start(stepCloseWorkBatch4Todo(null)) // 할일 조회
+    Job createWorkTodoBatchJob(JobRepository jobRepository, Step stepCloseWorkBatch4Todo){
+		// TodoCloseWorkJob
+        return new JobBuilder(TodoCloseWorkJob.JOB_NAME, jobRepository) 
+                .start(stepCloseWorkBatch4Todo)
                 .build();
     }
 
 	@Bean
 	@JobScope
-    Step stepCloseWorkBatch4Todo(@Value("#{jobParameters[" + TodoCloseWorkJob.CLOSE_DATE_KEY + "]}") String closeDate) {
-		return stepBuilderFactory.get("stepCloseWorkBatch4Todo")
-				.tasklet(taskletCloseWorkTodo(null))
+    Step stepCloseWorkBatch4Todo(
+    		JobRepository jobRepository, 
+    		Tasklet  taskletCloseWorkTodo,
+    		PlatformTransactionManager platformTransactionManager, 
+    		@Value("#{jobParameters[" + TodoCloseWorkJob.CLOSE_DATE_KEY + "]}") String closeDate) {
+		
+		return new StepBuilder("stepCloseWorkBatch4Todo", jobRepository)
+				.tasklet(taskletCloseWorkTodo, platformTransactionManager)
                 .build();				
     }
 	

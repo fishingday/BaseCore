@@ -5,22 +5,24 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.persistence.EntityManagerFactory;
-
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.ObjectUtils;
 
+import jakarta.persistence.EntityManagerFactory;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.td.TdTodo;
 import kr.co.basedevice.corebase.quartz.job.TodoCreateWorkJob;
@@ -39,28 +41,31 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class TodoCreateWorkBatchJob {
-	private final JobBuilderFactory jobBuilderFactory;
-	private final StepBuilderFactory stepBuilderFactory;
+public class TodoCreateWorkBatchJob extends DefaultBatchConfiguration {
     private final EntityManagerFactory entityManagerFactory;
     private final TodoService todoService;
     
     public final static int chunkSize = 10;
 
 	@Bean(name = TodoCreateWorkJob.JOB_NAME)
-    Job createWorkTodoBatchJob(){
-        return jobBuilderFactory.get(TodoCreateWorkJob.JOB_NAME)
-                .start(createWorkBatch4TodoReader(null)) // 할일 조회
+    Job createWorkTodoBatchJob(JobRepository jobRepository, Step createWorkBatch4TodoReader){
+        return new JobBuilder(TodoCreateWorkJob.JOB_NAME, jobRepository)
+                .start(createWorkBatch4TodoReader) // 할일 조회
                 .build();
     }
 
 	@Bean
 	@JobScope
-    Step createWorkBatch4TodoReader(@Value("#{jobParameters["+TodoCreateWorkJob.CREATE_DATE_KEY+"]}") String createDate) {
-		return stepBuilderFactory.get("createWorkBatch4TodoReader")
-				.<TdTodo, TdTodo>chunk(chunkSize)
-                .reader(jpaPagingItemReaderTodo(null))
-                .writer(itemWriterWork(null))
+    Step createWorkBatch4TodoReader(
+    		JobRepository jobRepository, 
+    		JpaPagingItemReader<TdTodo>  jpaPagingItemReaderTodo,
+    		ItemWriter<TdTodo> itemWriterWork,
+    		PlatformTransactionManager platformTransactionManager,     		
+    		@Value("#{jobParameters["+TodoCreateWorkJob.CREATE_DATE_KEY+"]}") String createDate) {
+		return new StepBuilder("createWorkBatch4TodoReader", jobRepository)
+				.<TdTodo, TdTodo>chunk(chunkSize, platformTransactionManager)
+                .reader(jpaPagingItemReaderTodo)
+                .writer(itemWriterWork)
                 .build();
 				
     }
