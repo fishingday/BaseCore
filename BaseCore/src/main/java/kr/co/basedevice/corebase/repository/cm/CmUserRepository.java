@@ -38,24 +38,6 @@ public interface CmUserRepository extends JpaRepository<CmUser, Long>, CmUserRep
 	List<CmUser> findByExcludeRoleSeq(Long roleSeq);
 
 	/**
-	 * 소속 조직 사용자 목록
-	 * 
-	 * @param orgSeq
-	 * @return
-	 */
-	@Query("select m from CmUser m inner join CmOrgUserMap n on (m.userSeq = n.userSeq) where m.delYn = 'N' and n.delYn = 'N' and n.orgSeq = ?1 order by m.userSeq asc")
-	List<CmUser> findByOrgSeq(Long orgSeq);
-
-	/**
-	 * 특정 조직 제외 사용자 목록
-	 * 
-	 * @param orgSeq
-	 * @return
-	 */
-	@Query("select m from CmUser m where m.delYn = 'N' and m.userSeq NOT IN (select n.userSeq from CmOrgUserMap n where n.delYn = 'N' and n.orgSeq = ?1) order by m.userSeq asc")
-	List<CmUser> findByExcludeOrgSeq(Long orgSeq);
-
-	/**
 	 * 로그인 ID 중복 확인
 	 * 
 	 * @param loginId

@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
@@ -28,11 +27,7 @@ public class AccountContext extends User {
 	private List<CmRole> authRoleList;
 	
 	private List<CmUserAlowIp> allowIpList;
-	
-	private List<CmOrg> orgList;
-	
-	private CmOrg currOrg;
-	
+		
 	private MyMenuDto myMenu;
 	
 	private MenuDto currMenu;

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.cm.CmUserAlowIp;
@@ -41,7 +40,6 @@ public class UserInfoRestController {
 				
 		// 자신이 변경할 수 없는 정보
 		List<CmRole> cmRoleList =  ((AccountContext) authentication.getPrincipal()).getAuthRoleList();		
-		List<CmOrg> cmOrgList = ((AccountContext) authentication.getPrincipal()).getOrgList();
 		
 		// 자신이 변경할 수 있는 정보
 		CmUser cmUser = userService.findByCmUser(userSeq);
@@ -49,7 +47,6 @@ public class UserInfoRestController {
 		UserInfoDto userInfoDto = new UserInfoDto();
 		userInfoDto.setCmUser(cmUser);
 		userInfoDto.setCmRoleList(cmRoleList);
-		userInfoDto.setCmOrgList(cmOrgList);
 		userInfoDto.setCmRoleList(cmRoleList);
 				
 		return ResponseEntity.ok(userInfoDto);

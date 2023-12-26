@@ -32,32 +32,32 @@ spring:
 #---
 #spring:
 #  profiles: local
-  datasource:
-    hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/~/test
-      driver-class-name: org.h2.Driver
-      username: sa
-      password:
+#  datasource:
+#    hikari:
+#      jdbc-url: jdbc:h2:tcp://localhost/~/test
+#      driver-class-name: org.h2.Driver
+#      username: sa
+#      password:
 #---
 #spring:
 #  profiles: mysql
-#  datasource:
-#    hikari:
-#      jdbc-url: jdbc:mysql://localhost:3306/spring_batch
-#      username: jojoldu
-#      password: jojoldu1
-#      driver-class-name: com.mysql.jdbc.Driver
-    
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mariadb://127.0.0.1:3306/imptodo_db?characterEncoding=UTF-8
+      username: imptodo
+      password: imptodo
+      driver-class-name: org.mariadb.jdbc.Driver    
     
   jpa:
     defer-datasource-initialization: false
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
     properties:
       hibernate:
-        jdbc:
-          lob.non_contextual_creation:true
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
     
 #  flyway:
 #    enabled: true

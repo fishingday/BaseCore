@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.basedevice.corebase.domain.cm.CmCdDtl;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
-import kr.co.basedevice.corebase.dto.system.OrgInfoDto;
 import kr.co.basedevice.corebase.service.common.CommonService;
-import kr.co.basedevice.corebase.service.common.OrgService;
 import kr.co.basedevice.corebase.service.common.RoleService;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +20,6 @@ public class CommonRestController {
 	
 	final private CommonService commonService;
 	final private RoleService roleService;
-	final private OrgService orgService;
 	
 	/**
 	 * 역할 목록 조회
@@ -49,15 +46,4 @@ public class CommonRestController {
 		return ResponseEntity.ok(cmCdDtlList);
 	}
 	
-	/**
-	 * 조직 목록
-	 * 
-	 * @return
-	 */
-	@GetMapping("/org_list.json")
-	public ResponseEntity<List<OrgInfoDto>> getOrgList(){
-		List<OrgInfoDto> orgInfoDtoList = orgService.findAllOrg();
-		
-		return ResponseEntity.ok(orgInfoDtoList);
-	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import kr.co.basedevice.corebase.domain.cm.CmOrg;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
 import kr.co.basedevice.corebase.domain.cm.CmUser;
 import kr.co.basedevice.corebase.domain.code.UserStatCd;
@@ -47,9 +46,7 @@ public class UserInfoDto {
 	private Long orgSeq;
 	
 	private List<CmRole> cmRoleList;
-	
-	private List<CmOrg> cmOrgList;
-		
+			
 	public void setCmUser(CmUser cmUser) {
 		this.userSeq = cmUser.getUserSeq();
 		this.loginId = cmUser.getLoginId();
@@ -75,20 +72,4 @@ public class UserInfoDto {
 			return null;
 		}
 	}
-	
-	public String getOrgNames() {
-		if(this.cmOrgList != null && !cmOrgList.isEmpty()) {
-			StringBuilder sb = new StringBuilder();
-			for(CmOrg cmOrg : this.cmOrgList) {
-				if(sb.length() != 0) {
-					sb.append(",");
-				}
-				sb.append(cmOrg.getOrgNm());
-			}
-			return sb.toString();			
-		}else {
-			return null;
-		}
-	}
-
 }

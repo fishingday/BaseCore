@@ -14,7 +14,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.co.basedevice.corebase.domain.cm.QCmOrgUserMap;
 import kr.co.basedevice.corebase.domain.cm.QCmRole;
 import kr.co.basedevice.corebase.domain.cm.QCmUser;
 import kr.co.basedevice.corebase.domain.cm.QCmUserRoleMap;
@@ -34,7 +33,6 @@ public class CmUserRepositoryImpl implements CmUserRepositoryQuerydsl{
 		QCmUser cmUser = QCmUser.cmUser;
 		QCmUserRoleMap cmUserRoleMap = QCmUserRoleMap.cmUserRoleMap;
 		QCmRole cmRole = QCmRole.cmRole;
-		QCmOrgUserMap cmOrgUserMap = QCmOrgUserMap.cmOrgUserMap;
 				
 		JPQLQuery<UserInfoDto> query = jpaQueryFactory.selectDistinct(
 				Projections.bean(UserInfoDto.class,
@@ -52,8 +50,7 @@ public class CmUserRepositoryImpl implements CmUserRepositoryQuerydsl{
 			)
 			.from(cmUser)
 			.leftJoin(cmUserRoleMap).on(cmUserRoleMap.userSeq.eq(cmUser.userSeq), cmUserRoleMap.delYn.eq(Yn.N))
-			.leftJoin(cmRole).on(cmRole.roleSeq.eq(cmUserRoleMap.roleSeq), cmRole.delYn.eq(Yn.N))
-		    .leftJoin(cmOrgUserMap).on(cmOrgUserMap.userSeq.eq(cmUser.userSeq), cmOrgUserMap.delYn.eq(Yn.N));
+			.leftJoin(cmRole).on(cmRole.roleSeq.eq(cmUserRoleMap.roleSeq), cmRole.delYn.eq(Yn.N));
 		
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(cmUser.delYn.eq(Yn.N));
@@ -73,10 +70,6 @@ public class CmUserRepositoryImpl implements CmUserRepositoryQuerydsl{
 		if(!ObjectUtils.isEmpty(searchUserInfo.getRoleSeq())) {
 			builder.and(cmRole.roleSeq.eq(searchUserInfo.getRoleSeq()));
 		}
-		
-		if(!ObjectUtils.isEmpty(searchUserInfo.getOrgSeq())) {
-			builder.and(cmOrgUserMap.orgSeq.eq(searchUserInfo.getOrgSeq()));
-		}		
 		
 		query.where(builder);
 		
