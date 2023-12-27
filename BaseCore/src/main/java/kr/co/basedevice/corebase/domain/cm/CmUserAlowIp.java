@@ -2,22 +2,18 @@ package kr.co.basedevice.corebase.domain.cm;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -27,13 +23,12 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_USER_ALOW_IP")
-//@SequenceGenerator(name = "SEQGEN_CM_USER_ALOW_IP", sequenceName = "SEQ_CM_USER_ALOW_IP", initialValue = 1000, allocationSize = 1)
 public class CmUserAlowIp extends BaseEntity implements Serializable {	
 
 	private static final long serialVersionUID = 2007929684016838318L;
 
 	@Id
-	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_USER_ALOW_IP")
+	@Tsid
 	@Column(name = "USER_ALOW_IP_SEQ", nullable = false)
 	private Long userAlowIpSeq;
 	

@@ -7,12 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.PointAplytoCd;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -22,14 +17,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "TD_POINT")
-//@SequenceGenerator(name = "SEQGEN_TD_POINT", sequenceName = "SEQ_TD_POINT", initialValue = 1000, allocationSize = 1)
 public class TdPoint extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = 263907859673969324L;
 
 	@Id
-	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_POINT")
+	@Tsid
 	@Column(name = "POINT_SEQ", nullable = false)
 	private Long pointSeq;
 	

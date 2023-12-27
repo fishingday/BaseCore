@@ -4,26 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.proxy.HibernateProxy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-
-import org.hibernate.proxy.HibernateProxy;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import io.hypersistence.utils.hibernate.id.Tsid;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
 import lombok.Getter;
@@ -33,13 +29,12 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "CM_MENU_DTL")
-//@SequenceGenerator(name = "SEQGEN_CM_MENU_DTL", sequenceName = "SEQ_CM_MENU_DTL", initialValue = 1000, allocationSize = 1)
 public class CmMenuDtl extends BaseEntity implements Serializable{
 
 	private static final long serialVersionUID = -220508149793619902L;
 
 	@Id
-	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_MENU_DTL")
+	@Tsid
 	@Column(name = "MENU_DTL_SEQ", nullable = false)
 	private Long menuDtlSeq;
 	

@@ -26,13 +26,12 @@ import lombok.Setter;
 @NoArgsConstructor
 //@Entity
 @Table(name = "CM_QUARTZ_LOG")
-//@SequenceGenerator(name = "SEQGEN_CM_QUARTZ_LOG", sequenceName = "SEQ_CM_QUARTZ_LOG", initialValue = 1, allocationSize = 1)
 public class CmQuartzLog implements Serializable{
 
 	private static final long serialVersionUID = -185494336443799876L;
 
 	@Id
-	@Tsid//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_CM_QUARTZ_LOG")
+	@Tsid
 	@Column(name = "QUARTZ_LOG_SEQ", nullable = false)
 	private Long quartzlogSeq;
 
