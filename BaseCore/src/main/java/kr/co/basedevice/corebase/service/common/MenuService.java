@@ -73,7 +73,7 @@ public class MenuService {
 		if(cnt > 0L) {
 			return false;
 		}else {
-			CmMenu cmMenu = cmMenuRepository.getById(menuSeq);
+			CmMenu cmMenu = cmMenuRepository.getReferenceById(menuSeq);
 			
 			cmMenu.setDelYn(Yn.Y);			
 			cmMenuRepository.save(cmMenu);
@@ -100,7 +100,7 @@ public class MenuService {
 		if(ObjectUtils.isEmpty(saveMenuInfo.getMenuSeq())) {
 			cmMenu = new CmMenu();
 		}else {
-			cmMenu = cmMenuRepository.getById(saveMenuInfo.getMenuSeq());
+			cmMenu = cmMenuRepository.getReferenceById(saveMenuInfo.getMenuSeq());
 			List<CmRoleMenuMap> cmRoleMenuMapList = cmRoleMenuMapRepository.findByMenuSeqAndDelYn(saveMenuInfo.getMenuSeq(), Yn.N);
 			if(cmRoleMenuMapList != null && !cmRoleMenuMapList.isEmpty()) {
 				for(CmRoleMenuMap cmRoleMenuMap : cmRoleMenuMapList) {

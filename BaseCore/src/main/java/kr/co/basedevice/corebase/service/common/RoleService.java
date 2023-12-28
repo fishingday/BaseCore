@@ -102,7 +102,7 @@ public class RoleService {
 		}
 		
 		// 역할 삭제
-		CmRole cmRole = cmRoleRepository.getById(roleSeq);
+		CmRole cmRole = cmRoleRepository.getReferenceById(roleSeq);
 		cmRole.setDelYn(Yn.Y);
 		return cmRoleRepository.save(cmRole);
 	}

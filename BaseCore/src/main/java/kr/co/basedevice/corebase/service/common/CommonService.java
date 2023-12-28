@@ -111,7 +111,7 @@ public class CommonService {
 			cmCdDtlRepository.saveAll(cmCdDtlList);
 		}
 		
-		CmCdGrp cmCdGrp = cmCdGrpRepository.getById(grpCd);
+		CmCdGrp cmCdGrp = cmCdGrpRepository.getReferenceById(grpCd);
 		cmCdGrp.setDelYn(Yn.Y);
 		
 		cmCdGrpRepository.save(cmCdGrp);
@@ -165,7 +165,7 @@ public class CommonService {
 		@CacheEvict(value = "CODE", key = "#cmCdDtlId.grpCd  + '-' +  #cmCdDtlId.cd")
 	})
 	public boolean removeCmCdDtl(CmCdDtlId cmCdDtlId) {			
-		CmCdDtl cmCdDtl = cmCdDtlRepository.getById(cmCdDtlId);	
+		CmCdDtl cmCdDtl = cmCdDtlRepository.getReferenceById(cmCdDtlId);	
 		
 		cmCdDtl.setDelYn(Yn.Y);		
 		cmCdDtlRepository.save(cmCdDtl);

@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import kr.co.basedevice.corebase.domain.cm.CmMenu;
 import kr.co.basedevice.corebase.domain.cm.CmRole;
@@ -69,7 +68,7 @@ public class UserService {
 
 	
 	public CmUser saveCmUser(CmUser cmUser) {
-		CmUser saveUser = cmUserRepository.getById(cmUser.getUserSeq());
+		CmUser saveUser = cmUserRepository.getReferenceById(cmUser.getUserSeq());
 		if(saveUser != null) {
 			saveUser.setLoginId(cmUser.getLoginId());
 			saveUser.setUserNm(cmUser.getUserNm());
@@ -176,7 +175,7 @@ public class UserService {
 	 */
 	public boolean chgUserInfo(SaveUserInfo saveUserInfo) {
 		
-		CmUser cmUser = cmUserRepository.getById(saveUserInfo.getUserSeq());		
+		CmUser cmUser = cmUserRepository.getReferenceById(saveUserInfo.getUserSeq());		
 		if(cmUser != null) {
 			cmUser.setLoginId(saveUserInfo.getLoginId());
 			cmUser.setUserNm(saveUserInfo.getUserNm());
@@ -244,7 +243,7 @@ public class UserService {
 			
 			// 패스워드를 변경한다는 의미는 사용자의 상태를 로그인할 수 있도록 하다는 의미다.
 			// 따라서 사용자의 상태와 계정만료일도 수정해 줘야...
-			CmUser cmUser = cmUserRepository.getById(userSeq);
+			CmUser cmUser = cmUserRepository.getReferenceById(userSeq);
 			
 			cmUser.setAcuntExpDt(saveUserPwd.getAcuntExpDt());
 			cmUser.setUserStatCd(UserStatCd.ENABLED);
@@ -313,7 +312,7 @@ public class UserService {
 				cmUserRoleMapRepository.saveAll(cmUserRoleMapList);
 			}
 			// 9. 마지막으로 사용자 정보를 비활성화 시키고 삭제 처리한다.	
-			CmUser cmUser = cmUserRepository.getById(userSeq);			
+			CmUser cmUser = cmUserRepository.getReferenceById(userSeq);			
 			cmUser.setUserStatCd(UserStatCd.DISABLED); // 삭제 처리
 			cmUser.setDelYn(Yn.Y);
 			cmUserRepository.save(cmUser);
@@ -354,7 +353,7 @@ public class UserService {
 	}
 
 	public boolean saveUserInfo(UserInfoDto userInfoDto) {
-		CmUser cmUser = cmUserRepository.getById(userInfoDto.getUserSeq());
+		CmUser cmUser = cmUserRepository.getReferenceById(userInfoDto.getUserSeq());
 		
 		cmUser.setUserNm(userInfoDto.getUserNm());
 		cmUser.setUserTelNo(userInfoDto.getUserTelNo());
@@ -481,7 +480,7 @@ public class UserService {
 	 */
 	public boolean removeUserAllowIp(Long userAlowIpSeq) {
 		
-		CmUserAlowIp cmUserAlowIp = cmUserAlowIpRepository.getById(userAlowIpSeq);
+		CmUserAlowIp cmUserAlowIp = cmUserAlowIpRepository.getReferenceById(userAlowIpSeq);
 		cmUserAlowIp.setDelYn(Yn.Y);		
 		cmUserAlowIpRepository.save(cmUserAlowIp);
 		

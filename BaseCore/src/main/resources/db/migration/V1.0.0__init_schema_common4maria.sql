@@ -187,10 +187,10 @@ create table cm_user_pwd (
 ) engine=InnoDB;
 
 create table cm_user_relat (
-    targeter_seq bigint not null,
     relator_seq bigint not null,
+    targeter_seq bigint not null,
     user_relat_cd enum ('GRAND','PARENT','RELAT','CHILD','SELF') not null,
-    user_relat_dtl_val varchar(20) not null,
+    user_relat_dtl_val varchar(20),
     relator_calnm varchar(30),
     targeter_calnm varchar(30),
     relat_aply_dt datetime(6),
