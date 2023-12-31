@@ -49,13 +49,13 @@ public class TdTodo extends BaseEntity implements Serializable{
 	@Column(name = "TODO_TITL", length = 200, nullable = false)
 	private String todoTitl;
 	
-	@Column(name = "TODO_TMP_CONT", length = 2000, nullable = false)
+	@Column(name = "TODO_TMP_CONT", length = 2000)
 	private String todoTmpCont;
 	
 	@Column(name = "TODO_DESC", length = 2000)
 	private String todoDesc;
 	
-	@Column(name = "COMPLET_CONDI_VAL", length = 128, nullable = false)
+	@Column(name = "COMPLET_CONDI_VAL", length = 128)
 	private String completCondiVal;
 	
 	@Column(name = "TODO_TYP_CD", nullable = false, length = 35)
@@ -67,7 +67,7 @@ public class TdTodo extends BaseEntity implements Serializable{
 	private Integer aplytoOrd;
 	
 	
-	@Column(name = "TODO_CRE_CD", nullable = false, length = 35)
+	@Column(name = "TODO_CRE_CD", length = 35)
 	@Enumerated(EnumType.STRING)
 	private TodoCreCd todoCreCd;
 	
@@ -81,7 +81,7 @@ public class TdTodo extends BaseEntity implements Serializable{
 	private Integer todoPoint;
 	
 	// 직접생성의 경우 하루 생성 제한
-	@Column(name = "DATE_LIMIT_CNT", nullable = false)
+	@Column(name = "DATE_LIMIT_CNT")
 	private Integer dateLimitCnt;
 	
 	@Column(name = "CONFM_METH_CD", nullable = false, length = 35)

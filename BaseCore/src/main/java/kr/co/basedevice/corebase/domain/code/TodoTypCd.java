@@ -9,5 +9,6 @@ public enum TodoTypCd {
 	READING,  // 독서
 	EXAM,     // 시험
 	ETIQUET,  // 예절
+	LEARNING, // 학습
 	PRESENT;  // 출석
 }
