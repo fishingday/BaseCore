@@ -10,17 +10,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.WorkStatCd;
@@ -32,12 +34,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_WORK")
+@SequenceGenerator(name = "SEQGEN_TD_WORK", sequenceName = "SEQ_TD_WORK", initialValue = 1000, allocationSize = 1)
 public class TdWork extends BaseEntity implements Serializable{
 	
 	private static final long serialVersionUID = -5123848958747519005L;
 
 	@Id
-	@Tsid
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_WORK")
 	@Column(name = "WORK_SEQ", nullable = false)
 	private Long workSeq;
 	

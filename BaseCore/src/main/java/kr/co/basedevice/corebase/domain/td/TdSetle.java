@@ -10,15 +10,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import kr.co.basedevice.corebase.domain.BaseEntity;
 import kr.co.basedevice.corebase.domain.code.Yn;
@@ -29,12 +31,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TD_SETLE")
+@SequenceGenerator(name = "SEQGEN_TD_SETLE", sequenceName = "SEQ_TD_SETLE", initialValue = 1000, allocationSize = 1)
 public class TdSetle extends BaseEntity implements Serializable{
 	
 	private static final long serialVersionUID = -8236512668919876948L;
 
 	@Id
-	@Tsid
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQGEN_TD_SETLE")
 	@Column(name = "SETLE_SEQ", nullable = false)
 	private Long setleSeq;
 
