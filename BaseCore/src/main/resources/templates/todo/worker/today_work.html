@@ -156,7 +156,8 @@
             let todoInfo = fnObj.action.getTodoInfo(row.todoSeq);
             
             if(todoInfo.todoTypCd === 'SLEEP' 
-              || todoInfo.todoTypCd === 'CLEAN'){
+              || todoInfo.todoTypCd === 'CLEAN'
+              || todoInfo.todoTypCd === 'ETIQUET' ){
               let msg = '';
               let til = '';
               

@@ -267,7 +267,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 		builder.and(tdWork.delYn.eq(Yn.N));
 		builder.and(cmUser.delYn.eq(Yn.N));
 		builder.and(cmUserRelat.delYn.eq(Yn.N));
-		builder.and(cmUserRelat.targeterAgreYn.eq(Yn.N));
+		builder.and(cmUserRelat.targeterAgreYn.eq(Yn.Y));
 		builder.and(tdWork.workPossBeginDt.gt(searchPlanWork.getWorkBeginDt()));
 		builder.and(tdWork.workPossBeginDt.lt(searchPlanWork.getWorkEndDt()));
 		builder.and(cmUserRelat.relatorSeq.eq(searchPlanWork.getCheckerSeq()));

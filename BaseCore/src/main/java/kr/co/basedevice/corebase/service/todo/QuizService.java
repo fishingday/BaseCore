@@ -131,22 +131,22 @@ public class QuizService {
 		int pickedNum = (int)(Math.random() * cnt);
 		
 		// 하나 조회
-		String sqlstr ="SELECT * "
+		String sqlstr ="SELECT v.* "
 				+ "  FROM (SELECT ROW_NUMBER() OVER(ORDER BY A.QUIZ_SEQ) NUM "
-				+ "                      ,A.QUIZ_SEQ, A.QUIZ_TYP_CD, A.QUIZ_TITL, A.QUIZ_CONT, A.QUIZ_ANSWER "
-				+ "          FROM TD_QUIZ A "
+				+ "               ,A.QUIZ_SEQ, A.QUIZ_TYP_CD, A.QUIZ_TITL, A.QUIZ_CONT, A.QUIZ_ANSWER "
+				+ "          FROM td_quiz A "
 				+ "         WHERE A.DEL_YN = 'N' "
 				+ "           AND A.QUIZ_TYP_CD = ? "
 				+ "           AND A.QUIZ_SEQ NOT IN ( "
 				+ "               SELECT X.QUIZ_SEQ "
-				+ "                 FROM TD_QUIZ_WORK_USE X "
+				+ "                 FROM td_quiz_work_use X "
 				+ "                WHERE X.DEL_YN = 'N' "
 				+ "                  AND X.USER_SEQ = ? "
 				+ "                GROUP BY X.QUIZ_SEQ "
 				+ "               HAVING COUNT(*) > ? "
 				+ "           ) "
-				+ "       ) "
-				+ " WHERE NUM = ?";
+				+ "       ) as v "
+				+ " WHERE v.NUM = ?";
 		
 		TdQuiz tdQuiz = jdbcTemplate.queryForObject(sqlstr, 
 				new RowMapper<TdQuiz>() {
