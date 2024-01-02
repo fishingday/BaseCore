@@ -311,6 +311,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 	@Override
 	public List<PlanWorkInfoDto> findByTodayPlanList4Worker(SearchWork searchWork) {
 		QTdWork tdWork = QTdWork.tdWork;
+		QTdTodo tdTodo = QTdTodo.tdTodo;
 		QCmUser cmUser = QCmUser.cmUser;
 		
 		JPQLQuery<PlanWorkInfoDto> query = jpaQueryFactory.select(
@@ -318,6 +319,11 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 					,cmUser.loginId
 					,cmUser.userNm.as("workerNm")
 					,tdWork.workerSeq
+					
+					,tdTodo.todoTitl
+					,tdTodo.todoTypCd
+					,tdTodo.confmMethCd
+					,tdTodo.completCondiVal				
 					
 					,tdWork.workSeq
 					,tdWork.todoSeq
@@ -333,6 +339,7 @@ public class TdWorkRepositoryImpl implements TdWorkRepositoryQuerydsl{
 				)
 			)
 			.from(tdWork)
+			.innerJoin(tdTodo).on(tdWork.todoSeq.eq(tdTodo.todoSeq))
 			.innerJoin(cmUser).on(tdWork.workerSeq.eq(cmUser.userSeq));
 		
 		BooleanBuilder builder = new BooleanBuilder();

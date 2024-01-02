@@ -19,6 +19,7 @@ public class PlanWorkInfoDto {
 	private String todoTitl;
 	private TodoTypCd todoTypCd;
 	private ConfmMethCd confmMethCd;
+	private String completCondiVal;
 		
 	private Long workSeq;
 	private Long todoSeq;

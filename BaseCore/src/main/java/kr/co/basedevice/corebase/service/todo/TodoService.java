@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import kr.co.basedevice.corebase.domain.code.ConfmMethCd;
 import kr.co.basedevice.corebase.domain.code.TodoCreCd;
 import kr.co.basedevice.corebase.domain.code.TodoTypCd;
 import kr.co.basedevice.corebase.domain.code.WorkStatCd;
@@ -231,30 +232,44 @@ public class TodoService {
 			tdQuizWorkUse.setDelYn(Yn.N);
 		}
 		
-		// 만약 이것이 시험이라면...
-		if(tdTodo.get().getTodoTypCd() == TodoTypCd.EXAM) {
-			int score = 0;
-			try{
-				score = Integer.parseInt(todoWorkData.getWorkCont());
-			}catch(NumberFormatException ex) {
-				return new ApiResponse(false, "시험 점수가 잘못되었습니다.");
-			}
+		// 시험과 일찍일어나기는 ... 레벨이 있다.
+		if(tdTodo.get().getTodoTypCd() == TodoTypCd.EXAM || tdTodo.get().getTodoTypCd() == TodoTypCd.WAKEUP) {
 			
-			// 시험은 점수에 따른 레벨이 있음...
 			List<TdTodo> listTdTodo = tdTodoRepository.findByUpTodoSeqAndDelYnOrderByAplytoOrdAsc(todoWorkData.getTodoSeq(), Yn.N);
-			if(!listTdTodo.isEmpty() && listTdTodo.size() > 0) {
-				for(TdTodo tdItm : listTdTodo) {
-					if(Integer.parseInt(tdItm.getConfmDtlVal()) <= score) {
-						tdWork.setGainPoint(tdItm.getTodoPoint());
+			
+			if(tdTodo.get().getConfmMethCd() == ConfmMethCd.TIME) { // 시간 체크
+				LocalTime lt = LocalTime.now();
+				for(TdTodo subTdTodo : listTdTodo) {
+					if(subTdTodo.getLimitBeginTm().isBefore(lt) && subTdTodo.getLimitEndTm().isAfter(lt)) {
+						tdWork.setGainPoint(subTdTodo.getTodoPoint());
+						msg = tdWork.getGainPoint() + "포인트가 적립 되었습니다.";
 						break;
 					}
 				}
-			}else{ // 없다면..
-				tdWork.setGainPoint(tdTodo.get().getTodoPoint());
+				tdWork.setWorkStatCd(WorkStatCd.DONE);
+			}else if(tdTodo.get().getConfmMethCd() == ConfmMethCd.SCORE) { // 점수 체크
+				int score = 0;
+				try{
+					score = Integer.parseInt(todoWorkData.getWorkCont());
+				}catch(NumberFormatException ex) {
+					return new ApiResponse(false, "시험 점수가 잘못되었습니다.");
+				}
+				
+				
+				if(!listTdTodo.isEmpty() && listTdTodo.size() > 0) {
+					for(TdTodo tdItm : listTdTodo) {
+						if(Integer.parseInt(tdItm.getConfmDtlVal()) <= score) {
+							tdWork.setGainPoint(tdItm.getTodoPoint());
+							break;
+						}
+					}
+				}else{ // 없다면..
+					tdWork.setGainPoint(tdTodo.get().getTodoPoint());
+				}
+				
+				msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
+				tdWork.setWorkStatCd(WorkStatCd.ONGOING);
 			}
-			
-			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
-			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
 		}else if(tdTodo.get().getTodoTypCd() == TodoTypCd.DIARY 
 				|| tdTodo.get().getTodoTypCd() == TodoTypCd.READING
 				|| tdTodo.get().getTodoTypCd() == TodoTypCd.EXERCISE
