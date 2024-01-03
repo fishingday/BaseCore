@@ -57,6 +57,15 @@
                   <span class="input-group-text">내용</span>
                   <textarea class="form-control" placeholder="작업내용" id="workCont"></textarea>
                 </div>
+                <div class="mb-3 row align-items-center" id="merge_time">
+				  <div class="col-auto">
+				    <label for="work_begin_dt" class="col-form-label">시간</label>
+				  </div>
+				  <div class="col-auto">
+					<input type="time" id="work_begin_dt" >~<input type="time" id="work_end_dt">
+                    <span>스택 : </span><input type="number" id="work_rslt_val" style="width: 50px;">
+                  </div>
+                </div>
                 <div class="mb-3 row">
                   <span id="todoGuide"></span>
                 </div>
@@ -104,6 +113,16 @@
           $("#workCont").bind("keyup", function(){
             fnObj.action.adjustHeight();
           });
+          
+          $("#work_begin_dt").bind("change", function(){
+			  fnObj.action.makeStack();
+		  });
+		  $("#work_end_dt").bind("change", function(){
+			  fnObj.action.makeStack();
+		  });
+		  $("#work_rslt_val").bind("change", function(){
+			  fnObj.action.makeStack();
+		  });
         },
         page: {
           init: function(){ // 버튼 바인딩 등
@@ -152,6 +171,10 @@
             }
             return null;
           },
+          makeStack: function(){
+			let todoInfo = fnObj.action.getTodoInfo(parseInt($("#todoSeq").val()));
+			console.log('입력된 시간을 계산해서 스택을 환산한다. 적립가능 최대 포인트 : ' + (todoInfo.dateLimitCnt * todoInfo.todoPoint) );
+		  },
           popRowClick: async function(row){
             let todoInfo = fnObj.action.getTodoInfo(row.todoSeq);
             
@@ -227,6 +250,13 @@
               $("#quizUseYn").val("N");
               $("#workCont").attr("readonly",false);
             }
+            
+            // 시간 단위로 체크하겠다는 뜻
+            if(todoInfo.confmMethCd === 'MERGE_TIME'){
+				$("#merge_time").show();
+			}else{
+				$("#merge_time").hide();
+			}
             
             $("#workSeq").val(row.workSeq);
             $("#todoSeq").val(row.todoSeq);
