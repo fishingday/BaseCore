@@ -283,10 +283,18 @@ public class TodoService {
 			tdWork.setWorkStatCd(WorkStatCd.ONGOING);
 		}
 		
+		if(tdTodo.get().getConfmMethCd() == ConfmMethCd.MERGE_TIME) {
+			tdWork.setWorkBeginDt(todoWorkData.getWorkBeginDt());
+			tdWork.setWorkEndDt(todoWorkData.getWorkEndDt());
+			tdWork.setWorkRsltVal(todoWorkData.getWorkRsltVal());
+			tdWork.setGainPoint(todoWorkData.getGainPoint());
+			msg = tdWork.getGainPoint() + "포인트 적립 예정입니다.";
+		}
+		
 		tdWork.setTodoSeq(tdTodo.get().getTodoSeq());
 		tdWork.setWorkTitl(todoWorkData.getWorkTitl());
 		tdWork.setWorkCont(todoWorkData.getWorkCont());
-		tdWork.setWorkerSeq(todoWorkData.getWorkerSeq());		
+		tdWork.setWorkerSeq(todoWorkData.getWorkerSeq());
 		tdWork.setWorkDt(LocalDateTime.now());
 		tdWork.setSetleYn(Yn.N);
 		tdWork.setDelYn(Yn.N);		

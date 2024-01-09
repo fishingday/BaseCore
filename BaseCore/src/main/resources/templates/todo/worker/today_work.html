@@ -65,6 +65,9 @@
 					<input type="time" id="work_begin_dt" >~<input type="time" id="work_end_dt">
                     <span>스택 : </span><input type="number" id="work_rslt_val" style="width: 50px;">
                   </div>
+                  <div class="col-auto">
+                    <span>포인트 : </span><input type="number" id="gain_point" readonly>
+                  </div>
                 </div>
                 <div class="mb-3 row">
                   <span id="todoGuide"></span>
@@ -114,13 +117,7 @@
             fnObj.action.adjustHeight();
           });
           
-          $("#work_begin_dt").bind("change", function(){
-			  fnObj.action.makeStack();
-		  });
-		  $("#work_end_dt").bind("change", function(){
-			  fnObj.action.makeStack();
-		  });
-		  $("#work_rslt_val").bind("change", function(){
+          $("#work_begin_dt, #work_end_dt, #work_rslt_val").bind("change", function(){
 			  fnObj.action.makeStack();
 		  });
         },
@@ -173,7 +170,56 @@
           },
           makeStack: function(){
 			let todoInfo = fnObj.action.getTodoInfo(parseInt($("#todoSeq").val()));
-			console.log('입력된 시간을 계산해서 스택을 환산한다. 적립가능 최대 포인트 : ' + (todoInfo.dateLimitCnt * todoInfo.todoPoint) );
+		
+			if($("#work_begin_dt").val() === ''){
+				Swal.fire({
+	              title: '필수 항목 입력',
+	              text: '시작시간을 입력해 주세요',
+	              icon: 'info',
+	              confirmButtonText: '닫기'
+	            });
+	            return;
+			}
+			
+			if($("#work_end_dt").val() !== ''){
+				let beginTime = $("#work_begin_dt").val().split(":");
+				let beginDate = new Date();
+				beginDate.setHours(beginTime[0]);
+				beginDate.setMinutes(beginTime[1]);
+				beginDate.setSeconds(0);
+				
+				let endTime = $("#work_end_dt").val().split(":");
+				let endDate = new Date();
+				endDate.setHours(endTime[0]);
+				endDate.setMinutes(endTime[1]);
+				endDate.setSeconds(0);
+				
+				$("#work_rslt_val").val(Math.floor(((endDate - beginDate) / (60*1000)) / 30));
+			}else if($("#work_rslt_val").val() !== ''){
+				let stackTime = $("#work_rslt_val").val() * 30;
+				
+				let beginTime = $("#work_begin_dt").val().split(":");
+				let endDate = new Date();
+				endDate.setHours(beginTime[0]);
+				endDate.setMinutes(beginTime[1]);
+				endDate.setSeconds(0);				
+				endDate.setMinutes(endDate.getMinutes() + stackTime);				
+				$("#work_end_dt").val(endDate.toLocaleTimeString('it-IT'));				
+			}else{
+				Swal.fire({
+	              title: '필수 항목 입력',
+	              text: '종료시간 또는 스택을 입력해 주세요.',
+	              icon: 'info',
+	              confirmButtonText: '닫기'
+	            });
+	            return;
+			}
+			
+			if($("#work_rslt_val").val() > todoInfo.dateLimitCnt){
+				$("#gain_point").val(todoInfo.dateLimitCnt * todoInfo.todoPoint);
+			}else{
+				$("#gain_point").val($("#work_rslt_val").val() * todoInfo.todoPoint);
+			}
 		  },
           popRowClick: async function(row){
             let todoInfo = fnObj.action.getTodoInfo(row.todoSeq);
@@ -330,6 +376,7 @@
             }
             
             let todoInfo = fnObj.action.getTodoInfo(parseInt($("#todoSeq").val()));
+            let tdWork = {};
             
             if($("#quizUseYn").val() === 'Y'){
               if($("#quizSeq").val() === ''){
@@ -395,7 +442,7 @@
                 });
                 return;
               }              
-            }else if(todoInfo.confmMethCd === 'INTIME'){ // 입력 시간 체크
+            }else if(todoInfo.confmMethCd === 'TIME'){ // 입력 시간 체크
               let now = new Date();
               let dateStr = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
               let beginDt = new Date(dateStr + ' ' + todoInfo.limitBeginTm);
@@ -410,9 +457,34 @@
                 });
                 return;
               }            
-            }
+            }else if(todoInfo.confmMethCd === 'MERGE_TIME'){
+				if($("#work_rslt_val").val() === '' || $("#work_rslt_val").val() === '0'){
+					Swal.fire({
+	                  title: '활동 시간 입력',
+	                  text: '시작시간을 입력하고, 종료 시간이나 스택을 입력해 주세요.',
+	                  icon: 'info',
+	                  confirmButtonText: '닫기'
+	                });
+					return;
+				}
+				let beginTime = $("#work_begin_dt").val().split(":");
+				let beginDate = new Date();
+				beginDate.setHours(beginTime[0]);
+				beginDate.setMinutes(beginTime[1]);
+				beginDate.setSeconds(0);
+				
+				let endTime = $("#work_end_dt").val().split(":");
+				let endDate = new Date();
+				endDate.setHours(endTime[0]);
+				endDate.setMinutes(endTime[1]);
+				endDate.setSeconds(0);
+								
+				tdWork.workBeginDt = beginDate.toJSON().substr(0, beginDate.toJSON().lastIndexOf('.')).replace('T', ' ');
+				tdWork.workEndDt = endDate.toJSON().substr(0, endDate.toJSON().lastIndexOf('.')).replace('T', ' ');
+				tdWork.workRsltVal = $("#work_rslt_val").val();
+				tdWork.gainPoint = $("#gain_point").val();
+			}
             
-            let tdWork = {};
             tdWork.workSeq = $("#workSeq").val();
             tdWork.todoSeq = $("#todoSeq").val();
             tdWork.quizSeq = $("#quizSeq").val();            
